@@ -54,9 +54,11 @@
 	<developerConnection>scm:svn:https://svn.mpi.nl/LAT/metadata-browser</developerConnection>
 	<url>https://trac.mpi.nl/wiki/MetadataBrowser</url>
     </scm>
+    
     <modules>
 	<module>metadata-browser-api</module>
 	<module>metadata-browser-cmdi</module>
+	<module>metadata-browser-pages</module>
     </modules>
     
     <dependencies>
