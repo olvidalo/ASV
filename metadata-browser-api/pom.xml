@@ -14,4 +14,11 @@
     <packaging>jar</packaging>
 
     <name>Metadata Browser Services API</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+    </dependencies>
 </project>
