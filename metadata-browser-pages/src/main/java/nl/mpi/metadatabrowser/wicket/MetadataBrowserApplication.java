@@ -7,7 +7,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * 
  * @see nl.mpi.metadata-browser.wicket.Start#main(String[])
  */
-public class WicketApplication extends WebApplication
+public class MetadataBrowserApplication extends WebApplication
 {    	
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
