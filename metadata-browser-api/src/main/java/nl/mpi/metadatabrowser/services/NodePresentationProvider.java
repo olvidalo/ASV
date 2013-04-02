@@ -26,5 +26,5 @@ import org.apache.wicket.Component;
  */
 public interface NodePresentationProvider {
 
-    Component getNodePresentation(URI nodeUri, NodeType nodeType);
+    Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType);
 }
