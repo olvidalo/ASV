@@ -7,6 +7,30 @@
           http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/context/spring-context-2.5.xsd/spring-spring-context-2.5.xsd-3.2.2.RELEASE.xsd">
 
     <!-- Spring configuration for running application in test mode using mock services -->
+        
+    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.MockNodeTypeIdentifier">
+	<constructor-arg>
+	    <map>
+		<entry key="http://test">
+		    <bean class="nl.mpi.metadatabrowser.model.MockNodeType">
+			<property name="name" value="TestNode" />
+		    </bean>
+		</entry>
+	    </map>
+	</constructor-arg>
+    </bean>
     
-    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.MockNodeTypeIdentifier" />
+    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.MockNodeActionsProvider">
+	<constructor-arg>
+	    <map>
+		<entry key="http://test">
+		    <list>
+			<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+			    <property name="name" value="TestAction" />
+			</bean>
+		    </list>
+		</entry>
+	    </map>
+	</constructor-arg>
+    </bean>
 </beans>
