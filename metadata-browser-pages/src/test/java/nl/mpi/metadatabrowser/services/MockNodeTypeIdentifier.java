@@ -34,6 +34,10 @@ public class MockNodeTypeIdentifier implements NodeTypeIdentifier {
 
     @Override
     public NodeType getNodeType(URI nodeUri) {
-	return uriNodeTypeMap.get(nodeUri.toString());
+	if (nodeUri == null) {
+	    return null;
+	} else {
+	    return uriNodeTypeMap.get(nodeUri.toString());
+	}
     }
 }

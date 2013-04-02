@@ -21,7 +21,7 @@ package nl.mpi.metadatabrowser.model;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class MockNodeType implements NodeType {
-    
+
     private String name;
 
     @Override
@@ -31,5 +31,10 @@ public class MockNodeType implements NodeType {
 
     public void setName(String name) {
 	this.name = name;
+    }
+
+    @Override
+    public String toString() {
+	return getName();
     }
 }

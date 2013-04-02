@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context/spring-context-2.5.xsd"
-
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-          http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/context/spring-context-2.5.xsd/spring-spring-context-2.5.xsd-3.2.2.RELEASE.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+">
 
     <!-- Spring configuration for running application in test mode using mock services -->
     
+    <!-- Tree provider -->
+    
     <bean id="archiveRootNode" class="nl.mpi.archiving.tree.MockCorpusNode">
 	<property name="name" value="RootNode"/>
+	<property name="uri" value="mock:/"/>
 	<property name="children">
 	    <list>
 		<bean class="nl.mpi.archiving.tree.MockCorpusNode">
 		    <property name="parent" ref="archiveRootNode" />
 		    <property name="name" value="Child1"/>
 		    <property name="nodeId" value="101"/>
+		    <property name="uri" value="mock:/101"/>
 		</bean>
 		    
 		<bean class="nl.mpi.archiving.tree.MockCorpusNode">
 		    <property name="parent" ref="archiveRootNode" />
 		    <property name="name" value="Child2"/>
 		    <property name="nodeId" value="102"/>
+		    <property name="uri" value="mock:/102"/>
 		</bean>
 	    </list>
 	</property>
@@ -31,31 +38,47 @@
 	<constructor-arg ref="archiveRootNode" />
     </bean>
     
+    <!-- Node type identification -->
+    
+    <bean id="rootNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+	<property name="name" value="Root" />
+    </bean>
+    
+    <bean id="childNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+	<property name="name" value="Child" />
+    </bean>
+    
     <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.MockNodeTypeIdentifier">
 	<constructor-arg>
 	    <map>
-		<entry key="http://test">
-		    <bean class="nl.mpi.metadatabrowser.model.MockNodeType">
-			<property name="name" value="TestNode" />
-		    </bean>
-		</entry>
+		<entry key="mock:/" value-ref="rootNodeType" />
+		<entry key="mock:/101" value-ref="childNodeType" />
+		<entry key="mock:/102" value-ref="childNodeType" />
 	    </map>
 	</constructor-arg>
     </bean>
     
+    <!-- Node actions -->
+    
+    <util:list id="childActions">
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Child action 1" />
+	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Child action 2" />
+	</bean>
+    </util:list>
+    
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.MockNodeActionsProvider">
 	<constructor-arg>
 	    <map>
-		<entry key="http://test">
-		    <list>
-			<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
-			    <property name="name" value="TestAction" />
-			</bean>
-		    </list>
-		</entry>
+		<entry key="mock:/101" value-ref="childActions" />
+		<entry key="mock:/102" value-ref="childActions" />
 	    </map>
 	</constructor-arg>
     </bean>
+    
+    <!-- Node presentation -->
     
     <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.MockNodePresentationProvider" />
     
