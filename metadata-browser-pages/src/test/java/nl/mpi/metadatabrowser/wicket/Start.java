@@ -22,33 +22,6 @@ public class Start {
 	connector.setPort(8080);
 	server.addConnector(connector);
 
-	// check if a keystore for a SSL certificate is available, and
-	// if so, start a SSL connector on port 8443. By default, the
-	// quickstart comes with a Apache Wicket Quickstart Certificate
-	// that expires about half way september 2021. Do not use this
-	// certificate anywhere important as the passwords are available
-	// in the source.
-
-	Resource keystore = Resource.newClassPathResource("/keystore");
-	if (keystore != null && keystore.exists()) {
-	    connector.setConfidentialPort(8443);
-
-	    SslContextFactory factory = new SslContextFactory();
-	    factory.setKeyStoreResource(keystore);
-	    factory.setKeyStorePassword("wicket");
-	    factory.setTrustStore(keystore);
-	    factory.setKeyManagerPassword("wicket");
-	    SslSocketConnector sslConnector = new SslSocketConnector(factory);
-	    sslConnector.setMaxIdleTime(timeout);
-	    sslConnector.setPort(8443);
-	    sslConnector.setAcceptors(4);
-	    server.addConnector(sslConnector);
-
-	    System.out.println("SSL access to the quickstart has been enabled on port 8443");
-	    System.out.println("You can access the application using SSL on https://localhost:8443");
-	    System.out.println();
-	}
-
 	WebAppContext bb = new WebAppContext();
 	bb.setServer(server);
 	bb.setContextPath("/");
