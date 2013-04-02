@@ -24,6 +24,7 @@ public class MetadataBrowserApplication extends WebApplication {
     @Override
     public void init() {
 	super.init();
+	// This is required for the SpringBean annotations to work
 	getComponentInstantiationListeners().add(new SpringComponentInjector(this));
     }
 }
