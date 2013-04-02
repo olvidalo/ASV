@@ -21,4 +21,6 @@ package nl.mpi.metadatabrowser.model;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public interface NodeType {
+
+    String getName();
 }
