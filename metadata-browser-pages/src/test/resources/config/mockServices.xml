@@ -14,21 +14,33 @@
     
     <bean id="archiveRootNode" class="nl.mpi.archiving.tree.MockCorpusNode">
 	<property name="name" value="RootNode"/>
+	<property name="nodeId" value="0"/>
 	<property name="uri" value="mock:/"/>
 	<property name="children">
 	    <list>
 		<bean class="nl.mpi.archiving.tree.MockCorpusNode">
 		    <property name="parent" ref="archiveRootNode" />
 		    <property name="name" value="Child1"/>
-		    <property name="nodeId" value="101"/>
-		    <property name="uri" value="mock:/101"/>
+		    <property name="nodeId" value="1"/>
+		    <property name="uri" value="mock:/1"/>
 		</bean>
 		    
+		<ref bean="collectionNode" />
+	    </list>
+	</property>
+    </bean>  
+    
+    <bean id="collectionNode" class="nl.mpi.archiving.tree.MockCorpusNode">
+	<property name="name" value="CollectionNode"/>
+	<property name="nodeId" value="2"/>
+	<property name="uri" value="mock:/2"/>
+	<property name="children">
+	    <list>
 		<bean class="nl.mpi.archiving.tree.MockCorpusNode">
-		    <property name="parent" ref="archiveRootNode" />
+		    <property name="parent" ref="collectionNode" />
 		    <property name="name" value="Child2"/>
-		    <property name="nodeId" value="102"/>
-		    <property name="uri" value="mock:/102"/>
+		    <property name="nodeId" value="21"/>
+		    <property name="uri" value="mock:/2/1"/>
 		</bean>
 	    </list>
 	</property>
@@ -44,6 +56,10 @@
 	<property name="name" value="Root" />
     </bean>
     
+    <bean id="collectionNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+	<property name="name" value="Collection" />
+    </bean>
+    
     <bean id="childNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
 	<property name="name" value="Child" />
     </bean>
@@ -52,13 +68,23 @@
 	<constructor-arg>
 	    <map>
 		<entry key="mock:/" value-ref="rootNodeType" />
-		<entry key="mock:/101" value-ref="childNodeType" />
-		<entry key="mock:/102" value-ref="childNodeType" />
+		<entry key="mock:/1" value-ref="childNodeType" />
+		<entry key="mock:/2" value-ref="collectionNodeType" />
+		<entry key="mock:/2/1" value-ref="childNodeType" />
 	    </map>
 	</constructor-arg>
     </bean>
     
     <!-- Node actions -->
+    
+    <util:list id="collectionActions">
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Collection action 1" />
+	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Collection action 2" />
+	</bean>
+    </util:list>
     
     <util:list id="childActions">
 	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
@@ -72,8 +98,9 @@
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.MockNodeActionsProvider">
 	<constructor-arg>
 	    <map>
-		<entry key="mock:/101" value-ref="childActions" />
-		<entry key="mock:/102" value-ref="childActions" />
+		<entry key="mock:/1" value-ref="childActions" />
+		<entry key="mock:/2" value-ref="collectionActions" />
+		<entry key="mock:/2/1" value-ref="childActions" />
 	    </map>
 	</constructor-arg>
     </bean>
