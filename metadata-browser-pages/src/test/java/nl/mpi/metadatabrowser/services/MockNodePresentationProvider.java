@@ -29,6 +29,6 @@ public class MockNodePresentationProvider implements NodePresentationProvider {
 
     @Override
     public Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType) {
-	return new Label(wicketId, getClass().getName());
+	return new Label(wicketId, String.format("[%s] %s", nodeType.getName(), nodeUri.toString()));
     }
 }

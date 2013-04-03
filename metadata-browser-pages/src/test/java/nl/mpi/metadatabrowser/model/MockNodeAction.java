@@ -16,11 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockNodeAction implements NodeAction {
+public class MockNodeAction implements NodeAction, Serializable {
 
     private String name;
 
