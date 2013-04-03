@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+">
+
+    <!-- Spring configuration for running application in test mode using mock services -->
+    
+    <!-- Node type identification -->
+    
+    <bean id="rootNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+	<property name="name" value="Root" />
+    </bean>
+    
+    <bean id="collectionNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+	<property name="name" value="Collection" />
+    </bean>
+    
+    <bean id="childNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+	<property name="name" value="Child" />
+    </bean>
+    
+    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.MockNodeTypeIdentifier">
+	<constructor-arg>
+	    <map>
+		<entry key="mock:/" value-ref="rootNodeType" />
+		<entry key="mock:/1" value-ref="childNodeType" />
+		<entry key="mock:/2" value-ref="collectionNodeType" />
+		<entry key="mock:/2/1" value-ref="childNodeType" />
+	    </map>
+	</constructor-arg>
+    </bean>
+    
+</beans>

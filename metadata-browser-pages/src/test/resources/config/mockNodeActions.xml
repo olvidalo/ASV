@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+">
+
+    <!-- Spring configuration for running application in test mode using mock services -->
+    
+    <!-- Node actions -->
+    
+    <util:list id="collectionActions">
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Collection action 1" />
+	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Collection action 2" />
+	</bean>
+    </util:list>
+    
+    <util:list id="childActions">
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Child action 1" />
+	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Child action 2" />
+	</bean>
+    </util:list>
+    
+    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.MockNodeActionsProvider">
+	<constructor-arg>
+	    <map>
+		<entry key="mock:/1" value-ref="childActions" />
+		<entry key="mock:/2" value-ref="collectionActions" />
+		<entry key="mock:/2/1" value-ref="childActions" />
+	    </map>
+	</constructor-arg>
+    </bean>
+    
+</beans>
