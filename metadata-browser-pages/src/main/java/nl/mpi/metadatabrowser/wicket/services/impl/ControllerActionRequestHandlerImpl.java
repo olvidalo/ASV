@@ -35,6 +35,12 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
     private final static Logger logger = LoggerFactory.getLogger(ControllerActionRequestHandlerImpl.class);
     private String rrsUrl;
 
+    /**
+     * Handles an action request on the provided request cycle
+     *
+     * @param requestCycle current request cycle to act on
+     * @param actionRequest action request to handle
+     */
     @Override
     public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest) {
 	if (actionRequest instanceof NavigationRequest) {

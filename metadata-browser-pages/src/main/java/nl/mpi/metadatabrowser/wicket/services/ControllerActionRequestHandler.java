@@ -26,5 +26,11 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public interface ControllerActionRequestHandler {
 
+    /**
+     * Handles an action request on the provided request cycle
+     *
+     * @param requestCycle current request cycle to act on
+     * @param actionRequest action request to handle
+     */
     void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest);
 }
