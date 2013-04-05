@@ -22,11 +22,17 @@ import java.util.Map;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface NavigationControllerActionRequest extends ControllerActionRequest {
+public interface NavigationRequest extends ControllerActionRequest {
 
     enum NavigationTarget {
 
-	RSS,
+	/**
+	 * Resource Request System
+	 */
+	RRS,
+	/**
+	 * A specific node
+	 */
 	NODE
     }
 
