@@ -1,0 +1,18 @@
+.feedbackPanelERROR{
+    background: lightcoral;
+}
+
+.feedbackPanelINFO{
+    background: lightblue;
+}
+
+ul.feedbackPanel{
+    border: 1px solid #ccc;
+    padding: 0px;
+}
+
+ul.feedbackPanel li{
+    list-style: none;
+    font-weight: bold;
+    padding: 2px;
+}

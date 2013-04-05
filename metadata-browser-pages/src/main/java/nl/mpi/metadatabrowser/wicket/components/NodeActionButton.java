@@ -51,7 +51,7 @@ class NodeActionButton extends Button {
 		info(feedbackMessage);
 	    }
 	} catch (NodeActionException ex) {
-	    logger.warn("Error in action execution on node {}", nodeUri, ex);
+	    logger.warn("Error in execution of action {} on node {}", action.getName(), nodeUri, ex);
 	    error(ex.getMessage());
 	}
     }

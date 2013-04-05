@@ -23,6 +23,7 @@ import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 
@@ -36,6 +37,9 @@ public final class NodeActionsPanel extends GenericPanel<NodeActionsStructure> {
 	super(id, model);
 
 	final Form form = new Form("nodeActionsForm");
+
+	form.add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
+
 	form.add(new ListView<NodeAction>("nodeActions", new NodeActionsListModel(getModel())) {
 	    @Override
 	    protected void populateItem(ListItem<NodeAction> item) {

@@ -15,18 +15,22 @@
     <util:list id="collectionActions">
 	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
 	    <property name="name" value="Collection action 1" />
+	    <property name="feedbackMessage" value="Collection action 1 feedback" />
 	</bean>
 	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
 	    <property name="name" value="Collection action 2" />
+	    <property name="exceptionMessage" value="Collection action 2 exception" />
 	</bean>
     </util:list>
     
     <util:list id="childActions">
 	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
 	    <property name="name" value="Child action 1" />
+	    <property name="feedbackMessage" value="Child action 1 feedback" />
 	</bean>
 	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
 	    <property name="name" value="Child action 2" />
+	    <property name="exceptionMessage" value="Child action 2 exception" />
 	</bean>
     </util:list>
     
