@@ -23,7 +23,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface DownloadRequest {
+public interface DownloadRequest extends ControllerActionRequest {
 
     IResourceStream getDownloadStream();
 
