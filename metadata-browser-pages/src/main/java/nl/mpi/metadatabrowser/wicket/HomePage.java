@@ -17,7 +17,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -32,37 +31,47 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private NodeActionsProvider nodeActionsProvider;
     @SpringBean
     private NodePresentationProvider nodePresentationProvider;
+    // Child components
+    private final NodeActionsPanel nodeActionsPanel;
+    private final MarkupContainer nodePresentationContainer;
 
     public HomePage(final PageParameters parameters) {
 	super();
 
-	final NodeActionsPanel nodeActionsPanel = new NodeActionsPanel("nodeActions", new Model<NodeActionsStructure>(new NodeActionsStructure()));
+	final MetadataBrowserTreePanel treePanel = new MetadataBrowserTreePanel("treePanel", treeModelProvider);
+	add(treePanel);
+
+	nodeActionsPanel = new NodeActionsPanel("nodeActions");
 	nodeActionsPanel.setOutputMarkupId(true);
 	add(nodeActionsPanel);
 
-	final MarkupContainer nodePresentationContainer = new WebMarkupContainer("nodePresentationContainer");
+	nodePresentationContainer = new WebMarkupContainer("nodePresentationContainer");
 	nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
 	nodePresentationContainer.setOutputMarkupId(true);
 	add(nodePresentationContainer);
-
-	final ArchiveTreePanel<SerializableCorpusNode> treePanel = new ArchiveTreePanel<SerializableCorpusNode>("treePanel", treeModelProvider) {
-	    //TODO: Loop over selected nodes
-	    @Override
-	    protected void onNodeLinkClicked(AjaxRequestTarget target, SerializableCorpusNode node) {
-		// Get the node type from the node type identifier
-		final NodeType nodeType = nodeTypeIdentifier.getNodeType(node.getUri());
-
-		// Get the node actions and update the model of the node actions panel
-		final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(node.getUri(), nodeType);
-		nodeActionsPanel.setModelObject(new NodeActionsStructure(node.getUri(), selectedNodeActions));
-		target.add(nodeActionsPanel);
-
-		// Add the node presentation component to the presentation container
-		final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", node.getUri(), nodeType);
-		nodePresentationContainer.addOrReplace(nodePresentation);
-		target.add(nodePresentationContainer);
-	    }
-	};
-	add(treePanel);
     }
+
+    private class MetadataBrowserTreePanel extends ArchiveTreePanel<SerializableCorpusNode> {
+
+	public MetadataBrowserTreePanel(String id, GenericTreeModelProvider provider) {
+	    super(id, provider);
+	}
+
+	//TODO: Loop over selected nodes
+	@Override
+	protected void onNodeLinkClicked(AjaxRequestTarget target, SerializableCorpusNode node) {
+	    // Get the node type from the node type identifier
+	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(node.getUri());
+
+	    // Get the node actions and update the model of the node actions panel
+	    final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(node.getUri(), nodeType);
+	    nodeActionsPanel.setModelObject(new NodeActionsStructure(node.getUri(), selectedNodeActions));
+	    target.add(nodeActionsPanel);
+
+	    // Add the node presentation component to the presentation container
+	    final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", node.getUri(), nodeType);
+	    nodePresentationContainer.addOrReplace(nodePresentation);
+	    target.add(nodePresentationContainer);
+	}
+    };
 }

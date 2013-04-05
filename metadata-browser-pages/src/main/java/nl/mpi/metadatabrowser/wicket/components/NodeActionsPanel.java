@@ -25,7 +25,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  *
@@ -33,8 +33,12 @@ import org.apache.wicket.model.IModel;
  */
 public final class NodeActionsPanel extends GenericPanel<NodeActionsStructure> {
 
-    public NodeActionsPanel(final String id, final IModel<NodeActionsStructure> model) {
-	super(id, model);
+    public NodeActionsPanel(String id) {
+	this(id, new NodeActionsStructure());
+    }
+
+    public NodeActionsPanel(String id, NodeActionsStructure model) {
+	super(id, new Model<NodeActionsStructure>(model));
 
 	final Form form = new Form("nodeActionsForm");
 
