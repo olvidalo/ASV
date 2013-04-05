@@ -16,28 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import java.util.Map;
+import org.apache.wicket.util.resource.IResourceStream;
 
 /**
- * Interface for a request to navigate to a certain (parameterised) location
+ * Interface for a request to offer a download coming from an input stream
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface NavigationRequest extends ControllerActionRequest {
+public interface DownloadRequest {
 
-    enum NavigationTarget {
+    IResourceStream getDownloadStream();
 
-	/**
-	 * Resource Request System
-	 */
-	RRS,
-	/**
-	 * A specific node
-	 */
-	NODE
-    }
-
-    NavigationTarget getTarget();
-
-    Map<String, String> getParameters();
+    String getFileName();
 }
