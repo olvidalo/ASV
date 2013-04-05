@@ -32,6 +32,14 @@
 	    <property name="name" value="Child action 2" />
 	    <property name="exceptionMessage" value="Child action 2 exception" />
 	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Request Resource Access" />
+	    <property name="resultActionRequest">
+		<bean class="nl.mpi.metadatabrowser.model.MockNavigationRequest">
+		    <property name="target" value="RRS" />
+		</bean>
+	    </property>
+	</bean>
     </util:list>
     
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.MockNodeActionsProvider">
