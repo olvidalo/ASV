@@ -17,6 +17,9 @@
 package nl.mpi.metadatabrowser.model;
 
 import java.io.Serializable;
+import java.net.URI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,6 +27,7 @@ import java.io.Serializable;
  */
 public class MockNodeAction implements NodeAction, Serializable {
 
+    private final static Logger logger = LoggerFactory.getLogger(MockNodeAction.class);
     private String name;
 
     @Override
@@ -33,6 +37,11 @@ public class MockNodeAction implements NodeAction, Serializable {
 
     public void setName(String name) {
 	this.name = name;
+    }
+
+    @Override
+    public void execute(URI nodeUri) {
+	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
     }
 
     @Override

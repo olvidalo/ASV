@@ -6,20 +6,10 @@
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="Stylesheet" />
     </head>
     <body>
-	<div wicket:id="treePanel">[TREE PANEL]</div>
-	<div>
-	    <h2>Node Type</h2>
-	    <span wicket:id="nodeTypeLabel">[node type]</span>
+	<div id="treePanel" wicket:id="treePanel">[TREE PANEL]</div>
+	<div id="actionsPanel" wicket:id="nodeActions">
 	</div>
-	<div wicket:id="nodeActionsListContainer">
-	    <h2>Node Actions</h2>
-	    <ul>
-		<li wicket:id="nodeActionsList">
-		    <button wicket:id="nodeAction">Node action</button>
-		</li>
-	    </ul>
-	</div>
-	<div wicket:id="nodePresentationContainer">
+	<div id="nodePresentation" wicket:id="nodePresentationContainer">
 	    <div wicket:id="nodePresentation">[NODE PRESENTATION]</div>
 	</div>
     </body>
