@@ -17,11 +17,14 @@
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
+import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.wicket.HomePage;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +48,8 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
     public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest) {
 	if (actionRequest instanceof NavigationRequest) {
 	    handleNavigationRequest(requestCycle, (NavigationRequest) actionRequest);
+	} else if (actionRequest instanceof DownloadRequest) {
+	    handleDownloadRequest(requestCycle, (DownloadRequest) actionRequest);
 	}
     }
 
@@ -65,6 +70,12 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
 		// Other, cannot handle
 		logger.warn("Don't know how to handle navigation request target {}", request.getTarget());
 	}
+    }
+
+    private void handleDownloadRequest(RequestCycle requestCycle, DownloadRequest downloadRequest) {
+	final IResourceStream stream = downloadRequest.getDownloadStream();
+	final String fileName = downloadRequest.getFileName();
+	requestCycle.scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(stream, fileName));
     }
 
     /**
