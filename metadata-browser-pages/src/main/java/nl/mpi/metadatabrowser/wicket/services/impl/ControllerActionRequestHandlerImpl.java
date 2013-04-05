@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
-import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.actionrequest.ControllerActionRequest;
+import nl.mpi.metadatabrowser.model.actionrequest.NavigationRequest;
 import nl.mpi.metadatabrowser.wicket.HomePage;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;

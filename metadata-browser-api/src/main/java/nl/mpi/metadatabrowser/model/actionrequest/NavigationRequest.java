@@ -14,11 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model;
+package nl.mpi.metadatabrowser.model.actionrequest;
+
+import java.util.Map;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface ControllerActionRequest {
+public interface NavigationRequest extends ControllerActionRequest {
+
+    enum NavigationTarget {
+
+	/**
+	 * Resource Request System
+	 */
+	RRS,
+	/**
+	 * A specific node
+	 */
+	NODE
+    }
+
+    NavigationTarget getTarget();
+
+    Map<String, String> getParameters();
 }
