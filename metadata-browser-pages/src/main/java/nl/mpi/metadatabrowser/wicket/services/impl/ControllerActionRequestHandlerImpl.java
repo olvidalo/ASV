@@ -75,6 +75,7 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
     private void handleDownloadRequest(RequestCycle requestCycle, DownloadRequest downloadRequest) {
 	final IResourceStream stream = downloadRequest.getDownloadStream();
 	final String fileName = downloadRequest.getFileName();
+	logger.debug("Recieved request to offer download from stream as {} with content type {}", fileName, stream.getContentType());
 	requestCycle.scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(stream, fileName));
     }
 

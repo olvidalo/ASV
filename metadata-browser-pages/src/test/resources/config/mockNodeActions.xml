@@ -21,6 +21,15 @@
 	    <property name="name" value="Collection action 2" />
 	    <property name="exceptionMessage" value="Collection action 2 exception" />
 	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	    <property name="name" value="Download" />
+	    <property name="resultActionRequest">
+		<bean class="nl.mpi.metadatabrowser.model.MockDownloadRequest">
+		    <property name="fileName" value="download.txt" />
+		    <property name="streamContent" value="This is a download test" />
+		</bean>
+	    </property>
+	</bean>
     </util:list>
     
     <util:list id="childActions">
