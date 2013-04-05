@@ -17,24 +17,8 @@
 package nl.mpi.metadatabrowser.model;
 
 /**
- * Interface for results returned after execution of node actions
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
- * @see NodeAction#execute(java.net.URI)
  */
-public interface NodeActionResult {
-
-    /**
-     * Provides a feedback message
-     *
-     * @return feedback message or null if not applicable
-     */
-    String getFeedbackMessage();
-
-    /**
-     * Provides an action request for the controller
-     *
-     * @return controller action request or null if not applicable
-     */
-    ControllerActionRequest getControllerActionRequest();
+public interface ControllerActionRequest {
 }

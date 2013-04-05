@@ -31,6 +31,7 @@ public class MockNodeAction implements NodeAction, Serializable {
     private String name;
     private String feedbackMessage;
     private String exceptionMessage;
+    private ControllerActionRequest resultActionRequest;
 
     @Override
     public String getName() {
@@ -49,6 +50,10 @@ public class MockNodeAction implements NodeAction, Serializable {
 	this.exceptionMessage = exceptionMessage;
     }
 
+    public void setResultActionRequest(ControllerActionRequest resultActionRequest) {
+	this.resultActionRequest = resultActionRequest;
+    }
+
     @Override
     public NodeActionResult execute(URI nodeUri) throws NodeActionException {
 	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
@@ -63,6 +68,11 @@ public class MockNodeAction implements NodeAction, Serializable {
 			logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
 			return feedbackMessage;
 		    }
+		}
+
+		@Override
+		public ControllerActionRequest getControllerActionRequest() {
+		    return resultActionRequest;
 		}
 	    };
 	} else {

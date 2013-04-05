@@ -16,25 +16,21 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.util.Map;
+
 /**
- * Interface for results returned after execution of node actions
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
- * @see NodeAction#execute(java.net.URI)
  */
-public interface NodeActionResult {
+public interface NavigationControllerActionRequest extends ControllerActionRequest {
 
-    /**
-     * Provides a feedback message
-     *
-     * @return feedback message or null if not applicable
-     */
-    String getFeedbackMessage();
+    enum NavigationTarget {
 
-    /**
-     * Provides an action request for the controller
-     *
-     * @return controller action request or null if not applicable
-     */
-    ControllerActionRequest getControllerActionRequest();
+	RSS,
+	NODE
+    }
+
+    NavigationTarget getTarget();
+
+    Map<String, String> getParameters();
 }
