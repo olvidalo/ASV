@@ -16,16 +16,15 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import java.net.URI;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsListModel;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 /**
  *
@@ -41,12 +40,8 @@ public final class NodeActionsPanel extends GenericPanel<NodeActionsStructure> {
 	    @Override
 	    protected void populateItem(ListItem<NodeAction> item) {
 		final NodeAction action = item.getModelObject();
-		item.add(new Button("nodeActionButton", new Model<String>(action.getName())) {
-		    @Override
-		    public void onSubmit() {
-			action.execute(NodeActionsPanel.this.getModelObject().getNodeUri());
-		    }
-		});
+		final URI nodeUri = NodeActionsPanel.this.getModelObject().getNodeUri();
+		item.add(new NodeActionButton("nodeActionButton", nodeUri, action));
 	    }
 	});
 	add(form);

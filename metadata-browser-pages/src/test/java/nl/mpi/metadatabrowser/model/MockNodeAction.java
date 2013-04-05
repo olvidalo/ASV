@@ -29,6 +29,8 @@ public class MockNodeAction implements NodeAction, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(MockNodeAction.class);
     private String name;
+    private String feedbackMessage;
+    private String exceptionMessage;
 
     @Override
     public String getName() {
@@ -39,9 +41,34 @@ public class MockNodeAction implements NodeAction, Serializable {
 	this.name = name;
     }
 
+    public void setFeedbackMessage(String feedbackMessage) {
+	this.feedbackMessage = feedbackMessage;
+    }
+
+    public void setExceptionMessage(String exceptionMessage) {
+	this.exceptionMessage = exceptionMessage;
+    }
+
     @Override
-    public void execute(URI nodeUri) {
+    public NodeActionResult execute(URI nodeUri) throws NodeActionException {
 	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+
+	if (exceptionMessage == null) {
+	    return new NodeActionResult() {
+		@Override
+		public String getFeedbackMessage() {
+		    if (feedbackMessage == null) {
+			return null;
+		    } else {
+			logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
+			return feedbackMessage;
+		    }
+		}
+	    };
+	} else {
+	    logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
+	    throw new NodeActionException(this, exceptionMessage);
+	}
     }
 
     @Override
