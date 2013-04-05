@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.net.URI;
+
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
@@ -23,4 +25,6 @@ package nl.mpi.metadatabrowser.model;
 public interface NodeAction {
 
     String getName();
+
+    void execute(URI nodeUri);
 }
