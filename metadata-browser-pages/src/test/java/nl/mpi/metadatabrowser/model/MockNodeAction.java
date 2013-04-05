@@ -18,7 +18,6 @@ package nl.mpi.metadatabrowser.model;
 
 import java.io.Serializable;
 import java.net.URI;
-import nl.mpi.metadatabrowser.model.actionrequest.ControllerActionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

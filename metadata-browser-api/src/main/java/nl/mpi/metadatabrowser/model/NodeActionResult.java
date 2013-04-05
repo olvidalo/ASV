@@ -16,8 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import nl.mpi.metadatabrowser.model.actionrequest.ControllerActionRequest;
-
 /**
  * Interface for results returned after execution of node actions
  *

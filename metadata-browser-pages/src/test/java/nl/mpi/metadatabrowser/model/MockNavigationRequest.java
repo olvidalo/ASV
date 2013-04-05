@@ -18,7 +18,6 @@ package nl.mpi.metadatabrowser.model;
 
 import java.io.Serializable;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.actionrequest.NavigationRequest;
 
 /**
  *
