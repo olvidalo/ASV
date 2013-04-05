@@ -17,29 +17,37 @@
 package nl.mpi.metadatabrowser.model;
 
 import java.net.URI;
-import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 
 /**
- * Interface for node actions
+ * Exception thrown if an error occurs during execution of a node action
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
- * @see NodeActionsProvider
+ * @see NodeAction#execute(java.net.URI)
  */
-public interface NodeAction {
+public class NodeActionException extends Exception {
+
+    private final NodeAction action;
+
+    public NodeActionException(NodeAction action, String message) {
+	super(message);
+	this.action = action;
+    }
+
+    public NodeActionException(NodeAction action, Throwable cause) {
+	super(cause);
+	this.action = action;
+    }
+
+    public NodeActionException(NodeAction action, String message, Throwable cause) {
+	super(message, cause);
+	this.action = action;
+    }
 
     /**
-     * Provides the name of this action for use on buttons etc.
      *
-     * @return the name of this node action
+     * @return the node action that was carried out when this exception occurred
      */
-    String getName();
-
-    /**
-     * Executes the action on the node specified by the URI
-     *
-     * @param nodeUri URI of node to execute this action on
-     * @return the result of the action
-     * @throws NodeActionException if any error occurs during node exception
-     */
-    NodeActionResult execute(URI nodeUri) throws NodeActionException;
+    public NodeAction getAction() {
+	return action;
+    }
 }

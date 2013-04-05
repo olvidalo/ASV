@@ -16,30 +16,18 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import java.net.URI;
-import nl.mpi.metadatabrowser.services.NodeActionsProvider;
-
 /**
- * Interface for node actions
+ * Interface for results returned after execution of node actions
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
- * @see NodeActionsProvider
+ * @see NodeAction#execute(java.net.URI)
  */
-public interface NodeAction {
+public interface NodeActionResult {
 
     /**
-     * Provides the name of this action for use on buttons etc.
+     * Provides a feedback message
      *
-     * @return the name of this node action
+     * @return feedback message or null if not applicable
      */
-    String getName();
-
-    /**
-     * Executes the action on the node specified by the URI
-     *
-     * @param nodeUri URI of node to execute this action on
-     * @return the result of the action
-     * @throws NodeActionException if any error occurs during node exception
-     */
-    NodeActionResult execute(URI nodeUri) throws NodeActionException;
+    String getFeedbackMessage();
 }
