@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.wicket.model;
 
 import java.util.List;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -25,7 +26,7 @@ import org.apache.wicket.model.IModel;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class NodeActionsListModel implements IModel<List<NodeAction>> {
+public class NodeActionsListModel extends AbstractReadOnlyModel<List<NodeAction>> {
 
     private final IModel<NodeActionsStructure> model;
 
@@ -44,15 +45,5 @@ public class NodeActionsListModel implements IModel<List<NodeAction>> {
 	} else {
 	    return model.getObject().getNodeActions();
 	}
-    }
-
-    @Override
-    public void setObject(List<NodeAction> object) {
-	throw new UnsupportedOperationException("NodeActionsListModel is read only");
-    }
-
-    @Override
-    public void detach() {
-	// Not detachable
     }
 }
