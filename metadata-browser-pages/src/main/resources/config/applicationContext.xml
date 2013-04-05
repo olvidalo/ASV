@@ -11,4 +11,9 @@
 
     <!-- Wicket application class -->	
     <bean id="wicketApplication" class="nl.mpi.metadatabrowser.wicket.MetadataBrowserApplication" />
+    <!-- Services -->
+    <bean id="actionRequestHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ControllerActionRequestHandlerImpl">
+	<!-- TODO: Make RRS URL configurable through context parameters -->
+	<property name="rrsUrl" value="http://corpus1.mpi.nl/ds/RRS_V1/RrsIndex" />
+    </bean>
 </beans>
