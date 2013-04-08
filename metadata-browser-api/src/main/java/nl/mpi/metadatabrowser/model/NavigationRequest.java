@@ -25,7 +25,10 @@ import java.util.Map;
  */
 public interface NavigationRequest extends ControllerActionRequest {
 
-    enum NavigationTarget {
+    /**
+     * Target of a {@link NavigationRequest}
+     */
+    public enum NavigationTarget {
 
 	/**
 	 * Resource Request System
@@ -37,7 +40,15 @@ public interface NavigationRequest extends ControllerActionRequest {
 	NODE
     }
 
+    /**
+     *
+     * @return the navigation target
+     */
     NavigationTarget getTarget();
 
+    /**
+     *
+     * @return named parameters (name, value) that should be applied to the navigation action
+     */
     Map<String, String> getParameters();
 }

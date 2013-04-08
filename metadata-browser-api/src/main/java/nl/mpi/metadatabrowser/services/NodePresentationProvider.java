@@ -21,10 +21,19 @@ import nl.mpi.metadatabrowser.model.NodeType;
 import org.apache.wicket.Component;
 
 /**
+ * Interface for a class that can provide a Wicket Component rendering a presentation of a given node
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public interface NodePresentationProvider {
 
+    /**
+     * Gets a renderable (through Wicket) component offering a presentation of the specified node
+     *
+     * @param wicketId string that the returned component should have as its id (see {@link Component#getId() }
+     * @param nodeUri URI of the node to render a presentation for
+     * @param nodeType the type of the node identified by nodeUri
+     * @return a Wicket Component representing
+     */
     Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType);
 }

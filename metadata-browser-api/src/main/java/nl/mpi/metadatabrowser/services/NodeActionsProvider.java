@@ -22,10 +22,18 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
 
 /**
+ * Interface for a provider that can map nodes (identified by an URI) to lists of {@link NodeAction}s
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public interface NodeActionsProvider {
 
+    /**
+     * Gets a list of available actions for the specified node
+     *
+     * @param nodeUri URI of the node to provide actions for
+     * @param nodeType node type of the node identified by nodeUri
+     * @return a list of actions available for this node
+     */
     List<NodeAction> getNodeActions(URI nodeUri, NodeType nodeType);
 }

@@ -25,7 +25,15 @@ import org.apache.wicket.util.resource.IResourceStream;
  */
 public interface DownloadRequest extends ControllerActionRequest {
 
+    /**
+     *
+     * @return the stream that should be forwarded to the user (via the browser)
+     */
     IResourceStream getDownloadStream();
 
+    /**
+     *
+     * @return the file name that should be offered to the user
+     */
     String getFileName();
 }

@@ -17,8 +17,12 @@
 package nl.mpi.metadatabrowser.model;
 
 /**
+ * 'Abstract' interface functioning as return type for {@link NodeActionResult#getControllerActionRequest() }. For actual controller action
+ * requests, please implement one of the extending interfaces.
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
+ * @see NavigationRequest
+ * @see DownloadRequest
  */
 public interface ControllerActionRequest {
 }

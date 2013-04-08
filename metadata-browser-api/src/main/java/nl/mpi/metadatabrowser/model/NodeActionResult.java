@@ -32,9 +32,12 @@ public interface NodeActionResult {
     String getFeedbackMessage();
 
     /**
-     * Provides an action request for the controller
+     * Provides an action request for the controller. For this to be usable, implementations of this interface should return an
+     * implementation of one of the extensions of the ControllerActionRequest interface.
      *
      * @return controller action request or null if not applicable
+     * @see NavigationRequest
+     * @see DownloadRequest
      */
     ControllerActionRequest getControllerActionRequest();
 }

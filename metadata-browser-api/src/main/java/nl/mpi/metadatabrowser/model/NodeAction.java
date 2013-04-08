@@ -20,7 +20,13 @@ import java.net.URI;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 
 /**
- * Interface for node actions
+ * Interface for node actions.
+ *
+ * Implementers are responsible for executing their action on the specified node in the {@link #execute(java.net.URI) } method and return
+ * an appropriate result object. This result object may request further action from the controller by providing a controller action request
+ * through {@link NodeActionResult#getControllerActionRequest() }.
+ *
+ * Generally it should be assumed that NodeActions may be reused, so it is not advised to keep state in the action itself.
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  * @see NodeActionsProvider

@@ -17,10 +17,20 @@
 package nl.mpi.metadatabrowser.model;
 
 /**
+ * Interface for types of nodes. Mainly a 'flag' for the controller to retrieve from the service and pass on to other services, e.g.
+ * implementations of {@link nl.mpi.metadatabrowser.services.NodeActionsProvider} and
+ * {@link nl.mpi.metadatabrowser.services.NodePresentationProvider}. The valued returned by {@link #getName() } may be used for logging and
+ * management purposes.
+ *
+ * It is advised to override the {@link #equals(java.lang.Object) } method.
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public interface NodeType {
 
+    /**
+     *
+     * @return name of the type of node
+     */
     String getName();
 }
