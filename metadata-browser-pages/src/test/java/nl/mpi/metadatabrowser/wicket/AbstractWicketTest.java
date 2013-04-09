@@ -22,8 +22,8 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 
 /**
- * Based on information by Petri Kainulainen found at
- * {@link http://www.petrikainulainen.net/programming/tips-and-tricks/mocking-spring-beans-with-apache-wicket-and-mockito/}
+ * Abstract base class for tests that require dependency injection of (mock) objects and services. Based on blog post by Petri Kainulainen
+ * found at {@link http://www.petrikainulainen.net/programming/tips-and-tricks/mocking-spring-beans-with-apache-wicket-and-mockito/}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
@@ -36,6 +36,7 @@ public abstract class AbstractWicketTest {
     public final void setUpAbstractWicketTest() {
 	applicationContextMock = new ApplicationContextMock();
 	tester = new WicketTester();
+	// register spring injector with mock application context
 	tester.getApplication().getComponentInstantiationListeners().add(new SpringComponentInjector(tester.getApplication(), applicationContextMock));
 	setUp();
     }

@@ -18,12 +18,16 @@ package nl.mpi.metadatabrowser.wicket.components;
 
 import java.net.URI;
 import java.util.Arrays;
+import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.wicket.AbstractWicketTest;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -41,11 +45,12 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 
     private WicketTester tester;
     private Mockery context = new JUnit4Mockery();
+    private ControllerActionRequestHandler actionRequestHandler;
 
     @Override
     public void setUp() {
 	this.tester = getTester();
-	final ControllerActionRequestHandler actionRequestHandler = context.mock(ControllerActionRequestHandler.class);
+	actionRequestHandler = context.mock(ControllerActionRequestHandler.class);
 	putBean("actionRequestHandler", actionRequestHandler);
     }
 
@@ -54,6 +59,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	final NodeActionsStructure modelObject = new NodeActionsStructure();
 	modelObject.setNodeUri(new URI("nodeUri"));
 
+	// Add two actions to the panel
 	final NodeAction action1 = context.mock(NodeAction.class, "action1");
 	final NodeAction action2 = context.mock(NodeAction.class, "action2");
 	context.checking(new Expectations() {
@@ -66,12 +72,63 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	});
 	modelObject.setNodeActions(Arrays.asList(action1, action2));
 
+	// Check the rendering
 	final NodeActionsPanel panel = new NodeActionsPanel("panelId", modelObject);
-	tester.startComponent(panel);
+	tester.startComponentInPage(panel);
+	Component actionsForm = panel.get("nodeActionsForm");
+	assertTrue(actionsForm instanceof Form);
 	Component listView = panel.get("nodeActionsForm:nodeActions");
 	assertTrue(listView instanceof ListView);
 	assertEquals(2, ((ListView) listView).size());
-	Component actionButton = ((ListView) listView).get("0:nodeActionButton");
+	Component actionButton = panel.get("nodeActionsForm:nodeActions:0:nodeActionButton");
 	assertTrue(actionButton instanceof NodeActionButton);
+    }
+
+    @Test
+    public void testSubmitAction() throws Exception {
+	// Prepare an action
+	final NodeActionsStructure modelObject = new NodeActionsStructure();
+	modelObject.setNodeUri(new URI("nodeUri"));
+
+	final NodeAction action = context.mock(NodeAction.class);
+	context.checking(new Expectations() {
+	    {
+		allowing(action).getName();
+		will(returnValue("action name"));
+	    }
+	});
+	modelObject.setNodeActions(Arrays.asList(action));
+
+	final NodeActionsPanel panel = new NodeActionsPanel("panelId", modelObject);
+	tester.startComponentInPage(panel);
+
+	// Prepare for submitting form through action button
+	final NodeActionResult actionResult = context.mock(NodeActionResult.class);
+	final ControllerActionRequest actionRequest = context.mock(ControllerActionRequest.class);
+	context.checking(new Expectations() {
+	    {
+		// Submission should execute the method
+		oneOf(action).execute(new URI("nodeUri"));
+		// which returns a result
+		will(returnValue(actionResult));
+
+		// Feedback message of result gets polled
+		oneOf(actionResult).getFeedbackMessage();
+		will(returnValue("feedback message"));
+
+		// Controller action requests gets polled...
+		oneOf(actionResult).getControllerActionRequest();
+		will(returnValue(actionRequest));
+
+		// ..and passed on to the action request handler
+		oneOf(actionRequestHandler).handleActionRequest(tester.getRequestCycle(), actionRequest);
+	    }
+	});
+	// Submit form...
+	final FormTester formTester = tester.newFormTester(panel.getPageRelativePath() + ":nodeActionsForm");
+	// ...using the action button
+	formTester.submit(formTester.getForm().get("nodeActions:0:nodeActionButton"));
+	// test whether feedback message matches
+	tester.assertInfoMessages("feedback message");
     }
 }
