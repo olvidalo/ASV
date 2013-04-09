@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Arrays;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.wicket.AbstractWicketTest;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
@@ -128,7 +129,42 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	final FormTester formTester = tester.newFormTester(panel.getPageRelativePath() + ":nodeActionsForm");
 	// ...using the action button
 	formTester.submit(formTester.getForm().get("nodeActions:0:nodeActionButton"));
-	// test whether feedback message matches
+	// Assert that feedback message matches
 	tester.assertInfoMessages("feedback message");
+    }
+
+    @Test
+    public void testCatchActionException() throws Exception {
+	// Prepare an action
+	final NodeActionsStructure modelObject = new NodeActionsStructure();
+	modelObject.setNodeUri(new URI("nodeUri"));
+
+	final NodeAction action = context.mock(NodeAction.class);
+	context.checking(new Expectations() {
+	    {
+		allowing(action).getName();
+		will(returnValue("action name"));
+	    }
+	});
+	modelObject.setNodeActions(Arrays.asList(action));
+
+	final NodeActionsPanel panel = new NodeActionsPanel("panelId", modelObject);
+	tester.startComponentInPage(panel);
+
+	// Prepare for submitting form through action button
+	context.checking(new Expectations() {
+	    {
+		// Submission should execute the method
+		oneOf(action).execute(new URI("nodeUri"));
+		// which throws an exception
+		will(throwException(new NodeActionException(action, "test exception message")));
+	    }
+	});
+	// Submit form...
+	final FormTester formTester = tester.newFormTester(panel.getPageRelativePath() + ":nodeActionsForm");
+	// ...using the action button
+	formTester.submit(formTester.getForm().get("nodeActions:0:nodeActionButton"));
+	// Assert that error message matches the message in the exception
+	tester.assertErrorMessages("test exception message");
     }
 }

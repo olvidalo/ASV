@@ -84,8 +84,11 @@ public class ControllerActionRequestHandlerImplTest {
 
 		oneOf(resourceStream).getInputStream();
 		will(returnValue(inputStream));
+		allowing(resourceStream).getContentType();
+		will(returnValue("test/content-type"));
 	    }
 	});
+	instance.handleActionRequest(requestCycle, actionRequest);
 	//TODO: Assert download
     }
 }
