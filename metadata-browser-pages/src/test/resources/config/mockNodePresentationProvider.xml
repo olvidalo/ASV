@@ -12,6 +12,6 @@
     
     <!-- Node presentation -->
     
-    <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.MockNodePresentationProvider" />
+    <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.mock.MockNodePresentationProvider" />
     
 </beans>

@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.archiving.tree;
+package nl.mpi.archiving.tree.mock;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.tree.GenericTreeNode;
 
 /**
  *

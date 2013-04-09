@@ -14,30 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services;
+package nl.mpi.metadatabrowser.model.mock;
 
-import java.net.URI;
-import java.util.Map;
-import nl.mpi.metadatabrowser.model.NodeType;
+import java.io.Serializable;
+import nl.mpi.metadatabrowser.model.DownloadRequest;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockNodeTypeIdentifier implements NodeTypeIdentifier {
+public class MockDownloadRequest implements DownloadRequest, Serializable {
 
-    private final Map<String, NodeType> uriNodeTypeMap;
+    private String fileName;
+    private String streamContent;
 
-    public MockNodeTypeIdentifier(Map<String, NodeType> uriNodeTypeMap) {
-	this.uriNodeTypeMap = uriNodeTypeMap;
+    public void setStreamContent(String streamContent) {
+	this.streamContent = streamContent;
     }
 
     @Override
-    public NodeType getNodeType(URI nodeUri) {
-	if (nodeUri == null) {
-	    return null;
-	} else {
-	    return uriNodeTypeMap.get(nodeUri.toString());
-	}
+    public IResourceStream getDownloadStream() {
+	return new StringResourceStream(streamContent);
+    }
+
+    public void setFileName(String fileName) {
+	this.fileName = fileName;
+    }
+
+    @Override
+    public String getFileName() {
+	return fileName;
     }
 }

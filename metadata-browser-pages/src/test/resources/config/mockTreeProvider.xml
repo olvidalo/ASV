@@ -12,13 +12,13 @@
     
     <!-- Tree provider -->
     
-    <bean id="archiveRootNode" class="nl.mpi.archiving.tree.MockCorpusNode">
+    <bean id="archiveRootNode" class="nl.mpi.archiving.tree.mock.MockCorpusNode">
 	<property name="name" value="RootNode"/>
 	<property name="nodeId" value="0"/>
 	<property name="uri" value="mock:/"/>
 	<property name="children">
 	    <list>
-		<bean class="nl.mpi.archiving.tree.MockCorpusNode">
+		<bean class="nl.mpi.archiving.tree.mock.MockCorpusNode">
 		    <property name="parent" ref="archiveRootNode" />
 		    <property name="name" value="Child1"/>
 		    <property name="nodeId" value="1"/>
@@ -30,13 +30,13 @@
 	</property>
     </bean>  
     
-    <bean id="collectionNode" class="nl.mpi.archiving.tree.MockCorpusNode">
+    <bean id="collectionNode" class="nl.mpi.archiving.tree.mock.MockCorpusNode">
 	<property name="name" value="CollectionNode"/>
 	<property name="nodeId" value="2"/>
 	<property name="uri" value="mock:/2"/>
 	<property name="children">
 	    <list>
-		<bean class="nl.mpi.archiving.tree.MockCorpusNode">
+		<bean class="nl.mpi.archiving.tree.mock.MockCorpusNode">
 		    <property name="parent" ref="collectionNode" />
 		    <property name="name" value="Child2"/>
 		    <property name="nodeId" value="21"/>

@@ -13,18 +13,18 @@
     <!-- Node actions -->
     
     <util:list id="collectionActions">
-	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
 	    <property name="name" value="Collection action 1" />
 	    <property name="feedbackMessage" value="Collection action 1 feedback" />
 	</bean>
-	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
 	    <property name="name" value="Collection action 2" />
 	    <property name="exceptionMessage" value="Collection action 2 exception" />
 	</bean>
-	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
 	    <property name="name" value="Download" />
 	    <property name="resultActionRequest">
-		<bean class="nl.mpi.metadatabrowser.model.MockDownloadRequest">
+		<bean class="nl.mpi.metadatabrowser.model.mock.MockDownloadRequest">
 		    <property name="fileName" value="download.txt" />
 		    <property name="streamContent" value="This is a download test" />
 		</bean>
@@ -33,25 +33,25 @@
     </util:list>
     
     <util:list id="childActions">
-	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
 	    <property name="name" value="Child action 1" />
 	    <property name="feedbackMessage" value="Child action 1 feedback" />
 	</bean>
-	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
 	    <property name="name" value="Child action 2" />
 	    <property name="exceptionMessage" value="Child action 2 exception" />
 	</bean>
-	<bean class="nl.mpi.metadatabrowser.model.MockNodeAction">
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
 	    <property name="name" value="Request Resource Access" />
 	    <property name="resultActionRequest">
-		<bean class="nl.mpi.metadatabrowser.model.MockNavigationRequest">
+		<bean class="nl.mpi.metadatabrowser.model.mock.MockNavigationRequest">
 		    <property name="target" value="RRS" />
 		</bean>
 	    </property>
 	</bean>
     </util:list>
     
-    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.MockNodeActionsProvider">
+    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.mock.MockNodeActionsProvider">
 	<constructor-arg>
 	    <map>
 		<entry key="mock:/1" value-ref="childActions" />

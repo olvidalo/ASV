@@ -14,35 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model;
+package nl.mpi.metadatabrowser.services.mock;
 
-import java.io.Serializable;
+import java.net.URI;
 import java.util.Map;
+import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockNavigationRequest implements NavigationRequest, Serializable {
+public class MockNodeTypeIdentifier implements NodeTypeIdentifier {
 
-    private NavigationTarget target;
-    private Map<String, String> parameters;
+    private final Map<String, NodeType> uriNodeTypeMap;
 
-    public void setTarget(NavigationTarget target) {
-	this.target = target;
+    public MockNodeTypeIdentifier(Map<String, NodeType> uriNodeTypeMap) {
+	this.uriNodeTypeMap = uriNodeTypeMap;
     }
 
     @Override
-    public NavigationTarget getTarget() {
-	return target;
-    }
-
-    public void setParameters(Map<String, String> parameters) {
-	this.parameters = parameters;
-    }
-
-    @Override
-    public Map<String, String> getParameters() {
-	return parameters;
+    public NodeType getNodeType(URI nodeUri) {
+	if (nodeUri == null) {
+	    return null;
+	} else {
+	    return uriNodeTypeMap.get(nodeUri.toString());
+	}
     }
 }

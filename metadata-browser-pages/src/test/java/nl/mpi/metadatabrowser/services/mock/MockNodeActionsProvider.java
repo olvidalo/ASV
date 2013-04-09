@@ -14,21 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services;
+package nl.mpi.metadatabrowser.services.mock;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.basic.Label;
+import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockNodePresentationProvider implements NodePresentationProvider {
+public class MockNodeActionsProvider implements NodeActionsProvider {
 
+    private final Map<String, List<NodeAction>> uriNodeActionMap;
+
+    public MockNodeActionsProvider(Map<String, List<NodeAction>> uriNodeActionMap) {
+	this.uriNodeActionMap = uriNodeActionMap;
+    }
+    
     @Override
-    public Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType) {
-	return new Label(wicketId, String.format("[%s] %s", nodeType.getName(), nodeUri.toString()));
+    public List<NodeAction> getNodeActions(URI nodeUri, NodeType nodeType) {
+	return uriNodeActionMap.get(nodeUri.toString());
     }
 }

@@ -14,36 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model;
+package nl.mpi.metadatabrowser.model.mock;
 
 import java.io.Serializable;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
+import java.util.Map;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockDownloadRequest implements DownloadRequest, Serializable {
+public class MockNavigationRequest implements NavigationRequest, Serializable {
 
-    private String fileName;
-    private String streamContent;
+    private NavigationTarget target;
+    private Map<String, String> parameters;
 
-    public void setStreamContent(String streamContent) {
-	this.streamContent = streamContent;
+    public void setTarget(NavigationTarget target) {
+	this.target = target;
     }
 
     @Override
-    public IResourceStream getDownloadStream() {
-	return new StringResourceStream(streamContent);
+    public NavigationTarget getTarget() {
+	return target;
     }
 
-    public void setFileName(String fileName) {
-	this.fileName = fileName;
+    public void setParameters(Map<String, String> parameters) {
+	this.parameters = parameters;
     }
 
     @Override
-    public String getFileName() {
-	return fileName;
+    public Map<String, String> getParameters() {
+	return parameters;
     }
 }

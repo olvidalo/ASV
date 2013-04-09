@@ -14,10 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model;
+package nl.mpi.metadatabrowser.model.mock;
 
 import java.io.Serializable;
 import java.net.URI;
+import nl.mpi.metadatabrowser.model.ControllerActionRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

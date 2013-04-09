@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model;
+package nl.mpi.metadatabrowser.model.mock;
 
 import java.io.Serializable;
+import nl.mpi.metadatabrowser.model.NodeType;
 
 /**
  *

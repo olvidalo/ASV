@@ -12,19 +12,19 @@
     
     <!-- Node type identification -->
     
-    <bean id="rootNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+    <bean id="rootNodeType" class="nl.mpi.metadatabrowser.model.mock.MockNodeType">
 	<property name="name" value="Root" />
     </bean>
     
-    <bean id="collectionNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+    <bean id="collectionNodeType" class="nl.mpi.metadatabrowser.model.mock.MockNodeType">
 	<property name="name" value="Collection" />
     </bean>
     
-    <bean id="childNodeType" class="nl.mpi.metadatabrowser.model.MockNodeType">
+    <bean id="childNodeType" class="nl.mpi.metadatabrowser.model.mock.MockNodeType">
 	<property name="name" value="Child" />
     </bean>
     
-    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.MockNodeTypeIdentifier">
+    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.mock.MockNodeTypeIdentifier">
 	<constructor-arg>
 	    <map>
 		<entry key="mock:/" value-ref="rootNodeType" />
