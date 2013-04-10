@@ -34,10 +34,22 @@ public interface NavigationRequest extends ControllerActionRequest {
 	 * Resource Request System
 	 */
 	RRS,
-	/**
-	 * A specific node
-	 */
-	NODE
+        /**
+         * AMS
+         */
+        AMS,
+        /**
+         * TROVA
+         */
+        TROVA,
+        /**
+         * a CMDISEARCH
+         */
+        CMDISEARCH,
+        /**
+         * browse statistics for a node
+         */
+        STATS
     }
 
     /**
