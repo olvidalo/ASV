@@ -1,16 +1,24 @@
-<!DOCTYPE html>
-<html xmlns:wicket="http://wicket.apache.org">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:wicket="http://wicket.apache.org">
     <head>
-	<meta charset="utf-8" />
 	<title>Metadata Browser</title>
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="Stylesheet" />
     </head>
     <body>
-	<div id="treePanel" wicket:id="treePanel">[TREE PANEL]</div>
-	<div id="actionsPanel" wicket:id="nodeActions">
-	</div>
-	<div id="nodePresentation" wicket:id="nodePresentationContainer">
-	    <div wicket:id="nodePresentation">[NODE PRESENTATION]</div>
+	<div id="wrap">
+	    <div id="treePanel" wicket:id="treePanel">[TREE PANEL]</div>
+	    <div id="nodePanel">
+		<div id="actionsPanelContainer">
+		    <div id="actionsPanel" wicket:id="nodeActions">
+		    </div>
+		</div>
+		<div id="nodePresentation" wicket:id="nodePresentationContainer">
+		    <div wicket:id="nodePresentation">[NODE PRESENTATION]</div>
+		</div>
+	    </div>
 	</div>
     </body>
 </html>

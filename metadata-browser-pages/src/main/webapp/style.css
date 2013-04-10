@@ -1,3 +1,46 @@
+body{
+    margin:0;
+    padding:0;
+}
+
+div#wrap{
+    margin-left: 20em;
+    height: auto;
+}
+
+div#nodePanel{
+}
+
+div#actionsPanelContainer{
+    padding-left: 1em;
+    padding-top: 1em;
+    min-height: 2em;
+    width: 100%;
+    border-bottom: 1px solid;
+}
+
+div#actionsPanel input {
+    font-size: medium;
+}
+
+div#nodePresentation {
+    padding-left: 1em;
+    padding-top: 1em;
+}
+
+div#treePanel{
+    float: left;
+    width: 20em;
+    margin-left: -20em;    
+    border-right: 1px solid;
+}
+
+div#treePanel div.wicket-tree{
+    width: auto;
+    margin-right: 0px;
+    min-height: 500px;
+}
+
 .feedbackPanelERROR{
     background: lightcoral;
 }
