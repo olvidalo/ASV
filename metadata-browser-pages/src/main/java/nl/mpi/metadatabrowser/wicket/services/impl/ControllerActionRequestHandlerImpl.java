@@ -61,11 +61,13 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
 		// TODO: Parameters
 		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(rrsUrl));
 		break;
-	    case NODE:
-		logger.debug("Received request to navigate to node with parameters {}", request.getParameters());
-		// TODO: Navigate to Node
-		requestCycle.setResponsePage(HomePage.class);
-		break;
+                
+                // for the moment not use
+//	    case NODE:
+//		logger.debug("Received request to navigate to node with parameters {}", request.getParameters());
+//		// TODO: Navigate to Node
+//		requestCycle.setResponsePage(HomePage.class);
+//		break;
 	    default:
 		// Other, cannot handle
 		logger.warn("Don't know how to handle navigation request target {}", request.getTarget());
