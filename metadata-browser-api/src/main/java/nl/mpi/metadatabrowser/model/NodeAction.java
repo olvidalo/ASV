@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model;
 
 import java.net.URI;
+import java.util.Collection;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 
 /**
@@ -41,11 +42,11 @@ public interface NodeAction {
     String getName();
 
     /**
-     * Executes the action on the node specified by the URI
+     * Executes the action on a list of nodes specified by their URIs
      *
-     * @param nodeUri URI of node to execute this action on
+     * @param nodeUris URI list of nodes to execute this action on
      * @return the result of the action
      * @throws NodeActionException if any error occurs during node exception
      */
-    NodeActionResult execute(URI nodeUri) throws NodeActionException;
+    NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException;
 }

@@ -16,10 +16,10 @@
  */
 package nl.mpi.metadatabrowser.services;
 
-import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
  * Interface for a provider that can map nodes (identified by an URI) to lists of {@link NodeAction}s
@@ -35,5 +35,5 @@ public interface NodeActionsProvider {
      * @param nodeType node type of the node identified by nodeUri
      * @return a list of actions available for this node
      */
-    List<NodeAction> getNodeActions(URI nodeUri, NodeType nodeType);
+    List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes);
 }

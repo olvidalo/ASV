@@ -14,23 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services;
+package nl.mpi.metadatabrowser.model;
 
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.metadatabrowser.model.NodeType;
 
 /**
- * Interface for a service that identifies the type of a given node
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface NodeTypeIdentifier {
-
-    /**
-     * Gets the node type for the specified node
-     *
-     * @param nodeUri URI of node to determine type for
-     * @return an object representing a type of node
-     */
-    NodeType getNodeType(CorpusNode node);
+public interface TypedCorpusNode extends CorpusNode {
+    
+    NodeType getNodeType();
+    
 }

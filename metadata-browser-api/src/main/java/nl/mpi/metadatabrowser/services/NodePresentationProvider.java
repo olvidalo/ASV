@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services;
 
-import java.net.URI;
-import nl.mpi.metadatabrowser.model.NodeType;
+import java.util.Collection;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.Component;
 
 /**
@@ -28,12 +28,12 @@ import org.apache.wicket.Component;
 public interface NodePresentationProvider {
 
     /**
-     * Gets a renderable (through Wicket) component offering a presentation of the specified node
+     * Gets a renderable (through Wicket) component offering a presentation of the specified nodes
      *
      * @param wicketId string that the returned component should have as its id (see {@link Component#getId() }
-     * @param nodeUri URI of the node to render a presentation for
+     * @param nodes nodes to render a presentation for
      * @param nodeType the type of the node identified by nodeUri
      * @return a Wicket Component representing
      */
-    Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType);
+    Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes);
 }
