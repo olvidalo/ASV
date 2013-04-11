@@ -23,20 +23,18 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 	super();
 
 	final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider);
-	treePanel.addArchiveTreePanelListener(new MetadataBrowserTreePanelListener());
 	add(treePanel);
 
 	nodesPanel = new NodesPanel("nodesPanel", new CollectionModel(treePanel.getSelectedNodes()));
 	nodesPanel.setOutputMarkupId(true);
 	add(nodesPanel);
+
+	treePanel.addArchiveTreePanelListener(new ArchiveTreePanelListener<SerializableCorpusNode>() {
+	    @Override
+	    public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {
+		nodesPanel.setModelObject(treePanel.getSelectedNodes());
+		target.add(nodesPanel);
+	    }
+	});
     }
-
-    private class MetadataBrowserTreePanelListener implements ArchiveTreePanelListener<SerializableCorpusNode>, Serializable {
-
-	@Override
-	public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {
-	    nodesPanel.setModelObject(treePanel.getSelectedNodes());
-	    target.add(nodesPanel);
-	}
-    };
 }
