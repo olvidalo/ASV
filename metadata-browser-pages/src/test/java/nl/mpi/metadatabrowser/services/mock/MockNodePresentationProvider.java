@@ -30,7 +30,11 @@ public class MockNodePresentationProvider implements NodePresentationProvider {
 
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) {
-	TypedCorpusNode node = nodes.iterator().next();
-	return new Label(wicketId, String.format("[%s] %s", node.getNodeType().getName(), node.getName()));
+	if (nodes.isEmpty()) {
+	    return null;
+	} else {
+	    final TypedCorpusNode node = nodes.iterator().next();
+	    return new Label(wicketId, String.format("[%s] %s", node.getNodeType().getName(), node.getName()));
+	}
     }
 }

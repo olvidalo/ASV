@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.services.mock;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -37,7 +38,11 @@ public class MockNodeActionsProvider implements NodeActionsProvider {
 
     @Override
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
-	// Take first node, get actions from map
-	return uriNodeActionMap.get(nodes.iterator().next().toString());
+	if (nodes.isEmpty()) {
+	    return Collections.emptyList();
+	} else {
+	    // Take first node, get actions from map
+	    return uriNodeActionMap.get(nodes.iterator().next().toString());
+	}
     }
 }
