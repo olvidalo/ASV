@@ -58,16 +58,9 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
 	    case RRS:
 		logger.debug("Received request to navigate to RRS with parameters {}", request.getParameters());
 		// Navigate to RRS
-		// TODO: Parameters
+		// TODO: Parameters?
 		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(rrsUrl));
 		break;
-                
-                // for the moment not use
-//	    case NODE:
-//		logger.debug("Received request to navigate to node with parameters {}", request.getParameters());
-//		// TODO: Navigate to Node
-//		requestCycle.setResponsePage(HomePage.class);
-//		break;
 	    default:
 		// Other, cannot handle
 		logger.warn("Don't know how to handle navigation request target {}", request.getTarget());
