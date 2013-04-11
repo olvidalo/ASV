@@ -5,6 +5,7 @@ import java.util.List;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
+import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
@@ -38,7 +39,8 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     public HomePage(final PageParameters parameters) {
 	super();
 
-	final MetadataBrowserTreePanel treePanel = new MetadataBrowserTreePanel("treePanel", treeModelProvider);
+	final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider);
+	treePanel.addArchiveTreePanelListener(new MetadataBrowserTreePanelListener());
 	add(treePanel);
 
 	nodeActionsPanel = new NodeActionsPanel("nodeActions");
@@ -51,15 +53,10 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 	add(nodePresentationContainer);
     }
 
-    private class MetadataBrowserTreePanel extends ArchiveTreePanel<SerializableCorpusNode> {
+    private class MetadataBrowserTreePanelListener implements ArchiveTreePanelListener<SerializableCorpusNode> {
 
-	public MetadataBrowserTreePanel(String id, GenericTreeModelProvider provider) {
-	    super(id, provider);
-	}
-
-	//TODO: Loop over selected nodes
 	@Override
-	protected void onNodeLinkClicked(AjaxRequestTarget target, SerializableCorpusNode node) {
+	public void nodeLinkClicked(AjaxRequestTarget target, SerializableCorpusNode node) {
 	    // Get the node type from the node type identifier
 	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(node.getUri());
 
