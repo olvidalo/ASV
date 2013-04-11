@@ -72,19 +72,28 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     protected void onModelChanged() {
 	super.onModelChanged();
 
-	final Collection<SerializableCorpusNode> selectedNodes = getModelObject();
-	final Collection<TypedCorpusNode> typedNodes = new ArrayList<TypedCorpusNode>(selectedNodes.size());
+	final Collection<TypedCorpusNode> typedNodes = getTypedCorpusNodes(getModelObject());
+	updateNodeActions(typedNodes);
+	updateNodePresentation(typedNodes);
+    }
 
+    private Collection<TypedCorpusNode> getTypedCorpusNodes(final Collection<SerializableCorpusNode> selectedNodes) {
+	final Collection<TypedCorpusNode> typedNodes = new ArrayList<TypedCorpusNode>(selectedNodes.size());
 	for (SerializableCorpusNode node : selectedNodes) {
 	    // Get the node type from the node type identifier
 	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(node);
 	    typedNodes.add(new TypedSerializableCorpusNode(node, nodeType));
 	}
+	return typedNodes;
+    }
 
+    private void updateNodeActions(final Collection<TypedCorpusNode> typedNodes) {
 	// Get the node actions and update the model of the node actions panel
 	final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(typedNodes);
 	nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, selectedNodeActions));
+    }
 
+    private void updateNodePresentation(final Collection<TypedCorpusNode> typedNodes) {
 	// Add the node presentation component to the presentation container (or remove if none is available)
 	final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
 	if (nodePresentation == null) {
