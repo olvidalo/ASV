@@ -53,7 +53,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 	add(nodePresentationContainer);
     }
 
-    private class MetadataBrowserTreePanelListener implements ArchiveTreePanelListener<SerializableCorpusNode> {
+    private class MetadataBrowserTreePanelListener implements ArchiveTreePanelListener<SerializableCorpusNode>, Serializable {
 
 	@Override
 	public void nodeLinkClicked(AjaxRequestTarget target, SerializableCorpusNode node) {
