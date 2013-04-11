@@ -45,7 +45,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class NodeActionsPanelTest extends AbstractWicketTest {
+public class NodesActionsPanelTest extends AbstractWicketTest {
 
     private WicketTester tester;
     private Mockery context = new JUnit4Mockery();
@@ -94,7 +94,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	modelObject.setNodeActions(Arrays.asList(action1, action2));
 
 	// Check the rendering
-	final NodeActionsPanel panel = new NodeActionsPanel("panelId", modelObject);
+	final NodesActionsPanel panel = new NodesActionsPanel("panelId", modelObject);
 	tester.startComponentInPage(panel);
 	Component actionsForm = panel.get("nodeActionsForm");
 	assertTrue(actionsForm instanceof Form);
@@ -120,7 +120,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	});
 	modelObject.setNodeActions(Arrays.asList(action));
 
-	final NodeActionsPanel panel = new NodeActionsPanel("panelId", modelObject);
+	final NodesActionsPanel panel = new NodesActionsPanel("panelId", modelObject);
 	tester.startComponentInPage(panel);
 
 	// Prepare for submitting form through action button
@@ -168,7 +168,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	});
 	modelObject.setNodeActions(Arrays.asList(action));
 
-	final NodeActionsPanel panel = new NodeActionsPanel("panelId", modelObject);
+	final NodesActionsPanel panel = new NodesActionsPanel("panelId", modelObject);
 	tester.startComponentInPage(panel);
 
 	// Prepare for submitting form through action button

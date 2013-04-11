@@ -32,13 +32,13 @@ import org.apache.wicket.model.Model;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public final class NodeActionsPanel extends GenericPanel<NodeActionsStructure> {
+public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> {
 
-    public NodeActionsPanel(String id) {
+    public NodesActionsPanel(String id) {
 	this(id, new NodeActionsStructure());
     }
 
-    public NodeActionsPanel(String id, NodeActionsStructure model) {
+    public NodesActionsPanel(String id, NodeActionsStructure model) {
 	super(id, new Model<NodeActionsStructure>(model));
 
 	final Form form = new Form("nodeActionsForm");
@@ -49,7 +49,7 @@ public final class NodeActionsPanel extends GenericPanel<NodeActionsStructure> {
 	    @Override
 	    protected void populateItem(ListItem<NodeAction> item) {
 		final NodeAction action = item.getModelObject();
-		final Collection<TypedCorpusNode> nodes = NodeActionsPanel.this.getModelObject().getNodes();
+		final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
 		item.add(new NodeActionButton("nodeActionButton", nodes, action));
 	    }
 	});

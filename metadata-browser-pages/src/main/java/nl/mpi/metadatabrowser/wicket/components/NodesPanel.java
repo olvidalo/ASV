@@ -52,13 +52,13 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     @SpringBean
     private NodePresentationProvider nodePresentationProvider;
     // Child components
-    private final NodeActionsPanel nodeActionsPanel;
+    private final NodesActionsPanel nodeActionsPanel;
     private final MarkupContainer nodePresentationContainer;
 
     public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
 	super(id, model);
 
-	nodeActionsPanel = new NodeActionsPanel("nodeActions");
+	nodeActionsPanel = new NodesActionsPanel("nodeActions");
 	nodeActionsPanel.setOutputMarkupId(true);
 	add(nodeActionsPanel);
 
