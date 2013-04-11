@@ -28,7 +28,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable>  implements TypedCorpusNode, Serializable {
+public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, Serializable {
 
     private final SerializableCorpusNode corpusNode;
     private final NodeType nodeType;
@@ -80,5 +80,10 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
 
     public CorpusNode getCorpusNode() {
 	return corpusNode;
+    }
+
+    @Override
+    public String toString() {
+	return corpusNode.toString();
     }
 }

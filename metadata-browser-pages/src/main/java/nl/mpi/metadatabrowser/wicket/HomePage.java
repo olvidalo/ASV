@@ -75,9 +75,13 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 	    nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, selectedNodeActions));
 	    target.add(nodeActionsPanel);
 
-	    // Add the node presentation component to the presentation container
+	    // Add the node presentation component to the presentation container (or remove if none is available)
 	    final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
-	    nodePresentationContainer.addOrReplace(nodePresentation);
+	    if (nodePresentation == null) {
+		nodePresentationContainer.addOrReplace(new WebMarkupContainer("nodePresentation"));
+	    } else{
+		nodePresentationContainer.addOrReplace(nodePresentation);
+	    }
 	    target.add(nodePresentationContainer);
 	}
     };
