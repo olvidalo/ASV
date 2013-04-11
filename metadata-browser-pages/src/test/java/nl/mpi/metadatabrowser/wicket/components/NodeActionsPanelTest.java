@@ -18,10 +18,13 @@ package nl.mpi.metadatabrowser.wicket.components;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.AbstractWicketTest;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
@@ -47,18 +50,35 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
     private WicketTester tester;
     private Mockery context = new JUnit4Mockery();
     private ControllerActionRequestHandler actionRequestHandler;
+    private Collection<TypedCorpusNode> testNodeCollection;
 
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
 	this.tester = getTester();
 	actionRequestHandler = context.mock(ControllerActionRequestHandler.class);
 	putBean("actionRequestHandler", actionRequestHandler);
+
+	final TypedCorpusNode testNode = context.mock(TypedCorpusNode.class);
+	final NodeType testNodeType = context.mock(NodeType.class);
+	context.checking(new Expectations() {
+	    {
+		allowing(testNode).getName();
+		will(returnValue("test node name"));
+
+		allowing(testNode).getUri();
+		will(returnValue(new URI("nodeUri")));
+
+		allowing(testNode).getNodeType();
+		will(returnValue(testNodeType));
+	    }
+	});
+	testNodeCollection = Arrays.asList(testNode);
     }
 
     @Test
     public void testRender() throws Exception {
 	final NodeActionsStructure modelObject = new NodeActionsStructure();
-	modelObject.setNodeUri(new URI("nodeUri"));
+	modelObject.setNodes(testNodeCollection);
 
 	// Add two actions to the panel
 	final NodeAction action1 = context.mock(NodeAction.class, "action1");
@@ -89,7 +109,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
     public void testSubmitAction() throws Exception {
 	// Prepare an action
 	final NodeActionsStructure modelObject = new NodeActionsStructure();
-	modelObject.setNodeUri(new URI("nodeUri"));
+	modelObject.setNodes(testNodeCollection);
 
 	final NodeAction action = context.mock(NodeAction.class);
 	context.checking(new Expectations() {
@@ -109,7 +129,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	context.checking(new Expectations() {
 	    {
 		// Submission should execute the method
-		oneOf(action).execute(new URI("nodeUri"));
+		oneOf(action).execute(testNodeCollection);
 		// which returns a result
 		will(returnValue(actionResult));
 
@@ -137,7 +157,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
     public void testCatchActionException() throws Exception {
 	// Prepare an action
 	final NodeActionsStructure modelObject = new NodeActionsStructure();
-	modelObject.setNodeUri(new URI("nodeUri"));
+	modelObject.setNodes(testNodeCollection);
 
 	final NodeAction action = context.mock(NodeAction.class);
 	context.checking(new Expectations() {
@@ -155,7 +175,7 @@ public class NodeActionsPanelTest extends AbstractWicketTest {
 	context.checking(new Expectations() {
 	    {
 		// Submission should execute the method
-		oneOf(action).execute(new URI("nodeUri"));
+		oneOf(action).execute(testNodeCollection);
 		// which throws an exception
 		will(throwException(new NodeActionException(action, "test exception message")));
 	    }

@@ -33,7 +33,7 @@ public abstract class AbstractWicketTest {
     private WicketTester tester = null;
 
     @Before
-    public final void setUpAbstractWicketTest() {
+    public final void setUpAbstractWicketTest() throws Exception {
 	applicationContextMock = new ApplicationContextMock();
 	tester = new WicketTester();
 	// register spring injector with mock application context
@@ -41,7 +41,7 @@ public abstract class AbstractWicketTest {
 	setUp();
     }
 
-    public abstract void setUp();
+    public abstract void setUp() throws Exception;
 
     public final void putBean(String name, Object bean) {
 	getApplicationContextMock().putBean(name, bean);

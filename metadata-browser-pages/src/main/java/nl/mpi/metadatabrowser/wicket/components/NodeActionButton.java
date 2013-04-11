@@ -16,10 +16,11 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
-import java.net.URI;
+import java.util.Collection;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.Model;
@@ -40,22 +41,22 @@ class NodeActionButton extends Button {
     private ControllerActionRequestHandler actionRequestHandler;
     // Properties
     private final NodeAction action;
-    private final URI nodeUri;
+    private Collection<TypedCorpusNode> nodes;
 
-    public NodeActionButton(String id, URI nodeUri, NodeAction action) {
+    public NodeActionButton(String id, Collection<TypedCorpusNode> nodes, NodeAction action) {
 	super(id, new Model<String>(action.getName()));
-	this.nodeUri = nodeUri;
+	this.nodes = nodes;
 	this.action = action;
     }
 
     @Override
     public void onSubmit() {
 	try {
-	    final NodeActionResult result = action.execute(nodeUri);
+	    final NodeActionResult result = action.execute(nodes);
 	    handleFeedbackMessage(result);
 	    actionRequestHandler.handleActionRequest(getRequestCycle(), result.getControllerActionRequest());
 	} catch (NodeActionException ex) {
-	    logger.warn("Error in execution of action {} on node {}", action.getName(), nodeUri, ex);
+	    logger.warn("Error in execution of action {} on nodes {}", action.getName(), nodes, ex);
 	    error(ex.getMessage());
 	}
     }
@@ -63,7 +64,7 @@ class NodeActionButton extends Button {
     private void handleFeedbackMessage(final NodeActionResult result) {
 	final String feedbackMessage = result.getFeedbackMessage();
 	if (feedbackMessage != null) {
-	    logger.debug("Feedback from action {} on node {}: {}", action.getName(), nodeUri, feedbackMessage);
+	    logger.debug("Feedback from action {} on node {}: {}", action.getName(), nodes, feedbackMessage);
 	    info(feedbackMessage);
 	}
     }

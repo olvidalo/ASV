@@ -16,8 +16,9 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
-import java.net.URI;
+import java.util.Collection;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsListModel;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import org.apache.wicket.markup.html.form.Form;
@@ -48,8 +49,8 @@ public final class NodeActionsPanel extends GenericPanel<NodeActionsStructure> {
 	    @Override
 	    protected void populateItem(ListItem<NodeAction> item) {
 		final NodeAction action = item.getModelObject();
-		final URI nodeUri = NodeActionsPanel.this.getModelObject().getNodeUri();
-		item.add(new NodeActionButton("nodeActionButton", nodeUri, action));
+		final Collection<TypedCorpusNode> nodes = NodeActionsPanel.this.getModelObject().getNodes();
+		item.add(new NodeActionButton("nodeActionButton", nodes, action));
 	    }
 	});
 	add(form);

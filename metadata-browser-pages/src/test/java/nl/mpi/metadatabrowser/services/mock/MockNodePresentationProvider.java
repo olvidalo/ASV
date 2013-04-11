@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services.mock;
 
-import java.net.URI;
-import nl.mpi.metadatabrowser.model.NodeType;
+import java.util.Collection;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
@@ -29,7 +29,8 @@ import org.apache.wicket.markup.html.basic.Label;
 public class MockNodePresentationProvider implements NodePresentationProvider {
 
     @Override
-    public Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType) {
-	return new Label(wicketId, String.format("[%s] %s", nodeType.getName(), nodeUri.toString()));
+    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) {
+	TypedCorpusNode node = nodes.iterator().next();
+	return new Label(wicketId, String.format("[%s] %s", node.getNodeType().getName(), node.getName()));
     }
 }

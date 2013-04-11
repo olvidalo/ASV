@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services.mock;
 
-import java.net.URI;
 import java.util.Map;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 
@@ -34,11 +34,11 @@ public class MockNodeTypeIdentifier implements NodeTypeIdentifier {
     }
 
     @Override
-    public NodeType getNodeType(URI nodeUri) {
-	if (nodeUri == null) {
+    public NodeType getNodeType(CorpusNode node) {
+	if (node == null) {
 	    return null;
 	} else {
-	    return uriNodeTypeMap.get(nodeUri.toString());
+	    return uriNodeTypeMap.get(node.getUri().toString());
 	}
     }
 }

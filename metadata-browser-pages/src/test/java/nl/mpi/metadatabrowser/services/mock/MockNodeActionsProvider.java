@@ -16,11 +16,11 @@
  */
 package nl.mpi.metadatabrowser.services.mock;
 
-import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 
 /**
@@ -34,9 +34,10 @@ public class MockNodeActionsProvider implements NodeActionsProvider {
     public MockNodeActionsProvider(Map<String, List<NodeAction>> uriNodeActionMap) {
 	this.uriNodeActionMap = uriNodeActionMap;
     }
-    
+
     @Override
-    public List<NodeAction> getNodeActions(URI nodeUri, NodeType nodeType) {
-	return uriNodeActionMap.get(nodeUri.toString());
+    public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
+	// Take first node, get actions from map
+	return uriNodeActionMap.get(nodes.iterator().next().toString());
     }
 }

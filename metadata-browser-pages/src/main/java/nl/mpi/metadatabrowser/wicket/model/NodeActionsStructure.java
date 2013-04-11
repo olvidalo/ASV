@@ -17,10 +17,11 @@
 package nl.mpi.metadatabrowser.wicket.model;
 
 import java.io.Serializable;
-import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
  * Structure containing the list of actions for a node identified by its URI
@@ -29,35 +30,25 @@ import nl.mpi.metadatabrowser.model.NodeAction;
  */
 public class NodeActionsStructure implements Serializable {
 
-    private URI nodeUri;
+    private Collection<TypedCorpusNode> nodes;
+    private List<NodeAction> nodeActions;
 
     public NodeActionsStructure() {
 	this(null, Collections.<NodeAction>emptyList());
     }
 
-    public NodeActionsStructure(URI nodeUri, List<NodeAction> nodeActions) {
-	this.nodeUri = nodeUri;
+    public NodeActionsStructure(Collection<TypedCorpusNode> nodes, List<NodeAction> nodeActions) {
+	this.nodes = nodes;
 	this.nodeActions = nodeActions;
     }
 
-    /**
-     * Get the value of nodeUri
-     *
-     * @return the value of nodeUri
-     */
-    public URI getNodeUri() {
-	return nodeUri;
+    public Collection<TypedCorpusNode> getNodes() {
+	return nodes;
     }
 
-    /**
-     * Set the value of nodeUri
-     *
-     * @param nodeUri new value of nodeUri
-     */
-    public void setNodeUri(URI nodeUri) {
-	this.nodeUri = nodeUri;
+    public void setNodes(Collection<TypedCorpusNode> nodes) {
+	this.nodes = nodes;
     }
-    private List<NodeAction> nodeActions;
 
     /**
      * Get the value of nodeActions

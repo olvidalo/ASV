@@ -17,11 +17,12 @@
 package nl.mpi.metadatabrowser.model.mock;
 
 import java.io.Serializable;
-import java.net.URI;
+import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +60,8 @@ public class MockNodeAction implements NodeAction, Serializable {
     }
 
     @Override
-    public NodeActionResult execute(URI nodeUri) throws NodeActionException {
-	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
+	logger.info("Action [{}] invoked on {}", getName(), nodes);
 
 	if (exceptionMessage == null) {
 	    return new NodeActionResult() {
