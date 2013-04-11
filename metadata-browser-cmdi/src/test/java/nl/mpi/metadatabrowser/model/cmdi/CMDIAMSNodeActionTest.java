@@ -17,10 +17,10 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -31,6 +31,8 @@ import static org.junit.Assert.*;
  */
 public class CMDIAMSNodeActionTest {
     
+    private Map<String, String> parameters = new HashMap<String,String>();
+
     public CMDIAMSNodeActionTest() {
     }
 
@@ -41,11 +43,11 @@ public class CMDIAMSNodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -57,25 +59,23 @@ public class CMDIAMSNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
-        String expResult = "navigate";
+        String expResult = "ams";
         String result = instance.getName();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
     }
 
-    
-        /**
+    /**
      * Test of setName method, of class CMDIAMSNodeAction.
      */
     @Test
     public void testSetName() {
         System.out.println("setName");
-        String name = "navigate";
+        String name = "ams";
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
         instance.setName(name);
-    } 
-    
-    
+    }
+
     /**
      * Test of execute method, of class CMDIAMSNodeAction.
      */
@@ -84,6 +84,15 @@ public class CMDIAMSNodeActionTest {
         System.out.println("execute");
         URI nodeUri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
+        
+                    NavigationActionRequest.setTarget (NavigationRequest.NavigationTarget.AMS);
+                    System.out.println(parameters);
+                    System.out.println(CMDIAMSNodeAction.getNodeID(nodeUri));
+                    System.out.println();
+            parameters.put ("nodeId", CMDIAMSNodeAction.getNodeID(nodeUri));
+            parameters.put ("jessionID", CMDIAMSNodeAction.getNodeID(nodeUri));
+            NavigationActionRequest.setParameters (parameters);
+            
         NodeActionResult expResult = new NodeActionResult() {
 
             @Override
@@ -97,7 +106,7 @@ public class CMDIAMSNodeActionTest {
             }
         };
         NodeActionResult result = instance.execute(nodeUri);
-        assertEquals("navigate", instance.getName());
+        assertEquals("ams", instance.getName());
         // TODO review the generated test code and remove the default call to fail.
     }
 }

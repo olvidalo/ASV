@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIDonwloadNodeActionTest {
-    
+
     public CMDIDonwloadNodeActionTest() {
     }
 
@@ -42,11 +42,11 @@ public class CMDIDonwloadNodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -83,14 +83,14 @@ public class CMDIDonwloadNodeActionTest {
         System.out.println("execute");
         DownloadActionRequest dar = new DownloadActionRequest();
         URI nodeUri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-        String fileName = nodeUri.toString().substring( nodeUri.toString().lastIndexOf('/')+1, nodeUri.toString().length() );
-String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
+        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
 
 
-File file = new File(nodeUri.getPath());
-IResourceStream resStream = new FileResourceStream(file);
-DownloadActionRequest.setStreamContent(resStream.toString());
-DownloadActionRequest.setFileName(fileNameWithoutExtn);
+        File file = new File(nodeUri.getPath());
+        IResourceStream resStream = new FileResourceStream(file);
+        DownloadActionRequest.setStreamContent(resStream.toString());
+        DownloadActionRequest.setFileName(fileNameWithoutExtn);
         NodeActionResult expResult = new NodeActionResult() {
 
             @Override
