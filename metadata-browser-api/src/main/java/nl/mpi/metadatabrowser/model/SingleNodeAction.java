@@ -31,10 +31,11 @@ public abstract class SingleNodeAction implements NodeAction {
      *
      * @param nodeUris singleton list of node URIs to execute the action on
      * @return the result of {@link #execute(java.net.URI) }
-     * @throws NodeActionException if the provided list of node URIs does not contain exactly one item
+     * @throws NodeActionException if the provided list of node URIs does not contain exactly one item or whatever gets thrown by
+     * {@link #execute(nl.mpi.metadatabrowser.model.TypedCorpusNode) }
      */
     @Override
-    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
+    public final NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
 	if (nodes.size() == 1) {
 	    return execute(nodes.iterator().next());
 	} else {
@@ -42,5 +43,12 @@ public abstract class SingleNodeAction implements NodeAction {
 	}
     }
 
-    public abstract NodeActionResult execute(TypedCorpusNode node) throws NodeActionException;
+    /**
+     * Implements the action for a node
+     *
+     * @param node node to execute the action on
+     * @return the result of the action
+     * @throws NodeActionException if any error occurs during node exception
+     */
+    protected abstract NodeActionResult execute(TypedCorpusNode node) throws NodeActionException;
 }

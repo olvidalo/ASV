@@ -19,11 +19,15 @@ package nl.mpi.metadatabrowser.model;
 import nl.mpi.archiving.tree.CorpusNode;
 
 /**
+ * Interface for a Corpus Node that has type information (by means of {@link NodeType}) in addition
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public interface TypedCorpusNode extends CorpusNode {
-    
+
+    /**
+     *
+     * @return the node type of this corpus node
+     */
     NodeType getNodeType();
-    
 }
