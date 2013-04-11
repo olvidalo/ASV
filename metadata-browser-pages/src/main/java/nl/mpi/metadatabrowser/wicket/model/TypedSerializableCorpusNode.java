@@ -21,13 +21,14 @@ import java.net.URI;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
  * Wrapper for {@link CorpusNode} that also encapsulates a {@link NodeType}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable>  implements nl.mpi.metadatabrowser.model.TypedCorpusNode {
+public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable>  implements TypedCorpusNode, Serializable {
 
     private final SerializableCorpusNode corpusNode;
     private final NodeType nodeType;
