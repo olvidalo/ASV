@@ -18,9 +18,12 @@ package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.File;
 import java.net.URI;
-import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.DownloadRequest;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.metadatabrowser.model.*;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.*;
@@ -32,6 +35,55 @@ import static org.junit.Assert.*;
  */
 public class CMDIDonwloadNodeActionTest {
 
+private TypedCorpusNode corpType = new TypedCorpusNode() {
+
+        @Override
+        public int getNodeId() {
+            return 1;
+        }
+
+        @Override
+        public String getName() {
+            return "1";
+        }
+
+        @Override
+        public URI getUri() {
+            try {
+                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+                return uri;
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+        }
+
+        @Override
+        public GenericTreeNode getChild(int index) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public int getChildCount() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public int getIndexOfChild(GenericTreeNode child) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public GenericTreeNode getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public NodeType getNodeType() {
+            return new CMDIMetadata();
+        }
+    };
+    
     public CMDIDonwloadNodeActionTest() {
     }
 
@@ -89,7 +141,7 @@ public class CMDIDonwloadNodeActionTest {
 
         File file = new File(nodeUri.getPath());
         IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest.setStreamContent(resStream.toString());
+        DownloadActionRequest.setStreamContent(resStream);
         DownloadActionRequest.setFileName(fileNameWithoutExtn);
         NodeActionResult expResult = new NodeActionResult() {
 
@@ -104,7 +156,7 @@ public class CMDIDonwloadNodeActionTest {
             }
         };
         CMDIDonwloadNodeAction instance = new CMDIDonwloadNodeAction();
-        NodeActionResult result = instance.execute(nodeUri);
+        NodeActionResult result = instance.execute(corpType);
         assertEquals("download", instance.getName());
         assertEquals("1", dar.getFileName());
     }

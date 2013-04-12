@@ -17,7 +17,15 @@
 package nl.mpi.metadatabrowser.services.cmdi;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIDonwloadNodeActionTest;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -26,6 +34,56 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodeTypeIdentifierTest {
+    
+        private TypedCorpusNode corpType = new TypedCorpusNode() {
+
+        @Override
+        public int getNodeId() {
+            return 1;
+        }
+
+        @Override
+        public String getName() {
+            return "1";
+        }
+
+        @Override
+        public URI getUri() {
+            try {
+                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+                return uri;
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+        }
+
+        @Override
+        public GenericTreeNode getChild(int index) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public int getChildCount() {
+            return 0;
+        }
+
+        @Override
+        public int getIndexOfChild(GenericTreeNode child) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public GenericTreeNode getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public NodeType getNodeType() {
+            return new CMDIResourceTxtType();
+        }
+    };
+    
     
     public CMDINodeTypeIdentifierTest() {
     }
@@ -52,11 +110,12 @@ public class CMDINodeTypeIdentifierTest {
     @Test
     public void testGetNodeType() {
         System.out.println("getNodeType");
-        URI nodeUri = null;
         CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier();
-        NodeType expResult = null;
-        NodeType result = instance.getNodeType(nodeUri);
-        assertEquals(expResult, result);
+        NodeType expResult = new CMDIResourceTxtType();
+        NodeType result = instance.getNodeType(corpType);
+        System.out.println(expResult);
+        System.out.println(result);
+        assertEquals(expResult.getName(), result.getName());
         // TODO review the generated test code and remove the default call to fail.
     }
 

@@ -17,11 +17,13 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.metadatabrowser.model.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -30,8 +32,57 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIAMSNodeActionTest {
+
+    private TypedCorpusNode corpType = new TypedCorpusNode() {
+
+        @Override
+        public int getNodeId() {
+            return 1;
+        }
+
+        @Override
+        public String getName() {
+            return "1";
+        }
+
+        @Override
+        public URI getUri() {
+            try {
+                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+                return uri;
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+        }
+
+        @Override
+        public GenericTreeNode getChild(int index) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public int getChildCount() {
+            return 0;
+        }
+
+        @Override
+        public int getIndexOfChild(GenericTreeNode child) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public GenericTreeNode getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public NodeType getNodeType() {
+            return new CMDIMetadata();
+        }
+    };
     
-    private Map<String, String> parameters = new HashMap<String,String>();
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDIAMSNodeActionTest() {
     }
@@ -82,17 +133,13 @@ public class CMDIAMSNodeActionTest {
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
-        URI nodeUri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
-        
-                    NavigationActionRequest.setTarget (NavigationRequest.NavigationTarget.AMS);
-                    System.out.println(parameters);
-                    System.out.println(CMDIAMSNodeAction.getNodeID(nodeUri));
-                    System.out.println();
-            parameters.put ("nodeId", CMDIAMSNodeAction.getNodeID(nodeUri));
-            parameters.put ("jessionID", CMDIAMSNodeAction.getNodeID(nodeUri));
-            NavigationActionRequest.setParameters (parameters);
-            
+        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.AMS);
+        System.out.println(parameters);
+        parameters.put("nodeId", Integer.toString(corpType.getNodeId()));
+        parameters.put("jessionID", "number");
+        NavigationActionRequest.setParameters(parameters);
+        System.out.println(parameters);
+
         NodeActionResult expResult = new NodeActionResult() {
 
             @Override
@@ -105,7 +152,9 @@ public class CMDIAMSNodeActionTest {
                 return new NavigationActionRequest();
             }
         };
-        NodeActionResult result = instance.execute(nodeUri);
+        System.out.println(expResult);
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
+        NodeActionResult result = instance.execute(corpType);
         assertEquals("ams", instance.getName());
         // TODO review the generated test code and remove the default call to fail.
     }

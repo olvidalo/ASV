@@ -19,6 +19,8 @@ package nl.mpi.metadatabrowser.model.cmdi;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Locale;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -54,17 +56,6 @@ public class DownloadActionRequestTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of setDownloadResource method, of class DownloadActionRequest.
-     */
-    @Test
-    public void testSetDownloadResource() {
-        System.out.println("setDownloadResource");
-        IResourceStream resStream = new StringResourceStream("/corpora/lams_demo/Corpusstructure/1.imdi");
-        DownloadActionRequest.setStreamContent(resStream.toString());
-        // TODO review the generated test code and remove the default call to fail.
-
-    }
 
     /**
      * Test of setFileName method, of class DownloadActionRequest.
@@ -81,11 +72,13 @@ public class DownloadActionRequestTest {
      * Test of setStreamContent method, of class DownloadActionRequest.
      */
     @Test
-    public void testSetStreamContent() {
+    public void testSetStreamContent() throws URISyntaxException {
         System.out.println("setStreamContent");
-        String streamContent = "";
+        URI nodeUri = new URI("/corpora/lams_demo/Corpusstructure/1.imdi");
+        File file = new File(nodeUri.getPath());
+        IResourceStream resStream = new FileResourceStream(file);
         DownloadActionRequest instance = new DownloadActionRequest();
-        instance.setStreamContent(streamContent);
+        instance.setStreamContent(resStream);
         // TODO review the generated test code and remove the default call to fail.
     }
 
@@ -93,13 +86,14 @@ public class DownloadActionRequestTest {
      * Test of getDownloadStream method, of class DownloadActionRequest.
      */
     @Test
-    public void testGetDownloadStream() throws ResourceStreamNotFoundException {
+    public void testGetDownloadStream() throws ResourceStreamNotFoundException, URISyntaxException {
         System.out.println("getDownloadStream");
-        DownloadActionRequest instance = new DownloadActionRequest();
-        IResourceStream expResult = new StringResourceStream("/corpora/lams_demo/Corpusstructure/1.imdi");
-        instance.setStreamContent("/corpora/lams_demo/Corpusstructure/1.imdi");
+        URI nodeUri = new URI("/Users/jeafer/Documents/CMDI/IPROSLA_Nijmegen.cmdi");
+        File file = new File(nodeUri.getPath());
+        IResourceStream resStream = new FileResourceStream(file);
+        DownloadActionRequest instance = new DownloadActionRequest("IPROSLA_Nijmegen", resStream);
         IResourceStream result = instance.getDownloadStream();
-        
+        System.out.println(instance.getFileName());
         assertNotNull(result);
         assertNotNull(result.getInputStream());
         assertNull(result.getContentType());

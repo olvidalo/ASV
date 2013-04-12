@@ -17,9 +17,17 @@
 package nl.mpi.metadatabrowser.services.cmdi;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
-import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -28,6 +36,55 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIActionsProviderTest {
+       
+    private TypedCorpusNode corpType = new TypedCorpusNode() {
+
+        @Override
+        public int getNodeId() {
+            return 1;
+        }
+
+        @Override
+        public String getName() {
+            return "1";
+        }
+
+        @Override
+        public URI getUri() {
+            try {
+                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+                return uri;
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+        }
+
+        @Override
+        public GenericTreeNode getChild(int index) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public int getChildCount() {
+            return 0;
+        }
+
+        @Override
+        public int getIndexOfChild(GenericTreeNode child) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public GenericTreeNode getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public NodeType getNodeType() {
+            return new CMDICollectionType();
+        }
+    };
     
     public CMDIActionsProviderTest() {
     }
@@ -54,11 +111,14 @@ public class CMDIActionsProviderTest {
     @Test
     public void testGetNodeActions() {
         System.out.println("getNodeActions");
-        URI nodeUri = null;
-        NodeType nodeType = new CMDICollectionType();
+
+        Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
+        
         CMDIActionsProvider instance = new CMDIActionsProvider();
         List expResult = instance.collectionNodeActionList;
-        List result = instance.getNodeActions(nodeUri, nodeType);
+        List result = instance.getNodeActions(collectionCorpus);
+        System.out.println(expResult.size());
+        assertEquals(expResult.size(), result.size());
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
     }

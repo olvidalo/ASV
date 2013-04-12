@@ -55,7 +55,18 @@ public class ProfileIdentifierTest {
         ProfileIdentifier instance = new ProfileIdentifier();
         String expResult = "profile2";
         instance.setProfile(expResult);
-        //String result = instance.getProfile(uri);
-        //assertEquals(expResult, result);
+        String result = instance.getProfile(uri);
+        assertNotEquals(expResult, result);
+    }
+
+    /**
+     * Test of setProfile method, of class ProfileIdentifier.
+     */
+    @Test
+    public void testSetProfile() {
+        System.out.println("setProfile");
+        String expResult_2 = "";
+        ProfileIdentifier instance = new ProfileIdentifier();
+        instance.setProfile(expResult_2);
     }
 }
