@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi;
 
-import java.net.URI;
-import nl.mpi.metadatabrowser.model.NodeType;
+import java.util.Collection;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.Component;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.wicket.Component;
 public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.services.NodePresentationProvider{
 
     @Override
-    public Component getNodePresentation(String wicketId, URI nodeUri, NodeType nodeType) {
+    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

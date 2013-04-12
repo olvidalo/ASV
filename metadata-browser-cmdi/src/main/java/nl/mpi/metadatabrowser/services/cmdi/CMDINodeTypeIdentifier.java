@@ -17,9 +17,11 @@
 package nl.mpi.metadatabrowser.services.cmdi;
 
 import java.net.URI;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
 
 /**
@@ -28,28 +30,29 @@ import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
  */
 public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.NodeTypeIdentifier {
 
-    @Override
-    public NodeType getNodeType(URI nodeUri) {
-        if(nodeUri == null){
-            return null;
-        }
-        NodeType nodetype = null;
-        ProfileIdentifier profileid = getProfileId(nodeUri);
-        if (profileid.toString().equals("profile1")) {
-            nodetype = new CMDIResourceType();           
-        }
-        if (profileid.toString().equals("profile2")) {
-            nodetype = new CMDICollectionType();
-        }
-        if (profileid.toString().equals("profile3")) {
-            nodetype = new CMDIMetadata();
-        }
-        return nodetype;
-    }
-
     public ProfileIdentifier getProfileId(URI nodeURI) {
         ProfileIdentifier profileId = new ProfileIdentifier();
         profileId.getProfile(nodeURI);
         return profileId;
+    }
+
+    @Override
+    public NodeType getNodeType(CorpusNode node) {
+        URI nodeUri = node.getUri();
+        if(nodeUri == null){
+            return null;
+        }
+        NodeType nodetype = null;
+        ProfileIdentifier profileid = new ProfileIdentifier();
+        if (profileid.getProfile(nodeUri).equals("profile1")) {
+            nodetype = new CMDIResourceTxtType();           
+        }
+        if (profileid.getProfile(nodeUri).equals("profile2")) {
+            nodetype = new CMDICollectionType();
+        }
+        if (profileid.getProfile(nodeUri).equals("profile3")) {
+            nodetype = new CMDIMetadata();
+        }
+        return nodetype;
     }
 }

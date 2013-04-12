@@ -18,9 +18,11 @@ package nl.mpi.metadatabrowser.services.cmdi;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 
@@ -30,7 +32,7 @@ import nl.mpi.metadatabrowser.services.NodeActionsProvider;
  */
 public class CMDIActionsProvider implements NodeActionsProvider {
 
-    private final List<NodeAction> resourcetxtNodeActionList = Arrays.asList(
+    private final List<NodeAction> resourcetxtNodeActionList = Arrays.<NodeAction>asList(
             new CMDIAMSNodeAction("Annotation Content Search"),
             new CMDIAMSNodeAction("Manage access Rights"),
             new CMDIAMSNodeAction("Request Resource Access"),
@@ -40,7 +42,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
             new CMDIDonwloadNodeAction("Download"));
     
     //private final List<NodeAction> resourcetxtNodeActionList;
-    private final List<NodeAction> resourceAudioVideoNodeActionList = Arrays.asList(
+    private final List<NodeAction> resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
             new CMDIAMSNodeAction("Manage access Rights"),
             new CMDIAMSNodeAction("Request Resource Access"),
             new CMDIAMSNodeAction("Access statistics"),
@@ -48,7 +50,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
             new CMDIAMSNodeAction("Create Bookmark"),
             new CMDIDonwloadNodeAction("Download"));
     
-    private final List<NodeAction> metadataNodeActionList = Arrays.asList(
+    private final List<NodeAction> metadataNodeActionList = Arrays.<NodeAction>asList(
             new CMDIAMSNodeAction("Metadata Search"),
             new CMDIAMSNodeAction("Annotation Content Search"),
             new CMDIAMSNodeAction("Manage access Rights"),
@@ -62,7 +64,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
             new CMDIAMSNodeAction("View Images")
             );
     
-    public final List<NodeAction> collectionNodeActionList = Arrays.asList(
+    public final List<NodeAction> collectionNodeActionList = Arrays.<NodeAction>asList(
             new CMDIAMSNodeAction("Metadata Search"),
             new CMDIAMSNodeAction("Annotation Content Search"),
             new CMDIAMSNodeAction("Manage access Rights"),
@@ -74,70 +76,27 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     // private final List<NodeAction> extraNodeActionList;
 
     public CMDIActionsProvider() {
-        //this.uriNodeActionMap = uriNodeActionMap;
+        
     }
 
     @Override
-    public List<NodeAction> getNodeActions(URI nodeUri, NodeType nodeType) {
-        if (nodeType instanceof CMDICollectionType) {
+    public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
+        if(nodes.size() > 0 && nodes.size() ==1){
+                if (nodes.iterator().next().getNodeType() instanceof CMDICollectionType) {
             return collectionNodeActionList;
         }
-        if (nodeType instanceof CMDIMetadata) {
+        if (nodes.iterator().next().getNodeType() instanceof CMDIMetadata) {
             return metadataNodeActionList;
         }
-        if (nodeType instanceof CMDIResourceType) {
+        if (nodes.iterator().next().getNodeType() instanceof CMDIResourceType) {
             return resourceAudioVideoNodeActionList;
         }
-        if (nodeType instanceof CMDIResourceTxtType) {
+        if (nodes.iterator().next().getNodeType() instanceof CMDIResourceTxtType) {
             return resourcetxtNodeActionList;
         }
+        } else if (nodes.size() > 1){
+        // return a list for multiple selection
+    }
         return null;
     }
-
-//    private List<NodeAction> createResourcetxtActions() {
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("Annotation Content Search"));
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("Manage access Rights"));
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("Request Resource Access"));
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("Access statistics"));
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("View Node"));
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("Create Bookmark"));
-//        resourcetxtNodeActionList.add(new CMDIDonwloadNodeAction("Download"));
-//        return resourcetxtNodeActionList;
-//    }
-
-//    private List<NodeAction> createResourceAudioVideoActions() {
-//        resourceAudioVideoNodeActionList.add(new CMDIDonwloadNodeAction("Manage access Rights"));
-//        resourceAudioVideoNodeActionList.add(new CMDIDonwloadNodeAction("Request Resource Access"));
-//        resourceAudioVideoNodeActionList.add(new CMDIDonwloadNodeAction("Access statistics"));
-//        resourceAudioVideoNodeActionList.add(new CMDIDonwloadNodeAction("View Node"));
-//        resourceAudioVideoNodeActionList.add(new CMDIDonwloadNodeAction("Create Bookmark"));
-//        resourceAudioVideoNodeActionList.add(new CMDIDonwloadNodeAction("Download"));
-//        return resourceAudioVideoNodeActionList;
-//    }
-
-//    private List<NodeAction> createMetadataActions() {
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Metadata Search"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Annotation Content Search"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Manage access Rights"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Request Resource Access"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("View Node"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Create Bookmark"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Download"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Download all resources"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Version info"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("View Images"));
-//        metadataNodeActionList.add(new CMDIDonwloadNodeAction("Access statistics"));
-//        return metadataNodeActionList;
-//    }
-//
-//    private List<NodeAction> createCollectionActions() {
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("Metadata Search"));
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("Annotation Content Search"));
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("Manage access Rights"));
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("Request Resource Access"));
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("View Node"));
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("Create Bookmark"));
-//        collectionNodeActionList.add(new CMDIDonwloadNodeAction("Download"));
-//        return collectionNodeActionList;
-//    }
 }

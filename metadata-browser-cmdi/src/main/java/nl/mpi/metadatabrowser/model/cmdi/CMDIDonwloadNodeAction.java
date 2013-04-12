@@ -17,17 +17,11 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.Serializable;
 import java.net.URI;
-import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeActionException;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import org.apache.wicket.request.resource.ResourceStreamResource;
+import nl.mpi.metadatabrowser.model.*;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ZipResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class CMDIDonwloadNodeAction implements NodeAction, Serializable {
+public final class CMDIDonwloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private String name = "download";
@@ -61,21 +55,20 @@ public final class CMDIDonwloadNodeAction implements NodeAction, Serializable {
 
 
     @Override
-    public NodeActionResult execute(URI nodeUri) throws NodeActionException {
+    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+        URI nodeUri = node.getUri();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // TODO HANDLE download action here
-String fileName = nodeUri.toString().substring( nodeUri.toString().lastIndexOf('/')+1, nodeUri.toString().length() );
-String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+        // HANDLE download action here
+        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
+        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
 
 
-File file = new File(nodeUri.getPath());
-IResourceStream resStream = new FileResourceStream(file);
-DownloadActionRequest.setStreamContent(resStream.toString());
-DownloadActionRequest.setFileName(fileNameWithoutExtn);
-//ResourceStreamResource resource = new ResourceStreamResource(resStream);
-	                        
-        
+        File file = new File(nodeUri.getPath());
+        IResourceStream resStream = new FileResourceStream(file);
+        DownloadActionRequest.setStreamContent(resStream);
+        DownloadActionRequest.setFileName(fileNameWithoutExtn);
+
         if (exceptionMessage == null) {
             return new NodeActionResult() {
 

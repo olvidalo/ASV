@@ -27,41 +27,41 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIAMSNodeAction implements NodeAction {
+public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private String name = "ams";
     private String feedbackMessage;
     private String exceptionMessage;
-    private Map<String, String> parameters = new HashMap<String,String>();
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDIAMSNodeAction(String name) {
-        this.name= name;
+        this.name = name;
     }
 
     CMDIAMSNodeAction() {
     }
 
-    
-        public void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
-    
+
     @Override
     public String getName() {
         return name;
     }
 
-
     @Override
-    public NodeActionResult execute(URI nodeUri) throws NodeActionException {
+    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+        URI nodeUri = node.getUri();
+        int nodeId = node.getNodeId();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // TODO HANDLE navigation action here
-NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.AMS);
-parameters.put("nodeId", getNodeID(nodeUri));
-parameters.put("jessionID", getNodeID(nodeUri));
-NavigationActionRequest.setParameters(parameters);
+        // HANDLE ams action here
+        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.AMS);
+        parameters.put("nodeId", Integer.toString(nodeId));
+        parameters.put("jessionID", "session id"); // use only for LANA
+        NavigationActionRequest.setParameters(parameters);
 
         if (exceptionMessage == null) {
             return new NodeActionResult() {
@@ -86,10 +86,4 @@ NavigationActionRequest.setParameters(parameters);
             throw new NodeActionException(this, exceptionMessage);
         }
     }
-    
-        public static String getNodeID(URI nodeUri) {
-        //TODO call corpusStructure on URI to get nodeid;
-        return "MPI#TEST1";
-    }
-
 }

@@ -26,17 +26,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDISearchNodeAction implements NodeAction {
+public class CMDISearchNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private String name = "cmdiSearch";
+    private final String name = "cmdiSearch";
     private String feedbackMessage;
     private String exceptionMessage;
     private Map<String, String> parameters;
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String getName() {
@@ -44,13 +40,16 @@ public class CMDISearchNodeAction implements NodeAction {
     }
 
     @Override
-    public NodeActionResult execute(URI nodeUri) throws NodeActionException {
+    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+        URI nodeUri = node.getUri();
+        int nodeId = node.getNodeId();
+
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // TODO HANDLE navigation action here
+        // HANDLE search action here
         NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.TROVA);
-        parameters.put("nodeId", getNodeID(nodeUri));
-        parameters.put("jessionID", getNodeID(nodeUri));
+        parameters.put("nodeId", Integer.toString(nodeId));
+        parameters.put("jessionID", "session number");
         NavigationActionRequest.setParameters(parameters);
 
         if (exceptionMessage == null) {
@@ -75,10 +74,5 @@ public class CMDISearchNodeAction implements NodeAction {
             logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
             throw new NodeActionException(this, exceptionMessage);
         }
-    }
-
-    private String getNodeID(URI nodeUri) {
-        //TODO call corpusStructure on URI to get nodeid;
-        return "MPI#TEST1";
     }
 }

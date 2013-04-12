@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi;
 import java.io.Serializable;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
 
 /**
  *
@@ -28,21 +27,29 @@ import org.apache.wicket.util.resource.StringResourceStream;
 public class DownloadActionRequest implements DownloadRequest, Serializable {
     
     private static String fileName;
-    private static String streamContent;
+    private static IResourceStream streamContent;
 
-    static void setFileName(String name) {
+    public static void setFileName(String name) {
         DownloadActionRequest.fileName = name;
+    }
+
+    DownloadActionRequest(String fileName, IResourceStream resStream) {
+        this.fileName = fileName;
+        this.streamContent = resStream;
+    }
+
+    DownloadActionRequest() {
     }
     
 
 
-    public static void setStreamContent(String streamContent) {
+    public static void setStreamContent(IResourceStream streamContent) {
 	DownloadActionRequest.streamContent = streamContent;
     }
     
     @Override
     public IResourceStream getDownloadStream() {
-        return new StringResourceStream(streamContent);
+        return streamContent;
     }
 
     

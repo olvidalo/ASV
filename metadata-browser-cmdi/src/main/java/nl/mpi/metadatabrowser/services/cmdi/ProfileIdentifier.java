@@ -32,7 +32,7 @@ public class ProfileIdentifier {
 
     private String getProfileId(URI uri) {
         //should call corpus structure DB
-        return "profile2";
+        return "profile1";
     }
 
     void setProfile(String expResult) {
