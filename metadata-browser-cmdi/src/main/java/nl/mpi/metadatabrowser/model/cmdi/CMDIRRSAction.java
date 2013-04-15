@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.*;
@@ -33,7 +34,7 @@ public class CMDIRRSAction extends SingleNodeAction implements NodeAction {
     private String feedbackMessage;
     private String exceptionMessage;
     private final String name = "rrs";
-    private Map<String, String> parameters;
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     @Override
     public String getName() {

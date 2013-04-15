@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.*;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class CMDITROVANodeAction extends SingleNodeAction implements NodeAction 
     private final String name = "trova";
     private String feedbackMessage;
     private String exceptionMessage;
-    private Map<String, String> parameters;
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDITROVANodeAction() {
     }
