@@ -38,8 +38,9 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 /**
  *
@@ -97,12 +98,12 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
 	final NodesActionsPanel panel = new NodesActionsPanel("panelId", modelObject);
 	tester.startComponentInPage(panel);
 	Component actionsForm = panel.get("nodeActionsForm");
-	assertTrue(actionsForm instanceof Form);
+	assertThat(actionsForm, instanceOf(Form.class));
 	Component listView = panel.get("nodeActionsForm:nodeActions");
-	assertTrue(listView instanceof ListView);
+	assertThat(listView, instanceOf(ListView.class));
 	assertEquals(2, ((ListView) listView).size());
 	Component actionButton = panel.get("nodeActionsForm:nodeActions:0:nodeActionButton");
-	assertTrue(actionButton instanceof NodeActionButton);
+	assertThat(actionButton, instanceOf(NodeActionButton.class));
     }
 
     @Test
