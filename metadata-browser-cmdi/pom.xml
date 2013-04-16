@@ -21,6 +21,11 @@
 	    <artifactId>metadata-browser-api</artifactId>
 	    <version>${project.parent.version}</version>
 	</dependency>
+        <dependency>
+            <groupId>nl.mpi</groupId>
+            <artifactId>corpusstructure-api</artifactId>
+            <version>1.7.9-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
 
