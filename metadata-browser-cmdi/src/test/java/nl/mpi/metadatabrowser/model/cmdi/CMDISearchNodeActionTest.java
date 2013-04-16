@@ -52,7 +52,7 @@ public class CMDISearchNodeActionTest {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }

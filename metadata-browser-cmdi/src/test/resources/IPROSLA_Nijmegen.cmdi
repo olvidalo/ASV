@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><CMD xmlns="http://www.clarin.eu/cmd/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CMDVersion="1.1" xsi:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd ">
+   <Header><MdCreator>alekoe</MdCreator><MdCreationDate>2012-12-20+01:00</MdCreationDate><MdSelfLink>http://hdl.handle.net/LUX16/00-8796EB34-DC46-4EC2-B1EB-CD18BB77F4F6</MdSelfLink><MdProfile>clarin.eu:cr1:p_1345561703620</MdProfile></Header>
+   <Resources>
+      <ResourceProxyList>
+         
+         <ResourceProxy id="res_e3cc9c9b-0a8c-448e-bd57-494d6b0e6907">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Abel/Abel.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_d38bb534-4572-4f4e-8923-4e129f440710">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Beatrijs/Beatrijs.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_8948dc06-cca2-4ab9-9a7e-cb667cfc6063">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Cato/Cato.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_2e998948-67aa-412e-9c40-f5f2fa685790">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Diederik/Diederik.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_91513055-d84e-4899-be97-5d063b51cc7b">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Eva/Eva.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_a98baaf3-b203-4d55-9c1f-d244c9ecfc44">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Florian/Florian.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_d76aacc7-c07a-485b-8c19-3e295d41b498">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Glenn/Glenn.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_7a47430f-22b0-465e-927f-224d1695468b">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Hugo/Hugo.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_c4350cdc-16e8-4146-93b3-bfc0b86c32b7">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Isabel/Isabel.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_de6ad56e-086c-4534-bf70-b2885a14bc95">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>file:/home/alekoe/projects/being_corpman/cmdification/iprosla/newexport/Janske/Janske.cmdi</ResourceRef>
+         </ResourceProxy>
+      </ResourceProxyList>
+      <JournalFileProxyList/>
+      <ResourceRelationList/>
+   </Resources>
+   <Components>
+      <collection ref="res_e3cc9c9b-0a8c-448e-bd57-494d6b0e6907 res_d38bb534-4572-4f4e-8923-4e129f440710 res_8948dc06-cca2-4ab9-9a7e-cb667cfc6063 res_2e998948-67aa-412e-9c40-f5f2fa685790 res_91513055-d84e-4899-be97-5d063b51cc7b res_a98baaf3-b203-4d55-9c1f-d244c9ecfc44 res_d76aacc7-c07a-485b-8c19-3e295d41b498 res_7a47430f-22b0-465e-927f-224d1695468b res_c4350cdc-16e8-4146-93b3-bfc0b86c32b7 res_de6ad56e-086c-4534-bf70-b2885a14bc95">
+         <CollectionInfo>
+            <Name xml:lang="eng">IPROSLA Nijmegen</Name>
+         </CollectionInfo>
+         <License>
+            <DistributionType>unspecified</DistributionType>
+            <LicenseName/>
+            <LicenseURL/>
+         </License>
+      </collection>
+   </Components>
+</CMD>

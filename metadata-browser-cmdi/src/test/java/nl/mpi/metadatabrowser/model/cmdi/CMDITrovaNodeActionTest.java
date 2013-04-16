@@ -31,8 +31,7 @@ import static org.junit.Assert.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIRRSActionTest {
-    
+public class CMDITrovaNodeActionTest {
     private Map<String, String> parameters = new HashMap<String, String>();
     
     private TypedCorpusNode corpType = new TypedCorpusNode() {
@@ -53,7 +52,7 @@ public class CMDIRRSActionTest {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }
@@ -84,8 +83,7 @@ public class CMDIRRSActionTest {
         }
     };
     
-    
-    public CMDIRRSActionTest() {
+    public CMDITrovaNodeActionTest() {
     }
 
     @BeforeClass
@@ -105,31 +103,30 @@ public class CMDIRRSActionTest {
     }
 
     /**
-     * Test of getName method, of class CMDIRRSAction.
+     * Test of getName method, of class CMDITrovaNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIRRSAction instance = new CMDIRRSAction();
-        String expResult = "rrs";
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
+        String expResult = "trova";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of execute method, of class CMDIRRSAction.
+     * Test of execute method, of class CMDITrovaNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
         TypedCorpusNode node = corpType;
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
         NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.RRS);
-        System.out.println(parameters);
         parameters.put("nodeId", Integer.toString(node.getNodeId()));
         parameters.put("jessionID", "number");// for LANA  only
         NavigationActionRequest.setParameters(parameters);
         System.out.println(parameters);
-
         NodeActionResult expResult = new NodeActionResult() {
 
             @Override
@@ -142,10 +139,8 @@ public class CMDIRRSActionTest {
                 return new NavigationActionRequest();
             }
         };
-        System.out.println(expResult);
-        CMDIRRSAction instance = new CMDIRRSAction();
         NodeActionResult result = instance.execute(node);
-        assertEquals("rrs", instance.getName());
-
+        assertNotEquals("rrs", instance.getName());
+        assertEquals("trova", instance.getName());
     }
 }

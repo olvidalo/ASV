@@ -23,10 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Locale;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.resource.FileResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.resource.*;
 import org.apache.wicket.util.time.Time;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -88,7 +85,7 @@ public class DownloadActionRequestTest {
     @Test
     public void testGetDownloadStream() throws ResourceStreamNotFoundException, URISyntaxException {
         System.out.println("getDownloadStream");
-        URI nodeUri = new URI("/Users/jeafer/Documents/CMDI/IPROSLA_Nijmegen.cmdi");
+        URI nodeUri = getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi").toURI();
         File file = new File(nodeUri.getPath());
         IResourceStream resStream = new FileResourceStream(file);
         DownloadActionRequest instance = new DownloadActionRequest("IPROSLA_Nijmegen", resStream);

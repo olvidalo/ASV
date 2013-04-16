@@ -16,16 +16,14 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.*;
-import org.apache.wicket.util.resource.FileResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -33,9 +31,11 @@ import static org.junit.Assert.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIDonwloadNodeActionTest {
-
-private TypedCorpusNode corpType = new TypedCorpusNode() {
+public class CMDIRrsNodeActionTest {
+    
+    private Map<String, String> parameters = new HashMap<String, String>();
+    
+    private TypedCorpusNode corpType = new TypedCorpusNode() {
 
         @Override
         public int getNodeId() {
@@ -53,7 +53,7 @@ private TypedCorpusNode corpType = new TypedCorpusNode() {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }
@@ -65,7 +65,7 @@ private TypedCorpusNode corpType = new TypedCorpusNode() {
 
         @Override
         public int getChildCount() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return 0;
         }
 
         @Override
@@ -84,7 +84,8 @@ private TypedCorpusNode corpType = new TypedCorpusNode() {
         }
     };
     
-    public CMDIDonwloadNodeActionTest() {
+    
+    public CMDIRrsNodeActionTest() {
     }
 
     @BeforeClass
@@ -94,55 +95,41 @@ private TypedCorpusNode corpType = new TypedCorpusNode() {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of getName method, of class CMDIDonwloadNodeAction.
+     * Test of getName method, of class CMDIRrsNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIDonwloadNodeAction instance = new CMDIDonwloadNodeAction();
-        String expResult = "download";
+        CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
+        String expResult = "rrs";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of setName method, of class CMDIDonwloadNodeAction.
-     */
-    @Test
-    public void testSetName() {
-        System.out.println("setName");
-        String name = "download2";
-        CMDIDonwloadNodeAction instance = new CMDIDonwloadNodeAction();
-        instance.setName(name);
-        assertEquals("download2", instance.getName());
-    }
-
-    /**
-     * Test of execute method, of class CMDIDonwloadNodeAction.
+     * Test of execute method, of class CMDIRrsNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
-        DownloadActionRequest dar = new DownloadActionRequest();
-        URI nodeUri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
-        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+        TypedCorpusNode node = corpType;
+        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.RRS);
+        System.out.println(parameters);
+        parameters.put("nodeId", Integer.toString(node.getNodeId()));
+        parameters.put("jessionID", "number");// for LANA  only
+        NavigationActionRequest.setParameters(parameters);
+        System.out.println(parameters);
 
-
-        File file = new File(nodeUri.getPath());
-        IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest.setStreamContent(resStream);
-        DownloadActionRequest.setFileName(fileNameWithoutExtn);
         NodeActionResult expResult = new NodeActionResult() {
 
             @Override
@@ -152,12 +139,13 @@ private TypedCorpusNode corpType = new TypedCorpusNode() {
 
             @Override
             public ControllerActionRequest getControllerActionRequest() {
-                return new DownloadActionRequest();
+                return new NavigationActionRequest();
             }
         };
-        CMDIDonwloadNodeAction instance = new CMDIDonwloadNodeAction();
-        NodeActionResult result = instance.execute(corpType);
-        assertEquals("download", instance.getName());
-        assertEquals("1", dar.getFileName());
+        System.out.println(expResult);
+        CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
+        NodeActionResult result = instance.execute(node);
+        assertEquals("rrs", instance.getName());
+
     }
 }

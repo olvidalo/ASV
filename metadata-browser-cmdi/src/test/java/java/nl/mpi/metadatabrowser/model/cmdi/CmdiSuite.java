@@ -16,6 +16,7 @@
  */
 package java.nl.mpi.metadatabrowser.model.cmdi;
 
+import nl.mpi.metadatabrowser.model.cmdi.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,7 +29,7 @@ import org.junit.runners.Suite;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({nl.mpi.metadatabrowser.model.cmdi.CMDIAMSNodeActionTest.class, nl.mpi.metadatabrowser.model.cmdi.CMDIMetadataTest.class, nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtTypeTest.class, nl.mpi.metadatabrowser.model.cmdi.CMDINodeTypeTest.class, nl.mpi.metadatabrowser.model.cmdi.CMDIDonwloadNodeActionTest.class, nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTypeTest.class, nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequestTest.class, nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequestTest.class, nl.mpi.metadatabrowser.model.cmdi.CMDICollectionTypeTest.class})
+@Suite.SuiteClasses({CMDIAMSNodeActionTest.class, CMDIMetadataTest.class, CMDINodeTypeTest.class, CMDIResourceTxtTypeTest.class, CMDIMultipleDownloadNodeActionTest.class, CMDIResourceTypeTest.class, NavigationActionRequestTest.class, CMDITrovaNodeActionTest.class, CMDIRrsNodeActionTest.class, CMDISearchNodeActionTest.class, CMDIDownloadNodeActionTest.class, DownloadActionRequestTest.class, CMDIStatsNodeActionTest.class, CMDICollectionTypeTest.class})
 public class CmdiSuite {
 
     @BeforeClass

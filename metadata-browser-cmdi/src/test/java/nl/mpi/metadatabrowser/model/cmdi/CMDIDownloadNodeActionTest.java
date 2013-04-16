@@ -16,14 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.*;
+import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -31,10 +33,9 @@ import static org.junit.Assert.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDITROVANodeActionTest {
-    private Map<String, String> parameters = new HashMap<String, String>();
-    
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
+public class CMDIDownloadNodeActionTest {
+
+private TypedCorpusNode corpType = new TypedCorpusNode() {
 
         @Override
         public int getNodeId() {
@@ -52,7 +53,7 @@ public class CMDITROVANodeActionTest {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }
@@ -64,7 +65,7 @@ public class CMDITROVANodeActionTest {
 
         @Override
         public int getChildCount() {
-            return 0;
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -83,7 +84,7 @@ public class CMDITROVANodeActionTest {
         }
     };
     
-    public CMDITROVANodeActionTest() {
+    public CMDIDownloadNodeActionTest() {
     }
 
     @BeforeClass
@@ -93,40 +94,43 @@ public class CMDITROVANodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of getName method, of class CMDITROVANodeAction.
+     * Test of getName method, of class CMDIDownloadNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDITROVANodeAction instance = new CMDITROVANodeAction();
-        String expResult = "trova";
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
+        String expResult = "download";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of execute method, of class CMDITROVANodeAction.
+     * Test of execute method, of class CMDIDownloadNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
-        TypedCorpusNode node = corpType;
-        CMDITROVANodeAction instance = new CMDITROVANodeAction();
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.RRS);
-        parameters.put("nodeId", Integer.toString(node.getNodeId()));
-        parameters.put("jessionID", "number");// for LANA  only
-        NavigationActionRequest.setParameters(parameters);
-        System.out.println(parameters);
+        DownloadActionRequest dar = new DownloadActionRequest();
+        URI nodeUri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
+        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+
+
+        File file = new File(nodeUri.getPath());
+        IResourceStream resStream = new FileResourceStream(file);
+        DownloadActionRequest.setStreamContent(resStream);
+        DownloadActionRequest.setFileName(fileNameWithoutExtn);
         NodeActionResult expResult = new NodeActionResult() {
 
             @Override
@@ -136,11 +140,12 @@ public class CMDITROVANodeActionTest {
 
             @Override
             public ControllerActionRequest getControllerActionRequest() {
-                return new NavigationActionRequest();
+                return new DownloadActionRequest();
             }
         };
-        NodeActionResult result = instance.execute(node);
-        assertNotEquals("rrs", instance.getName());
-        assertEquals("trova", instance.getName());
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
+        NodeActionResult result = instance.execute(corpType);
+        assertEquals("download", instance.getName());
+        assertEquals("1", dar.getFileName());
     }
 }

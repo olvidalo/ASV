@@ -20,7 +20,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +27,8 @@ import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -36,7 +37,8 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIActionsProviderTest {
-       
+
+    private final Mockery context = new JUnit4Mockery();
     private TypedCorpusNode corpType = new TypedCorpusNode() {
 
         @Override
@@ -55,7 +57,7 @@ public class CMDIActionsProviderTest {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }
@@ -85,7 +87,7 @@ public class CMDIActionsProviderTest {
             return new CMDICollectionType();
         }
     };
-    
+
     public CMDIActionsProviderTest() {
     }
 
@@ -96,11 +98,11 @@ public class CMDIActionsProviderTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -113,8 +115,8 @@ public class CMDIActionsProviderTest {
         System.out.println("getNodeActions");
 
         Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-        
-        CMDIActionsProvider instance = new CMDIActionsProvider();
+
+        CMDIActionsProvider instance = new CMDIActionsProvider(context.mock(CmdiCorpusStructureDB.class), context.mock(ZipService.class));
         List expResult = instance.collectionNodeActionList;
         List result = instance.getNodeActions(collectionCorpus);
         System.out.println(expResult.size());

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIDonwloadNodeActionTest;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIDownloadNodeActionTest;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import org.junit.*;
@@ -53,7 +53,7 @@ public class CMDINodeTypeIdentifierTest {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }

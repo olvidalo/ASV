@@ -51,7 +51,7 @@ public class CMDIAMSNodeActionTest {
                 URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
                 return uri;
             } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDonwloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }
@@ -114,17 +114,6 @@ public class CMDIAMSNodeActionTest {
         String result = instance.getName();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-    }
-
-    /**
-     * Test of setName method, of class CMDIAMSNodeAction.
-     */
-    @Test
-    public void testSetName() {
-        System.out.println("setName");
-        String name = "ams";
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
-        instance.setName(name);
     }
 
     /**
