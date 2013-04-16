@@ -30,20 +30,12 @@ import org.slf4j.LoggerFactory;
 public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private String name = "ams";
+    private final String name = "ams";
     private String feedbackMessage;
     private String exceptionMessage;
     private Map<String, String> parameters = new HashMap<String, String>();
 
-    public CMDIAMSNodeAction(String name) {
-        this.name = name;
-    }
-
-    CMDIAMSNodeAction() {
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public CMDIAMSNodeAction() {
     }
 
     @Override

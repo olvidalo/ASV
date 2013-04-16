@@ -36,6 +36,9 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction 
     private String exceptionMessage;
     private Map<String, String> parameters = new HashMap<String, String>();
 
+    public CMDIStatsNodeAction() {
+    }
+
     @Override
     public String getName() {
         return name;

@@ -16,10 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
+import java.io.*;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +30,24 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDISearchNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "cmdiSearch";
+    private final String name = "multidownload";
     private String feedbackMessage;
     private String exceptionMessage;
-    private Map<String, String> parameters = new HashMap<String, String>();
+    //private ControllerActionRequest resultActionRequest;
+    //private CorpusStructureDBImpl csdb = new CorpusStructureDBImpl("java:comp/env/jdbc/CSDB", false, "jdbc/CSDB", "start1a");
+    private final CmdiCorpusStructureDB csdb;
+    private final ZipService zipService;
 
-    public CMDISearchNodeAction() {
+    public CMDIMultipleDownloadNodeAction(CmdiCorpusStructureDB csdb, ZipService zipService) {
+        this.csdb = csdb;
+        this.zipService = zipService;
     }
 
+
+    
     @Override
     public String getName() {
         return name;
@@ -46,16 +56,26 @@ public class CMDISearchNodeAction extends SingleNodeAction implements NodeAction
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         URI nodeUri = node.getUri();
-        int nodeId = node.getNodeId();
-
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+        int nodeid = node.getNodeId();
 
-        // HANDLE search action here
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.TROVA);
-        parameters.put("nodeId", Integer.toString(nodeId));
-        parameters.put("jessionID", "session number");
-        NavigationActionRequest.setParameters(parameters);
+        try {
+            List<TypedCorpusNode> childrenNodes = csdb.getChildrenCMDIs(nodeid);
+            final File zipFile = zipService.createZipFileForNodes(childrenNodes);
+            IResourceStream resStream = new FileResourceStream(zipFile){
 
+                @Override
+                public void close() throws IOException {
+                    super.close();
+                    zipFile.delete();
+                }
+                
+            };
+            DownloadActionRequest.setStreamContent(resStream);
+            DownloadActionRequest.setFileName("package_" + node.getName());
+        } catch (IOException ioe) {
+            System.out.println("IOException :" + ioe);
+        }
         if (exceptionMessage == null) {
             return new NodeActionResult() {
 
@@ -71,7 +91,7 @@ public class CMDISearchNodeAction extends SingleNodeAction implements NodeAction
 
                 @Override
                 public ControllerActionRequest getControllerActionRequest() {
-                    return new NavigationActionRequest();
+                    return new DownloadActionRequest();
                 }
             };
         } else {

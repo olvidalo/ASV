@@ -16,10 +16,12 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
+import java.io.File;
+import java.io.Serializable;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.*;
+import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,15 +29,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDITROVANodeAction extends SingleNodeAction implements NodeAction {
+public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "trova";
+    private final String name = "download";
     private String feedbackMessage;
     private String exceptionMessage;
-    private Map<String, String> parameters = new HashMap<String, String>();
+    //private ControllerActionRequest resultActionRequest;
 
-    public CMDITROVANodeAction() {
+    public CMDIDownloadNodeAction() {
     }
 
     @Override
@@ -43,17 +45,21 @@ public class CMDITROVANodeAction extends SingleNodeAction implements NodeAction 
         return name;
     }
 
+
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         URI nodeUri = node.getUri();
-        int nodeId = node.getNodeId();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // HANDLE trova action here
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.TROVA);
-        parameters.put("nodeId", Integer.toString(nodeId));
-        parameters.put("jessionID", "session number"); // use only for LANA
-        NavigationActionRequest.setParameters(parameters);
+        // HANDLE download action here
+        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
+        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+
+
+        File file = new File(nodeUri.getPath());
+        IResourceStream resStream = new FileResourceStream(file);
+        DownloadActionRequest.setStreamContent(resStream);
+        DownloadActionRequest.setFileName(fileNameWithoutExtn);
 
         if (exceptionMessage == null) {
             return new NodeActionResult() {
@@ -70,7 +76,7 @@ public class CMDITROVANodeAction extends SingleNodeAction implements NodeAction 
 
                 @Override
                 public ControllerActionRequest getControllerActionRequest() {
-                    return new NavigationActionRequest();
+                    return new DownloadActionRequest();
                 }
             };
         } else {

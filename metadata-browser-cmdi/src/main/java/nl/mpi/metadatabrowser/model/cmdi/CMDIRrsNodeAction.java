@@ -16,12 +16,11 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
-import java.io.File;
-import java.io.Serializable;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.*;
-import org.apache.wicket.util.resource.FileResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,19 +28,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class CMDIDonwloadNodeAction extends SingleNodeAction implements Serializable {
+public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private String name = "download";
     private String feedbackMessage;
     private String exceptionMessage;
-    //private ControllerActionRequest resultActionRequest;
+    private final String name = "rrs";
+    private Map<String, String> parameters = new HashMap<String, String>();
 
-    public CMDIDonwloadNodeAction(String name) {
-        setName(name);
-    }
-
-    CMDIDonwloadNodeAction() {
+    public CMDIRrsNodeAction() {
     }
 
     @Override
@@ -49,25 +44,16 @@ public final class CMDIDonwloadNodeAction extends SingleNodeAction implements Se
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         URI nodeUri = node.getUri();
+        int nodeId = node.getNodeId();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // HANDLE download action here
-        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
-        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-
-
-        File file = new File(nodeUri.getPath());
-        IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest.setStreamContent(resStream);
-        DownloadActionRequest.setFileName(fileNameWithoutExtn);
+        // HANDLE rrs navigation action here
+        NavigationActionRequest.setTarget(NavigationTarget.RRS);
+        parameters.put("nodeId", Integer.toString(nodeId));
+        NavigationActionRequest.setParameters(parameters);
 
         if (exceptionMessage == null) {
             return new NodeActionResult() {
@@ -84,7 +70,7 @@ public final class CMDIDonwloadNodeAction extends SingleNodeAction implements Se
 
                 @Override
                 public ControllerActionRequest getControllerActionRequest() {
-                    return new DownloadActionRequest();
+                    return new NavigationActionRequest();
                 }
             };
         } else {

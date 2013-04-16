@@ -16,12 +16,10 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
@@ -31,52 +29,54 @@ import nl.mpi.metadatabrowser.services.NodeActionsProvider;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIActionsProvider implements NodeActionsProvider {
-
+    
     private final List<NodeAction> resourcetxtNodeActionList = Arrays.<NodeAction>asList(
-            new CMDIAMSNodeAction("Annotation Content Search"),
-            new CMDIAMSNodeAction("Manage access Rights"),
-            new CMDIAMSNodeAction("Request Resource Access"),
-            new CMDIAMSNodeAction("Access statistics"),
-            new CMDIAMSNodeAction("View Node"),
-            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDonwloadNodeAction("Download"));
+            new CMDITrovaNodeAction(),
+            new CMDIAMSNodeAction(),
+            new CMDIRrsNodeAction(),
+            new CMDIStatsNodeAction(),
+//            new CMDIAMSNodeAction("View Node"),
+//            new CMDIAMSNodeAction("Create Bookmark"),
+            new CMDIDownloadNodeAction()
+            );
     
     //private final List<NodeAction> resourcetxtNodeActionList;
     private final List<NodeAction> resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
-            new CMDIAMSNodeAction("Manage access Rights"),
-            new CMDIAMSNodeAction("Request Resource Access"),
-            new CMDIAMSNodeAction("Access statistics"),
-            new CMDIAMSNodeAction("View Node"),
-            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDonwloadNodeAction("Download"));
-    
-    private final List<NodeAction> metadataNodeActionList = Arrays.<NodeAction>asList(
-            new CMDIAMSNodeAction("Metadata Search"),
-            new CMDIAMSNodeAction("Annotation Content Search"),
-            new CMDIAMSNodeAction("Manage access Rights"),
-            new CMDIAMSNodeAction("Request Resource Access"),
-            new CMDIAMSNodeAction("Access statistics"),
-            new CMDIAMSNodeAction("View Node"),
-            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDonwloadNodeAction("Download"),
-            new CMDIDonwloadNodeAction("Download all resources"),
-            new CMDIDonwloadNodeAction("Version info"),
-            new CMDIAMSNodeAction("View Images")
+            new CMDIAMSNodeAction(),
+            new CMDIRrsNodeAction(),
+            new CMDIStatsNodeAction(),
+//            new CMDIAMSNodeAction("View Node"),
+//            new CMDIAMSNodeAction("Create Bookmark"),
+            new CMDIDownloadNodeAction()
             );
     
+    private final List<NodeAction> metadataNodeActionList;
+    
     public final List<NodeAction> collectionNodeActionList = Arrays.<NodeAction>asList(
-            new CMDIAMSNodeAction("Metadata Search"),
-            new CMDIAMSNodeAction("Annotation Content Search"),
-            new CMDIAMSNodeAction("Manage access Rights"),
-            new CMDIAMSNodeAction("Request Resource Access"),
-            new CMDIAMSNodeAction("View Node"),
-            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDonwloadNodeAction("Download")
+            new CMDISearchNodeAction(),
+            new CMDITrovaNodeAction(),
+            new CMDIAMSNodeAction(),
+            new CMDIRrsNodeAction(),
+//            new CMDIAMSNodeAction("View Node"),
+//            new CMDIAMSNodeAction("Create Bookmark"),
+            new CMDIDownloadNodeAction()
             );
     // private final List<NodeAction> extraNodeActionList;
 
-    public CMDIActionsProvider() {
-        
+    public CMDIActionsProvider(CmdiCorpusStructureDB csdb, ZipService zipService) {
+        metadataNodeActionList  = Arrays.<NodeAction>asList(
+            new CMDISearchNodeAction(),
+            new CMDITrovaNodeAction(),
+            new CMDIAMSNodeAction(),
+            new CMDIRrsNodeAction(),
+            new CMDIStatsNodeAction(),
+//            new CMDIAMSNodeAction("View Node"),
+//            new CMDIAMSNodeAction("Create Bookmark"),
+            new CMDIDownloadNodeAction(),
+            new CMDIMultipleDownloadNodeAction(csdb, zipService)
+//            new CMDIDownloadNodeAction("Version info"),
+//            new CMDIAMSNodeAction("View Images")
+            );
     }
 
     @Override

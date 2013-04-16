@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +27,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIRRSAction extends SingleNodeAction implements NodeAction {
+public class CMDITrovaNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+    private final String name = "trova";
     private String feedbackMessage;
     private String exceptionMessage;
-    private final String name = "rrs";
     private Map<String, String> parameters = new HashMap<String, String>();
+
+    public CMDITrovaNodeAction() {
+    }
 
     @Override
     public String getName() {
@@ -47,9 +49,10 @@ public class CMDIRRSAction extends SingleNodeAction implements NodeAction {
         int nodeId = node.getNodeId();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // HANDLE rrs navigation action here
-        NavigationActionRequest.setTarget(NavigationTarget.RRS);
+        // HANDLE trova action here
+        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.TROVA);
         parameters.put("nodeId", Integer.toString(nodeId));
+        parameters.put("jessionID", "session number"); // use only for LANA
         NavigationActionRequest.setParameters(parameters);
 
         if (exceptionMessage == null) {
