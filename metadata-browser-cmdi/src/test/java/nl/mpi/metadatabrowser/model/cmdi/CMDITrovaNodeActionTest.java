@@ -17,71 +17,26 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.tree.GenericTreeNode;
-import nl.mpi.metadatabrowser.model.*;
-import org.junit.*;
+import nl.mpi.metadatabrowser.model.ControllerActionRequest;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import static org.hamcrest.Matchers.instanceOf;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDITrovaNodeActionTest {
-    private Map<String, String> parameters = new HashMap<String, String>();
-    
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
-
-        @Override
-        public int getNodeId() {
-            return 1;
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public URI getUri() {
-            try {
-                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-                return uri;
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public GenericTreeNode getChild(int index) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getChildCount() {
-            return 0;
-        }
-
-        @Override
-        public int getIndexOfChild(GenericTreeNode child) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public GenericTreeNode getParent() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDIMetadata();
-        }
-    };
+        private final Mockery context = new JUnit4Mockery();
+    private final static int NODE_ID = 1;
     
     public CMDITrovaNodeActionTest() {
     }
@@ -120,27 +75,38 @@ public class CMDITrovaNodeActionTest {
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
-        TypedCorpusNode node = corpType;
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        map.put("nodeId", Integer.toString(NODE_ID));
+        map.put("jessionID", "session number");
+
+        context.checking(new Expectations() {
+
+            {
+                oneOf(node).getUri();
+                will(returnValue(new URI("nodeUri")));
+                allowing(node).getNodeId();
+                will(returnValue(NODE_ID));
+            }
+        });
+
+
+
         CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.RRS);
-        parameters.put("nodeId", Integer.toString(node.getNodeId()));
-        parameters.put("jessionID", "number");// for LANA  only
-        NavigationActionRequest.setParameters(parameters);
-        System.out.println(parameters);
-        NodeActionResult expResult = new NodeActionResult() {
-
-            @Override
-            public String getFeedbackMessage() {
-                return "no message";
-            }
-
-            @Override
-            public ControllerActionRequest getControllerActionRequest() {
-                return new NavigationActionRequest();
-            }
-        };
         NodeActionResult result = instance.execute(node);
-        assertNotEquals("rrs", instance.getName());
         assertEquals("trova", instance.getName());
+
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertEquals(NavigationRequest.NavigationTarget.TROVA, navigationActionRequest.getTarget());
+        assertNotNull(navigationActionRequest.getParameters());
+        assertEquals(map, navigationActionRequest.getParameters());
+        
+
     }
 }

@@ -17,15 +17,18 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.tree.GenericTreeNode;
-import nl.mpi.metadatabrowser.model.*;
-import org.junit.*;
+import nl.mpi.metadatabrowser.model.ControllerActionRequest;
+import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import static org.hamcrest.Matchers.instanceOf;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  *
@@ -33,56 +36,8 @@ import static org.junit.Assert.*;
  */
 public class CMDIAMSNodeActionTest {
 
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
-
-        @Override
-        public int getNodeId() {
-            return 1;
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public URI getUri() {
-            try {
-                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-                return uri;
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public GenericTreeNode getChild(int index) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getChildCount() {
-            return 0;
-        }
-
-        @Override
-        public int getIndexOfChild(GenericTreeNode child) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public GenericTreeNode getParent() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDIMetadata();
-        }
-    };
-    
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private final Mockery context = new JUnit4Mockery();
+    private final static int NODE_ID = 1;
 
     public CMDIAMSNodeActionTest() {
     }
@@ -122,29 +77,36 @@ public class CMDIAMSNodeActionTest {
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.AMS);
-        System.out.println(parameters);
-        parameters.put("nodeId", Integer.toString(corpType.getNodeId()));
-        parameters.put("jessionID", "number");
-        NavigationActionRequest.setParameters(parameters);
-        System.out.println(parameters);
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 
-        NodeActionResult expResult = new NodeActionResult() {
+        Map<String, String> map = new HashMap<String, String>();
 
-            @Override
-            public String getFeedbackMessage() {
-                return "no message";
+        map.put("nodeId", Integer.toString(NODE_ID));
+        map.put("jsessionID", "session id");
+
+        context.checking(new Expectations() {
+
+            {
+                oneOf(node).getUri();
+                will(returnValue(new URI("nodeUri")));
+                allowing(node).getNodeId();
+                will(returnValue(NODE_ID));
             }
+        });
 
-            @Override
-            public ControllerActionRequest getControllerActionRequest() {
-                return new NavigationActionRequest();
-            }
-        };
-        System.out.println(expResult);
+
+
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
-        NodeActionResult result = instance.execute(corpType);
+        NodeActionResult result = instance.execute(node);
         assertEquals("ams", instance.getName());
-        // TODO review the generated test code and remove the default call to fail.
+
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertEquals(NavigationTarget.AMS, navigationActionRequest.getTarget());
+        assertNotNull(navigationActionRequest.getParameters());
+        assertEquals(map, navigationActionRequest.getParameters());
     }
 }
