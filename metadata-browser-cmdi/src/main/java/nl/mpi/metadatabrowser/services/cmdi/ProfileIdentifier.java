@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi;
 
 import java.net.URI;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 
 /**
  *
@@ -24,19 +25,19 @@ import java.net.URI;
  */
 public class ProfileIdentifier {
     private String profileId;
+    private final CmdiCorpusStructureDB csdb;
+    
+    public ProfileIdentifier(CmdiCorpusStructureDB csdb){
+        this.csdb = csdb;
+    }
     
     public String getProfile(URI uri){
-        profileId = getProfileId(uri);
+        profileId = csdb.getProfileId(uri);       
        return profileId;
     }
-
-    private String getProfileId(URI uri) {
-        //should call corpus structure DB
-        return "profile1";
-    }
-
-    void setProfile(String expResult) {
-        this.profileId = expResult;
+    
+    void setProfile(String profileId) {
+        this.profileId = profileId;
     }
     
 }

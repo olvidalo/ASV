@@ -29,4 +29,6 @@ public interface CmdiCorpusStructureDB extends CorpusStructureDB {
     public List<TypedCorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException;
     
     public URI getObjectURI(int id) throws UnknownNodeException;
+
+    public String getProfileId(URI uri);
 }
