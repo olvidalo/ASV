@@ -54,6 +54,5 @@ public class CMDINodeTypeTest {
         String expResult = null;
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
     }
 }
