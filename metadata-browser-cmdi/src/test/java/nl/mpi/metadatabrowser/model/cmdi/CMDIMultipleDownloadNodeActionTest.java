@@ -48,55 +48,7 @@ import static org.junit.Assert.*;
 public class CMDIMultipleDownloadNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
-
-        @Override
-        public int getNodeId() {
-            return 1;
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public URI getUri() {
-            try {
-                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-                return uri;
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public GenericTreeNode getChild(int index) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getChildCount() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getIndexOfChild(GenericTreeNode child) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public GenericTreeNode getParent() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDIMetadata();
-        }
-    };
-
+    
     public CMDIMultipleDownloadNodeActionTest() {
     }
 

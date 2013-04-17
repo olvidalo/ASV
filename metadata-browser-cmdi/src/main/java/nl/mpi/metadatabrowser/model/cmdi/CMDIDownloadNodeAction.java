@@ -53,13 +53,13 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
         // HANDLE download action here
         String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
-        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+       // String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
 
 
         File file = new File(nodeUri.getPath());
         IResourceStream resStream = new FileResourceStream(file);
         DownloadActionRequest.setStreamContent(resStream);
-        DownloadActionRequest.setFileName(fileNameWithoutExtn);
+        DownloadActionRequest.setFileName(fileName);
 
         if (exceptionMessage == null) {
             return new NodeActionResult() {

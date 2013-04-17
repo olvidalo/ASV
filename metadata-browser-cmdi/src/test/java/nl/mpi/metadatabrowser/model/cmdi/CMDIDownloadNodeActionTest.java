@@ -16,7 +16,10 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
@@ -27,6 +30,10 @@ import nl.mpi.metadatabrowser.model.*;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.junit.*;
+import static org.hamcrest.Matchers.*;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
 
 /**
@@ -35,55 +42,9 @@ import static org.junit.Assert.*;
  */
 public class CMDIDownloadNodeActionTest {
 
-private TypedCorpusNode corpType = new TypedCorpusNode() {
+    private final Mockery context = new JUnit4Mockery();
+    private final static int NODE_ID = 1;
 
-        @Override
-        public int getNodeId() {
-            return 1;
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public URI getUri() {
-            try {
-                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-                return uri;
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public GenericTreeNode getChild(int index) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getChildCount() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getIndexOfChild(GenericTreeNode child) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public GenericTreeNode getParent() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDIMetadata();
-        }
-    };
-    
     public CMDIDownloadNodeActionTest() {
     }
 
@@ -120,32 +81,32 @@ private TypedCorpusNode corpType = new TypedCorpusNode() {
      */
     @Test
     public void testExecute() throws Exception {
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         System.out.println("execute");
-        DownloadActionRequest dar = new DownloadActionRequest();
-        URI nodeUri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
-        String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+        
+        context.checking(new Expectations() {
 
-
-        File file = new File(nodeUri.getPath());
-        IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest.setStreamContent(resStream);
-        DownloadActionRequest.setFileName(fileNameWithoutExtn);
-        NodeActionResult expResult = new NodeActionResult() {
-
-            @Override
-            public String getFeedbackMessage() {
-                return "no message";
+            {
+                oneOf(node).getUri();
+                will(returnValue(new URI("nodeUri")));
+                allowing(node).getNodeId();
+                will(returnValue(NODE_ID));
+                allowing(node).getName();
+                will(returnValue("nodeName"));
             }
+        });
 
-            @Override
-            public ControllerActionRequest getControllerActionRequest() {
-                return new DownloadActionRequest();
-            }
-        };
         CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
-        NodeActionResult result = instance.execute(corpType);
+        NodeActionResult result = instance.execute(node);
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
+
         assertEquals("download", instance.getName());
-        assertEquals("1", dar.getFileName());
+        
+        DownloadActionRequest downloadActionRequest = (DownloadActionRequest)actionRequest;
+        assertEquals("nodeUri", downloadActionRequest.getFileName());
+        IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
+        assertThat(downloadStream, instanceOf(FileResourceStream.class));
     }
 }

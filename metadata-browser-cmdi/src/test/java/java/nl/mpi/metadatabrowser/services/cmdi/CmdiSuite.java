@@ -16,6 +16,7 @@
  */
 package java.nl.mpi.metadatabrowser.services.cmdi;
 
+import nl.mpi.metadatabrowser.services.cmdi.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,7 +29,7 @@ import org.junit.runners.Suite;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({nl.mpi.metadatabrowser.services.cmdi.CMDINodeTypeIdentifierTest.class, nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifierTest.class, nl.mpi.metadatabrowser.services.cmdi.CMDINodePresentationProviderTest.class, nl.mpi.metadatabrowser.services.cmdi.CMDIActionsProviderTest.class})
+@Suite.SuiteClasses({CMDINodeTypeIdentifierTest.class, ZipServiceImplTest.class, ZipServiceTest.class, ProfileIdentifierTest.class, CMDINodePresentationProviderTest.class, CMDIActionsProviderTest.class})
 public class CmdiSuite {
 
     @BeforeClass
