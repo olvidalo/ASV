@@ -51,7 +51,7 @@ public class CMDISearchNodeAction extends SingleNodeAction implements NodeAction
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
         // HANDLE search action here
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.TROVA);
+        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.CMDISEARCH);
         parameters.put("nodeId", Integer.toString(nodeId));
         parameters.put("jessionID", "session number");
         NavigationActionRequest.setParameters(parameters);

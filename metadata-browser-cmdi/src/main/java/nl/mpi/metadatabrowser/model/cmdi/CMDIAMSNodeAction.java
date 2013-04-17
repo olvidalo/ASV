@@ -52,7 +52,7 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         // HANDLE ams action here
         NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.AMS);
         parameters.put("nodeId", Integer.toString(nodeId));
-        parameters.put("jessionID", "session id"); // use only for LANA
+        parameters.put("jsessionID", "session id"); // use only for LANA
         NavigationActionRequest.setParameters(parameters);
 
         if (exceptionMessage == null) {
