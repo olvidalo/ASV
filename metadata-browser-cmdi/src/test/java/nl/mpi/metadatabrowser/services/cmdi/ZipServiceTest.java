@@ -16,28 +16,27 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi;
 
-import java.net.URI;
-import nl.mpi.metadatabrowser.model.NodeType;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
-import static org.hamcrest.Matchers.instanceOf;
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDINodeTypeIdentifierTest {
-
-    private final Mockery context = new JUnit4Mockery();
-
-    public CMDINodeTypeIdentifierTest() {
+public class ZipServiceTest {
+        private final Mockery context = new JUnit4Mockery();
+        
+    public ZipServiceTest() {
     }
 
     @BeforeClass
@@ -47,37 +46,39 @@ public class CMDINodeTypeIdentifierTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of getNodeType method, of class CMDINodeTypeIdentifier.
+     * Test of createZipFileForNodes method, of class ZipService.
      */
     @Test
-    public void testGetNodeType() throws Exception {
-        System.out.println("getNodeType");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+    public void testCreateZipFileForNodes() throws Exception {
+        System.out.println("createZipFileForNodes");
         final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final ZipService zipService = context.mock(ZipService.class);
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
+        final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
+        final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1,child2);
+        
+        ZipService instance = new ZipServiceImpl();
+        File expResult = null;
+        File result = instance.createZipFileForNodes(childrenNodes);
+        assertEquals(expResult, result);
 
-        context.checking(new Expectations() {
+    }
 
-            {
-                allowing(node).getUri();
-                will(returnValue(new URI("nodeUri")));
-                allowing(csdb).getProfileId(new URI("nodeUri"));
-                        will(returnValue("profile1"));
-            }
-        });
-        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
-        NodeType expResult = new CMDIResourceTxtType();
-        NodeType result = instance.getNodeType(node);
-        assertThat(result, instanceOf(CMDIResourceTxtType.class));
-        assertEquals(expResult.getName(), result.getName());
+    public class ZipServiceImpl implements ZipService {
+
+        public File createZipFileForNodes(List<TypedCorpusNode> childrenNodes) throws IOException, UnknownNodeException, FileNotFoundException {
+            return null;
+        }
     }
 }

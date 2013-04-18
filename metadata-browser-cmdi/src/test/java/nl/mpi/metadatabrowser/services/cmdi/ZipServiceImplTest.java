@@ -16,28 +16,28 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi;
 
-import java.net.URI;
-import nl.mpi.metadatabrowser.model.NodeType;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.ZipFile;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import org.junit.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDINodeTypeIdentifierTest {
+public class ZipServiceImplTest {
 
     private final Mockery context = new JUnit4Mockery();
 
-    public CMDINodeTypeIdentifierTest() {
+    public ZipServiceImplTest() {
     }
 
     @BeforeClass
@@ -57,27 +57,36 @@ public class CMDINodeTypeIdentifierTest {
     }
 
     /**
-     * Test of getNodeType method, of class CMDINodeTypeIdentifier.
+     * Test of createZipFileForNodes method, of class ZipServiceImpl.
      */
     @Test
-    public void testGetNodeType() throws Exception {
-        System.out.println("getNodeType");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+    public void testCreateZipFileForNodes() throws Exception {
+        System.out.println("createZipFileForNodes");
         final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
+        final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
+        final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1, child2);
 
         context.checking(new Expectations() {
 
             {
-                allowing(node).getUri();
-                will(returnValue(new URI("nodeUri")));
-                allowing(csdb).getProfileId(new URI("nodeUri"));
-                        will(returnValue("profile1"));
+                oneOf(child1).getNodeId();
+                will(returnValue(1));
+                oneOf(child2).getNodeId();
+                will(returnValue(2));
+                oneOf(csdb).getObjectURI(1);
+                will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi").toURI()));
+                oneOf(csdb).getObjectURI(2);
+                will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Corpora.cmdi").toURI()));
             }
         });
-        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
-        NodeType expResult = new CMDIResourceTxtType();
-        NodeType result = instance.getNodeType(node);
-        assertThat(result, instanceOf(CMDIResourceTxtType.class));
-        assertEquals(expResult.getName(), result.getName());
+
+        ZipServiceImpl instance = new ZipServiceImpl(csdb);
+        File result = instance.createZipFileForNodes(childrenNodes);
+        ZipFile zip = new ZipFile(result);
+        assertThat(result, instanceOf(File.class));
+        assertNotNull(result.getPath());
+        assertNotNull(result.length());
+        assertEquals(2, zip.size());
     }
 }

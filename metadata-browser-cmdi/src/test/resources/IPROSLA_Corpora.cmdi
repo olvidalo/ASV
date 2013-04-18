@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CMD xmlns="http://www.clarin.eu/cmd/"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     CMDVersion="1.1"
+     xsi:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd ">
+   <Header>
+      <MdCreator>alekoe</MdCreator>
+      <MdCreationDate>2012-12-20+01:00</MdCreationDate>
+      <MdProfile>clarin.eu:cr1:p_1345561703620</MdProfile>
+   </Header>
+   <Resources>
+      <ResourceProxyList>
+         <ResourceProxy id="res_51d95048-f3a0-4611-8b70-48612a5c4105">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>IPROSLA_Corpora/IPROSLA_Amsterdam.cmdi</ResourceRef>
+         </ResourceProxy>
+         <ResourceProxy id="res_81d28f51-91fc-47b9-a734-a1a8dd49a408">
+            <ResourceType>Metadata</ResourceType>
+            <ResourceRef>IPROSLA_Corpora/IPROSLA_Nijmegen.cmdi</ResourceRef>
+         </ResourceProxy>
+      </ResourceProxyList>
+      <JournalFileProxyList/>
+      <ResourceRelationList/>
+   </Resources>
+   <Components>
+      <collection ref="res_51d95048-f3a0-4611-8b70-48612a5c4105 res_81d28f51-91fc-47b9-a734-a1a8dd49a408">
+         <CollectionInfo>
+            <Name xml:lang="eng">IPROSLA Corpora</Name>
+            <Description>
+               <Description xml:lang="eng">this is a description</Description>
+            </Description>
+         </CollectionInfo>
+         <License>
+            <DistributionType>unspecified</DistributionType>
+            <LicenseName/>
+            <LicenseURL/>
+         </License>
+      </collection>
+   </Components>
+</CMD>
