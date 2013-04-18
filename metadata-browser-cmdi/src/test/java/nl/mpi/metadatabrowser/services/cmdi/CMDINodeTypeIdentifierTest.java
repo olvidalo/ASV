@@ -17,74 +17,27 @@
 package nl.mpi.metadatabrowser.services.cmdi;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIDownloadNodeActionTest;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import static org.hamcrest.Matchers.instanceOf;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodeTypeIdentifierTest {
-    
-        private TypedCorpusNode corpType = new TypedCorpusNode() {
 
-        @Override
-        public int getNodeId() {
-            return 1;
-        }
+    private final Mockery context = new JUnit4Mockery();
+    private final int NODE_ID = 1;
 
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public URI getUri() {
-            try {
-                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-                return uri;
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public GenericTreeNode getChild(int index) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getChildCount() {
-            return 0;
-        }
-
-        @Override
-        public int getIndexOfChild(GenericTreeNode child) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public GenericTreeNode getParent() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDIResourceTxtType();
-        }
-    };
-    
-    
     public CMDINodeTypeIdentifierTest() {
     }
 
@@ -95,11 +48,11 @@ public class CMDINodeTypeIdentifierTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -108,28 +61,26 @@ public class CMDINodeTypeIdentifierTest {
      * Test of getNodeType method, of class CMDINodeTypeIdentifier.
      */
     @Test
-    public void testGetNodeType() {
-        System.out.println("getNodeType");
-        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier();
-        NodeType expResult = new CMDIResourceTxtType();
-        NodeType result = instance.getNodeType(corpType);
-        System.out.println(expResult);
-        System.out.println(result);
-        assertEquals(expResult.getName(), result.getName());
-        // TODO review the generated test code and remove the default call to fail.
-    }
+    public void testGetNodeType() throws Exception {
 
-    /**
-     * Test of getProfileId method, of class CMDINodeTypeIdentifier.
-     */
-    @Test
-    public void testGetProfileId() {
-        System.out.println("getProfileId");
-        URI nodeURI = null;
-        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier();
-        ProfileIdentifier expResult = new ProfileIdentifier();
-        ProfileIdentifier result = instance.getProfileId(nodeURI);
-        assertSame(expResult.getProfile(null), result.getProfile(nodeURI));
-        // TODO review the generated test code and remove the default call to fail.
+
+        System.out.println("getNodeType");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+
+        context.checking(new Expectations() {
+
+            {
+                allowing(node).getUri();
+                will(returnValue(new URI("nodeUri")));
+                allowing(csdb).getProfileId(new URI("nodeUri"));
+                        will(returnValue("profile1"));
+            }
+        });
+        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
+        NodeType expResult = new CMDIResourceTxtType();
+        NodeType result = instance.getNodeType(node);
+        assertThat(result, instanceOf(CMDIResourceTxtType.class));
+        assertEquals(expResult.getName(), result.getName());
     }
 }
