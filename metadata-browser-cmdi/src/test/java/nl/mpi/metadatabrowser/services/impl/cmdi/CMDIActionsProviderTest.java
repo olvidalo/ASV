@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi;
+package nl.mpi.metadatabrowser.services.impl.cmdi;
 
+import nl.mpi.metadatabrowser.services.impl.cmdi.CMDIActionsProvider;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
+import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.*;

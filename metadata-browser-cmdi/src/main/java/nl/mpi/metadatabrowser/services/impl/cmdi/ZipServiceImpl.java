@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi;
+package nl.mpi.metadatabrowser.services.impl.cmdi;
 
 import java.io.*;
 import java.net.URI;
@@ -24,6 +24,7 @@ import java.util.zip.ZipOutputStream;
 import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 
 /**
  *

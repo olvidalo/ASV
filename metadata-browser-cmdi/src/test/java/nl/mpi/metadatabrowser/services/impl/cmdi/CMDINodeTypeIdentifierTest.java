@@ -14,25 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi;
+package nl.mpi.metadatabrowser.services.impl.cmdi;
 
+import nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodeTypeIdentifier;
 import java.net.URI;
+import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 import org.junit.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class ProfileIdentifierTest {
+public class CMDINodeTypeIdentifierTest {
+
     private final Mockery context = new JUnit4Mockery();
 
-    public ProfileIdentifierTest() {
+    public CMDINodeTypeIdentifierTest() {
     }
 
     @BeforeClass
@@ -52,47 +58,27 @@ public class ProfileIdentifierTest {
     }
 
     /**
-     * Test of getProfile method, of class ProfileIdentifier.
+     * Test of getNodeType method, of class CMDINodeTypeIdentifier.
      */
     @Test
-    public void testGetProfile() throws Exception {
+    public void testGetNodeType() throws Exception {
+        System.out.println("getNodeType");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
-        System.out.println("getProfile");
-
-        context.checking(new Expectations() {
-            {
-                oneOf(csdb).getProfileId(new URI("nodeUri"));
-                will(returnValue("profile1"));
-            }
-        });
-        ProfileIdentifier instance = new ProfileIdentifier(csdb);
-        String expResult = "profile2";
-        instance.setProfile(expResult);
-        String result = instance.getProfile(new URI("nodeUri"));
-        assertNotEquals(expResult, result);
-    }
-
-    /**
-     * Test of setProfile method, of class ProfileIdentifier.
-     */
-    @Test
-    public void testSetProfile() {
-       // context.setImposteriser(ClassImposteriser.INSTANCE);
-        final ProfileIdentifier proI = context.mock(ProfileIdentifier.class);
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
-        System.out.println("setProfile");
 
         context.checking(new Expectations() {
 
             {
-                oneOf(proI).setProfile("profile2");
+                allowing(node).getUri();
+                will(returnValue(new URI("nodeUri")));
+                allowing(csdb).getProfileId(new URI("nodeUri"));
+                        will(returnValue("profile1"));
             }
         });
-
-        String expResult = "profile3";
-        ProfileIdentifier instance = new ProfileIdentifier(csdb);
-        instance.setProfile(expResult);
-        assertNotEquals(expResult, instance.getProfile(null));
-        assertEquals("profile3", instance.getProfile(null));
+        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
+        NodeType expResult = new CMDIResourceTxtType();
+        NodeType result = instance.getNodeType(node);
+        assertThat(result, instanceOf(CMDIResourceTxtType.class));
+        assertEquals(expResult.getName(), result.getName());
     }
 }

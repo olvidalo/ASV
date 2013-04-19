@@ -14,16 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi;
+package nl.mpi.metadatabrowser.services.impl.cmdi;
 
 import java.net.URI;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface ProfileIdentifier {
-    String getProfile(URI nodeUri);
-
-    void setProfile(String profile2);
+public class ProfileIdentifierImpl implements ProfileIdentifier {
+    private String profileId;
+    private final CmdiCorpusStructureDB csdb;
+    
+    public ProfileIdentifierImpl(CmdiCorpusStructureDB csdb){
+        this.csdb = csdb;
+    }
+    
+    @Override
+    public String getProfile(URI uri){
+        profileId = csdb.getProfileId(uri);       
+       return profileId;
+    }
+    
+    @Override
+    public void setProfile(String profileId) {
+        this.profileId = profileId;
+    }
+    
 }

@@ -16,6 +16,11 @@
  */
 package java.nl.mpi.metadatabrowser.services.cmdi;
 
+import nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodeTypeIdentifierTest;
+import nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodePresentationProviderTest;
+import nl.mpi.metadatabrowser.services.impl.cmdi.CMDIActionsProviderTest;
+import nl.mpi.metadatabrowser.services.impl.cmdi.ProfileIdentifierTest;
+import nl.mpi.metadatabrowser.services.impl.cmdi.ZipServiceImplTest;
 import nl.mpi.metadatabrowser.services.cmdi.*;
 import org.junit.After;
 import org.junit.AfterClass;

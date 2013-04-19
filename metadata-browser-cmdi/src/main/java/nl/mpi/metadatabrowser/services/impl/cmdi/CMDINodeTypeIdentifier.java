@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi;
+package nl.mpi.metadatabrowser.services.impl.cmdi;
 
+import nl.mpi.metadatabrowser.services.impl.cmdi.ProfileIdentifierImpl;
 import java.net.URI;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -39,7 +40,7 @@ public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.N
             return null;
         }
         NodeType nodetype = null;
-        ProfileIdentifier profileid = new ProfileIdentifier(csdb);
+        ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
         if (profileid.getProfile(nodeUri).equals("profile1")) {
             nodetype = new CMDIResourceTxtType();
         }
