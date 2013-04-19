@@ -28,7 +28,11 @@
 	    <artifactId>metadata-browser-api</artifactId>
 	    <version>${project.parent.version}</version>
 	</dependency>
-
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>metadata-browser-cmdi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	<!-- WICKET DEPENDENCIES -->
 	<dependency>
 	    <groupId>org.apache.wicket</groupId>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/metadata-browser-pages">
+    <!-- Spring profile for runtime. Actual beans may come from dependency, also see contextConfigLocation parameter in web.xml -->
+    <Parameter name="spring.profiles.active" value="cmdi-production" />
+</Context>
