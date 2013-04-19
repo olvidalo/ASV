@@ -23,6 +23,8 @@ public class Start {
 	bb.setServer(server);
 	bb.setContextPath("/");
 	bb.setWar("src/main/webapp");
+	// Mock spring beans are in 'mock' profile
+	bb.setInitParameter("spring.profiles.active", "mock");
 
 	// START JMX SERVER
 	// MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
