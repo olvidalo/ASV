@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+       profile="cmdi-production"
+>
+    
+    <!-- 
+	Spring configuration for usage of the CMDI metadata browser services in a production environment.
+	
+	These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
+	is active.
+    -->
+    
+    <!-- CSDB factory -->
+    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.impl.cmdi.CmdiCorpusStructureDBFactoryImpl">
+	<constructor-arg value="dbname" />
+    </bean>
+    
+    <!-- CSDB created from factory (not sure if this will work because Wicket requires serializability -->
+    <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
+    
+    <!-- Tree model provider based on corpus structure -->    
+    <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
+	<constructor-arg ref="csdbFactory" />
+    </bean>
+    
+    <!-- CMDI implementations for metadata browser providers -->
+    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodeTypeIdentifier">
+	<constructor-arg ref="csdb" />
+    </bean>
+
+    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.impl.cmdi.CMDIActionsProvider">
+	<constructor-arg ref="csdb" />
+	<constructor-arg>
+	    <bean class="nl.mpi.metadatabrowser.services.impl.cmdi.ZipServiceImpl"/>
+	</constructor-arg>
+    </bean>    
+    
+    <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodePresentationProvider" />
+    
+</beans>
