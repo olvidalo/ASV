@@ -19,16 +19,17 @@ package nl.mpi.metadatabrowser.services.impl.cmdi;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.services.NodePresentationProvider{
+public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.services.NodePresentationProvider {
 
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) {
-        throw new UnsupportedOperationException("Not supported yet.");
+	//TODO: Implement actual presentation
+	return new Label(wicketId, nodes.toString());
     }
-    
 }
