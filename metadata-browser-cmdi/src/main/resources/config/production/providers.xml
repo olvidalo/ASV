@@ -19,6 +19,11 @@
     <!-- Tree model provider based on corpus structure -->    
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
 	<constructor-arg ref="csdbFactory" />
+	<constructor-arg>
+	    <bean class="nl.mpi.metadatabrowser.services.impl.cmdi.TypedCorpusNodeResolver">
+		<constructor-arg ref="csdb" />
+	    </bean>
+	</constructor-arg>
     </bean>
     
     <!-- CMDI implementations for metadata browser providers -->
@@ -29,7 +34,9 @@
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.impl.cmdi.CMDIActionsProvider">
 	<constructor-arg ref="csdb" />
 	<constructor-arg>
-	    <bean class="nl.mpi.metadatabrowser.services.impl.cmdi.ZipServiceImpl"/>
+	    <bean class="nl.mpi.metadatabrowser.services.impl.cmdi.ZipServiceImpl">
+		<constructor-arg ref="csdb" />
+	    </bean>
 	</constructor-arg>
     </bean>    
     

@@ -16,11 +16,15 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
+import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.corpusstructure.CorpusNode;
 import nl.mpi.corpusstructure.Node;
+import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
@@ -29,21 +33,41 @@ import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB {
-    
+public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Serializable {
+
+    private MockTypedCorpusNode rootNode;
+
+    public void setRootNode(MockTypedCorpusNode rootNode) {
+	this.rootNode = rootNode;
+    }
+
+    private MockTypedCorpusNode getNode(int nodeId) {
+	return rootNode.getChildRecursive(nodeId);
+    }
+
     @Override
     public List<TypedCorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	final MockTypedCorpusNode node = getNode(nodeId);
+	if (node != null) {
+	    return Collections.<TypedCorpusNode>unmodifiableList(node.getChildren());
+	} else {
+	    return Collections.emptyList();
+	}
     }
 
     @Override
     public URI getObjectURI(int id) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	final TypedCorpusNode node = getNode(id);
+	if (node != null) {
+	    return node.getUri();
+	} else {
+	    return null;
+	}
     }
 
     @Override
     public String getProfileId(URI uri) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return "profile";
     }
 
     @Override
@@ -53,22 +77,37 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB {
 
     @Override
     public Node getNode(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	TypedCorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
+	if (node != null) {
+	    return new Node(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
+	} else {
+	    return null;
+	}
     }
 
     @Override
     public CorpusNode getCorpusNode(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	TypedCorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
+	if (node != null) {
+	    return new CorpusNode(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
+	} else {
+	    return null;
+	}
     }
 
     @Override
     public String getRootNodeId() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return NodeIdUtils.TONODEID(rootNode.getNodeId());
     }
 
     @Override
     public String[] getSubnodes(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	List<TypedCorpusNode> children = getChildrenCMDIs(NodeIdUtils.TOINT(nodeId));
+	List<String> subNodes = new ArrayList<String>(children.size());
+	for (TypedCorpusNode child : children) {
+	    subNodes.add(NodeIdUtils.TONODEID(child.getNodeId()));
+	}
+	return subNodes.toArray(new String[]{});
     }
 
     @Override
@@ -158,12 +197,10 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB {
 
     @Override
     public void close() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean getStatus() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return true;
     }
-
 }

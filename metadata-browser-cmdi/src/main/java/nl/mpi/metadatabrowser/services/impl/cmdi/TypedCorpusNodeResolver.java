@@ -14,26 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi.mock;
+package nl.mpi.metadatabrowser.services.impl.cmdi;
 
 import java.io.Serializable;
-import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBFactory;
+import java.net.URI;
+import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockCmdiCorpusStructureDatabaseFactory implements CorpusStructureDBFactory, Serializable {
+public class TypedCorpusNodeResolver implements NodeResolver, Serializable {
 
-    private final CmdiCorpusStructureDB cmdiCsdb;
+    private final CmdiCorpusStructureDB csdb;
 
-    public MockCmdiCorpusStructureDatabaseFactory(CmdiCorpusStructureDB cmdiCsdb) {
-	this.cmdiCsdb = cmdiCsdb;
+    public TypedCorpusNodeResolver(CmdiCorpusStructureDB csdb) {
+	this.csdb = csdb;
     }
 
     @Override
-    public CmdiCorpusStructureDB createCorpusStructureDB() {
-	return cmdiCsdb;
+    public URI getUri(CorpusNode node) {
+	return csdb.getObjectURI(node.getNodeId());
     }
 }
