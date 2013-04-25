@@ -79,7 +79,7 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
         parameters.put("archive_name", archive_name);
         parameters.put("resolver", resolver);
 
-        FrameActionRequest.setParameters(parameters);
+        ShowComponentActionRequest.setParameters(parameters);
 
         if (exceptionMessage == null) {
             return new NodeActionResult() {
@@ -96,7 +96,7 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
 
                 @Override
                 public ControllerActionRequest getControllerActionRequest() {
-                    return new FrameActionRequest();
+                    return new ShowComponentActionRequest();
                 }
             };
         } else {

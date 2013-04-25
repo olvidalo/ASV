@@ -18,22 +18,34 @@ package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.Serializable;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.FrameRequest;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.form.TextArea;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class FrameActionRequest implements FrameRequest, Serializable {
+public class ShowComponentActionRequest implements ShowComponentRequest, Serializable {
 
     private static Map<String, String> parameters;
+    private static TextArea content;
 
     public static void setParameters(Map<String, String> parameters) {
-        FrameActionRequest.parameters = parameters;
+        ShowComponentActionRequest.parameters = parameters;
+    }
+
+    static void setTextArea(TextArea content) {
+        ShowComponentActionRequest.content = content;
     }
 
     @Override
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    @Override
+    public Component getComponent() {
+        return content;
     }
 }
