@@ -28,6 +28,7 @@ import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.util.OurURL;
 
 /**
  *
@@ -202,5 +203,10 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
     @Override
     public boolean getStatus() {
 	return true;
+    }
+
+    @Override
+    public OurURL getObjectURL(String toString, int HTTP_URL) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

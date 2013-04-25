@@ -20,6 +20,7 @@ import java.util.List;
 import nl.mpi.corpusstructure.CorpusStructureDB;
 import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.util.OurURL;
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
@@ -31,4 +32,6 @@ public interface CmdiCorpusStructureDB extends CorpusStructureDB {
     public URI getObjectURI(int id) throws UnknownNodeException;
 
     public String getProfileId(URI uri);
+
+    public OurURL getObjectURL(String toString, int HTTP_URL);
 }
