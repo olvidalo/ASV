@@ -17,15 +17,18 @@
 package nl.mpi.metadatabrowser.model;
 
 import java.util.Map;
+import org.apache.wicket.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface FrameRequest extends ControllerActionRequest {    
+public interface ShowComponentRequest extends ControllerActionRequest {    
     /**
      *
      * @return named parameters (name, value) that should be applied to the navigation action
      */
     Map<String, String> getParameters();
+    
+    Component getComponent();
 }

@@ -49,7 +49,8 @@ public interface NavigationRequest extends ControllerActionRequest {
         /**
          * browse statistics for a node
          */
-        STATS
+        STATS,
+        Annex
     }
 
     /**
