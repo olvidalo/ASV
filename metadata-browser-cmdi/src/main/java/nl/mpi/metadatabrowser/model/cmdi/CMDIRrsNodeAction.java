@@ -20,7 +20,11 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +34,8 @@ import org.slf4j.LoggerFactory;
  */
 public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
 
-    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private String feedbackMessage;
-    private String exceptionMessage;
-    private final String name = "rrs";
+    private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
+    private final static String name = "rrs";
     private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDIRrsNodeAction() {
@@ -41,41 +43,24 @@ public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        URI nodeUri = node.getUri();
-        int nodeId = node.getNodeId();
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+	URI nodeUri = node.getUri();
+	int nodeId = node.getNodeId();
+	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // HANDLE rrs navigation action here
-        NavigationActionRequest.setTarget(NavigationTarget.RRS);
-        parameters.put("nodeId", Integer.toString(nodeId));
-        NavigationActionRequest.setParameters(parameters);
+	// HANDLE rrs navigation action here
+	NavigationActionRequest.setTarget(NavigationTarget.RRS);
+	parameters.put("nodeId", Integer.toString(nodeId));
+	NavigationActionRequest.setParameters(parameters);
 
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
+	NavigationActionRequest request = new NavigationActionRequest();
+	//TODO: implement constructor so that we can do the following instead of static setting
+	//final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
 
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
-
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    return new NavigationActionRequest();
-                }
-            };
-        } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
-        }
+	return new SimpleNodeActionResult(request);
     }
 }
