@@ -30,7 +30,7 @@ import nl.mpi.metadatabrowser.services.cmdi.ZipService;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class ZipServiceImpl implements ZipService {
+public class ZipServiceImpl implements ZipService, Serializable {
     private final CmdiCorpusStructureDB csdb;
 
     public ZipServiceImpl(CmdiCorpusStructureDB csdb) {
