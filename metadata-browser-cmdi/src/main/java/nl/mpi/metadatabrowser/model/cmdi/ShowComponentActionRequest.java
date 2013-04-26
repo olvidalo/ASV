@@ -28,21 +28,16 @@ import org.apache.wicket.markup.html.form.TextArea;
  */
 public class ShowComponentActionRequest implements ShowComponentRequest, Serializable {
 
-    private static Map<String, String> parameters;
-    private static TextArea content;
-
-    public static void setParameters(Map<String, String> parameters) {
-        ShowComponentActionRequest.parameters = parameters;
+    private TextArea content;
+    
+      public ShowComponentActionRequest(TextArea textArea) {
+        this.content =textArea;
+    }
+    
+    public void setTextArea(TextArea content) {
+        this.content = content;
     }
 
-    static void setTextArea(TextArea content) {
-        ShowComponentActionRequest.content = content;
-    }
-
-    @Override
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
 
     @Override
     public Component getComponent() {

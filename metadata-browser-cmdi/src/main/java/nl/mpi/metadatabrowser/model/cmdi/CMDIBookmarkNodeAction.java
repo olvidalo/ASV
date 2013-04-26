@@ -79,30 +79,10 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
         parameters.put("archive_name", archive_name);
         parameters.put("resolver", resolver);
 
-        ShowComponentActionRequest.setParameters(parameters);
+        final ShowComponentActionRequest request = new ShowComponentActionRequest(null);
+        return new SimpleNodeActionResult(request);
 
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
 
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
-
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    return new ShowComponentActionRequest();
-                }
-            };
-        } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
-        }
     }
 
     @Override

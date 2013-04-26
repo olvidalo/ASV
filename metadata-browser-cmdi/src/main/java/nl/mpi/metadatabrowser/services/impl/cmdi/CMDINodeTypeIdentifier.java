@@ -41,7 +41,6 @@ public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.N
         if (nodeUri == null) {
             return null;
         }
-        NodeType nodetype = null;
         ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
         final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeId());
         

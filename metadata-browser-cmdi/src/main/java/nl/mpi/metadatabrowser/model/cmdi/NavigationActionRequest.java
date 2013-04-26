@@ -26,11 +26,16 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
  */
 public class NavigationActionRequest implements NavigationRequest, Serializable {
 
-    private static NavigationTarget target;
-    private static Map<String, String> parameters;
+    private NavigationTarget target;
+    private Map<String, String> parameters;
 
-    public static void  setTarget(NavigationTarget target) {
-        NavigationActionRequest.target = target;
+    NavigationActionRequest(NavigationTarget navigationTarget, Map<String, String> parameters) {
+        this.parameters = parameters;
+        this.target =navigationTarget;
+    }
+
+    public void setTarget(NavigationTarget target) {
+        this.target = target;
     }
 
     @Override
@@ -38,8 +43,8 @@ public class NavigationActionRequest implements NavigationRequest, Serializable 
         return target;
     }
 
-    public static void setParameters(Map<String, String> parameters) {
-        NavigationActionRequest.parameters = parameters;
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
     }
 
     @Override

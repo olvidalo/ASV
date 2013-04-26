@@ -22,6 +22,7 @@ import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -69,10 +70,12 @@ public class CMDINodeTypeIdentifierTest {
         context.checking(new Expectations() {
 
             {
-                allowing(node).getUri();
+                oneOf(node).getUri();
                 will(returnValue(new URI("nodeUri")));
-                allowing(csdb).getProfileId(new URI("nodeUri"));
-                        will(returnValue("profile1"));
+                oneOf(node).getNodeId();
+                will(returnValue(1));
+                allowing(csdb).getCorpusNodeType(1);
+                will(returnValue(CorpusNodeType.RESOURCE_ANNOTATION));
             }
         });
         CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
