@@ -16,13 +16,17 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.io.Serializable;
+
 /**
- * Interface for results returned after execution of node actions
+ * Interface for results returned after execution of node actions.
  *
+ * Serializability of all implementations must be assured!
+ * 
  * @author Twan Goosen <twan.goosen@mpi.nl>
  * @see NodeAction#execute(java.net.URI)
  */
-public interface NodeActionResult {
+public interface NodeActionResult extends Serializable {
 
     /**
      * Provides a feedback message

@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
@@ -29,10 +30,12 @@ import nl.mpi.metadatabrowser.services.NodeActionsProvider;
  *
  * Generally it should be assumed that NodeActions may be reused, so it is not advised to keep state in the action itself.
  *
+ * Serializability of all implementations must be assured!
+ *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  * @see NodeActionsProvider
  */
-public interface NodeAction {
+public interface NodeAction extends Serializable {
 
     /**
      * Provides the name of this action for use on buttons etc.

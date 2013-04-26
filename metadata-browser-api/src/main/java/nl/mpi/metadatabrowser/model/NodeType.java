@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.io.Serializable;
+
 /**
  * Interface for types of nodes. Mainly a 'flag' for the controller to retrieve from the service and pass on to other services, e.g.
  * implementations of {@link nl.mpi.metadatabrowser.services.NodeActionsProvider} and
@@ -24,9 +26,11 @@ package nl.mpi.metadatabrowser.model;
  *
  * It is advised to override the {@link #equals(java.lang.Object) } method.
  *
+ * Serializability of all implementations must be assured!
+ *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface NodeType {
+public interface NodeType extends Serializable {
 
     /**
      *

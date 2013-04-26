@@ -16,13 +16,17 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.io.Serializable;
+
 /**
  * 'Abstract' interface functioning as return type for {@link NodeActionResult#getControllerActionRequest() }. For actual controller action
  * requests, please implement one of the extending interfaces.
  *
+ * Serializability of all implementations must be assured!
+ * 
  * @author Twan Goosen <twan.goosen@mpi.nl>
  * @see NavigationRequest
  * @see DownloadRequest
  */
-public interface ControllerActionRequest {
+public interface ControllerActionRequest extends Serializable {
 }
