@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.corpusstructure.Node;
 import nl.mpi.corpusstructure.NodeIdUtils;
@@ -207,5 +208,10 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
     @Override
     public OurURL getObjectURL(String toString, int HTTP_URL) {
 	throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public CorpusNodeType getCorpusNodeType(int nodeId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

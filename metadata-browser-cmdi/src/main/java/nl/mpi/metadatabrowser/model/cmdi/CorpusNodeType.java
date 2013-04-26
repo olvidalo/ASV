@@ -15,25 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package nl.mpi.metadatabrowser.model.cmdi;
-import java.net.URI;
-import java.util.List;
-import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.corpusstructure.CorpusStructureDB;
-import nl.mpi.corpusstructure.UnknownNodeException;
-import nl.mpi.util.OurURL;
+
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface CmdiCorpusStructureDB extends CorpusStructureDB {
-    
-    public List<CorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException;
-    
-    public URI getObjectURI(int id) throws UnknownNodeException;
+public enum CorpusNodeType {
 
-    public String getProfileId(URI uri);
-
-    public OurURL getObjectURL(String toString, int HTTP_URL);
-    
-    public CorpusNodeType getCorpusNodeType(int nodeId);
+    METADATA,
+    RESOURCE_VIDEO,
+    RESOURCE_AUDIO,
+    RESOURCE_LEXICAL,
+    RESOURCE_ANNOTATION,
+    RESOURCE_OTHER
 }

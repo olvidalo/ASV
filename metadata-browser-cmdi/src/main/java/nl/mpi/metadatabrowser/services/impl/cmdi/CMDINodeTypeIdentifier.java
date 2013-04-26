@@ -16,9 +16,9 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
-import nl.mpi.metadatabrowser.services.impl.cmdi.ProfileIdentifierImpl;
 import java.net.URI;
 import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.*;
 
@@ -27,8 +27,10 @@ import nl.mpi.metadatabrowser.model.cmdi.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.NodeTypeIdentifier {
+
     private final CmdiCorpusStructureDB csdb;
-    
+    private String collectionProfileId = "collection";
+
     public CMDINodeTypeIdentifier(CmdiCorpusStructureDB csdb) {
         this.csdb = csdb;
     }
@@ -41,15 +43,18 @@ public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.N
         }
         NodeType nodetype = null;
         ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
-        if (profileid.getProfile(nodeUri).equals("profile1")) {
-            nodetype = new CMDIResourceTxtType();
+        final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeId());
+        
+        if (corpusNodeType == CorpusNodeType.RESOURCE_VIDEO || corpusNodeType == CorpusNodeType.RESOURCE_AUDIO
+                || corpusNodeType == CorpusNodeType.RESOURCE_OTHER) {
+            return new CMDIResourceType();
+        } else if (corpusNodeType == CorpusNodeType.RESOURCE_ANNOTATION || corpusNodeType == CorpusNodeType.RESOURCE_LEXICAL) {
+            return new CMDIResourceTxtType();
+        } else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
+            return new CMDICollectionType();
+        } //todo extend for special profile support (configurable probably)
+        else {
+            return new CMDIMetadata();
         }
-        if (profileid.getProfile(nodeUri).equals("profile2")) {
-            nodetype = new CMDICollectionType();
-        }
-        if (profileid.getProfile(nodeUri).equals("profile3")) {
-            nodetype = new CMDIMetadata();
-        }
-        return nodetype;
     }
 }
