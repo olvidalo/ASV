@@ -69,10 +69,10 @@ public class ProfileIdentifierTest {
             }
         });
         ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
-        String expResult = "profile2";
+        String expResult = "profile1";
         instance.setProfile(expResult);
         String result = instance.getProfile(new URI("nodeUri"));
-        assertNotEquals(expResult, result);
+        assertEquals(expResult, result);
     }
 
     /**

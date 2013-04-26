@@ -31,9 +31,6 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "ams";
-    private String feedbackMessage;
-    private String exceptionMessage;
-    private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDIAMSNodeAction() {
     }
@@ -49,33 +46,15 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         int nodeId = node.getNodeId();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // HANDLE ams action here
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.AMS);
+        // HANDLE ams action here        
+        Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("nodeId", Integer.toString(nodeId));
         parameters.put("jsessionID", "session id"); // use only for LANA
-        NavigationActionRequest.setParameters(parameters);
 
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
+        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.AMS, parameters);
 
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
+        return new SimpleNodeActionResult(request);
 
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    return new NavigationActionRequest();
-                }
-            };
-        } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
-        }
+
     }
 }

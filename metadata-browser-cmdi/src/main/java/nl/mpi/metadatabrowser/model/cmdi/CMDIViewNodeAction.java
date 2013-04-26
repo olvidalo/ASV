@@ -54,6 +54,8 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         OurURL nodeURL = csdb.getObjectURL(nodeId, ArchiveAccessContext.HTTP_URL); // Get the XML file
         String xmlContent = null;
         PrintWriter out = null;
+        Map<String, String> parameters = new HashMap<String, String>();
+        TextArea content;
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
 //        String[] formats = SearchClient.getSearchableFormats();
@@ -69,7 +71,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
                 parameters.put("nodeId", nodeId);
                 parameters.put("jsessionID", "jsessioID");
                 navType = true;
-            } else{
+            } else {
                 xmlContent = nodeURL.toString();
             }
         }
@@ -96,8 +98,8 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 //            logger.error("url error while getting URL", ex);
 //        }
 
-        TextArea content = new TextArea(xmlContent);
-        ShowComponentActionRequest.setTextArea(content);
+        content = new TextArea(xmlContent);
+        //ShowComponentActionRequest.setTextArea(content);
 //resStream.write(null);
         // HANDLE bookmark action here
 //        parameters.put("nodeId", nodeId);
@@ -112,31 +114,12 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 //
 //        ShowComponentActionRequest.setParameters(parameters);
 
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
-
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
-
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    if (navType == true){
-                        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.Annex);
-                        return new NavigationActionRequest();
-                    }
-                    return new ShowComponentActionRequest();
-                }
-            };
+        if (navType == true) {
+            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.Annex, parameters);
+            return new SimpleNodeActionResult(request);
         } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
+            final ShowComponentActionRequest request = new ShowComponentActionRequest(content);
+            return new SimpleNodeActionResult(request);
         }
     }
 

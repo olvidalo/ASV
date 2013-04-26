@@ -31,9 +31,6 @@ public class CMDITrovaNodeAction extends SingleNodeAction implements NodeAction 
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "trova";
-    private String feedbackMessage;
-    private String exceptionMessage;
-    private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDITrovaNodeAction() {
     }
@@ -50,32 +47,12 @@ public class CMDITrovaNodeAction extends SingleNodeAction implements NodeAction 
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
         // HANDLE trova action here
-        NavigationActionRequest.setTarget(NavigationRequest.NavigationTarget.TROVA);
+        Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("nodeId", Integer.toString(nodeId));
-        parameters.put("jessionID", "session number"); // use only for LANA
-        NavigationActionRequest.setParameters(parameters);
+        parameters.put("jessionID", "session number");
 
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
+        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
 
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
-
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    return new NavigationActionRequest();
-                }
-            };
-        } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
-        }
+        return new SimpleNodeActionResult(request);
     }
 }

@@ -36,7 +36,6 @@ public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
     private final static String name = "rrs";
-    private Map<String, String> parameters = new HashMap<String, String>();
 
     public CMDIRrsNodeAction() {
     }
@@ -53,13 +52,10 @@ public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
 	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
 	// HANDLE rrs navigation action here
-	NavigationActionRequest.setTarget(NavigationTarget.RRS);
+        Map<String, String> parameters = new HashMap<String, String>();
 	parameters.put("nodeId", Integer.toString(nodeId));
-	NavigationActionRequest.setParameters(parameters);
 
-	NavigationActionRequest request = new NavigationActionRequest();
-	//TODO: implement constructor so that we can do the following instead of static setting
-	//final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
+	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
 
 	return new SimpleNodeActionResult(request);
     }
