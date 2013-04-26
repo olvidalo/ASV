@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 
 /**
  *
@@ -35,6 +36,11 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     private String profileId;
     private MockCorpusNode parent;
     private List<MockCorpusNode> children;
+    private CorpusNodeType corpusNodeType = CorpusNodeType.METADATA;
+
+    public void setCorpusNodeType(CorpusNodeType corpusNodeType) {
+	this.corpusNodeType = corpusNodeType;
+    }
 
     public void setProfileId(String profileId) {
 	this.profileId = profileId;
@@ -97,6 +103,10 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     @Override
     public GenericTreeNode getParent() {
 	return parent;
+    }
+
+    public CorpusNodeType getCorpusNodeType() {
+	return corpusNodeType;
     }
 
     protected MockCorpusNode getChildRecursive(int nodeId) {

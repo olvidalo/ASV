@@ -26,7 +26,7 @@
 	<property name="nodeId" value="0" />
 	<property name="uri" value="node:0" />
 	<property name="name" value="Root" />
-	<property name="profileId" value="Collection" />
+	<property name="profileId" value="collection" />
 	<property name="children">
 	    <list>
 		<ref bean="child1" />
@@ -44,6 +44,7 @@
 	<property name="children">
 	    <list>
 		<ref bean="resource1" />
+		<ref bean="resource2" />
 	    </list>
 	</property>
     </bean>
@@ -59,7 +60,17 @@
     <bean id="resource1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
 	<property name="nodeId" value="021" />
 	<property name="uri" value="node:0/2/1" />
-	<property name="name" value="Resource 1" />
+	<property name="name" value="Video resource" />
+	<property name="corpusNodeType" value="RESOURCE_VIDEO" />
+	<property name="parent" ref="child1" />
+	<!-- resource -->
+    </bean>
+    
+    <bean id="resource2" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
+	<property name="nodeId" value="022" />
+	<property name="uri" value="node:0/2/2" />
+	<property name="name" value="Audio resource" />
+	<property name="corpusNodeType" value="RESOURCE_AUDIO" />
 	<property name="parent" ref="child1" />
 	<!-- resource -->
     </bean>
