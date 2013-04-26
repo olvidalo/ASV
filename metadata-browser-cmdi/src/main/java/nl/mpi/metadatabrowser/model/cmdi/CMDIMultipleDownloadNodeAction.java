@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi;
 import java.io.*;
 import java.net.URI;
 import java.util.List;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -60,7 +61,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
         int nodeid = node.getNodeId();
 
         try {
-            List<TypedCorpusNode> childrenNodes = csdb.getChildrenCMDIs(nodeid);
+            List<CorpusNode> childrenNodes = csdb.getChildrenCMDIs(nodeid);
             final File zipFile = zipService.createZipFileForNodes(childrenNodes);
             IResourceStream resStream = new FileResourceStream(zipFile){
 

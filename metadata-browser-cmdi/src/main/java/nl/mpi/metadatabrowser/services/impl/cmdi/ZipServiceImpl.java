@@ -21,8 +21,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.corpusstructure.UnknownNodeException;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 
@@ -38,7 +38,7 @@ public class ZipServiceImpl implements ZipService {
     }
 
     @Override
-    public File createZipFileForNodes(List<TypedCorpusNode> childrenNodes) throws IOException, UnknownNodeException, FileNotFoundException {
+    public File createZipFileForNodes(List<? extends CorpusNode> childrenNodes) throws IOException, UnknownNodeException, FileNotFoundException {
         //create object of FileOutputStream
         File tmp = File.createTempFile("mdtbrowser", ".zip");
         FileOutputStream fout = new FileOutputStream(tmp);
@@ -47,7 +47,7 @@ public class ZipServiceImpl implements ZipService {
         byte[] buffer = new byte[1024];
         // HANDLE multiple download action here
         if (childrenNodes.size() > 0) {
-            for (TypedCorpusNode childNode : childrenNodes) {
+            for (CorpusNode childNode : childrenNodes) {
                 URI childUri = csdb.getObjectURI(childNode.getNodeId());
 
                 FileInputStream is;

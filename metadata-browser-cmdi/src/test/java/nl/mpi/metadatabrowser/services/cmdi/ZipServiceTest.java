@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
@@ -34,8 +35,8 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class ZipServiceTest {
-        private final Mockery context = new JUnit4Mockery();
-        
+    private final Mockery context = new JUnit4Mockery();
+
     public ZipServiceTest() {
     }
 
@@ -46,11 +47,11 @@ public class ZipServiceTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -60,25 +61,26 @@ public class ZipServiceTest {
      */
     @Test
     public void testCreateZipFileForNodes() throws Exception {
-        System.out.println("createZipFileForNodes");
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
-        final ZipService zipService = context.mock(ZipService.class);
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
-        final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
-        final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1,child2);
-        
-        ZipService instance = new ZipServiceImpl();
-        File expResult = null;
-        File result = instance.createZipFileForNodes(childrenNodes);
-        assertEquals(expResult, result);
+	System.out.println("createZipFileForNodes");
+	final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+	final ZipService zipService = context.mock(ZipService.class);
+	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+	final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
+	final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
+	final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1, child2);
+
+	ZipService instance = new ZipServiceImpl();
+	File expResult = null;
+	File result = instance.createZipFileForNodes(childrenNodes);
+	assertEquals(expResult, result);
 
     }
 
     public class ZipServiceImpl implements ZipService {
 
-        public File createZipFileForNodes(List<TypedCorpusNode> childrenNodes) throws IOException, UnknownNodeException, FileNotFoundException {
-            return null;
-        }
+	@Override
+	public File createZipFileForNodes(List<? extends CorpusNode> childrenNodes) throws IOException, UnknownNodeException, FileNotFoundException {
+	    return null;
+	}
     }
 }

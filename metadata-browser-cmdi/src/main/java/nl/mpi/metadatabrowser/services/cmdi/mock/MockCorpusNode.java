@@ -20,25 +20,24 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeNode;
-import nl.mpi.metadatabrowser.model.NodeType;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockTypedCorpusNode implements TypedCorpusNode, Serializable {
+public class MockCorpusNode implements CorpusNode, Serializable {
 
-    private NodeType nodeType;
     private int nodeId;
     private String name;
     private URI uri;
-    private MockTypedCorpusNode parent;
-    private List<MockTypedCorpusNode> children;
+    private String profileId;
+    private MockCorpusNode parent;
+    private List<MockCorpusNode> children;
 
-    public void setNodeTypeName(String name) {
-	this.nodeType = new MockNodeType(name);
+    public void setProfileId(String profileId) {
+	this.profileId = profileId;
     }
 
     public void setNodeId(int nodeId) {
@@ -54,16 +53,15 @@ public class MockTypedCorpusNode implements TypedCorpusNode, Serializable {
     }
 
     public void setParent(GenericTreeNode parent) {
-	this.parent = (MockTypedCorpusNode) parent;
+	this.parent = (MockCorpusNode) parent;
     }
 
-    public void setChildren(List<MockTypedCorpusNode> children) {
+    public void setChildren(List<MockCorpusNode> children) {
 	this.children = children;
     }
 
-    @Override
-    public NodeType getNodeType() {
-	return nodeType;
+    public String getProfileId() {
+	return profileId;
     }
 
     @Override
@@ -101,14 +99,14 @@ public class MockTypedCorpusNode implements TypedCorpusNode, Serializable {
 	return parent;
     }
 
-    protected MockTypedCorpusNode getChildRecursive(int nodeId) {
+    protected MockCorpusNode getChildRecursive(int nodeId) {
 	if (nodeId == this.nodeId) {
 	    return this;
 	}
 
 	if (children != null) {
-	    for (MockTypedCorpusNode child : children) {
-		MockTypedCorpusNode childRecursive = child.getChildRecursive(nodeId);
+	    for (MockCorpusNode child : children) {
+		MockCorpusNode childRecursive = child.getChildRecursive(nodeId);
 		if (childRecursive != null) {
 		    return childRecursive;
 		}
@@ -117,25 +115,11 @@ public class MockTypedCorpusNode implements TypedCorpusNode, Serializable {
 	return null;
     }
 
-    public List<MockTypedCorpusNode> getChildren() {
+    public List<MockCorpusNode> getChildren() {
 	if (children == null) {
 	    return Collections.emptyList();
 	} else {
 	    return children;
-	}
-    }
-
-    private static class MockNodeType implements NodeType, Serializable {
-
-	private final String name;
-
-	public MockNodeType(String name) {
-	    this.name = name;
-	}
-
-	@Override
-	public String getName() {
-	    return name;
 	}
     }
 }

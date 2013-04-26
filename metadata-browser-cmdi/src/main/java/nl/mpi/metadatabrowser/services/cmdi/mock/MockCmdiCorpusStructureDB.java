@@ -21,12 +21,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
-import nl.mpi.corpusstructure.CorpusNode;
 import nl.mpi.corpusstructure.Node;
 import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.corpusstructure.UnknownNodeException;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.util.OurURL;
 
@@ -36,21 +35,21 @@ import nl.mpi.util.OurURL;
  */
 public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Serializable {
 
-    private MockTypedCorpusNode rootNode;
+    private MockCorpusNode rootNode;
 
-    public void setRootNode(MockTypedCorpusNode rootNode) {
+    public void setRootNode(MockCorpusNode rootNode) {
 	this.rootNode = rootNode;
     }
 
-    private MockTypedCorpusNode getNode(int nodeId) {
+    private MockCorpusNode getNode(int nodeId) {
 	return rootNode.getChildRecursive(nodeId);
     }
 
     @Override
-    public List<TypedCorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException {
-	final MockTypedCorpusNode node = getNode(nodeId);
+    public List<CorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException {
+	final MockCorpusNode node = getNode(nodeId);
 	if (node != null) {
-	    return Collections.<TypedCorpusNode>unmodifiableList(node.getChildren());
+	    return Collections.<CorpusNode>unmodifiableList(node.getChildren());
 	} else {
 	    return Collections.emptyList();
 	}
@@ -58,7 +57,7 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
 
     @Override
     public URI getObjectURI(int id) throws UnknownNodeException {
-	final TypedCorpusNode node = getNode(id);
+	final CorpusNode node = getNode(id);
 	if (node != null) {
 	    return node.getUri();
 	} else {
@@ -78,7 +77,7 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
 
     @Override
     public Node getNode(String nodeId) throws UnknownNodeException {
-	TypedCorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
+	CorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
 	if (node != null) {
 	    return new Node(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
 	} else {
@@ -87,10 +86,10 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
     }
 
     @Override
-    public CorpusNode getCorpusNode(String nodeId) throws UnknownNodeException {
-	TypedCorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
+    public nl.mpi.corpusstructure.CorpusNode getCorpusNode(String nodeId) throws UnknownNodeException {
+	CorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
 	if (node != null) {
-	    return new CorpusNode(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
+	    return new nl.mpi.corpusstructure.CorpusNode(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
 	} else {
 	    return null;
 	}
@@ -103,9 +102,9 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
 
     @Override
     public String[] getSubnodes(String nodeId) throws UnknownNodeException {
-	List<TypedCorpusNode> children = getChildrenCMDIs(NodeIdUtils.TOINT(nodeId));
+	List<CorpusNode> children = getChildrenCMDIs(NodeIdUtils.TOINT(nodeId));
 	List<String> subNodes = new ArrayList<String>(children.size());
-	for (TypedCorpusNode child : children) {
+	for (CorpusNode child : children) {
 	    subNodes.add(NodeIdUtils.TONODEID(child.getNodeId()));
 	}
 	return subNodes.toArray(new String[]{});
@@ -137,7 +136,7 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
     }
 
     @Override
-    public CorpusNode[] getDescendantResources(String nodeId, boolean onsiteOnly, String userToRead, String userToWrite) throws UnknownNodeException {
+    public nl.mpi.corpusstructure.CorpusNode[] getDescendantResources(String nodeId, boolean onsiteOnly, String userToRead, String userToWrite) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -207,6 +206,6 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
 
     @Override
     public OurURL getObjectURL(String toString, int HTTP_URL) {
-        throw new UnsupportedOperationException("Not supported yet.");
+	throw new UnsupportedOperationException("Not supported yet.");
     }
 }

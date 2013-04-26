@@ -22,29 +22,46 @@
 	<constructor-arg ref="csdb" />
     </bean>
     
-    <bean id="rootNode" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode">
+    <bean id="rootNode" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
 	<property name="nodeId" value="0" />
 	<property name="uri" value="node:0" />
 	<property name="name" value="Root" />
-	<property name="nodeTypeName" value="Collection" />
+	<property name="profileId" value="Collection" />
 	<property name="children">
 	    <list>
-		<bean id="child1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode">
-		    <property name="nodeId" value="01" />
-		    <property name="uri" value="node:0/0" />
-		    <property name="name" value="Child 1" />
-		    <property name="nodeTypeName" value="Session" />
-		    <property name="parent" ref="rootNode" />
-		</bean>
-		<bean id="child1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode">
-		    <property name="nodeId" value="02" />
-		    <property name="uri" value="node:0/2" />
-		    <property name="name" value="Child 2" />
-		    <property name="nodeTypeName" value="Session" />
-		    <property name="parent" ref="rootNode" />
-		</bean>
+		<ref bean="child1" />
+		<ref bean="child2" />
 	    </list>
 	</property>
+    </bean>
+    
+    <bean id="child1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
+	<property name="nodeId" value="01" />
+	<property name="uri" value="node:0/0" />
+	<property name="name" value="Child 1" />
+	<property name="profileId" value="profile100" />
+	<property name="parent" ref="rootNode" />
+	<property name="children">
+	    <list>
+		<ref bean="resource1" />
+	    </list>
+	</property>
+    </bean>
+    
+    <bean id="child2" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
+	<property name="nodeId" value="02" />
+	<property name="uri" value="node:0/2" />
+	<property name="name" value="Child 2" />
+	<property name="profileId" value="profile101" />
+	<property name="parent" ref="rootNode" />
+    </bean>
+    
+    <bean id="resource1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
+	<property name="nodeId" value="021" />
+	<property name="uri" value="node:0/2/1" />
+	<property name="name" value="Resource 1" />
+	<property name="parent" ref="child1" />
+	<!-- resource -->
     </bean>
     
 </beans>

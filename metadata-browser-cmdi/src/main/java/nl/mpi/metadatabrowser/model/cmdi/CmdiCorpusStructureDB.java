@@ -17,9 +17,9 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 import java.net.URI;
 import java.util.List;
+import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.corpusstructure.CorpusStructureDB;
 import nl.mpi.corpusstructure.UnknownNodeException;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.util.OurURL;
 /**
  *
@@ -27,7 +27,7 @@ import nl.mpi.util.OurURL;
  */
 public interface CmdiCorpusStructureDB extends CorpusStructureDB {
     
-    public List<TypedCorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException;
+    public List<CorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException;
     
     public URI getObjectURI(int id) throws UnknownNodeException;
 
