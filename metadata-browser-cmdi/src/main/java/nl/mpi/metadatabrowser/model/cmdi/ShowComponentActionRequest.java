@@ -17,7 +17,6 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.Serializable;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.form.TextArea;
