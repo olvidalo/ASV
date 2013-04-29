@@ -85,24 +85,16 @@ public class ProfileIdentifierTest {
         System.out.println("setProfile");
 
         context.checking(new Expectations() {
-
             {
-
                 oneOf(proI).setProfile("profile2");
                 allowing(csdb).getProfileId(new URI("nodeUri23"));
                 will(returnValue("profile23"));
-                allowing(proI).getProfile(new URI("nodeUri46"));
-                will(returnValue("profile46"));
-                allowing(csdb).getProfileId(new URI("nodeUri2"));
-                will(returnValue("profile2"));
-
             }
         });
 
-        String expResult = "profile3";
+        String expResult = "profile23";
         ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
         instance.setProfile(expResult);
-        assertNotEquals(expResult, instance.getProfile(new URI("nodeUri23")));
-        assertEquals("profile2", instance.getProfile(new URI("nodeUri2")));
+        assertEquals(expResult, instance.getProfile(new URI("nodeUri23")));
     }
 }

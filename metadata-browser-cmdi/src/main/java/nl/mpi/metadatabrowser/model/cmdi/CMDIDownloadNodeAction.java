@@ -33,9 +33,6 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "download";
-    private String feedbackMessage;
-    private String exceptionMessage;
-    //private ControllerActionRequest resultActionRequest;
 
     public CMDIDownloadNodeAction() {
     }
@@ -61,27 +58,8 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
         DownloadActionRequest.setStreamContent(resStream);
         DownloadActionRequest.setFileName(fileName);
 
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
+        final DownloadActionRequest request = new DownloadActionRequest();
 
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
-
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    return new DownloadActionRequest();
-                }
-            };
-        } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
-        }
+	return new SimpleNodeActionResult(request);
     }
 }

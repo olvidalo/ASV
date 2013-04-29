@@ -35,10 +35,6 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "multidownload";
-    private String feedbackMessage;
-    private String exceptionMessage;
-    //private ControllerActionRequest resultActionRequest;
-    //private CorpusStructureDBImpl csdb = new CorpusStructureDBImpl("java:comp/env/jdbc/CSDB", false, "jdbc/CSDB", "start1a");
     private final CmdiCorpusStructureDB csdb;
     private final ZipService zipService;
 
@@ -77,27 +73,8 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
         } catch (IOException ioe) {
             System.out.println("IOException :" + ioe);
         }
-        if (exceptionMessage == null) {
-            return new NodeActionResult() {
+        final DownloadActionRequest request = new DownloadActionRequest();
 
-                @Override
-                public String getFeedbackMessage() {
-                    if (feedbackMessage == null) {
-                        return null;
-                    } else {
-                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-                        return feedbackMessage;
-                    }
-                }
-
-                @Override
-                public ControllerActionRequest getControllerActionRequest() {
-                    return new DownloadActionRequest();
-                }
-            };
-        } else {
-            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-            throw new NodeActionException(this, exceptionMessage);
-        }
+	return new SimpleNodeActionResult(request);
     }
 }
