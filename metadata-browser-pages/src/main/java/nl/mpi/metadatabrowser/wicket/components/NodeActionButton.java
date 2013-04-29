@@ -62,7 +62,7 @@ class NodeActionButton extends Button {
 	    error(ex.getMessage());
 	} catch (RequestHandlerException ex) {
 	    logger.warn("Error in handling action request returned by action {} on nodes {}", action.getName(), nodes, ex);
-	    warn("Could not finish action. Contact the administrator for help.");
+	    warn("Could not complete action. Please contact the administrator.");
 	}
     }
 
