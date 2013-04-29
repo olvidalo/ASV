@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
 import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -51,7 +52,7 @@ public class NavigationRequestHandlerTest {
      * Test of handleActionRequest method, of class NavigationRequestHandler.
      */
     @Test
-    public void testHandleActionRequest() {
+    public void testHandleActionRequest() throws RequestHandlerException {
 
 	final NavigationRequest actionRequest = context.mock(NavigationRequest.class);
 	context.checking(new Expectations() {
