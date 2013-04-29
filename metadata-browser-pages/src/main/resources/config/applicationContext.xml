@@ -13,7 +13,14 @@
     <bean id="wicketApplication" class="nl.mpi.metadatabrowser.wicket.MetadataBrowserApplication" />
     <!-- Services -->
     <bean id="actionRequestHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ControllerActionRequestHandlerImpl">
-	<!-- TODO: Make RRS URL configurable through context parameters -->
-	<property name="rrsUrl" value="http://corpus1.mpi.nl/ds/RRS_V1/RrsIndex" />
+	<property name="navigationRequestHandler">
+	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.NavigationRequestHandler">
+		<!-- TODO: Make RRS URL configurable through context parameters -->
+		<property name="rrsUrl" value="http://corpus1.mpi.nl/ds/RRS_V1/RrsIndex" />
+	    </bean>
+	</property>
+	<property name="downloadRequestHandler">
+	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.DownloadRequestHandler" />
+	</property>
     </bean>
 </beans>

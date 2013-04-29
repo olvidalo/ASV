@@ -16,12 +16,11 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -46,49 +45,44 @@ public class ControllerActionRequestHandlerImplTest {
 	tester = new WicketTester();
 	requestCycle = tester.getRequestCycle();
 	instance = new ControllerActionRequestHandlerImpl();
-	instance.setRrsUrl(rrsUrl);
     }
 
-    /**
-     * Test of handleActionRequest method, of class ControllerActionRequestHandlerImpl.
-     */
     @Test
     public void testHandleNavigationRequest() {
-
-	final NavigationRequest actionRequest = context.mock(NavigationRequest.class);
+	final ControllerActionRequestHandler<NavigationRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "NavigationRequest");
+	final NavigationRequest request = context.mock(NavigationRequest.class);
+	instance.setNavigationRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(actionRequest).getTarget();
-		will(returnValue(NavigationRequest.NavigationTarget.RRS));
-		allowing(actionRequest).getParameters();
+		oneOf(requestHandler).handleActionRequest(requestCycle, request);
 	    }
 	});
-	instance.handleActionRequest(requestCycle, actionRequest);
-	//TODO: Assert redirect
-	//TODO: Test for other targets
+	instance.handleActionRequest(requestCycle, request);
     }
 
     @Test
-    public void testDownloadRequest() throws Exception {
-	final String fileName = "filename";
-
-	final DownloadRequest actionRequest = context.mock(DownloadRequest.class);
-	final IResourceStream resourceStream = context.mock(IResourceStream.class);
-	final InputStream inputStream = new ByteArrayInputStream("stream content".getBytes());
+    public void testHandleDownloadRequest() {
+	final ControllerActionRequestHandler<DownloadRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "DownloadRequest");
+	final DownloadRequest request = context.mock(DownloadRequest.class);
+	instance.setDownloadRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(actionRequest).getFileName();
-		will(returnValue(fileName));
-		oneOf(actionRequest).getDownloadStream();
-		will(returnValue(resourceStream));
-
-		oneOf(resourceStream).getInputStream();
-		will(returnValue(inputStream));
-		allowing(resourceStream).getContentType();
-		will(returnValue("test/content-type"));
+		oneOf(requestHandler).handleActionRequest(requestCycle, request);
 	    }
 	});
-	instance.handleActionRequest(requestCycle, actionRequest);
-	//TODO: Assert download
+	instance.handleActionRequest(requestCycle, request);
+    }
+
+    @Test
+    public void testHandleShowComponentRequest() {
+	final ControllerActionRequestHandler<ShowComponentRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "ShowComponentRequest");
+	final ShowComponentRequest request = context.mock(ShowComponentRequest.class);
+	instance.setShowComponentRequestHandler(requestHandler);
+	context.checking(new Expectations() {
+	    {
+		oneOf(requestHandler).handleActionRequest(requestCycle, request);
+	    }
+	});
+	instance.handleActionRequest(requestCycle, request);
     }
 }

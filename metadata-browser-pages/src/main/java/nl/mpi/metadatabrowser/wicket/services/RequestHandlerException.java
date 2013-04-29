@@ -16,21 +16,24 @@
  */
 package nl.mpi.metadatabrowser.wicket.services;
 
-import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import org.apache.wicket.request.cycle.RequestCycle;
-
 /**
- * Handler of {@link ControllerActionRequest}s acting on the {@link RequestCycle} depending on the nature and details of the action request
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface ControllerActionRequestHandler<R extends ControllerActionRequest> {
+public class RequestHandlerException extends Exception {
 
-    /**
-     * Handles an action request on the provided request cycle
-     *
-     * @param requestCycle current request cycle to act on
-     * @param actionRequest action request to handle
-     */
-    void handleActionRequest(RequestCycle requestCycle, R actionRequest);
+    public RequestHandlerException(String string) {
+	super(string);
+    }
+
+    public RequestHandlerException(Throwable thrwbl) {
+	super(thrwbl);
+    }
+
+    public RequestHandlerException(String string, Throwable thrwbl) {
+	super(string, thrwbl);
+    }
+
+    
+    
 }

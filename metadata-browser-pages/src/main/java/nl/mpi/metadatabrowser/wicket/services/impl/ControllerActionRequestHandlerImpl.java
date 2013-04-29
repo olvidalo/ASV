@@ -19,27 +19,27 @@ package nl.mpi.metadatabrowser.wicket.services.impl;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
-import nl.mpi.metadatabrowser.wicket.HomePage;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
-import org.apache.wicket.request.http.handler.RedirectRequestHandler;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of handler for {@link ControllerActionRequest}s
+ * Delegation action request handler that wraps specialized handlers and calls these depending on the type of the incoming
+ * {@link ControllerActionRequest}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class ControllerActionRequestHandlerImpl implements ControllerActionRequestHandler {
+public class ControllerActionRequestHandlerImpl implements ControllerActionRequestHandler<ControllerActionRequest> {
 
     private final static Logger logger = LoggerFactory.getLogger(ControllerActionRequestHandlerImpl.class);
-    private String rrsUrl;
+    private ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler;
+    private ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler;
+    private ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler;
 
     /**
-     * Handles an action request on the provided request cycle
+     * Handles an action request on the provided request cycle. Assumes that the specialized handlers have been set.
      *
      * @param requestCycle current request cycle to act on
      * @param actionRequest action request to handle
@@ -47,39 +47,25 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
     @Override
     public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest) {
 	if (actionRequest instanceof NavigationRequest) {
-	    handleNavigationRequest(requestCycle, (NavigationRequest) actionRequest);
+	    navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest);
 	} else if (actionRequest instanceof DownloadRequest) {
-	    handleDownloadRequest(requestCycle, (DownloadRequest) actionRequest);
+	    downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest);
+	} else if (actionRequest instanceof ShowComponentRequest) {
+	    showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest);
+	} else {
+	    logger.warn("Cannot handle action request of type {}: {}", actionRequest.getClass(), actionRequest);
 	}
     }
 
-    private void handleNavigationRequest(RequestCycle requestCycle, NavigationRequest request) {
-	switch (request.getTarget()) {
-	    case RRS:
-		logger.debug("Received request to navigate to RRS with parameters {}", request.getParameters());
-		// Navigate to RRS
-		// TODO: Parameters?
-		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(rrsUrl));
-		break;
-	    default:
-		// Other, cannot handle
-		logger.warn("Don't know how to handle navigation request target {}", request.getTarget());
-	}
+    public void setNavigationRequestHandler(ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler) {
+	this.navigationRequestHandler = navigationRequestHandler;
     }
 
-    private void handleDownloadRequest(RequestCycle requestCycle, DownloadRequest downloadRequest) {
-	final IResourceStream stream = downloadRequest.getDownloadStream();
-	final String fileName = downloadRequest.getFileName();
-	logger.debug("Recieved request to offer download from stream as {} with content type {}", fileName, stream.getContentType());
-	requestCycle.scheduleRequestHandlerAfterCurrent(new ResourceStreamRequestHandler(stream, fileName));
+    public void setDownloadRequestHandler(ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler) {
+	this.downloadRequestHandler = downloadRequestHandler;
     }
 
-    /**
-     *
-     * @param rrsUrl Base URL of Resource Request System
-     * @see NavigationRequest.NavigationTarget#RRS
-     */
-    public void setRrsUrl(String rrsUrl) {
-	this.rrsUrl = rrsUrl;
+    public void setShowComponentRequestHandler(ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler) {
+	this.showComponentRequestHandler = showComponentRequestHandler;
     }
 }
