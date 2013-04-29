@@ -16,10 +16,12 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
+import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -33,22 +35,22 @@ import org.junit.Test;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ControllerActionRequestHandlerImplTest {
-
+    
     public final String rrsUrl = "RRSURL";
     private final Mockery context = new JUnit4Mockery();
     private WicketTester tester;
     private RequestCycle requestCycle;
     private ControllerActionRequestHandlerImpl instance;
-
+    
     @Before
     public void setUp() {
 	tester = new WicketTester();
 	requestCycle = tester.getRequestCycle();
 	instance = new ControllerActionRequestHandlerImpl();
     }
-
+    
     @Test
-    public void testHandleNavigationRequest() {
+    public void testHandleNavigationRequest() throws Exception {
 	final ControllerActionRequestHandler<NavigationRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "NavigationRequest");
 	final NavigationRequest request = context.mock(NavigationRequest.class);
 	instance.setNavigationRequestHandler(requestHandler);
@@ -59,9 +61,9 @@ public class ControllerActionRequestHandlerImplTest {
 	});
 	instance.handleActionRequest(requestCycle, request);
     }
-
+    
     @Test
-    public void testHandleDownloadRequest() {
+    public void testHandleDownloadRequest() throws Exception {
 	final ControllerActionRequestHandler<DownloadRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "DownloadRequest");
 	final DownloadRequest request = context.mock(DownloadRequest.class);
 	instance.setDownloadRequestHandler(requestHandler);
@@ -72,9 +74,9 @@ public class ControllerActionRequestHandlerImplTest {
 	});
 	instance.handleActionRequest(requestCycle, request);
     }
-
+    
     @Test
-    public void testHandleShowComponentRequest() {
+    public void testHandleShowComponentRequest() throws Exception {
 	final ControllerActionRequestHandler<ShowComponentRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "ShowComponentRequest");
 	final ShowComponentRequest request = context.mock(ShowComponentRequest.class);
 	instance.setShowComponentRequestHandler(requestHandler);
@@ -83,6 +85,12 @@ public class ControllerActionRequestHandlerImplTest {
 		oneOf(requestHandler).handleActionRequest(requestCycle, request);
 	    }
 	});
+	instance.handleActionRequest(requestCycle, request);
+    }
+    
+    @Test(expected = RequestHandlerException.class)
+    public void handleUnknown() throws Exception {
+	final ControllerActionRequest request = context.mock(ControllerActionRequest.class);
 	instance.handleActionRequest(requestCycle, request);
     }
 }

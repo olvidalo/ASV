@@ -32,5 +32,5 @@ public interface ControllerActionRequestHandler<R extends ControllerActionReques
      * @param requestCycle current request cycle to act on
      * @param actionRequest action request to handle
      */
-    void handleActionRequest(RequestCycle requestCycle, R actionRequest);
+    void handleActionRequest(RequestCycle requestCycle, R actionRequest) throws RequestHandlerException;
 }

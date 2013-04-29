@@ -21,9 +21,8 @@ import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
+import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Delegation action request handler that wraps specialized handlers and calls these depending on the type of the incoming
@@ -33,7 +32,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ControllerActionRequestHandlerImpl implements ControllerActionRequestHandler<ControllerActionRequest> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ControllerActionRequestHandlerImpl.class);
     private ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler;
     private ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler;
     private ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler;
@@ -43,9 +41,11 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
      *
      * @param requestCycle current request cycle to act on
      * @param actionRequest action request to handle
+     * @throws RequestHandlerException when actionRequest is of a type that this handler cannot process or if an error occurs within
+     * one of the wrapped handlers
      */
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest) {
+    public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest) throws RequestHandlerException {
 	if (actionRequest instanceof NavigationRequest) {
 	    navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest);
 	} else if (actionRequest instanceof DownloadRequest) {
@@ -53,7 +53,7 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
 	} else if (actionRequest instanceof ShowComponentRequest) {
 	    showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest);
 	} else {
-	    logger.warn("Cannot handle action request of type {}: {}", actionRequest.getClass(), actionRequest);
+	    throw new RequestHandlerException("Cannot handle action request of type " + actionRequest.getClass().getName());
 	}
     }
 
