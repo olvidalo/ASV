@@ -22,5 +22,8 @@
 	<property name="downloadRequestHandler">
 	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.DownloadRequestHandler" />
 	</property>
+	<property name="showComponentRequestHandler">
+	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.ShowComponentRequestHandler" />
+	</property>
     </bean>
 </beans>

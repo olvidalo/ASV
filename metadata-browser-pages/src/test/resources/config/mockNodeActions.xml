@@ -50,6 +50,14 @@
 		</bean>
 	    </property>
 	</bean>
+	<bean class="nl.mpi.metadatabrowser.model.mock.MockNodeAction">
+	    <property name="name" value="bookmark" />
+	    <property name="resultActionRequest">
+		<bean class="nl.mpi.metadatabrowser.model.mock.MockShowComponentRequest">
+		    <property name="text" value="Bookmark panel content!" />
+		</bean>
+	    </property>
+	</bean>
     </util:list>
     
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.mock.MockNodeActionsProvider">
