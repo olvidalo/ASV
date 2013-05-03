@@ -21,6 +21,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.*;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +34,7 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "bookmark";
-    private String feedbackMessage;
-    private String exceptionMessage;
-    private Map<String, String> parameters = new HashMap<String, String>();
+    Form form;
     private final CmdiCorpusStructureDB csdb;
 
     public CMDIBookmarkNodeAction(CmdiCorpusStructureDB csdb) {
@@ -69,20 +69,18 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
 
 
         // HANDLE bookmark action here
-        parameters.put("nodeId", nodeId);
-        parameters.put("name", nodeName);
-        parameters.put("uri", nodeUri.toString());
-        parameters.put("url", url);
-        parameters.put("last_modified", "lastmodified");
-        parameters.put("title", "title");
-        parameters.put("format", "format");
-        parameters.put("archive_name", archive_name);
-        parameters.put("resolver", resolver);
+        form.add(new Label("nodeId", nodeId));
+        form.add(new Label("name", nodeName));
+        form.add(new Label("uri", nodeUri.toString()));
+        form.add(new Label("url", url));
+        form.add(new Label("last_modified", "lastmodified"));
+        form.add(new Label("title", "title"));
+        form.add(new Label("format", "format"));
+        form.add(new Label("archive_name", archive_name));
+        form.add(new Label("resolver", resolver));
 
-        final ShowComponentActionRequest request = new ShowComponentActionRequest(null);
+        final ShowComponentActionRequest request = new ShowComponentActionRequest(form);
         return new SimpleNodeActionResult(request);
-
-
     }
 
     @Override

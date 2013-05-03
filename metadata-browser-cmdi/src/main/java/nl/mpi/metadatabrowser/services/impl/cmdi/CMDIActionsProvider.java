@@ -32,31 +32,11 @@ import nl.mpi.metadatabrowser.services.cmdi.ZipService;
  */
 public class CMDIActionsProvider implements NodeActionsProvider {
 
-    private final List<NodeAction> resourcetxtNodeActionList = Arrays.<NodeAction>asList(
-            new CMDITrovaNodeAction(),
-            new CMDIAMSNodeAction(),
-            new CMDIRrsNodeAction(),
-            new CMDIStatsNodeAction(),
-            //            new CMDIAMSNodeAction("View Node"),
-            //            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDownloadNodeAction());
+    private final List<NodeAction> resourcetxtNodeActionList;
     //private final List<NodeAction> resourcetxtNodeActionList;
-    private final List<NodeAction> resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
-            new CMDIAMSNodeAction(),
-            new CMDIRrsNodeAction(),
-            new CMDIStatsNodeAction(),
-            //            new CMDIAMSNodeAction("View Node"),
-            //            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDownloadNodeAction());
+    private final List<NodeAction> resourceAudioVideoNodeActionList;
     private final List<NodeAction> metadataNodeActionList;
-    public final List<NodeAction> collectionNodeActionList = Arrays.<NodeAction>asList(
-            new CMDISearchNodeAction(),
-            new CMDITrovaNodeAction(),
-            new CMDIAMSNodeAction(),
-            new CMDIRrsNodeAction(),
-            //            new CMDIAMSNodeAction("View Node"),
-            //            new CMDIAMSNodeAction("Create Bookmark"),
-            new CMDIDownloadNodeAction());
+    public final List<NodeAction> collectionNodeActionList;
     // private final List<NodeAction> extraNodeActionList;
 
     public CMDIActionsProvider(CmdiCorpusStructureDB csdb, ZipService zipService) {
@@ -66,12 +46,40 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIAMSNodeAction(),
                 new CMDIRrsNodeAction(),
                 new CMDIStatsNodeAction(),
-                //            new CMDIAMSNodeAction("View Node"),
-                //            new CMDIAMSNodeAction("Create Bookmark"),
+                new CMDIViewNodeAction(csdb),
+                new CMDIBookmarkNodeAction(csdb),
                 new CMDIDownloadNodeAction(),
                 new CMDIMultipleDownloadNodeAction(csdb, zipService) //            new CMDIDownloadNodeAction("Version info"),
                 //            new CMDIAMSNodeAction("View Images")
                 );
+
+        collectionNodeActionList = Arrays.<NodeAction>asList(
+                new CMDISearchNodeAction(),
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIViewNodeAction(csdb),
+                new CMDIBookmarkNodeAction(csdb),
+                new CMDIDownloadNodeAction());
+
+        resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIStatsNodeAction(),
+                new CMDIViewNodeAction(csdb),
+                new CMDIBookmarkNodeAction(csdb),
+                new CMDIDownloadNodeAction());
+
+        resourcetxtNodeActionList = Arrays.<NodeAction>asList(
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIStatsNodeAction(),
+                new CMDIViewNodeAction(csdb),
+                new CMDIBookmarkNodeAction(csdb),
+                new CMDIDownloadNodeAction());
+
+
     }
 
     @Override

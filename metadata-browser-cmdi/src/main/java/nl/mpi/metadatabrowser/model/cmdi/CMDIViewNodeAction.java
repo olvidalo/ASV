@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "bookmark";
+    private final String name = "view Node";
     private String feedbackMessage;
     private String exceptionMessage;
     private Map<String, String> parameters = new HashMap<String, String>();
@@ -99,20 +99,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 //        }
 
         content = new TextArea(xmlContent);
-        //ShowComponentActionRequest.setTextArea(content);
-//resStream.write(null);
-        // HANDLE bookmark action here
-//        parameters.put("nodeId", nodeId);
-//        parameters.put("name", nodeName);
-//        parameters.put("uri", nodeUri.toString());
-//        parameters.put("url", url);
-//        parameters.put("last_modified", "lastmodified");
-//        parameters.put("title", "title");
-//        parameters.put("format", "format");
-//        parameters.put("archive_name", archive_name);
-//        parameters.put("resolver", resolver);
-//
-//        ShowComponentActionRequest.setParameters(parameters);
+
 
         if (navType == true) {
             final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.Annex, parameters);
