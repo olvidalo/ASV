@@ -22,7 +22,13 @@ import org.apache.wicket.Component;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface ShowComponentRequest extends ControllerActionRequest {    
-    
-    Component getComponent();
+public interface ShowComponentRequest extends ControllerActionRequest {
+
+    /**
+     * Provides a custom component for the Wicket UI layer to display
+     *
+     * @param id the string that should be used as the id for the top-level component returned
+     * @return the component that should be shown
+     */
+    Component getComponent(String id);
 }
