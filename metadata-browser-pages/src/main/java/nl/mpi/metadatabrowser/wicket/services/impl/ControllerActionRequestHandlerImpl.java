@@ -22,6 +22,7 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -45,13 +46,13 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
      * one of the wrapped handlers
      */
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest) throws RequestHandlerException {
+    public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest, Page originatingPage) throws RequestHandlerException {
 	if (actionRequest instanceof NavigationRequest) {
-	    navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest);
+	    navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest, originatingPage);
 	} else if (actionRequest instanceof DownloadRequest) {
-	    downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest);
+	    downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest, originatingPage);
 	} else if (actionRequest instanceof ShowComponentRequest) {
-	    showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest);
+	    showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest, originatingPage);
 	} else {
 	    throw new RequestHandlerException("Cannot handle action request of type " + actionRequest.getClass().getName());
 	}

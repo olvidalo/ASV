@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import java.util.Map;
 import org.apache.wicket.Component;
 
 /**

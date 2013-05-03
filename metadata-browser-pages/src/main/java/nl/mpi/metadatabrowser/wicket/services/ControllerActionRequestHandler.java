@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.wicket.services;
 
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
+import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -31,6 +32,7 @@ public interface ControllerActionRequestHandler<R extends ControllerActionReques
      *
      * @param requestCycle current request cycle to act on
      * @param actionRequest action request to handle
+     * @param originatingPage page from which the action was called that returned the request to be handled
      */
-    void handleActionRequest(RequestCycle requestCycle, R actionRequest) throws RequestHandlerException;
+    void handleActionRequest(RequestCycle requestCycle, R actionRequest, Page originatingPage) throws RequestHandlerException;
 }

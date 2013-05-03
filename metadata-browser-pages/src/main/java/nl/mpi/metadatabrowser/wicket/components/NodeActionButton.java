@@ -77,7 +77,7 @@ class NodeActionButton extends Button {
     private void handleActionRequest(final NodeActionResult result) throws RequestHandlerException {
 	final ControllerActionRequest actionRequest = result.getControllerActionRequest();
 	if (actionRequest != null) {
-	    actionRequestHandler.handleActionRequest(getRequestCycle(), actionRequest);
+	    actionRequestHandler.handleActionRequest(getRequestCycle(), actionRequest, getPage());
 	}
     }
 }

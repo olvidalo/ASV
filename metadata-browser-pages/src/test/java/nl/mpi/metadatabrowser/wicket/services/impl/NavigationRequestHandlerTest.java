@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.wicket.services.impl;
 
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -62,7 +63,7 @@ public class NavigationRequestHandlerTest {
 		allowing(actionRequest).getParameters();
 	    }
 	});
-	instance.handleActionRequest(requestCycle, actionRequest);
+	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());
 	//TODO: Assert redirect to rrs url
 	//TODO: Test for other targets
     }

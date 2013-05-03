@@ -22,6 +22,8 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.Page;
+import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -35,20 +37,22 @@ import org.junit.Test;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ControllerActionRequestHandlerImplTest {
-    
+
     public final String rrsUrl = "RRSURL";
     private final Mockery context = new JUnit4Mockery();
     private WicketTester tester;
+    private Page page;
     private RequestCycle requestCycle;
     private ControllerActionRequestHandlerImpl instance;
-    
+
     @Before
     public void setUp() {
 	tester = new WicketTester();
 	requestCycle = tester.getRequestCycle();
+	page = new MockHomePage();
 	instance = new ControllerActionRequestHandlerImpl();
     }
-    
+
     @Test
     public void testHandleNavigationRequest() throws Exception {
 	final ControllerActionRequestHandler<NavigationRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "NavigationRequest");
@@ -56,12 +60,12 @@ public class ControllerActionRequestHandlerImplTest {
 	instance.setNavigationRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(requestHandler).handleActionRequest(requestCycle, request);
+		oneOf(requestHandler).handleActionRequest(requestCycle, request, page);
 	    }
 	});
-	instance.handleActionRequest(requestCycle, request);
+	instance.handleActionRequest(requestCycle, request, page);
     }
-    
+
     @Test
     public void testHandleDownloadRequest() throws Exception {
 	final ControllerActionRequestHandler<DownloadRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "DownloadRequest");
@@ -69,12 +73,12 @@ public class ControllerActionRequestHandlerImplTest {
 	instance.setDownloadRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(requestHandler).handleActionRequest(requestCycle, request);
+		oneOf(requestHandler).handleActionRequest(requestCycle, request, page);
 	    }
 	});
-	instance.handleActionRequest(requestCycle, request);
+	instance.handleActionRequest(requestCycle, request, page);
     }
-    
+
     @Test
     public void testHandleShowComponentRequest() throws Exception {
 	final ControllerActionRequestHandler<ShowComponentRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "ShowComponentRequest");
@@ -82,15 +86,15 @@ public class ControllerActionRequestHandlerImplTest {
 	instance.setShowComponentRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(requestHandler).handleActionRequest(requestCycle, request);
+		oneOf(requestHandler).handleActionRequest(requestCycle, request, page);
 	    }
 	});
-	instance.handleActionRequest(requestCycle, request);
+	instance.handleActionRequest(requestCycle, request, page);
     }
-    
+
     @Test(expected = RequestHandlerException.class)
     public void handleUnknown() throws Exception {
 	final ControllerActionRequest request = context.mock(ControllerActionRequest.class);
-	instance.handleActionRequest(requestCycle, request);
+	instance.handleActionRequest(requestCycle, request, page);
     }
 }

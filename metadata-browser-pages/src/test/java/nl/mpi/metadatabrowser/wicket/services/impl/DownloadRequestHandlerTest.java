@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.wicket.services.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
+import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
@@ -71,7 +72,7 @@ public class DownloadRequestHandlerTest {
 		will(returnValue("test/content-type"));
 	    }
 	});
-	instance.handleActionRequest(requestCycle, actionRequest);
+	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());
 	//TODO: Assert download
     }
 }

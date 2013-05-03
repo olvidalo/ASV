@@ -143,7 +143,7 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
 		will(returnValue(actionRequest));
 
 		// ..and passed on to the action request handler
-		oneOf(actionRequestHandler).handleActionRequest(tester.getRequestCycle(), actionRequest);
+		oneOf(actionRequestHandler).handleActionRequest(tester.getRequestCycle(), actionRequest, panel.getPage());
 	    }
 	});
 	// Submit form...

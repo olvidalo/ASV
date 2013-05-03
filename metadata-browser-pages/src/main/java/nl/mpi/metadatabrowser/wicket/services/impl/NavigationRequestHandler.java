@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.wicket.services.impl;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
     private String rrsUrl;
 
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest) throws RequestHandlerException {
+    public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
 	switch (actionRequest.getTarget()) {
 	    case RRS:
 		logger.debug("Received request to navigate to RRS with parameters {}", actionRequest.getParameters());

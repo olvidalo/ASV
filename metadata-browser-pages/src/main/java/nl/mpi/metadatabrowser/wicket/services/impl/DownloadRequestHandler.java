@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.wicket.services.impl;
 
 import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
+import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -33,7 +34,7 @@ public class DownloadRequestHandler implements ControllerActionRequestHandler<Do
     private final static Logger logger = LoggerFactory.getLogger(DownloadRequestHandler.class);
 
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, DownloadRequest downloadRequest) {
+    public void handleActionRequest(RequestCycle requestCycle, DownloadRequest downloadRequest, Page originatingPage) {
 	final IResourceStream stream = downloadRequest.getDownloadStream();
 	final String fileName = downloadRequest.getFileName();
 	logger.debug("Recieved request to offer download from stream as {} with content type {}", fileName, stream.getContentType());
