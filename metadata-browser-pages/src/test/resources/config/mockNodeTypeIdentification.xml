@@ -25,11 +25,16 @@
 	<property name="name" value="Child" />
     </bean>
     
+    <bean id="resourceNodeType" class="nl.mpi.metadatabrowser.model.mock.MockNodeType">
+	<property name="name" value="Resource" />
+    </bean>
+    
     <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.mock.MockNodeTypeIdentifier">
 	<constructor-arg>
 	    <map>
 		<entry key="mock:/" value-ref="rootNodeType" />
 		<entry key="mock:/1" value-ref="childNodeType" />
+		<entry key="mock:/1/1" value-ref="resourceNodeType" />
 		<entry key="mock:/2" value-ref="collectionNodeType" />
 		<entry key="mock:/2/1" value-ref="childNodeType" />
 	    </map>

@@ -19,18 +19,29 @@
 	<property name="uri" value="mock:/"/>
 	<property name="children">
 	    <list>
-		<bean class="nl.mpi.archiving.tree.mock.MockCorpusNode">
-		    <property name="parent" ref="archiveRootNode" />
-		    <property name="name" value="Child1"/>
-		    <property name="nodeId" value="1"/>
-		    <property name="uri" value="mock:/1"/>
-		</bean>
-		    
+		<ref bean="childNode" />
 		<ref bean="collectionNode" />
 	    </list>
 	</property>
     </bean>  
     
+    <bean id="childNode" class="nl.mpi.archiving.tree.mock.MockCorpusNode">
+	<property name="parent" ref="archiveRootNode" />
+	<property name="name" value="Child1"/>
+	<property name="nodeId" value="1"/>
+	<property name="uri" value="mock:/1"/>
+	<property name="children">
+	    <list>
+		<bean id="resourceNode" class="nl.mpi.archiving.tree.mock.MockCorpusNode">
+		    <property name="parent" ref="childNode" />
+		    <property name="name" value="Resource1"/>
+		    <property name="nodeId" value="11"/>
+		    <property name="uri" value="mock:/1/1"/>
+		</bean>
+	    </list>
+	</property>
+    </bean>
+		
     <bean id="collectionNode" class="nl.mpi.archiving.tree.mock.MockCorpusNode">
 	<property name="name" value="CollectionNode"/>
 	<property name="nodeId" value="2"/>
@@ -49,6 +60,10 @@
         
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.GenericTreeModelProviderImpl">
 	<constructor-arg ref="archiveRootNode" />
+    </bean>
+    
+    <bean id="treeIconProvider" class="nl.mpi.archiving.tree.wicket.components.mock.MockNodeIconProvider">
+	<constructor-arg ref="nodeTypeIdentifier" />
     </bean>
     
 </beans>
