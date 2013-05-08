@@ -38,19 +38,18 @@ public final class PanelShowComponent extends Panel {
 
     public PanelShowComponent(String id, TypedCorpusNode node, String archiveName, String resolver) {
         super(id);
-
-        //if (form != null) {
         final Form form = new Form("nodeInfoForm");
-
         String nodeName = node.getName();
         String nodeId = Integer.toString(node.getNodeId());
         URI nodeUri = node.getUri();
-        String url = null;
+        
+        String url = null;      
         try {
             url = nodeUri.toURL().toString();
         } catch (MalformedURLException ex) {
             logger.error("url error while getting URL", ex);
         }
+        
         // HANDLE bookmark action here
         form.add(new Label("nodeId", nodeId));
         form.add(new Label("name", nodeName));
@@ -67,61 +66,10 @@ public final class PanelShowComponent extends Panel {
         formContainer.add(form);
         // Add container to page
         add(formContainer);
-        //(Form) createNodeInfoForm("nodeInfoForm");
-        // Put details/submit form in container for refresh through AJAX
-//        final MarkupContainer formContainer = new WebMarkupContainer("formContainer");
-//        formContainer.add(nodeInfoForm);
-//        // Add container to page
-//        formContainer.setMarkupId("formContainer");
-//        add(formContainer);
 
-
-//        tableContainer = new WebMarkupContainer("bookmark");
-//        tableContainer.setOutputMarkupId(true);
-//        tableContainer.setMarkupId("bookmark");
-//        add(tableContainer);
-        // }
 
 
 
 
     }
-
-//    /**
-//     * Creates and adds node id form
-//     *
-//     * @param id
-//     * @return Form
-//     */
-//    private Form createNodeInfoForm(final String id, TypedCorpusNode node, String archive_name, String resolver) {
-//        final Form form = new Form("nodeIdForm");
-//
-//        String nodeName = node.getName();
-//        String nodeId = Integer.toString(node.getNodeId());
-//        URI nodeUri = node.getUri();
-//        String url = null;
-//        try {
-//            url = nodeUri.toURL().toString();
-//        } catch (MalformedURLException ex) {
-//            logger.error("url error while getting URL", ex);
-//        }
-//        // HANDLE bookmark action here
-//        form.add(new Label("nodeId", nodeId));
-//        form.add(new Label("name", nodeName));
-//        form.add(new Label("uri", nodeUri.toString()));
-//        form.add(new Label("url", url));
-//        form.add(new Label("last_modified", "lastmodified"));
-//        form.add(new Label("title", "title"));
-//        form.add(new Label("format", "format"));
-//        form.add(new Label("archive_name", archive_name));
-//        form.add(new Label("resolver", resolver));
-//
-//        // Put details/submit form in container for refresh through AJAX
-//        final MarkupContainer formContainer = new WebMarkupContainer("formContainer");
-//        formContainer.add(form);
-//        // Add container to page
-//        add(formContainer);
-//
-//        return form;
-//    }
 }
