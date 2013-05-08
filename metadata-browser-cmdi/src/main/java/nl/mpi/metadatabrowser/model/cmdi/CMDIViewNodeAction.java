@@ -16,15 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
-import org.apache.wicket.markup.html.form.TextArea;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.*;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.util.OurURL;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.util.resource.IResourceStreamWriter;
+import org.apache.wicket.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +37,6 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "view Node";
-    private String feedbackMessage;
-    private String exceptionMessage;
     private Map<String, String> parameters = new HashMap<String, String>();
     private final CmdiCorpusStructureDB csdb;
     private boolean navType = false;
@@ -52,60 +51,113 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         URI nodeUri = node.getUri();
         String nodeId = Integer.toString(node.getNodeId());
         OurURL nodeURL = csdb.getObjectURL(nodeId, ArchiveAccessContext.HTTP_URL); // Get the XML file
-        String xmlContent = null;
-        PrintWriter out = null;
-        Map<String, String> parameters = new HashMap<String, String>();
-        TextArea content;
+        String xmlContent = null;      
+
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-//        String[] formats = SearchClient.getSearchableFormats();
-//        List<String> formatslist = new ArrayList<String>(formats.length);
-//        formatslist.addAll(Arrays.asList(formats));
 
         if ((nodeURL != null) && (node != null)) {
             if (node.getNodeType() instanceof CMDIMetadata
                     || node.getNodeType() instanceof CMDICollectionType) {
-                xmlContent = nodeURL.toString();
-            }//all formats that should be handled by annex
-            else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
-                parameters.put("nodeId", nodeId);
-                parameters.put("jsessionID", "jsessioID");
-                navType = true;
-            } else {
-                xmlContent = nodeURL.toString();
+
+
+                try {
+                    // get URL content
+                    //url = new URL("http://www.mkyong.com");
+                    URLConnection conn = nodeURL.toURL().openConnection();
+
+                    // open the stream and put it into BufferedReader
+                    BufferedReader br = new BufferedReader(
+                            new InputStreamReader(conn.getInputStream()));
+
+                    String inputLine;
+
+                    //save to this filename
+                    String fileName = "/users/mkyong/test.html";
+                    File file = new File(fileName);
+
+                    if (!file.exists()) {
+                        file.createNewFile();
+                    }
+
+                    //use FileWriter to write file
+                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+                    BufferedWriter bw = new BufferedWriter(fw);
+
+                    while ((inputLine = br.readLine()) != null) {
+                        bw.write(inputLine);
+                    }
+
+                    bw.close();
+                    br.close();
+
+                    System.out.println("Done");
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //      try {
+                //                            JAXBContext jc = JAXBContext.newInstance(String.class);
+                //
+                //            File xml = new File(nodeURL.toString());
+                //            Unmarshaller unmarshaller = jc.createUnmarshaller();
+                //            String recon = (String) unmarshaller.unmarshal(xml);
+                //
+                //            Marshaller marshaller = jc.createMarshaller();
+                //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                //            marshaller.marshal(recon, System.out);
+                //
+                //                    xmlContent = nodeURL.toString();
+                //                } //all formats that should be handled by annex
+                //                catch (JAXBException ex) {
+                //                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+                //                }
             }
+
+            //      try {
+
+
+//                            JAXBContext jc = JAXBContext.newInstance(String.class);
+//
+//            File xml = new File(nodeURL.toString());
+//            Unmarshaller unmarshaller = jc.createUnmarshaller();
+//            String recon = (String) unmarshaller.unmarshal(xml);
+//
+//            Marshaller marshaller = jc.createMarshaller();
+//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//            marshaller.marshal(recon, System.out);
+//                    
+//                    xmlContent = nodeURL.toString();
+//                } //all formats that should be handled by annex
+//                catch (JAXBException ex) {
+//                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+
+
+        } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
+            parameters.put("nodeId", nodeId);
+            parameters.put("jsessionID", "jsessioID");
+            navType = true;
+        } else {
+            xmlContent = nodeURL.toString();
         }
 
-//        String nodeName = node.getName();
-
-//        String resolver = csdb.getArchiveRoots().getHandleProxy();
-//        if (resolver == null) {
-//            resolver = "";
-//        }
-//        if (!resolver.endsWith("/")) {
-//            resolver = resolver + "/";
-//        }
-//
-//        String archive_name = csdb.getArchiveRoots().getArchiveName();
-//        if (archive_name == null) {
-//            archive_name = "unknown";
-//        }
-//
-//        String url = null;
-//        try {
-//            url = nodeUri.toURL().toString();
-//        } catch (MalformedURLException ex) {
-//            logger.error("url error while getting URL", ex);
-//        }
-
-        content = new TextArea(xmlContent);
-
-
-        if (navType == true) {
-            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.Annex, parameters);
+        final String xmlText = xmlContent;
+        
+        if (navType
+                == true) {
+            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
             return new SimpleNodeActionResult(request);
         } else {
-            final ShowComponentActionRequest request = new ShowComponentActionRequest(content);
+            final ShowComponentRequest request = new ShowComponentRequest() {
+                
+                @Override
+                public Component getComponent(String id) {
+                    return new PanelViewNodeShowComponent(id, xmlText);
+                }
+            };
             return new SimpleNodeActionResult(request);
         }
     }

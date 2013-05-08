@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.*;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.slf4j.Logger;
@@ -34,7 +35,6 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "bookmark";
-    Form form;
     private final CmdiCorpusStructureDB csdb;
 
     public CMDIBookmarkNodeAction(CmdiCorpusStructureDB csdb) {
@@ -42,12 +42,10 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
     }
 
     @Override
-    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+    protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         URI nodeUri = node.getUri();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-        String nodeName = node.getName();
-        String nodeId = Integer.toString(node.getNodeId());
-        String resolver = csdb.getArchiveRoots().getHandleProxy();
+        String resolver = csdb.getHandleResolverURI().toString();
         if (resolver == null) {
             resolver = "";
         }
@@ -55,31 +53,21 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
             resolver = resolver + "/";
         }
 
-        String archive_name = csdb.getArchiveRoots().getArchiveName();
+        String archive_name = "cmdi archive";//csdb.getArchiveRoots().getArchiveName();
         if (archive_name == null) {
             archive_name = "unknown";
         }
 
-        String url = null;
-        try {
-            url = nodeUri.toURL().toString();
-        } catch (MalformedURLException ex) {
-            logger.error("url error while getting URL", ex);
-        }
+        final String archiveName = archive_name;
+        final String finalResolver = resolver;
 
+        final ShowComponentRequest request = new ShowComponentRequest() {
 
-        // HANDLE bookmark action here
-        form.add(new Label("nodeId", nodeId));
-        form.add(new Label("name", nodeName));
-        form.add(new Label("uri", nodeUri.toString()));
-        form.add(new Label("url", url));
-        form.add(new Label("last_modified", "lastmodified"));
-        form.add(new Label("title", "title"));
-        form.add(new Label("format", "format"));
-        form.add(new Label("archive_name", archive_name));
-        form.add(new Label("resolver", resolver));
-
-        final ShowComponentActionRequest request = new ShowComponentActionRequest(form);
+            @Override
+            public Component getComponent(String id) {
+                return new PanelShowComponent(id, node, archiveName, finalResolver);
+            }
+        };
         return new SimpleNodeActionResult(request);
     }
 
