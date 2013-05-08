@@ -17,10 +17,14 @@
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.corpusstructure.Node;
@@ -39,161 +43,161 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
     private MockCorpusNode rootNode;
 
     public void setRootNode(MockCorpusNode rootNode) {
-	this.rootNode = rootNode;
+        this.rootNode = rootNode;
     }
 
     private MockCorpusNode getNode(int nodeId) {
-	return rootNode.getChildRecursive(nodeId);
+        return rootNode.getChildRecursive(nodeId);
     }
 
     @Override
     public List<CorpusNode> getChildrenCMDIs(int nodeId) throws UnknownNodeException {
-	final MockCorpusNode node = getNode(nodeId);
-	if (node != null) {
-	    return Collections.<CorpusNode>unmodifiableList(node.getChildren());
-	} else {
-	    return Collections.emptyList();
-	}
+        final MockCorpusNode node = getNode(nodeId);
+        if (node != null) {
+            return Collections.<CorpusNode>unmodifiableList(node.getChildren());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
     public URI getObjectURI(int id) throws UnknownNodeException {
-	final CorpusNode node = getNode(id);
-	if (node != null) {
-	    return node.getUri();
-	} else {
-	    return null;
-	}
+        final CorpusNode node = getNode(id);
+        if (node != null) {
+            return node.getUri();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public String getProfileId(URI uri) {
-	return "profile";
+        return "profile";
     }
 
     @Override
     public ArchiveAccessContext getArchiveRoots() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Node getNode(String nodeId) throws UnknownNodeException {
-	CorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
-	if (node != null) {
-	    return new Node(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
-	} else {
-	    return null;
-	}
+        CorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
+        if (node != null) {
+            return new Node(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
+        } else {
+            return null;
+        }
     }
 
     @Override
     public nl.mpi.corpusstructure.CorpusNode getCorpusNode(String nodeId) throws UnknownNodeException {
-	CorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
-	if (node != null) {
-	    return new nl.mpi.corpusstructure.CorpusNode(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
-	} else {
-	    return null;
-	}
+        CorpusNode node = getNode(NodeIdUtils.TOINT(nodeId));
+        if (node != null) {
+            return new nl.mpi.corpusstructure.CorpusNode(nodeId, Node.SESSION, "test/test", node.getName(), node.getName());
+        } else {
+            return null;
+        }
     }
 
     @Override
     public String getRootNodeId() {
-	return NodeIdUtils.TONODEID(rootNode.getNodeId());
+        return NodeIdUtils.TONODEID(rootNode.getNodeId());
     }
 
     @Override
     public String[] getSubnodes(String nodeId) throws UnknownNodeException {
-	List<CorpusNode> children = getChildrenCMDIs(NodeIdUtils.TOINT(nodeId));
-	List<String> subNodes = new ArrayList<String>(children.size());
-	for (CorpusNode child : children) {
-	    subNodes.add(NodeIdUtils.TONODEID(child.getNodeId()));
-	}
-	return subNodes.toArray(new String[]{});
+        List<CorpusNode> children = getChildrenCMDIs(NodeIdUtils.TOINT(nodeId));
+        List<String> subNodes = new ArrayList<String>(children.size());
+        for (CorpusNode child : children) {
+            subNodes.add(NodeIdUtils.TONODEID(child.getNodeId()));
+        }
+        return subNodes.toArray(new String[]{});
     }
 
     @Override
     public Node[] getChildrenNodes(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getParentNodes(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getDescendants(String nodeId, int nodeType, String format) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getDescendants(String nodeId, int nodeType, String[] formats) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getDescendants(String nodeId, int nodeType, String[] formats, String user, boolean onsite) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public nl.mpi.corpusstructure.CorpusNode[] getDescendantResources(String nodeId, boolean onsiteOnly, String userToRead, String userToWrite) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getSessions(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getSessionsAndCatalogues(String nodeId) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] getResourcesFromArchive(int nodeType, String[] formats, String user, boolean onlyAvailable, boolean onlyOnSite) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public List getResourcesAccessInfo() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getCanonicalVPath(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getNamePath(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String[] translateToNamePath(String[] nodeids) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String resolveNameInAnnotationContext(String annotationNodeId, String name, String function) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String resolveNameInSessionContext(String sessionNodeId, String name, String function) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getCanonicalParent(String nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getAdminKey(String name) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -202,16 +206,29 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
 
     @Override
     public boolean getStatus() {
-	return true;
+        return true;
     }
 
     @Override
-    public OurURL getObjectURL(String toString, int HTTP_URL) {
-	throw new UnsupportedOperationException("Not supported yet.");
+    public OurURL getObjectURL(String nodeid, int HTTP_URL) {
+        try {
+            return new OurURL(getObjectURI(Integer.parseInt(nodeid)).toString());
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public CorpusNodeType getCorpusNodeType(int nodeId) {
-	return getNode(nodeId).getCorpusNodeType();
+        return getNode(nodeId).getCorpusNodeType();
+    }
+
+    @Override
+    public URI getHandleResolverURI() {
+        try {
+            return new URI("http://hdl.handle.net/");
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

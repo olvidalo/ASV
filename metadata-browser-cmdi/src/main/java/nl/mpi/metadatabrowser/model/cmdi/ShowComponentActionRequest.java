@@ -17,12 +17,10 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.Serializable;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  *
@@ -30,24 +28,27 @@ import org.apache.wicket.markup.html.form.TextArea;
  */
 public class ShowComponentActionRequest implements ShowComponentRequest, Serializable {
 
-    public  TextArea content;
-    public  Form nodeForm;
-    
-      public ShowComponentActionRequest(TextArea textArea) {
-        this.content =textArea;
+    public TextArea content;
+    public Panel nodeFormPanel;
+
+    public ShowComponentActionRequest(TextArea textArea) {
+        this.content = textArea;
     }
 
-    ShowComponentActionRequest(Form nodeForm) {
-        this.nodeForm = nodeForm;
+    ShowComponentActionRequest(Panel nodeFormPanel) {
+        this.nodeFormPanel = nodeFormPanel;
     }
-    
+
     public void setTextArea(TextArea content) {
         this.content = content;
     }
 
-
     @Override
-    public Component getComponent() {
-        return content;
+    public Component getComponent(String id) {
+        if (content != null) {
+            return content;
+        } else {
+            return nodeFormPanel;
+        }
     }
 }
