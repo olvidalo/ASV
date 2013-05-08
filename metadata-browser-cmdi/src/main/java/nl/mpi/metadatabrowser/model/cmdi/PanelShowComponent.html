@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>PanelShowContent</title>
+    </head>
+    <body>
+        <wicket:panel>            
+<!--            <div id="tableContainer" wicket:id="tableContainer">-->
+                <div wicket:id="formContainer">
+	                    <form wicket:id="nodeInfoForm">
+	                        <p>Selected node id: <span wicket:id="nodeId">Node id</span></p>
+                                <p>Name: <span wicket:id="name">Name</span></p>
+	                        <p>URI: <span wicket:id="uri">URI</span></p>
+                                <p>URL: <span wicket:id="url">URL</span></p>
+	                        <p>Last modified: <span wicket:id="last_modified">last modified</span></p>
+                                <p>Title: <span wicket:id="title">title</span></p>
+                                <p>Format: <span wicket:id="format">format</span></p>
+	                        <p>Archive Name: <span wicket:id="archive_name">archive name</span></p>
+	                        <p>Resolver: <span wicket:id="resolver">resolver</span></p>
+	                    </form>
+	                </div>
+<!--            </div>-->
+        </wicket:panel>
+    </body>
+</html>
