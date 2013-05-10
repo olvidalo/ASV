@@ -17,7 +17,7 @@
     -->
     
     <!-- CSDB factory -->
-    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.impl.cmdi.CmdiCorpusStructureDBFactoryImpl">
+    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.CmdiCorpusStructureDBFactoryImpl">
 	<constructor-arg value="dbname" />
     </bean>
     
