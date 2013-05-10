@@ -42,4 +42,7 @@
     
     <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodePresentationProvider" />
     
+    <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodeIconProvider">
+	<constructor-arg ref="nodeTypeIdentifier" />
+    </bean>
 </beans>

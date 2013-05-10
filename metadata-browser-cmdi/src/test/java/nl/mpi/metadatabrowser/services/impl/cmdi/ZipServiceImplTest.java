@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
+import nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;

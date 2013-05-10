@@ -37,7 +37,7 @@
     
     <bean id="child1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
 	<property name="nodeId" value="01" />
-	<property name="uri" value="node:0/0" />
+	<property name="uri" value="file:Users/jeafer/Documents/CMDI/collection-cgn.cmdi" />
 	<property name="name" value="Child 1" />
 	<property name="profileId" value="profile100" />
 	<property name="parent" ref="rootNode" />
@@ -59,7 +59,7 @@
     
     <bean id="resource1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
 	<property name="nodeId" value="021" />
-	<property name="uri" value="node:0/2/1" />
+	<property name="uri" value="file:Users/jeafer/Documents/CMDI/resources/talkbank.imdi" />
 	<property name="name" value="Video resource" />
 	<property name="corpusNodeType" value="RESOURCE_VIDEO" />
 	<property name="parent" ref="child1" />
@@ -68,11 +68,10 @@
     
     <bean id="resource2" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
 	<property name="nodeId" value="022" />
-	<property name="uri" value="node:0/2/2" />
+	<property name="uri" value="file:Users/jeafer/Documents/CMDI/collection-talkbank.cmdi" />
 	<property name="name" value="Audio resource" />
 	<property name="corpusNodeType" value="RESOURCE_AUDIO" />
 	<property name="parent" ref="child1" />
 	<!-- resource -->
     </bean>
-    
 </beans>

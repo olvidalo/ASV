@@ -16,7 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
-import nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier;
 import java.net.URI;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;

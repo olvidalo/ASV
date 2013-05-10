@@ -16,7 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
-import nl.mpi.metadatabrowser.services.impl.cmdi.CMDINodePresentationProvider;
+import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
 import java.net.URI;
 import nl.mpi.metadatabrowser.model.NodeType;
 import org.apache.wicket.Component;

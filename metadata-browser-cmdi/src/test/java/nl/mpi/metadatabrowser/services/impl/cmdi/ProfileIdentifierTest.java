@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
+import nl.mpi.metadatabrowser.services.cmdi.impl.ProfileIdentifierImpl;
 import java.net.URI;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;

@@ -70,11 +70,12 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
             };
             DownloadActionRequest.setStreamContent(resStream);
             DownloadActionRequest.setFileName("package_" + node.getName());
-        } catch (IOException ioe) {
-            System.out.println("IOException :" + ioe);
-        }
         final DownloadActionRequest request = new DownloadActionRequest();
 
 	return new SimpleNodeActionResult(request);
+                } catch (IOException ioe) {
+            System.out.println("IOException :" + ioe);
+        }
+        return new SimpleNodeActionResult("Error trying to download multiple files. One or more file encountered a problem.");
     }
 }

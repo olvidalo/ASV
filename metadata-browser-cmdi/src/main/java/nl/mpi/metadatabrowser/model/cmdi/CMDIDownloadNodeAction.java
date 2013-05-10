@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
+import java.rmi.UnexpectedException;
 import nl.mpi.metadatabrowser.model.*;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -30,19 +31,18 @@ import org.slf4j.LoggerFactory;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
-
+    
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "download";
-
+    
     public CMDIDownloadNodeAction() {
     }
-
+    
     @Override
     public String getName() {
         return name;
     }
-
-
+    
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         URI nodeUri = node.getUri();
@@ -50,16 +50,20 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
         // HANDLE download action here
         String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
-       // String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-
-
-        File file = new File(nodeUri.getPath());
-        IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest.setStreamContent(resStream);
-        DownloadActionRequest.setFileName(fileName);
-
-        final DownloadActionRequest request = new DownloadActionRequest();
-
-	return new SimpleNodeActionResult(request);
+        // String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+            
+     try{
+            File file = new File(nodeUri.getPath());            
+            IResourceStream resStream = new FileResourceStream(file);
+            DownloadActionRequest.setStreamContent(resStream);
+            DownloadActionRequest.setFileName(fileName);
+            
+            final DownloadActionRequest request = new DownloadActionRequest();
+            
+            return new SimpleNodeActionResult(request);
+     }catch (NullPointerException e){
+         logger.error("unvalid type of file. Could not find path for this file : " + fileName);
+     }
+         return new SimpleNodeActionResult("Download action could not be performed due to a invalid path with the file. Filepath = " + nodeUri.getPath());      
     }
 }
