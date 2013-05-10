@@ -28,7 +28,7 @@ import nl.mpi.metadatabrowser.model.cmdi.*;
 public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.NodeTypeIdentifier {
 
     private final CmdiCorpusStructureDB csdb;
-    private String collectionProfileId = "collection";
+    private String collectionProfileId = "profile";
 
     public CMDINodeTypeIdentifier(CmdiCorpusStructureDB csdb) {
         this.csdb = csdb;
@@ -48,7 +48,10 @@ public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.N
             return new CMDIResourceType();
         } else if (corpusNodeType == CorpusNodeType.RESOURCE_ANNOTATION || corpusNodeType == CorpusNodeType.RESOURCE_LEXICAL) {
             return new CMDIResourceTxtType();
-        } else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
+        } else if (corpusNodeType == CorpusNodeType.METADATA){
+            return new CMDIMetadata();
+        }
+        else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
             return new CMDICollectionType();
         } //todo extend for special profile support (configurable probably)
         else {

@@ -22,6 +22,7 @@ package nl.mpi.metadatabrowser.model.cmdi;
  */
 public enum CorpusNodeType {
 
+    COLLECTION,
     METADATA,
     RESOURCE_VIDEO,
     RESOURCE_AUDIO,

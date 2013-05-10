@@ -27,29 +27,31 @@ import org.apache.wicket.request.resource.ResourceReference;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDINodeIconProvider <T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T>{
+public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
+
     private final ResourceReference sessionIcon = new PackageResourceReference(CMDINodeIconProvider.class, "session_color.gif");
     private final ResourceReference corpusIcon = new PackageResourceReference(CMDINodeIconProvider.class, "corpusnode_color.gif");
     private final ResourceReference fileIcon = new PackageResourceReference(CMDINodeIconProvider.class, "mediafile.gif");
+    private final ResourceReference fileIconTxt = new PackageResourceReference(CMDINodeIconProvider.class, "file.gif");
     private final NodeTypeIdentifier nodeTypeIdentifier;
 
     public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier) {
-	this.nodeTypeIdentifier = nodeTypeIdentifier;
+        this.nodeTypeIdentifier = nodeTypeIdentifier;
     }
 
     @Override
     public ResourceReference getNodeIcon(T contentNode) {
-       final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
-	if (nodeType.getName().equalsIgnoreCase("Collection")) {
-	    return corpusIcon;
-	} else if (nodeType.getName().equalsIgnoreCase("Root")) {
-	    return corpusIcon;
-	} else if (nodeType.getName().equalsIgnoreCase("Resource")) {
-	    return fileIcon;
-	} else {
-	    return sessionIcon;
-	}
+        final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
+        if (nodeType.getName().equalsIgnoreCase("Collection")) {
+            return corpusIcon;
+        } else if (nodeType.getName().equalsIgnoreCase("Root")) {
+            return corpusIcon;
+        } else if (nodeType.getName().equalsIgnoreCase("ResourceAudioVideo")) {
+            return fileIcon;
+        } else if (nodeType.getName().equalsIgnoreCase("ResourceTxt")) {
+            return fileIconTxt;
+        } else {
+            return sessionIcon;
+        }
     }
-
-    
 }

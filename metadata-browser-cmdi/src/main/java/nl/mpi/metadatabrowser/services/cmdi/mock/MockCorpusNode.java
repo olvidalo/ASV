@@ -36,16 +36,20 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     private String profileId;
     private MockCorpusNode parent;
     private List<MockCorpusNode> children;
-    private CorpusNodeType corpusNodeType = CorpusNodeType.METADATA;
+    private CorpusNodeType corpusNodeType;
 
+    
+    //not used?
     public void setCorpusNodeType(CorpusNodeType corpusNodeType) {
 	this.corpusNodeType = corpusNodeType;
     }
 
+    //not used?
     public void setProfileId(String profileId) {
 	this.profileId = profileId;
     }
 
+    // not used?
     public void setNodeId(int nodeId) {
 	this.nodeId = nodeId;
     }
