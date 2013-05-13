@@ -46,7 +46,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIAMSNodeAction(),
                 new CMDIRrsNodeAction(),
                 new CMDIStatsNodeAction(),
-                new CMDIViewNodeAction(csdb),
                 new CMDIBookmarkNodeAction(csdb),
                 new CMDIDownloadNodeAction(),
                 new CMDIMultipleDownloadNodeAction(csdb, zipService) //            new CMDIDownloadNodeAction("Version info"),
@@ -58,7 +57,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDITrovaNodeAction(),
                 new CMDIAMSNodeAction(),
                 new CMDIRrsNodeAction(),
-                new CMDIViewNodeAction(csdb),
                 new CMDIBookmarkNodeAction(csdb),
                 new CMDIDownloadNodeAction());
 
