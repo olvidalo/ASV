@@ -16,10 +16,12 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.List;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.corpusstructure.CorpusStructureDB;
 import nl.mpi.corpusstructure.UnknownNodeException;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.util.OurURL;
 /**
  *
@@ -38,4 +40,8 @@ public interface CmdiCorpusStructureDB extends CorpusStructureDB {
     public CorpusNodeType getCorpusNodeType(int nodeId);
     
     public URI getHandleResolverURI();
+    
+    public String getHandle(int nodeid);
+
+    public Timestamp getObjectFileTime(TypedCorpusNode node);
 }

@@ -45,27 +45,13 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         URI nodeUri = node.getUri();
         logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-        String resolver = csdb.getHandleResolverURI().toString();
-        if (resolver == null) {
-            resolver = "";
-        }
-        if (!resolver.endsWith("/")) {
-            resolver = resolver + "/";
-        }
-
-        String archive_name = "cmdi archive";//csdb.getArchiveRoots().getArchiveName();
-        if (archive_name == null) {
-            archive_name = "unknown";
-        }
-
-        final String archiveName = archive_name;
-        final String finalResolver = resolver;
 
         final ShowComponentRequest request = new ShowComponentRequest() {
 
             @Override
             public Component getComponent(String id) {
-                return new PanelShowComponent(id, node, archiveName, finalResolver);
+                // create panel form for bookmark action
+                return new PanelShowComponent(id, node, csdb);
             }
         };
         return new SimpleNodeActionResult(request);

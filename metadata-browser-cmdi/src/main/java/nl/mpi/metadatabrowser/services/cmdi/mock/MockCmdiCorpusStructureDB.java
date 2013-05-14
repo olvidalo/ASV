@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.corpusstructure.Node;
 import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.corpusstructure.UnknownNodeException;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 import nl.mpi.util.OurURL;
@@ -230,5 +232,15 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public String getHandle(int nodeid) {
+        return "11142/00-021C2EA5-66DB-4363-A957-CE9FEE4226CD";
+    }
+
+    @Override
+    public Timestamp getObjectFileTime(TypedCorpusNode node) {
+        return new Timestamp(1368520487);
     }
 }
