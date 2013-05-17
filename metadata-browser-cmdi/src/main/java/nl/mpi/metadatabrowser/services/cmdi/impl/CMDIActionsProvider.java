@@ -16,6 +16,14 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIRrsNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -98,7 +106,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 }
             }
         } else if (nodes.size() > 1) {
-            // return a list for multiple selection
+            //TODO return a list for multiple selection
         }
         return null;
     }

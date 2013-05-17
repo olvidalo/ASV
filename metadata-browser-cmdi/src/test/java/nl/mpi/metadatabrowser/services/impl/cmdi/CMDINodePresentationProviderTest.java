@@ -19,7 +19,10 @@ package nl.mpi.metadatabrowser.services.impl.cmdi;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
 import java.net.URI;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import org.apache.wicket.Component;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -28,6 +31,7 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodePresentationProviderTest {
+    private final Mockery context = new JUnit4Mockery();
     
     public CMDINodePresentationProviderTest() {
     }
@@ -57,7 +61,7 @@ public class CMDINodePresentationProviderTest {
         String wicketId = "";
         URI nodeUri = null;
         NodeType nodeType = null;
-        CMDINodePresentationProvider instance = new CMDINodePresentationProvider();
+        CMDINodePresentationProvider instance = new CMDINodePresentationProvider(context.mock(CmdiCorpusStructureDB.class));
         Component expResult = null;
         //Component result = instance.getNodePresentation(wicketId, nodeUri, nodeType);
         //assertEquals(expResult, result);

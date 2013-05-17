@@ -16,12 +16,14 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.util.OurURL;
@@ -59,90 +61,56 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         if ((nodeURL != null) && (node != null)) {
             if (node.getNodeType() instanceof CMDIMetadata
                     || node.getNodeType() instanceof CMDICollectionType) {
-
-
+                InputStream in = null;
                 try {
-                    // get URL content
-                    //url = new URL("http://www.mkyong.com");
-                    URLConnection conn = nodeURL.toURL().openConnection();
-
-                    // open the stream and put it into BufferedReader
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(conn.getInputStream()));
-
-                    String inputLine;
-
-                    //save to this filename
-                    String fileName = "/users/mkyong/test.html";
-                    File file = new File(fileName);
-
-                    if (!file.exists()) {
-                        file.createNewFile();
+                    in = nodeURL.toURL().openStream();
+                    StringBuffer sb = new StringBuffer();
+                    byte [] buffer = new byte[256];
+                    while(true){
+                        int byteRead = in.read(buffer);
+                        if(byteRead == -1)
+                            break;
+                        for(int i = 0; i < byteRead; i++){
+                            sb.append((char)buffer[i]);
+                        }
                     }
-
-                    //use FileWriter to write file
-                    FileWriter fw = new FileWriter(file.getAbsoluteFile());
-                    BufferedWriter bw = new BufferedWriter(fw);
-
-                    while ((inputLine = br.readLine()) != null) {
-                        bw.write(inputLine);
-                    }
-
-                    bw.close();
-                    br.close();
-
-                    System.out.println("Done");
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    xmlContent = sb.toString();
+                    //return sb.toString();
+                                //      try {
+                                //                            JAXBContext jc = JAXBContext.newInstance(String.class);
+                                //
+                                //            File xml = new File(nodeURL.toString());
+                                //            Unmarshaller unmarshaller = jc.createUnmarshaller();
+                                //            String recon = (String) unmarshaller.unmarshal(xml);
+                                //
+                                //            Marshaller marshaller = jc.createMarshaller();
+                                //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                                //            marshaller.marshal(recon, System.out);
+                                //
+                                //                    xmlContent = nodeURL.toString();
+                                //                } //all formats that should be handled by annex
+                                //                catch (JAXBException ex) {
+                                //                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+                                //                }
                 }
                 //      try {
-                //                            JAXBContext jc = JAXBContext.newInstance(String.class);
-                //
-                //            File xml = new File(nodeURL.toString());
-                //            Unmarshaller unmarshaller = jc.createUnmarshaller();
-                //            String recon = (String) unmarshaller.unmarshal(xml);
-                //
-                //            Marshaller marshaller = jc.createMarshaller();
-                //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                //            marshaller.marshal(recon, System.out);
-                //
-                //                    xmlContent = nodeURL.toString();
-                //                } //all formats that should be handled by annex
-                //                catch (JAXBException ex) {
-                //                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-                //                }
+                catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        in.close();
+                    } catch (IOException ex) {
+                        java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-
-            //      try {
-
-
-//                            JAXBContext jc = JAXBContext.newInstance(String.class);
-//
-//            File xml = new File(nodeURL.toString());
-//            Unmarshaller unmarshaller = jc.createUnmarshaller();
-//            String recon = (String) unmarshaller.unmarshal(xml);
-//
-//            Marshaller marshaller = jc.createMarshaller();
-//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-//            marshaller.marshal(recon, System.out);
-//                    
-//                    xmlContent = nodeURL.toString();
-//                } //all formats that should be handled by annex
-//                catch (JAXBException ex) {
-//                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-
-
-        } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
+         else if (node.getNodeType() instanceof CMDIResourceTxtType) {
             parameters.put("nodeId", nodeId);
             parameters.put("jsessionID", "jsessioID");
             navType = true;
         } else {
             xmlContent = nodeURL.toString();
-        }
+        }}
 
         final String xmlText = xmlContent;
         

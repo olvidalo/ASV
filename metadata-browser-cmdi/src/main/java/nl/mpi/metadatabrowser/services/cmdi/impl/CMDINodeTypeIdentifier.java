@@ -28,6 +28,8 @@ import nl.mpi.metadatabrowser.model.cmdi.*;
 public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.NodeTypeIdentifier {
 
     private final CmdiCorpusStructureDB csdb;
+    
+    //TODO had a list of profileID or add correct profileID
     private String collectionProfileId = "profile";
 
     public CMDINodeTypeIdentifier(CmdiCorpusStructureDB csdb) {
@@ -51,6 +53,7 @@ public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.N
         } else if (corpusNodeType == CorpusNodeType.METADATA){
             return new CMDIMetadata();
         }
+        //TODO: loop through list ???
         else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
             return new CMDICollectionType();
         } //todo extend for special profile support (configurable probably)

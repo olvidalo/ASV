@@ -1,4 +1,4 @@
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;

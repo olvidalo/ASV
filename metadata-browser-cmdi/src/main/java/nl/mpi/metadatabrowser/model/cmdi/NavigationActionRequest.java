@@ -29,7 +29,7 @@ public class NavigationActionRequest implements NavigationRequest, Serializable 
     private NavigationTarget target;
     private Map<String, String> parameters;
 
-    NavigationActionRequest(NavigationTarget navigationTarget, Map<String, String> parameters) {
+    public NavigationActionRequest(NavigationTarget navigationTarget, Map<String, String> parameters) {
         this.parameters = parameters;
         this.target =navigationTarget;
     }

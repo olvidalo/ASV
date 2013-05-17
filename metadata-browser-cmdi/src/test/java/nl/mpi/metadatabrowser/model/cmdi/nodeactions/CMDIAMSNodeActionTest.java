@@ -14,17 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import org.jmock.Expectations;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
 import static org.hamcrest.Matchers.instanceOf;
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
@@ -34,12 +36,12 @@ import org.junit.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIRrsNodeActionTest {
+public class CMDIAMSNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
     private final static int NODE_ID = 1;
 
-    public CMDIRrsNodeActionTest() {
+    public CMDIAMSNodeActionTest() {
     }
 
     @BeforeClass
@@ -59,19 +61,20 @@ public class CMDIRrsNodeActionTest {
     }
 
     /**
-     * Test of getName method, of class CMDIRrsNodeAction.
+     * Test of getName method, of class CMDIAMSNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
-        String expResult = "rrs";
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
+        String expResult = "ams";
         String result = instance.getName();
         assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
     }
 
     /**
-     * Test of execute method, of class CMDIRrsNodeAction.
+     * Test of execute method, of class CMDIAMSNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
@@ -81,6 +84,7 @@ public class CMDIRrsNodeActionTest {
         Map<String, String> map = new HashMap<String, String>();
 
         map.put("nodeId", Integer.toString(NODE_ID));
+        map.put("jsessionID", "session id");
 
         context.checking(new Expectations() {
 
@@ -94,18 +98,17 @@ public class CMDIRrsNodeActionTest {
 
 
 
-        CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
         NodeActionResult result = instance.execute(node);
-        assertEquals("rrs", instance.getName());
+        assertEquals("ams", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationRequest.NavigationTarget.RRS, navigationActionRequest.getTarget());
+        assertEquals(NavigationTarget.AMS, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getParameters());
         assertEquals(map, navigationActionRequest.getParameters());
-        assertEquals("rrs", instance.getName());
     }
 }

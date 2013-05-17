@@ -14,14 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import org.apache.wicket.util.resource.FileResourceStream;
-import org.apache.wicket.util.resource.IResourceStream;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -33,12 +36,11 @@ import org.junit.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIDownloadNodeActionTest {
-
-    private final Mockery context = new JUnit4Mockery();
+public class CMDITrovaNodeActionTest {
+        private final Mockery context = new JUnit4Mockery();
     private final static int NODE_ID = 1;
-
-    public CMDIDownloadNodeActionTest() {
+    
+    public CMDITrovaNodeActionTest() {
     }
 
     @BeforeClass
@@ -48,35 +50,40 @@ public class CMDIDownloadNodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of getName method, of class CMDIDownloadNodeAction.
+     * Test of getName method, of class CMDITrovaNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
-        String expResult = "download";
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
+        String expResult = "trova";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of execute method, of class CMDIDownloadNodeAction.
+     * Test of execute method, of class CMDITrovaNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         System.out.println("execute");
-        
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        map.put("nodeId", Integer.toString(NODE_ID));
+        map.put("jessionID", "session number");
+
         context.checking(new Expectations() {
 
             {
@@ -84,22 +91,24 @@ public class CMDIDownloadNodeActionTest {
                 will(returnValue(new URI("nodeUri")));
                 allowing(node).getNodeId();
                 will(returnValue(NODE_ID));
-                allowing(node).getName();
-                will(returnValue("nodeName"));
             }
         });
 
-        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
+
+
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
         NodeActionResult result = instance.execute(node);
+        assertEquals("trova", instance.getName());
+
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
-        assertEquals("download", instance.getName());
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertEquals(NavigationRequest.NavigationTarget.TROVA, navigationActionRequest.getTarget());
+        assertNotNull(navigationActionRequest.getParameters());
+        assertEquals(map, navigationActionRequest.getParameters());
         
-        DownloadActionRequest downloadActionRequest = (DownloadActionRequest)actionRequest;
-        assertEquals("nodeUri", downloadActionRequest.getFileName());
-        IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
-        assertThat(downloadStream, instanceOf(FileResourceStream.class));
+
     }
 }

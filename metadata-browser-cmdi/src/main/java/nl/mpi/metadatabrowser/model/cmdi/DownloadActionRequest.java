@@ -33,12 +33,12 @@ public class DownloadActionRequest implements DownloadRequest, Serializable {
         DownloadActionRequest.fileName = name;
     }
 
-    DownloadActionRequest(String fileName, IResourceStream resStream) {
+    public DownloadActionRequest(String fileName, IResourceStream resStream) {
         this.fileName = fileName;
         this.streamContent = resStream;
     }
 
-    DownloadActionRequest() {
+    public DownloadActionRequest() {
     }
     
 

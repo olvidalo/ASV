@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -34,11 +36,12 @@ import org.junit.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDITrovaNodeActionTest {
-        private final Mockery context = new JUnit4Mockery();
+public class CMDIStatsNodeActionTest {
+
+    private final Mockery context = new JUnit4Mockery();
     private final static int NODE_ID = 1;
-    
-    public CMDITrovaNodeActionTest() {
+
+    public CMDIStatsNodeActionTest() {
     }
 
     @BeforeClass
@@ -48,29 +51,30 @@ public class CMDITrovaNodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of getName method, of class CMDITrovaNodeAction.
+     * Test of getName method, of class CMDIStatsNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
-        String expResult = "trova";
+        CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
+        String expResult = "stats";
         String result = instance.getName();
-        assertEquals(expResult, result);
+        assertNotEquals(expResult, result);
+        assertEquals("accessStats", result);
     }
 
     /**
-     * Test of execute method, of class CMDITrovaNodeAction.
+     * Test of execute method, of class CMDIStatsNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
@@ -80,7 +84,6 @@ public class CMDITrovaNodeActionTest {
         Map<String, String> map = new HashMap<String, String>();
 
         map.put("nodeId", Integer.toString(NODE_ID));
-        map.put("jessionID", "session number");
 
         context.checking(new Expectations() {
 
@@ -94,19 +97,17 @@ public class CMDITrovaNodeActionTest {
 
 
 
-        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
+        CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
         NodeActionResult result = instance.execute(node);
-        assertEquals("trova", instance.getName());
+        assertEquals("accessStats", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationRequest.NavigationTarget.TROVA, navigationActionRequest.getTarget());
+        assertEquals(NavigationRequest.NavigationTarget.STATS, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getParameters());
         assertEquals(map, navigationActionRequest.getParameters());
-        
-
     }
 }

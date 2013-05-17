@@ -14,17 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
-import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeActionException;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.SingleNodeAction;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,31 +30,34 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction {
 
-    private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
-    private final static String name = "rrs";
+    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+    private final String name = "accessStats";
 
-    public CMDIRrsNodeAction() {
+    public CMDIStatsNodeAction() {
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-	URI nodeUri = node.getUri();
-	int nodeId = node.getNodeId();
-	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+        URI nodeUri = node.getUri();
+        int nodeId = node.getNodeId();
 
-	// HANDLE rrs navigation action here
+        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+
+        // HANDLE access statistics action here
         Map<String, String> parameters = new HashMap<String, String>();
-	parameters.put("nodeId", Integer.toString(nodeId));
+        parameters.put("nodeId", Integer.toString(nodeId));
 
-	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
+        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, parameters);
 
-	return new SimpleNodeActionResult(request);
+        return new SimpleNodeActionResult(request);
+
+
     }
 }

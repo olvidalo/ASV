@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class PanelShowComponent extends Panel {
 
-    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+    private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
 
     public PanelShowComponent(String id, TypedCorpusNode node, CmdiCorpusStructureDB csdb) {
         super(id);
@@ -53,7 +54,7 @@ public final class PanelShowComponent extends Panel {
         }
 
         String resolver = csdb.getHandleResolverURI().toString();
-        String archive_name = "cmdi archive";//csdb.getArchiveRoots().getArchiveName();
+        String archive_name = csdb.getArchiveRoots().getArchiveName();
         if (archive_name == null) {
             archive_name = "unknown";
         }

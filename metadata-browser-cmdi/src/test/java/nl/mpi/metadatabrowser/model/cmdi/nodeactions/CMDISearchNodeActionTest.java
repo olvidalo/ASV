@@ -14,15 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -34,12 +36,11 @@ import org.junit.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIAMSNodeActionTest {
-
-    private final Mockery context = new JUnit4Mockery();
+public class CMDISearchNodeActionTest {    
+        private final Mockery context = new JUnit4Mockery();
     private final static int NODE_ID = 1;
-
-    public CMDIAMSNodeActionTest() {
+    
+    public CMDISearchNodeActionTest() {
     }
 
     @BeforeClass
@@ -49,40 +50,40 @@ public class CMDIAMSNodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
 
     /**
-     * Test of getName method, of class CMDIAMSNodeAction.
+     * Test of getName method, of class CMDISearchNodeAction.
      */
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
-        String expResult = "ams";
+        CMDISearchNodeAction instance = new CMDISearchNodeAction();
+        String expResult = "cmdiSearch";
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+
     }
 
     /**
-     * Test of execute method, of class CMDIAMSNodeAction.
+     * Test of execute method, of class CMDISearchNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
         System.out.println("execute");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 
         Map<String, String> map = new HashMap<String, String>();
 
         map.put("nodeId", Integer.toString(NODE_ID));
-        map.put("jsessionID", "session id");
+        map.put("jessionID", "session number");
 
         context.checking(new Expectations() {
 
@@ -96,16 +97,16 @@ public class CMDIAMSNodeActionTest {
 
 
 
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
+        CMDISearchNodeAction instance = new CMDISearchNodeAction();
         NodeActionResult result = instance.execute(node);
-        assertEquals("ams", instance.getName());
+        assertEquals("cmdiSearch", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationTarget.AMS, navigationActionRequest.getTarget());
+        assertEquals(NavigationRequest.NavigationTarget.CMDISEARCH, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getParameters());
         assertEquals(map, navigationActionRequest.getParameters());
     }

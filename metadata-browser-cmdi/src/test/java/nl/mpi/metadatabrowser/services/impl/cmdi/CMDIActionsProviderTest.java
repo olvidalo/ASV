@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeActionTest;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider;
 import java.net.URI;
 import java.net.URISyntaxException;
