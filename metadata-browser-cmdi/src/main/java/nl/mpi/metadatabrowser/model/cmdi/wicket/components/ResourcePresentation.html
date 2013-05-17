@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Resource Presentation</title>
+    </head>
+    <body>
+        <wicket:panel>
+            <h1>Resource Information</h1>
+            <wicket:panel>            
+                <div wicket:id="tableContainer">
+                    <p>
+                        <table border="0">
+                            <tr>
+                                <td>
+                                    <table summary="Resource Info" align="left" width="100%" border="0">
+                                        <tr>
+                                            <td>URL:</td>
+                                            <td>
+                                                <span wicket:id="url">URL</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Handle URI:</td>
+                                            Handle: <span wicket:id="handle">Handle</span>
+                                        </tr>
+                                        <tr>
+                                            <td>Internal Node ID:</td>
+                                            <td>
+                                                <span wicket:id="nodeId">Node id</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Node type:</td>
+                                            <td>
+                                                <span wicket:id="nodetype">Node Type</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Format:</td>
+                                            <td>
+                                                <span wicket:id="format">format</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>File size:</td>
+                                            <td>
+                                                <span wicket:id="size">Size</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last modified:</td>
+                                            <td>
+                                                <span wicket:id="last_modified">last modified</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> MD5 Check sum:</td>
+                                            <td>
+                                                <span wicket:id="checksum">Check Sum</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h1>Access</h1>
+                        <p>
+                            <table border="0">
+                                <tr>
+                                    <td>You can access the resource itself (if you have the privileges), by clicking on the the selected resource icon with the right
+                                        mouse-button and selecting the "view" option or use your browser (plugin) via this <i><a href='#' wicket:id="link">link</a></i>. You will need to
+                                        authenticate yourself (again) for downloading the resource when it is protected.
+                                        <br><br>
+                                                </td>
+                                                </tr>
+                                                </table>
+                                                <table border="0">
+                                                    <tr>   
+                                                        <td>General Accessibility:</td>
+                                                        <td>
+                                                            <img wicket:id="access_icon"/><span wicket:id="accesslevel">Access level of a node</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Currently accessible to user <span wicket:id="userid">User ID</span>:</td>
+                                                        <td>
+                                                            <span wicket:id="hasaccess">User access to a node</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><br><br>
+                                                                    <b>Applicable License Agreement(s)</b> <br><br>
+                                                                            <span wicket:id="licenses">No license required for this resource</span>                                                                                
+                                                                                    <br><br>
+                                                                                                    <br> <br><br>
+                                                                                                    </td>
+                                                                                                    </tr>
+                                                                                                    </table>
+
+
+                                                                                                    <table border="0">
+                                                                                                        <tr>
+                                                                                                            <td></td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <td>For more information about this resource see the metadata in the containing session. <br><br>
+                                                                                                                        <br><br>
+                                                                                                                                <b>Rights</b> <br><br>
+                                                                                                                                        All resources in this archive are Copyright Â© of their respective holders. Re-distribution of the content in any form, by any means,
+                                                                                                                                        without the prior permission of the copyright holder is prohibited, unless explicitly stated otherwise in a license. See the metadata
+                                                                                                                                        descriptions of the resources for contact information or contact corpman@mpi.nl.
+                                                                                                                                        </td>
+                                                                                                                                        </tr>
+                                                                                                                                        </table>
+
+                                                                                                                                        <br><br>
+                                                                                                                                                </div>
+                                                                                                                                                </wicket:panel>
+                                                                                                                                                </body>
+                                                                                                                                                </html>
