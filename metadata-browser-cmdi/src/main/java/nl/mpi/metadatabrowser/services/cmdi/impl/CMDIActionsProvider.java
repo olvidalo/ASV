@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
 import java.io.*;
@@ -26,6 +26,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.util.OurURL;
 import org.apache.wicket.Component;
 import org.slf4j.Logger;
