@@ -24,14 +24,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.corpusstructure.ArchiveAccessContext;
-import nl.mpi.corpusstructure.Node;
-import nl.mpi.corpusstructure.NodeIdUtils;
-import nl.mpi.corpusstructure.UnknownNodeException;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.corpusstructure.*;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 import nl.mpi.util.OurURL;
@@ -240,7 +234,22 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
     }
 
     @Override
-    public Timestamp getObjectFileTime(TypedCorpusNode node) {
+    public Timestamp getObjectFileTime(CorpusNode node) {
         return new Timestamp(1368520487);
+    }
+
+    @Override
+    public String getObjectChecksum(int node) {
+        return "adab88ba00910f9591df887f45a05419";
+    }
+
+    @Override
+    public long getObjectSize(int node) {
+        return 2640;
+    }
+
+    @Override
+    public AccessInfo getObjectAccessInfo(String nodeId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
