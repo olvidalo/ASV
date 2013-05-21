@@ -38,8 +38,8 @@ public class CmdiCorpusStructureDBFactoryImpl implements CorpusStructureDBFactor
     @Override
     public CmdiCorpusStructureDB createCorpusStructureDB() {
 	logger.debug("Creating new CmdiCorpusStructureDB with dbname='{}'", dbname);
-	throw new UnsupportedOperationException("Not supported yet");
 	//TODO: Implement CmdiCorpusStructureDB and return an instance here
 	//return new CmdiCorpusStructureDBImpl(dbname); 
+	return null;
     }
 }

@@ -6,22 +6,20 @@
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
->
-    <beans profile="cmdi-production,cmdi-production-csdb">
+       profile="cmdi-production,cmdi-production-csdb">
     
     <!-- 
 	Spring configuration of the corpus structure database beans for usage in a production environment.
 	
-	    These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
-	    or 'cmdi-production-csdb' is active.
-	-->
+	These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
+	or 'cmdi-production-csdb' is active.
+    -->
     
-	<!-- CSDB factory -->
-	<bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.CmdiCorpusStructureDBFactoryImpl">
-	    <constructor-arg value="dbname" />
-	</bean>
+    <!-- CSDB factory -->
+    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.CmdiCorpusStructureDBFactoryImpl">
+	<constructor-arg value="dbname" />
+    </bean>
     
-	<!-- CSDB created from factory (not sure if this will work because Wicket requires serializability -->
-	<bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
-    </beans>
+    <!-- CSDB created from factory (not sure if this will work because Wicket requires serializability -->
+    <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
 </beans>
