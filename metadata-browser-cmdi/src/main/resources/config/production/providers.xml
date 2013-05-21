@@ -6,15 +6,14 @@
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
-	profile="cmdi-production, cmdi-production-providers"
->
+       profile="cmdi-production,cmdi-production-providers">
     
     <!-- 
 	Spring configuration for usage of the CMDI metadata browser services in a production environment.
 	
 	    These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
 	    or 'cmdi-production-providers' is active.
-	-->
+    -->
     
 	<!-- Tree model provider based on corpus structure -->    
 	<bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
