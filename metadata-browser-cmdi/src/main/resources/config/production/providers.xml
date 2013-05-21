@@ -6,43 +6,46 @@
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
-       profile="cmdi-production,cmdi-production-providers"
+       
 >
+
+    <beans profile="cmdi-production,cmdi-production-providers">
     
     <!-- 
 	Spring configuration for usage of the CMDI metadata browser services in a production environment.
 	
-	These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
-	or 'cmdi-production-providers' is active.
-    -->
+	    These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
+	    or 'cmdi-production-providers' is active.
+	-->
     
-    <!-- Tree model provider based on corpus structure -->    
-    <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
-	<constructor-arg ref="csdbFactory" />
-	<constructor-arg>
-	    <bean class="nl.mpi.metadatabrowser.services.cmdi.impl.TypedCorpusNodeResolver">
-		<constructor-arg ref="csdb" />
-	    </bean>
-	</constructor-arg>
-    </bean>
+	<!-- Tree model provider based on corpus structure -->    
+	<bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
+	    <constructor-arg ref="csdbFactory" />
+	    <constructor-arg>
+		<bean class="nl.mpi.metadatabrowser.services.cmdi.impl.TypedCorpusNodeResolver">
+		    <constructor-arg ref="csdb" />
+		</bean>
+	    </constructor-arg>
+	</bean>
     
-    <!-- CMDI implementations for metadata browser providers -->
-    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier">
-	<constructor-arg ref="csdb" />
-    </bean>
+	<!-- CMDI implementations for metadata browser providers -->
+	<bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier">
+	    <constructor-arg ref="csdb" />
+	</bean>
 
-    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider">
-	<constructor-arg ref="csdb" />
-	<constructor-arg>
-	    <bean class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl">
-		<constructor-arg ref="csdb" />
-	    </bean>
-	</constructor-arg>
-    </bean>    
+	<bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider">
+	    <constructor-arg ref="csdb" />
+	    <constructor-arg>
+		<bean class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl">
+		    <constructor-arg ref="csdb" />
+		</bean>
+	    </constructor-arg>
+	</bean>    
     
-    <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider" />
+	<bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider" />
     
-    <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider">
-	<constructor-arg ref="nodeTypeIdentifier" />
-    </bean>
+	<bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider">
+	    <constructor-arg ref="nodeTypeIdentifier" />
+	</bean>
+    </beans>
 </beans>
