@@ -34,23 +34,28 @@ public interface NavigationRequest extends ControllerActionRequest {
 	 * Resource Request System
 	 */
 	RRS,
-        /**
-         * AMS
-         */
-        AMS,
-        /**
-         * TROVA
-         */
-        TROVA,
-        /**
-         * a CMDISEARCH
-         */
-        CMDISEARCH,
-        /**
-         * browse statistics for a node
-         */
-        STATS,
-        ANNEX
+	/**
+	 * AMS access rights management
+	 */
+	AMS,
+	/**
+	 * TROVA content search
+	 */
+	TROVA,
+	/**
+	 * CMDI metadata search
+	 */
+	CMDISEARCH,
+	/**
+	 * ANNEX viewer
+	 */
+	ANNEX,
+	/**
+	 *
+	 * @deprecated statistics will not be a feature of this version of the metadata browser
+	 */
+	@Deprecated
+	STATS
     }
 
     /**

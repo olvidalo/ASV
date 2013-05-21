@@ -25,6 +25,7 @@ import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget.ANNEX;
 import static nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget.RRS;
 
 /**
@@ -35,15 +36,34 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
 
     private final static Logger logger = LoggerFactory.getLogger(NavigationRequestHandler.class);
     private String rrsUrl;
+    private String amsUrl;
+    private String annexUrl;
+    private String mdSearchUrl;
+    private String contentSearchUrl;
 
     @Override
     public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
+	logger.debug("Received request to navigate to RRS with parameters {}", actionRequest.getParameters());
 	switch (actionRequest.getTarget()) {
+	    case AMS:
+		// TODO: Parameters?
+		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(amsUrl));
+		break;
+	    case ANNEX:
+		// TODO: Parameters?
+		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(annexUrl));
+		break;
+	    case CMDISEARCH:
+		// TODO: Parameters?
+		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(mdSearchUrl));
+		break;
 	    case RRS:
-		logger.debug("Received request to navigate to RRS with parameters {}", actionRequest.getParameters());
-		// Navigate to RRS
 		// TODO: Parameters?
 		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(rrsUrl));
+		break;
+	    case TROVA:
+		// TODO: Parameters?
+		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(contentSearchUrl));
 		break;
 	    default:
 		// Other, cannot handle
@@ -58,5 +78,26 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
      */
     public void setRrsUrl(String rrsUrl) {
 	this.rrsUrl = rrsUrl;
+	logger.info("RRS url set to {}", rrsUrl);
+    }
+
+    public void setAmsUrl(String amsUrl) {
+	this.amsUrl = amsUrl;
+	logger.info("AMS url set to {}", rrsUrl);
+    }
+
+    public void setAnnexUrl(String annexUrl) {
+	this.annexUrl = annexUrl;
+	logger.info("Annex url set to {}", rrsUrl);
+    }
+
+    public void setContentSearchUrl(String contentSearchUrl) {
+	this.contentSearchUrl = contentSearchUrl;
+	logger.info("Content search url set to {}", rrsUrl);
+    }
+
+    public void setMdSearchUrl(String mdSearchUrl) {
+	this.mdSearchUrl = mdSearchUrl;
+	logger.info("Metadata serach url set to {}", rrsUrl);
     }
 }
