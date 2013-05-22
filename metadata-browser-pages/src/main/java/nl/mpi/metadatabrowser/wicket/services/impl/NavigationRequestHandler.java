@@ -16,7 +16,10 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import java.util.EnumMap;
+import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Page;
@@ -25,9 +28,6 @@ import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget.ANNEX;
-import static nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget.RRS;
-
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
@@ -35,40 +35,21 @@ import static nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget.RR
 public class NavigationRequestHandler implements ControllerActionRequestHandler<NavigationRequest> {
 
     private final static Logger logger = LoggerFactory.getLogger(NavigationRequestHandler.class);
-    private String rrsUrl;
-    private String amsUrl;
-    private String annexUrl;
-    private String mdSearchUrl;
-    private String contentSearchUrl;
+    private final Map<NavigationTarget, String> targetUrls = new EnumMap<NavigationTarget, String>(NavigationTarget.class);
 
     @Override
     public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
 	logger.debug("Received request to navigate to RRS with parameters {}", actionRequest.getParameters());
-	switch (actionRequest.getTarget()) {
-	    case AMS:
-		// TODO: Parameters?
-		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(amsUrl));
-		break;
-	    case ANNEX:
-		// TODO: Parameters?
-		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(annexUrl));
-		break;
-	    case CMDISEARCH:
-		// TODO: Parameters?
-		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(mdSearchUrl));
-		break;
-	    case RRS:
-		// TODO: Parameters?
-		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(rrsUrl));
-		break;
-	    case TROVA:
-		// TODO: Parameters?
-		requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(contentSearchUrl));
-		break;
-	    default:
-		// Other, cannot handle
-		throw new RequestHandlerException("Don't know how to handle navigation request target " + actionRequest.getTarget());
+	if (targetUrls.containsKey(actionRequest.getTarget())) {
+	    redirectToUrl(requestCycle, targetUrls.get(actionRequest.getTarget()));
+	} else {
+	    throw new RequestHandlerException("Don't know how to handle navigation request target " + actionRequest.getTarget());
 	}
+    }
+
+    private void redirectToUrl(RequestCycle requestCycle, String url) {
+	// TODO: Parameters?
+	requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(url));
     }
 
     /**
@@ -77,27 +58,27 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
      * @see NavigationRequest.NavigationTarget#RRS
      */
     public void setRrsUrl(String rrsUrl) {
-	this.rrsUrl = rrsUrl;
+	targetUrls.put(NavigationTarget.RRS, rrsUrl);
 	logger.info("RRS url set to {}", rrsUrl);
     }
 
     public void setAmsUrl(String amsUrl) {
-	this.amsUrl = amsUrl;
-	logger.info("AMS url set to {}", rrsUrl);
+	targetUrls.put(NavigationTarget.AMS, amsUrl);
+	logger.info("AMS url set to {}", amsUrl);
     }
 
     public void setAnnexUrl(String annexUrl) {
-	this.annexUrl = annexUrl;
-	logger.info("Annex url set to {}", rrsUrl);
+	targetUrls.put(NavigationTarget.ANNEX, annexUrl);
+	logger.info("Annex url set to {}", annexUrl);
     }
 
     public void setContentSearchUrl(String contentSearchUrl) {
-	this.contentSearchUrl = contentSearchUrl;
-	logger.info("Content search url set to {}", rrsUrl);
+	targetUrls.put(NavigationTarget.TROVA, contentSearchUrl);
+	logger.info("Content search url set to {}", contentSearchUrl);
     }
 
     public void setMdSearchUrl(String mdSearchUrl) {
-	this.mdSearchUrl = mdSearchUrl;
-	logger.info("Metadata serach url set to {}", rrsUrl);
+	targetUrls.put(NavigationTarget.CMDISEARCH, mdSearchUrl);
+	logger.info("Metadata serach url set to {}", mdSearchUrl);
     }
 }
