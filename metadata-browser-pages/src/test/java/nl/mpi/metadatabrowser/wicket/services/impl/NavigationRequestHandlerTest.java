@@ -58,7 +58,7 @@ public class NavigationRequestHandlerTest {
 	final NavigationRequest actionRequest = context.mock(NavigationRequest.class);
 	context.checking(new Expectations() {
 	    {
-		oneOf(actionRequest).getTarget();
+		allowing(actionRequest).getTarget();
 		will(returnValue(NavigationRequest.NavigationTarget.RRS));
 		allowing(actionRequest).getParameters();
 	    }
