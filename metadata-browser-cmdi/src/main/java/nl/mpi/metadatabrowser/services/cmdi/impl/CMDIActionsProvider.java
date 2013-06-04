@@ -16,22 +16,13 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIRrsNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.*;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 
@@ -56,8 +47,9 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIRrsNodeAction(),
                 new CMDIStatsNodeAction(),
                 new CMDIBookmarkNodeAction(csdb),
-                new CMDIDownloadNodeAction(),
-                new CMDIMultipleDownloadNodeAction(csdb, zipService) //            new CMDIDownloadNodeAction("Version info"),
+                new CMDIDownloadNodeAction(csdb),
+                new CMDIMultipleDownloadNodeAction(csdb, zipService) 
+                //            new CMDIVersionInfoAction();
                 //            new CMDIAMSNodeAction("View Images")
                 );
 
@@ -67,7 +59,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIAMSNodeAction(),
                 new CMDIRrsNodeAction(),
                 new CMDIBookmarkNodeAction(csdb),
-                new CMDIDownloadNodeAction());
+                new CMDIDownloadNodeAction(csdb));
 
         resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
                 new CMDIAMSNodeAction(),
@@ -75,7 +67,8 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIStatsNodeAction(),
                 new CMDIViewNodeAction(csdb),
                 new CMDIBookmarkNodeAction(csdb),
-                new CMDIDownloadNodeAction());
+                new CMDIDownloadNodeAction(csdb));
+        //            new CMDIVersionInfoAction();
 
         resourcetxtNodeActionList = Arrays.<NodeAction>asList(
                 new CMDITrovaNodeAction(),
@@ -84,7 +77,8 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIStatsNodeAction(),
                 new CMDIViewNodeAction(csdb),
                 new CMDIBookmarkNodeAction(csdb),
-                new CMDIDownloadNodeAction());
+                new CMDIDownloadNodeAction(csdb));
+        //            new CMDIVersionInfoAction();
 
 
     }
