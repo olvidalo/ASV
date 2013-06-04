@@ -28,16 +28,17 @@ import org.slf4j.LoggerFactory;
 public class CmdiCorpusStructureDBFactoryImpl implements CorpusStructureDBFactory {
 
     private final static Logger logger = LoggerFactory.getLogger(CmdiCorpusStructureDBFactoryImpl.class);
-    private final String dbname;
+    private CmdiCorpusStructureDB csdb;
+    //private final String dbname;
 
-    public CmdiCorpusStructureDBFactoryImpl(String dbname) {
-	logger.info("Constructed with dbname='{}'", dbname);
-	this.dbname = dbname;
+    public CmdiCorpusStructureDBFactoryImpl(CmdiCorpusStructureDB cmdiCsdb) {
+	//logger.info("Constructed with dbname='{}'", dbname);
+	this.csdb = cmdiCsdb;
     }
 
     @Override
     public CmdiCorpusStructureDB createCorpusStructureDB() {
-	logger.debug("Creating new CmdiCorpusStructureDB with dbname='{}'", dbname);
+	//logger.debug("Creating new CmdiCorpusStructureDB with dbname='{}'", dbname);
 	throw new UnsupportedOperationException();
 	//TODO: Implement CmdiCorpusStructureDB and return an instance here
 	//return new CmdiCorpusStructureDBImpl(dbname); 

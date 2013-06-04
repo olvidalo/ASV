@@ -36,7 +36,7 @@ public interface CmdiCorpusStructureDB extends CorpusStructureDB {
 
     public String getProfileId(URI uri);
 
-    public OurURL getObjectURL(String toString, int HTTP_URL);
+    public OurURL getObjectURL(String nodeid, int HTTP_URL);
     
     public CorpusNodeType getCorpusNodeType(int nodeId);
     

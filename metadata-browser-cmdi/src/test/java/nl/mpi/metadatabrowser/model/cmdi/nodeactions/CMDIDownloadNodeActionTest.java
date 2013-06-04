@@ -18,9 +18,12 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
 import java.net.URI;
+import nl.mpi.corpusstructure.AccessInfo;
+import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -65,7 +68,8 @@ public class CMDIDownloadNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
+        CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb);
         String expResult = "download";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -77,6 +81,9 @@ public class CMDIDownloadNodeActionTest {
     @Test
     public void testExecute() throws Exception {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
+        //final AccessInfo ai = context.mock(AccessInfo.class);
         System.out.println("execute");
         
         context.checking(new Expectations() {
@@ -88,10 +95,12 @@ public class CMDIDownloadNodeActionTest {
                 will(returnValue(NODE_ID));
                 allowing(node).getName();
                 will(returnValue("nodeName"));
+                allowing(csdb).getObjectAccessInfo(NodeIdUtils.TONODEID(NODE_ID));
+                will(returnValue(ai));
             }
         });
 
-        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction();
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb);
         NodeActionResult result = instance.execute(node);
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

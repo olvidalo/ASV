@@ -54,7 +54,7 @@ public final class PanelShowComponent extends Panel {
         }
 
         String resolver = csdb.getHandleResolverURI().toString();
-        String archive_name = csdb.getArchiveRoots().getArchiveName();
+        String archive_name = "archive"; //TODO enable csdb.getArchiveRoots().getArchiveName();
         if (archive_name == null) {
             archive_name = "unknown";
         }

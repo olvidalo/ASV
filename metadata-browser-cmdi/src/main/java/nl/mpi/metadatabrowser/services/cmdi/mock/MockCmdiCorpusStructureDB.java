@@ -205,6 +205,7 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
         return true;
     }
 
+    
     @Override
     public OurURL getObjectURL(String nodeid, int HTTP_URL) {
         try {
@@ -250,6 +251,7 @@ public class MockCmdiCorpusStructureDB implements CmdiCorpusStructureDB, Seriali
 
     @Override
     public AccessInfo getObjectAccessInfo(String nodeId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
+        return ai;
     }
 }
