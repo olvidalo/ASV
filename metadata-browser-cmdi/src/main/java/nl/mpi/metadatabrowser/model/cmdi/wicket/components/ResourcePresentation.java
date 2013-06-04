@@ -47,12 +47,12 @@ import org.slf4j.LoggerFactory;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public final class ResourcePresentation extends Panel {
-
+    
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
     public ResourcePresentation(String id, TypedCorpusNode node, CmdiCorpusStructureDB csdb, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) {
         super(id);
-        String nodeId = NodeIdUtils.TONODEID(node.getNodeId());
+        String nodeId = Integer.toString(node.getNodeId());
 
         OurURL nodeURL = csdb.getObjectURL(nodeId, ArchiveAccessContext.HTTP_URL); // Get the XML file
         if ((nodeURL != null) && (node != null)) {
@@ -63,7 +63,7 @@ public final class ResourcePresentation extends Panel {
                 hasaccess = Boolean.valueOf(csdb.getObjectAccessInfo(nodeId).hasReadAccess(userid));
             }
 
-            String urid = csdb.getHandle(node.getNodeId());
+            String handle = csdb.getHandle(node.getNodeId());
             String nodetype = "unknown";
             String format = node.getNodeType().getName();
             String checksum = csdb.getObjectChecksum(node.getNodeId());
@@ -133,14 +133,15 @@ public final class ResourcePresentation extends Panel {
 
 
             // get the licenses for a nodeId
-            List<NodeLicense> licenses = getLicenses(nodeId, aSrv);
+            List<NodeLicense> licenses = getLicenses(node, aSrv);
             List<String[]> licenseViews = new ArrayList<String[]>();
             for (int i = 0; i < licenses.size(); i++) {
                 License license = licenses.get(i).getLicense();
-                String url = licenseService.getLicenseLink(license);
+                String url = ""; 
+                //TODO replace URL by String url=licenseService.getLicenseLink(license);
                 String[] licenseData = new String[2];
-                licenseData[1] = license.getName();
-                licenseData[2] = url;
+                licenseData[0] = license.getName();
+                licenseData[1] = url;
                 licenseViews.add(licenseData);
             }
 
@@ -171,8 +172,9 @@ public final class ResourcePresentation extends Panel {
             tableContainer.add(licensesLabel);
 
             tableContainer.add(new Label("hasaccess", hasaccess.toString()));
-            tableContainer.add(new Label("nodeid", nodeId));
-            tableContainer.add(new Label("urid", urid));
+            tableContainer.add(new Label("nodeId", nodeId));
+            tableContainer.add(new Label("handle", handle));
+//            tableContainer.add(new Label("urid", urid));
             tableContainer.add(new Label("url", nodeURL.toString()));
             tableContainer.add(new Label("nodetype", nodetype));
             tableContainer.add(new Label("format", format));
@@ -190,10 +192,10 @@ public final class ResourcePresentation extends Panel {
         }
     }
 
-    private List<NodeLicense> getLicenses(String node, AdvAuthorizationService aSrv) {
+    private List<NodeLicense> getLicenses(TypedCorpusNode node, AdvAuthorizationService aSrv) {
         List<NodeLicense> result = Collections.EMPTY_LIST;
         try {
-            result = aSrv.getLicenseAcceptance(new NodeIDImpl(node), null);
+            result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeId()), null);
         } catch (DataSourceException e) {
             logger.error("Cannot get licenses from AMS for node: " + node + " (This can happen when AMS is not deployed or not running).");
         }

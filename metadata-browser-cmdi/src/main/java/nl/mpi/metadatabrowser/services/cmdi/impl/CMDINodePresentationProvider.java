@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,9 +40,13 @@ public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.serv
     private AdvAuthorizationService authoSrv;
     private LicenseService licSrv;
     private CmdiCorpusStructureDB csdb;
+    
+    
+    //TODO : decide where does userId comes from and implement accordingly
+    private String userId;
 
     public CMDINodePresentationProvider(CmdiCorpusStructureDB csdb){
-        this.csdb = csdb;
+        this.csdb = csdb;        
     }
     /**
      *
@@ -49,14 +55,14 @@ public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.serv
      */
     private void initialiseContextLoader() {
         this.contextLoader = new SpringContextLoader();
-        this.contextLoader.init("spring-ams2-core.xml");
+        contextLoader.init("spring-ams2-core.xml");
     }
 
     /**
      *
      * @return AuthorizationService bean, to be used by the connection to AMS2
      */
-    public AdvAuthorizationService authorizationService() {
+    private AdvAuthorizationService authorizationService() {
 
         if (this.contextLoader == null) {
             initialiseContextLoader();
@@ -70,7 +76,7 @@ public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.serv
     /**
      * @return LicenseService bean, to be used by the connection to AMS2
      */
-    public LicenseService licenseService() {
+    private LicenseService licenseService() {
 
         if (this.contextLoader == null) {
             initialiseContextLoader();
@@ -89,16 +95,18 @@ public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.serv
         //get TypedCorpusNode node, 
         //getCmdiCorpusStructureDB csdb, 
         //get String userid, 
-        //get FedUID fedUid, 
         //get LicenseService licenseService, 
         //get AdvAuthorizationService aSrv.
         // mostly beans ????
+       licSrv = new MockLicenseService();
+       authoSrv = new MockAuthorizationService();
         Iterator<TypedCorpusNode> iterator = nodes.iterator();
         while (iterator.hasNext()) {
             TypedCorpusNode node = iterator.next();
-            if (node instanceof CMDIMetadata) {
-            } else if (node instanceof CMDIResourceTxtType || node instanceof CMDIResourceType) {
-                return new ResourcePresentation(wicketId, node , csdb, wicketId, licSrv, authoSrv);
+            if (node.getNodeType() instanceof CMDIMetadata) {
+                //TODO : implement metadata presentation
+            } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
+                return new ResourcePresentation(wicketId, node , csdb, userId, licSrv, authoSrv);
             }
         }
 
