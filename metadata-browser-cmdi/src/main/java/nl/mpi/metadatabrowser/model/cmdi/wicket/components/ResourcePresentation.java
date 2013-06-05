@@ -16,11 +16,11 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.*;
 import nl.mpi.corpusstructure.AccessInfo;
 import nl.mpi.corpusstructure.ArchiveAccessContext;
-import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;
@@ -39,6 +39,8 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.ContextRelativeResource;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,12 @@ import org.slf4j.LoggerFactory;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public final class ResourcePresentation extends Panel {
-    
+
+    private final ResourceReference openIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_green.png");
+    private final ResourceReference licensedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_yellow.png");
+    private final ResourceReference restrictedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_orange.png");
+    private final ResourceReference closedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_red.png");
+    private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
     public ResourcePresentation(String id, TypedCorpusNode node, CmdiCorpusStructureDB csdb, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) {
@@ -106,25 +113,24 @@ public final class ResourcePresentation extends Panel {
             String rrsurl = null;
             final MarkupContainer tableContainer = new WebMarkupContainer("tableContainer");
 
-
             if (nodeAccessLevel == 1) {
-                tableContainer.add(new Image("access_icon", new ContextRelativeResource("al_circle_green.png")));
+                tableContainer.add(new Image("access_icon", openIcon));
                 tableContainer.add(new Label("accesslevel", "This resource is openly available"));
 
             } else if (nodeAccessLevel == 2) {
-                tableContainer.add(new Image("access_icon", new ContextRelativeResource("al_circle__yellow.png")));
+                tableContainer.add(new Image("access_icon", licensedIcon));
                 tableContainer.add(new Label("accesslevel", "This resource is accessible to registered users of the archive"));
 
             } else if (nodeAccessLevel == 3) {
-                tableContainer.add(new Image("access_icon", new ContextRelativeResource("al_circle__orange.png")));
+                tableContainer.add(new Image("access_icon", restrictedIcon));
                 tableContainer.add(new Label("accesslevel", "Access to this resource can be <a href='" + rrsurl + ">requested</a>"));
 
             } else if (nodeAccessLevel == 4) {
-                tableContainer.add(new Image("access_icon", new ContextRelativeResource("al_circle__red.png")));
+                tableContainer.add(new Image("access_icon", closedIcon));
                 tableContainer.add(new Label("accesslevel", "Access to this resource is prohibited"));
 
             } else if (nodeAccessLevel == 5) {
-                tableContainer.add(new Image("access_icon", new ContextRelativeResource("al_circle__black.png")));
+                tableContainer.add(new Image("access_icon", externalIcon));
                 tableContainer.add(new Label("accesslevel", "This resource is external"));
             } else {
                 tableContainer.add(new Image("access_icon", new ContextRelativeResource("")));
@@ -137,7 +143,7 @@ public final class ResourcePresentation extends Panel {
             List<String[]> licenseViews = new ArrayList<String[]>();
             for (int i = 0; i < licenses.size(); i++) {
                 License license = licenses.get(i).getLicense();
-                String url = ""; 
+                String url = "";
                 //TODO replace URL by String url=licenseService.getLicenseLink(license);
                 String[] licenseData = new String[2];
                 licenseData[0] = license.getName();
@@ -147,7 +153,7 @@ public final class ResourcePresentation extends Panel {
 
             StringBuilder sb = new StringBuilder();
             Label licensesLabel;
-            
+
             // create label for licenses
             if (licenseViews.isEmpty()) {
                 licensesLabel = new Label("licenses", "No licenses required for this resource.");
@@ -165,9 +171,9 @@ public final class ResourcePresentation extends Panel {
 
             }
             licensesLabel.setEscapeModelStrings(false);
-            
-            
-            
+
+
+
             // Add all labels to table container to be displayed in html
             tableContainer.add(licensesLabel);
 
@@ -183,7 +189,7 @@ public final class ResourcePresentation extends Panel {
             tableContainer.add(new Label("last_modified", lastmodified));
 
             tableContainer.add(new Label("userid", userid));
- 
+
             tableContainer.add(new ExternalLink("link", nodeURL.toString(), "link"));
 
             // Add container to page
