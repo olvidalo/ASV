@@ -16,17 +16,19 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import java.util.Collection;
 import java.util.Iterator;
 import nl.mpi.common.util.spring.SpringContextLoader;
-import nl.mpi.lat.ams.Constants;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AdvAuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.*;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -47,44 +49,6 @@ public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.serv
 
     public CMDINodePresentationProvider(CmdiCorpusStructureDB csdb){
         this.csdb = csdb;        
-    }
-    /**
-     *
-     * Initialises the context loader that will retrieve the beans from the
-     * configuration provided by AMS2.
-     */
-    private void initialiseContextLoader() {
-        this.contextLoader = new SpringContextLoader();
-        contextLoader.init("spring-ams2-core.xml");
-    }
-
-    /**
-     *
-     * @return AuthorizationService bean, to be used by the connection to AMS2
-     */
-    private AdvAuthorizationService authorizationService() {
-
-        if (this.contextLoader == null) {
-            initialiseContextLoader();
-        }
-        if (this.authoSrv == null) {
-            this.authoSrv = (AdvAuthorizationService) contextLoader.getBean(Constants.BEAN_AUTHORIZATION_SRV);
-        }
-        return this.authoSrv;
-    }
-
-    /**
-     * @return LicenseService bean, to be used by the connection to AMS2
-     */
-    private LicenseService licenseService() {
-
-        if (this.contextLoader == null) {
-            initialiseContextLoader();
-        }
-        if (this.licSrv == null) {
-            this.licSrv = (LicenseService) contextLoader.getBean(Constants.BEAN_LICENSE_SRV);
-        }
-        return this.licSrv;
     }
 
     @Override
@@ -109,9 +73,6 @@ public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.serv
                 return new ResourcePresentation(wicketId, node , csdb, userId, licSrv, authoSrv);
             }
         }
-
-
-
         return new Label(wicketId, nodes.toString());
     }
 }

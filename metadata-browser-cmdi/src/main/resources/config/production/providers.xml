@@ -45,5 +45,6 @@
     
     <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider">
         <constructor-arg ref="nodeTypeIdentifier" />
+        <constructor-arg ref="csdb" />
     </bean>
 </beans>
