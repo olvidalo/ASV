@@ -16,8 +16,9 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
@@ -37,9 +38,10 @@ import org.junit.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDITrovaNodeActionTest {
-        private final Mockery context = new JUnit4Mockery();
+
+    private final Mockery context = new JUnit4Mockery();
     private final static int NODE_ID = 1;
-    
+
     public CMDITrovaNodeActionTest() {
     }
 
@@ -50,11 +52,11 @@ public class CMDITrovaNodeActionTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -78,6 +80,8 @@ public class CMDITrovaNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
+        nodes.add(node);
 
         Map<String, String> map = new HashMap<String, String>();
 
@@ -97,7 +101,7 @@ public class CMDITrovaNodeActionTest {
 
 
         CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
-        NodeActionResult result = instance.execute(node);
+        NodeActionResult result = instance.execute(nodes);
         assertEquals("trova", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
@@ -108,7 +112,7 @@ public class CMDITrovaNodeActionTest {
         assertEquals(NavigationRequest.NavigationTarget.TROVA, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getParameters());
         assertEquals(map, navigationActionRequest.getParameters());
-        
+
 
     }
 }

@@ -37,6 +37,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     private final List<NodeAction> resourceAudioVideoNodeActionList;
     private final List<NodeAction> metadataNodeActionList;
     public final List<NodeAction> collectionNodeActionList;
+    public final List<NodeAction> multipleNodeActionList;
     // private final List<NodeAction> extraNodeActionList;
 
     public CMDIActionsProvider(CmdiCorpusStructureDB csdb, ZipService zipService) {
@@ -79,6 +80,12 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIBookmarkNodeAction(csdb),
                 new CMDIDownloadNodeAction(csdb));
         //            new CMDIVersionInfoAction();
+        
+        multipleNodeActionList = Arrays.<NodeAction>asList(
+                new CMDISearchNodeAction(),
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction());
 
 
     }
@@ -101,7 +108,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 }
             }
         } else if (nodes.size() > 1) {
-            //TODO return a list for multiple selection
+            return multipleNodeActionList;
         }
         return null;
     }

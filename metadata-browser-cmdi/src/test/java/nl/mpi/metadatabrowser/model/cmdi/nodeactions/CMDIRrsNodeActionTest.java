@@ -16,8 +16,9 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIRrsNodeAction;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
@@ -25,8 +26,8 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
-import org.jmock.Expectations;
 import static org.hamcrest.Matchers.instanceOf;
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
@@ -79,6 +80,8 @@ public class CMDIRrsNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
+        nodes.add(node);
 
         Map<String, String> map = new HashMap<String, String>();
 
@@ -97,7 +100,7 @@ public class CMDIRrsNodeActionTest {
 
 
         CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
-        NodeActionResult result = instance.execute(node);
+        NodeActionResult result = instance.execute(nodes);
         assertEquals("rrs", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();

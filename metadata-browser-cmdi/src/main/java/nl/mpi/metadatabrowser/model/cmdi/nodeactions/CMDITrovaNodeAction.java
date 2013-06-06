@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.*;
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDITrovaNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDITrovaNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "trova";
@@ -43,16 +44,17 @@ public class CMDITrovaNodeAction extends SingleNodeAction implements NodeAction 
     }
 
     @Override
-    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        URI nodeUri = node.getUri();
-        int nodeId = node.getNodeId();
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-
-        // HANDLE trova action here
+    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("nodeId", Integer.toString(nodeId));
-        parameters.put("jessionID", "session number");
+        for (TypedCorpusNode node : nodes) {
+            URI nodeUri = node.getUri();
+            int nodeId = node.getNodeId();
+            logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
+            // HANDLE trova action here
+            parameters.put("nodeId", Integer.toString(nodeId));
+            parameters.put("jessionID", "session number");
+        }
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
 
         return new SimpleNodeActionResult(request);

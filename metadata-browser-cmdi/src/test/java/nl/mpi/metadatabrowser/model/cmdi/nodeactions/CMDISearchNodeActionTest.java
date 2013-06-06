@@ -16,8 +16,9 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
@@ -79,6 +80,8 @@ public class CMDISearchNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
          final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
+         nodes.add(node);
 
         Map<String, String> map = new HashMap<String, String>();
 
@@ -98,7 +101,7 @@ public class CMDISearchNodeActionTest {
 
 
         CMDISearchNodeAction instance = new CMDISearchNodeAction();
-        NodeActionResult result = instance.execute(node);
+        NodeActionResult result = instance.execute(nodes);
         assertEquals("cmdiSearch", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();

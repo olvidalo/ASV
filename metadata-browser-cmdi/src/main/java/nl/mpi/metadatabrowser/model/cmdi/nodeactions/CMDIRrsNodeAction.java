@@ -17,13 +17,13 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDIRrsNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
     private final static String name = "rrs";
@@ -47,16 +47,18 @@ public class CMDIRrsNodeAction extends SingleNodeAction implements NodeAction {
 	return name;
     }
 
+
     @Override
-    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
+       Map<String, String> parameters = new HashMap<String, String>();
+        for (TypedCorpusNode node: nodes){
 	URI nodeUri = node.getUri();
 	int nodeId = node.getNodeId();
 	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-	// HANDLE rrs navigation action here
-        Map<String, String> parameters = new HashMap<String, String>();
+	// HANDLE rrs navigation action here       
 	parameters.put("nodeId", Integer.toString(nodeId));
-
+        }
 	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
 
 	return new SimpleNodeActionResult(request);
