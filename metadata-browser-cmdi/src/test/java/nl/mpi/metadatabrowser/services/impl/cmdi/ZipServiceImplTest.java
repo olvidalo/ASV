@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipFile;
+import nl.mpi.corpusstructure.AccessInfo;
+import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import static org.hamcrest.Matchers.instanceOf;
@@ -37,6 +39,7 @@ import org.junit.*;
 public class ZipServiceImplTest {
 
     private final Mockery context = new JUnit4Mockery();
+    private final static int NODE_ID = 1;
 
     public ZipServiceImplTest() {
     }
@@ -67,23 +70,29 @@ public class ZipServiceImplTest {
         final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
         final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
         final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1, child2);
+        final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
+        final String userId = "corpman";
 
         context.checking(new Expectations() {
 
             {
-                oneOf(child1).getNodeId();
-                will(returnValue(1));
-                oneOf(child2).getNodeId();
+                allowing(child1).getNodeId();
+                will(returnValue(NODE_ID));
+                allowing(child2).getNodeId();
                 will(returnValue(2));
-                oneOf(csdb).getObjectURI(1);
+                allowing(csdb).getObjectURI(1);
                 will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi").toURI()));
-                oneOf(csdb).getObjectURI(2);
+                allowing(csdb).getObjectURI(2);
                 will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Corpora.cmdi").toURI()));
+                allowing(csdb).getObjectAccessInfo(NodeIdUtils.TONODEID(NODE_ID));
+                will(returnValue(ai));
+                allowing(csdb).getObjectAccessInfo(NodeIdUtils.TONODEID(2));
+                will(returnValue(ai));
             }
         });
 
         ZipServiceImpl instance = new ZipServiceImpl(csdb);
-        File result = instance.createZipFileForNodes(childrenNodes);
+        File result = instance.createZipFileForNodes(childrenNodes, userId);
         ZipFile zip = new ZipFile(result);
         assertThat(result, instanceOf(File.class));
         assertNotNull(result.getPath());

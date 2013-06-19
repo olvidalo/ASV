@@ -29,6 +29,6 @@ import nl.mpi.corpusstructure.UnknownNodeException;
  */
 public interface ZipService {
 
-    File createZipFileForNodes(List<? extends CorpusNode> childrenNodes) throws IOException, UnknownNodeException, FileNotFoundException;
+    File createZipFileForNodes(List<? extends CorpusNode> childrenNodes, String userid) throws IOException, UnknownNodeException, FileNotFoundException;
     
 }

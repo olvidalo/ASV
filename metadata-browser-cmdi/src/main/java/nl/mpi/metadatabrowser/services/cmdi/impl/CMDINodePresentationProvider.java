@@ -38,7 +38,6 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.services.NodePresentationProvider {
 
-    private SpringContextLoader contextLoader;
     private AdvAuthorizationService authoSrv;
     private LicenseService licSrv;
     private CmdiCorpusStructureDB csdb;

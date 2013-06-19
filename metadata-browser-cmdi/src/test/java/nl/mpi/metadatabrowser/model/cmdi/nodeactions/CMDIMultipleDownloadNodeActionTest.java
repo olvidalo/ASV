@@ -101,6 +101,7 @@ public class CMDIMultipleDownloadNodeActionTest {
         final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
         final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
         final List<TypedCorpusNode> childrenList = Arrays.asList(child1,child2);
+        final String userId = null;
 
         final File zipFile = File.createTempFile("test", "txt");
         final FileWriter fileWriter = new FileWriter(zipFile);
@@ -120,7 +121,7 @@ public class CMDIMultipleDownloadNodeActionTest {
                 oneOf(csdb).getChildrenCMDIs(NODE_ID);
                 will(returnValue(childrenList));
                 
-                oneOf(zipService).createZipFileForNodes(childrenList);
+                oneOf(zipService).createZipFileForNodes(childrenList, userId);
                 will(returnValue(zipFile));
             }
         });

@@ -40,10 +40,12 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     private final String name = "multidownload";
     private final CmdiCorpusStructureDB csdb;
     private final ZipService zipService;
+    private String userid;
 
     public CMDIMultipleDownloadNodeAction(CmdiCorpusStructureDB csdb, ZipService zipService) {
         this.csdb = csdb;
         this.zipService = zipService;
+        
     }
 
 
@@ -61,7 +63,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
         try {
             List<CorpusNode> childrenNodes = csdb.getChildrenCMDIs(nodeid);
-            final File zipFile = zipService.createZipFileForNodes(childrenNodes);
+            final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
             IResourceStream resStream = new FileResourceStream(zipFile){
 
                 @Override
