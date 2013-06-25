@@ -47,12 +47,11 @@ public class CMDIAMSNodeAction implements NodeAction {
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
                 Map<String, String> parameters = new HashMap<String, String>();
         for (TypedCorpusNode node : nodes) {
-        URI nodeUri = node.getUri();
-        int nodeId = node.getNodeId();
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+        URI nodeId = node.getNodeId();
+        logger.info("Action [{}] invoked on {}", getName(), nodeId);
 
         // HANDLE ams action here        
-        parameters.put("nodeId", Integer.toString(nodeId));
+        parameters.put("nodeId", nodeId.toString());
         parameters.put("jsessionID", "session id"); // use only for LANA
         }
 

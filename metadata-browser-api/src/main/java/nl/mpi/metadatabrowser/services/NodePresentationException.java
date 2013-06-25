@@ -16,21 +16,21 @@
  */
 package nl.mpi.metadatabrowser.services;
 
-import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.metadatabrowser.model.NodeType;
-
 /**
- * Interface for a service that identifies the type of a given node
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface NodeTypeIdentifier {
+public class NodePresentationException extends Exception {
 
-    /**
-     * Gets the node type for the specified node
-     *
-     * @param nodeUri URI of node to determine type for
-     * @return an object representing a type of node
-     */
-    NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException;
+    public NodePresentationException(String string, Throwable thrwbl) {
+	super(string, thrwbl);
+    }
+
+    public NodePresentationException(Throwable thrwbl) {
+	super(thrwbl);
+    }
+
+    public NodePresentationException(String string) {
+	super(string);
+    }
 }

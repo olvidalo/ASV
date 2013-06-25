@@ -48,13 +48,12 @@ public class CMDISearchNodeAction implements NodeAction {
         Map<String, String> parameters = new HashMap<String, String>();
         for (TypedCorpusNode node : nodes) {
             URI nodeUri = node.getUri();
-            int nodeId = node.getNodeId();
 
             logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
             // HANDLE search action here        
 
-            parameters.put("nodeId", Integer.toString(nodeId));
+	    parameters.put("nodeId", node.getNodeId().toString());
             parameters.put("jessionID", "session number");
         }
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.CMDISEARCH, parameters);

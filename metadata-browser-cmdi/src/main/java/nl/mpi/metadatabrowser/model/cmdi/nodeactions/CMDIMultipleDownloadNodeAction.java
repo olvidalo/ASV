@@ -16,12 +16,19 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.metadatabrowser.model.*;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
@@ -38,49 +45,46 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "multidownload";
-    private final CmdiCorpusStructureDB csdb;
+    private final CorpusStructureProvider csdb;
     private final ZipService zipService;
     private String userid;
 
-    public CMDIMultipleDownloadNodeAction(CmdiCorpusStructureDB csdb, ZipService zipService) {
-        this.csdb = csdb;
-        this.zipService = zipService;
-        
+    public CMDIMultipleDownloadNodeAction(CorpusStructureProvider csdb, ZipService zipService) {
+	this.csdb = csdb;
+	this.zipService = zipService;
+
     }
 
-
-    
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        URI nodeUri = node.getUri();
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-        int nodeid = node.getNodeId();
+	URI nodeUri = node.getUri();
+	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+	URI nodeid = node.getNodeId();
 
-        try {
-            List<CorpusNode> childrenNodes = csdb.getChildrenCMDIs(nodeid);
-            final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
-            IResourceStream resStream = new FileResourceStream(zipFile){
+	try {
+	    List<CorpusNode> childrenNodes = csdb.getChildrenNodes(nodeid);
+	    final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
+	    IResourceStream resStream = new FileResourceStream(zipFile) {
+		@Override
+		public void close() throws IOException {
+		    super.close();
+		    zipFile.delete();
+		}
+	    };
+	    DownloadActionRequest.setStreamContent(resStream);
+	    DownloadActionRequest.setFileName("package_" + node.getName());
+	    final DownloadActionRequest request = new DownloadActionRequest();
 
-                @Override
-                public void close() throws IOException {
-                    super.close();
-                    zipFile.delete();
-                }
-                
-            };
-            DownloadActionRequest.setStreamContent(resStream);
-            DownloadActionRequest.setFileName("package_" + node.getName());
-        final DownloadActionRequest request = new DownloadActionRequest();
-
-	return new SimpleNodeActionResult(request);
-                } catch (IOException ioe) {
-            System.out.println("IOException :" + ioe);
-        }
-        return new SimpleNodeActionResult("Error trying to download multiple files. One or more file encountered a problem.");
+	    return new SimpleNodeActionResult(request);
+	} catch (IOException ex) {
+	    throw new NodeActionException(this, ex);
+	} catch (UnknownNodeException ex) {
+	    throw new NodeActionException(this, ex);
+	}
     }
 }

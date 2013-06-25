@@ -16,17 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.*;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelShowComponent;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,30 +34,33 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "bookmark";
-    private final CmdiCorpusStructureDB csdb;
+    private final CorpusStructureProvider csdb;
 
-    public CMDIBookmarkNodeAction(CmdiCorpusStructureDB csdb) {
-        this.csdb = csdb;
+    public CMDIBookmarkNodeAction(CorpusStructureProvider csdb) {
+	this.csdb = csdb;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-        URI nodeUri = node.getUri();
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+	URI nodeUri = node.getUri();
+	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        final ShowComponentRequest request = new ShowComponentRequest() {
-
-            @Override
-            public Component getComponent(String id) {
-                // create panel form for bookmark action
-                return new PanelShowComponent(id, node, csdb);
-            }
-        };
-        return new SimpleNodeActionResult(request);
+	final ShowComponentRequest request = new ShowComponentRequest() {
+	    @Override
+	    public Component getComponent(String id) throws ControllerActionRequestException {
+		try {
+		    // create panel form for bookmark action
+		    return new PanelShowComponent(id, node, csdb);
+		} catch (UnknownNodeException ex) {
+		    throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeId(), ex);
+		}
+	    }
+	};
+	return new SimpleNodeActionResult(request);
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 }

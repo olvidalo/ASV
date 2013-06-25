@@ -17,30 +17,32 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class ProfileIdentifierImpl implements ProfileIdentifier {
-    private String profileId;
-    private final CmdiCorpusStructureDB csdb;
-    
-    public ProfileIdentifierImpl(CmdiCorpusStructureDB csdb){
-        this.csdb = csdb;
+
+    private final static Logger logger = LoggerFactory.getLogger(ProfileIdentifierImpl.class);
+    private final CorpusStructureProvider csdb;
+
+    public ProfileIdentifierImpl(CorpusStructureProvider csdb) {
+	this.csdb = csdb;
     }
-    
+
     @Override
-    public String getProfile(URI uri){
-        profileId = csdb.getProfileId(uri);       
-       return profileId;
+    public URI getProfile(URI uri) {
+	try {
+	    return csdb.getProfileSchemaLocation(uri);
+	} catch (UnknownNodeException ex) {
+	    logger.warn("Failed to get profile, unknown node at {}", uri);
+	    return null;
+	}
     }
-    
-    @Override
-    public void setProfile(String profileId) {
-        this.profileId = profileId;
-    }
-    
 }

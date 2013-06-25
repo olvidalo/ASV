@@ -47,18 +47,16 @@ public class CMDIRrsNodeAction implements NodeAction {
 	return name;
     }
 
-
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-       Map<String, String> parameters = new HashMap<String, String>();
-        for (TypedCorpusNode node: nodes){
-	URI nodeUri = node.getUri();
-	int nodeId = node.getNodeId();
-	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+	Map<String, String> parameters = new HashMap<String, String>();
+	for (TypedCorpusNode node : nodes) {
+	    URI nodeUri = node.getUri();
+	    logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-	// HANDLE rrs navigation action here       
-	parameters.put("nodeId", Integer.toString(nodeId));
-        }
+	    // HANDLE rrs navigation action here       
+	    parameters.put("nodeId", node.getNodeId().toString());
+	}
 	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
 
 	return new SimpleNodeActionResult(request);

@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import nl.mpi.archiving.corpusstructure.provider.CorpusNodeType;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeNode;
-import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
 
 /**
  *
@@ -30,7 +30,7 @@ import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
  */
 public class MockCorpusNode implements CorpusNode, Serializable {
 
-    private int nodeId;
+    private URI nodeId;
     private String name;
     private URI uri;
     private String profileId;
@@ -38,7 +38,6 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     private List<MockCorpusNode> children;
     private CorpusNodeType corpusNodeType;
 
-    
     //not used?
     public void setCorpusNodeType(CorpusNodeType corpusNodeType) {
 	this.corpusNodeType = corpusNodeType;
@@ -50,7 +49,7 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     }
 
     // not used?
-    public void setNodeId(int nodeId) {
+    public void setNodeId(URI nodeId) {
 	this.nodeId = nodeId;
     }
 
@@ -75,7 +74,7 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     }
 
     @Override
-    public int getNodeId() {
+    public URI getNodeId() {
 	return nodeId;
     }
 
@@ -113,7 +112,7 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 	return corpusNodeType;
     }
 
-    protected MockCorpusNode getChildRecursive(int nodeId) {
+    protected MockCorpusNode getChildRecursive(URI nodeId) {
 	if (nodeId == this.nodeId) {
 	    return this;
 	}
@@ -135,5 +134,10 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 	} else {
 	    return children;
 	}
+    }
+
+    @Override
+    public String toString() {
+	return getName();
     }
 }

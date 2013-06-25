@@ -33,6 +33,16 @@ import java.io.Serializable;
 public interface NodeType extends Serializable {
 
     /**
+     * Special instance indicating an unknown node type
+     */
+    public final static NodeType UNKNOWN = new NodeType() {
+	@Override
+	public String getName() {
+	    return "Unknown";
+	}
+    };
+
+    /**
      *
      * @return name of the type of node
      */

@@ -18,13 +18,13 @@ package nl.mpi.metadatabrowser.services.impl.cmdi;
 
 import nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl;
 import java.io.File;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipFile;
-import nl.mpi.corpusstructure.AccessInfo;
-import nl.mpi.corpusstructure.NodeIdUtils;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -37,9 +37,10 @@ import org.junit.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class ZipServiceImplTest {
+    public static final URI NODE1_ID = URI.create("node:1");
+    public static final URI NODE2_ID = URI.create("node:2");
 
     private final Mockery context = new JUnit4Mockery();
-    private final static int NODE_ID = 1;
 
     public ZipServiceImplTest() {
     }
@@ -66,28 +67,33 @@ public class ZipServiceImplTest {
     @Test
     public void testCreateZipFileForNodes() throws Exception {
         System.out.println("createZipFileForNodes");
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
         final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
         final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
         final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1, child2);
-        final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
+        final AccessInfo ai = context.mock(AccessInfo.class);
         final String userId = "corpman";
 
         context.checking(new Expectations() {
-
             {
                 allowing(child1).getNodeId();
-                will(returnValue(NODE_ID));
-                allowing(child2).getNodeId();
-                will(returnValue(2));
-                allowing(csdb).getObjectURI(1);
+                will(returnValue(NODE1_ID));
+		allowing(child2).getNodeId();
+                will(returnValue(NODE2_ID));
+                
+		allowing(csdb).getObjectURI(NODE1_ID);
                 will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi").toURI()));
-                allowing(csdb).getObjectURI(2);
+		allowing(csdb).getObjectURI(NODE2_ID);
                 will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Corpora.cmdi").toURI()));
-                allowing(csdb).getObjectAccessInfo(NodeIdUtils.TONODEID(NODE_ID));
+                
+		allowing(csdb).getObjectAccessInfo(NODE1_ID);
                 will(returnValue(ai));
-                allowing(csdb).getObjectAccessInfo(NodeIdUtils.TONODEID(2));
+                
+		allowing(csdb).getObjectAccessInfo(NODE2_ID);
                 will(returnValue(ai));
+		
+		allowing(ai).hasReadAccess(userId);
+		will(returnValue(true));
             }
         });
 

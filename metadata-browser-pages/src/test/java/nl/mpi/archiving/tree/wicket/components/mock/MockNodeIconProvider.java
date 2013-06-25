@@ -20,35 +20,44 @@ import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class MockNodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
-
+    
+    private final static Logger logger = LoggerFactory.getLogger(MockNodeIconProvider.class);
     private final ResourceReference sessionIcon = new PackageResourceReference(MockNodeIconProvider.class, "session_color.gif");
     private final ResourceReference corpusIcon = new PackageResourceReference(MockNodeIconProvider.class, "corpusnode_color.gif");
     private final ResourceReference fileIcon = new PackageResourceReference(MockNodeIconProvider.class, "mediafile.gif");
     private final NodeTypeIdentifier nodeTypeIdentifier;
-
+    
     public MockNodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier) {
 	this.nodeTypeIdentifier = nodeTypeIdentifier;
     }
-
+    
     @Override
     public ResourceReference getNodeIcon(T contentNode) {
-	final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
-	if (nodeType.getName().equalsIgnoreCase("Collection")) {
-	    return corpusIcon;
-	} else if (nodeType.getName().equalsIgnoreCase("Root")) {
-	    return corpusIcon;
-	} else if (nodeType.getName().equalsIgnoreCase("Resource")) {
+	try {
+	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
+	    if (nodeType.getName().equalsIgnoreCase("Collection")) {
+		return corpusIcon;
+	    } else if (nodeType.getName().equalsIgnoreCase("Root")) {
+		return corpusIcon;
+	    } else if (nodeType.getName().equalsIgnoreCase("Resource")) {
+		return fileIcon;
+	    } else {
+		return sessionIcon;
+	    }
+	} catch (NodeTypeIdentifierException ex) {
+	    logger.error("Error determining node type for icon", ex);
 	    return fileIcon;
-	} else {
-	    return sessionIcon;
 	}
     }
 }

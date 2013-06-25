@@ -16,26 +16,28 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
-import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier;
 import java.net.URI;
+import nl.mpi.archiving.corpusstructure.provider.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
-import nl.mpi.metadatabrowser.model.cmdi.CorpusNodeType;
-import static org.hamcrest.Matchers.instanceOf;
+import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.*;
+
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import org.junit.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodeTypeIdentifierTest {
+    public static final URI NODE_1_ID = URI.create("node:1");
 
     private final Mockery context = new JUnit4Mockery();
 
@@ -65,7 +67,7 @@ public class CMDINodeTypeIdentifierTest {
     public void testGetNodeType() throws Exception {
         System.out.println("getNodeType");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 
         context.checking(new Expectations() {
 
@@ -73,8 +75,8 @@ public class CMDINodeTypeIdentifierTest {
                 oneOf(node).getUri();
                 will(returnValue(new URI("nodeUri")));
                 oneOf(node).getNodeId();
-                will(returnValue(1));
-                allowing(csdb).getCorpusNodeType(1);
+                will(returnValue(NODE_1_ID));
+                allowing(csdb).getCorpusNodeType(NODE_1_ID);
                 will(returnValue(CorpusNodeType.RESOURCE_ANNOTATION));
             }
         });

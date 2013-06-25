@@ -14,19 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model;
 
 /**
  *
- * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public enum CorpusNodeType {
+public class ControllerActionRequestException extends Exception {
 
-    COLLECTION,
-    METADATA,
-    RESOURCE_VIDEO,
-    RESOURCE_AUDIO,
-    RESOURCE_LEXICAL,
-    RESOURCE_ANNOTATION,
-    RESOURCE_OTHER
+    public ControllerActionRequestException(String string) {
+	super(string);
+    }
+
+    public ControllerActionRequestException(Throwable thrwbl) {
+	super(thrwbl);
+    }
+
+    public ControllerActionRequestException(String string, Throwable thrwbl) {
+	super(string, thrwbl);
+    }
 }

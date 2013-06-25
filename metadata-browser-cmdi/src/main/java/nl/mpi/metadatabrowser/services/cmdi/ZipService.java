@@ -20,8 +20,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.corpusstructure.UnknownNodeException;
 
 /**
  *

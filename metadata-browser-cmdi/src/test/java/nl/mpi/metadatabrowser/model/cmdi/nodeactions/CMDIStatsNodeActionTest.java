@@ -39,7 +39,7 @@ import org.junit.*;
 public class CMDIStatsNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private final static int NODE_ID = 1;
+    private final static URI NODE_ID = URI.create("node:1");
 
     public CMDIStatsNodeActionTest() {
     }
@@ -83,7 +83,7 @@ public class CMDIStatsNodeActionTest {
 
         Map<String, String> map = new HashMap<String, String>();
 
-        map.put("nodeId", Integer.toString(NODE_ID));
+        map.put("nodeId", NODE_ID.toString());
 
         context.checking(new Expectations() {
 

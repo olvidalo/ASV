@@ -23,7 +23,5 @@ import java.net.URI;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public interface ProfileIdentifier {
-    String getProfile(URI nodeUri);
-
-    void setProfile(String profile2);
+    URI getProfile(URI nodeUri);
 }

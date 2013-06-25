@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
@@ -32,8 +33,12 @@ public class ShowComponentRequestHandler implements ControllerActionRequestHandl
 
     @Override
     public void handleActionRequest(RequestCycle requestCycle, ShowComponentRequest actionRequest, Page originatingPage) throws RequestHandlerException {
-	final Component component = actionRequest.getComponent("nodePresentation");
-	final MarkupContainer container = (MarkupContainer) originatingPage.get("nodesPanel:nodePresentationContainer");
-	container.addOrReplace(component);
+	try {
+	    final Component component = actionRequest.getComponent("nodePresentation");
+	    final MarkupContainer container = (MarkupContainer) originatingPage.get("nodesPanel:nodePresentationContainer");
+	    container.addOrReplace(component);
+	} catch (ControllerActionRequestException ex) {
+	    throw new RequestHandlerException("Error while getting component to show for action result", ex);
+	}
     }
 }

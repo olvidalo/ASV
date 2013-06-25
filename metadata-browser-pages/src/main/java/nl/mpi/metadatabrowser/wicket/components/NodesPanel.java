@@ -25,8 +25,10 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
+import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.model.TypedSerializableCorpusNode;
 import org.apache.wicket.Component;
@@ -35,6 +37,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Panel combining an actions panel and a node presentation component based on a collection of corpus nodes (typically a selection from the
@@ -44,6 +48,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  */
 public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable> extends GenericPanel<Collection<SerializableCorpusNode>> implements Serializable {
 
+    private final static Logger logger = LoggerFactory.getLogger(NodesPanel.class);
     private static final long serialVersionUID = 1L;
     @SpringBean
     private NodeTypeIdentifier nodeTypeIdentifier;
@@ -81,8 +86,14 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 	final Collection<TypedCorpusNode> typedNodes = new ArrayList<TypedCorpusNode>(selectedNodes.size());
 	for (SerializableCorpusNode node : selectedNodes) {
 	    // Get the node type from the node type identifier
-	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(node);
-	    typedNodes.add(new TypedSerializableCorpusNode(node, nodeType));
+	    try {
+		final NodeType nodeType = nodeTypeIdentifier.getNodeType(node);
+		typedNodes.add(new TypedSerializableCorpusNode(node, nodeType));
+	    } catch (NodeTypeIdentifierException ex) {
+		logger.warn("Could not determine node type for node {}. Adding as unknown type.", node, ex);
+		warn("Error identifying node type: " + ex.getMessage());
+		typedNodes.add(new TypedSerializableCorpusNode(node, NodeType.UNKNOWN));
+	    }
 	}
 	return typedNodes;
     }
@@ -95,11 +106,16 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 
     private void updateNodePresentation(final Collection<TypedCorpusNode> typedNodes) {
 	// Add the node presentation component to the presentation container (or remove if none is available)
-	final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
-	if (nodePresentation == null) {
-	    nodePresentationContainer.addOrReplace(new WebMarkupContainer("nodePresentation"));
-	} else {
-	    nodePresentationContainer.addOrReplace(nodePresentation);
+	try {
+	    final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
+	    if (nodePresentation == null) {
+		nodePresentationContainer.addOrReplace(new WebMarkupContainer("nodePresentation"));
+	    } else {
+		nodePresentationContainer.addOrReplace(nodePresentation);
+	    }
+	} catch (NodePresentationException ex) {
+	    logger.warn("Error while updating node presentation for {}", typedNodes, ex);
+	    error(ex.getMessage());
 	}
     }
 }

@@ -30,5 +30,5 @@ public interface ShowComponentRequest extends ControllerActionRequest {
      * @param id the string that should be used as the id for the top-level component returned
      * @return the component that should be shown
      */
-    Component getComponent(String id);
+    Component getComponent(String id) throws ControllerActionRequestException;
 }

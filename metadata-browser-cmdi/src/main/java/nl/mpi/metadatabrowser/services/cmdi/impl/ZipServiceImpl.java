@@ -16,18 +16,21 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.corpusstructure.*;
-import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
-import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
-import nl.mpi.util.OurURL;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +41,12 @@ import org.slf4j.LoggerFactory;
  */
 public class ZipServiceImpl implements ZipService, Serializable {
 
-    private final CmdiCorpusStructureDB csdb;
+    private final CorpusStructureProvider csdb;
     private final Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
     private static final long MAX_LIMIT = FileUtils.ONE_GB * 2; // 200000000L ; //4000000000L  //4GB
 
-    public ZipServiceImpl(CmdiCorpusStructureDB csdb) {
-        this.csdb = csdb;
+    public ZipServiceImpl(CorpusStructureProvider csdb) {
+	this.csdb = csdb;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
                 URI childUri = csdb.getObjectURI(childNode.getNodeId());
                 if (itemsAdded == 0) { // check if at least one resource is accessible for user
                     if (childUri != null) {
-                        hasaccess = checkAccess(userid, NodeIdUtils.TONODEID(childNode.getNodeId()), childUri);// get access rights for each resource
+                        hasaccess = checkAccess(userid, childNode.getNodeId(), childUri);// get access rights for each resource
                         logger.debug("resources-download, access for " + childUri + ", " + userid + ", " + hasaccess);
                         if (hasaccess) {
                             itemsAdded++;
@@ -81,7 +84,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
                         logger.info("maximum size limit of 4GB reached");
                     }
                     if (childUri != null) {
-                        hasaccess = checkAccess(userid, NodeIdUtils.TONODEID(childNode.getNodeId()), childUri);// get access rights for each resource
+                        hasaccess = checkAccess(userid, childNode.getNodeId(), childUri);// get access rights for each resource
                         if (hasaccess) {
                             logger.info("resources-download: " + childUri.toString());
                             FileInputStream is;
@@ -121,7 +124,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
         return tmp;
     }
 
-    private boolean checkAccess(String userid, String nodeId, URI childUri) {
+    private boolean checkAccess(String userid, URI nodeId, URI childUri) throws UnknownNodeException {
         boolean hasaccess;
         if (userid == null || userid.equals("") || userid.equals("anonymous")) {
             hasaccess = csdb.getObjectAccessInfo(nodeId).hasReadAccess(AccessInfo.EVERYBODY);

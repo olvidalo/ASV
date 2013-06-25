@@ -26,12 +26,13 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
-import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import static org.junit.Assert.*;
 import org.junit.*;
+
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -40,7 +41,7 @@ import org.junit.*;
 public class CMDIRrsNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private final static int NODE_ID = 1;
+    private final static URI NODE_ID = URI.create("node:1");
 
     public CMDIRrsNodeActionTest() {
     }
@@ -85,7 +86,7 @@ public class CMDIRrsNodeActionTest {
 
         Map<String, String> map = new HashMap<String, String>();
 
-        map.put("nodeId", Integer.toString(NODE_ID));
+        map.put("nodeId", NODE_ID.toString());
 
         context.checking(new Expectations() {
 

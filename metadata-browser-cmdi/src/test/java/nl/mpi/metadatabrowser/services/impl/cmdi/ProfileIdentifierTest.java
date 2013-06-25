@@ -16,16 +16,15 @@
  */
 package nl.mpi.metadatabrowser.services.impl.cmdi;
 
-import nl.mpi.metadatabrowser.services.cmdi.impl.ProfileIdentifierImpl;
 import java.net.URI;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
-import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.metadatabrowser.services.cmdi.impl.ProfileIdentifierImpl;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import org.junit.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -59,43 +58,19 @@ public class ProfileIdentifierTest {
      */
     @Test
     public void testGetProfile() throws Exception {
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
         System.out.println("getProfile");
 
         context.checking(new Expectations() {
 
             {
-                oneOf(csdb).getProfileId(new URI("nodeUri"));
-                will(returnValue("profile1"));
+                oneOf(csdb).getProfileSchemaLocation(new URI("nodeUri"));
+                will(returnValue(URI.create("profile1")));
             }
         });
         ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
-        String expResult = "profile1";
-        instance.setProfile(expResult);
-        String result = instance.getProfile(new URI("nodeUri"));
+        URI expResult = URI.create("profile1");
+        URI result = instance.getProfile(new URI("nodeUri"));
         assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of setProfile method, of class ProfileIdentifier.
-     */
-    @Test
-    public void testSetProfile() throws Exception {
-        final ProfileIdentifier proI = context.mock(ProfileIdentifier.class);
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
-        System.out.println("setProfile");
-
-        context.checking(new Expectations() {
-            {
-                oneOf(proI).setProfile("profile2");
-                allowing(csdb).getProfileId(new URI("nodeUri23"));
-                will(returnValue("profile23"));
-            }
-        });
-
-        String expResult = "profile23";
-        ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
-        instance.setProfile(expResult);
-        assertEquals(expResult, instance.getProfile(new URI("nodeUri23")));
     }
 }

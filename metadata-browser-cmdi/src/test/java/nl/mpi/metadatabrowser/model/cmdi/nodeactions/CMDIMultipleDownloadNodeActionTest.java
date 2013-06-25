@@ -16,23 +16,17 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -40,7 +34,12 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
@@ -78,7 +77,7 @@ public class CMDIMultipleDownloadNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
 
-        CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
         ZipService zipService = context.mock(ZipService.class);
         CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(csdb, zipService);
 
@@ -86,7 +85,7 @@ public class CMDIMultipleDownloadNodeActionTest {
         String result = instance.getName();
         assertEquals(expResult, result);
     }
-    private final static int NODE_ID = 1;
+    private final static URI NODE_ID = URI.create("node:1");
 
     /**
      * Test of execute method, of class CMDIMultipleDownloadNodeAction.
@@ -95,7 +94,7 @@ public class CMDIMultipleDownloadNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
 
-        final CmdiCorpusStructureDB csdb = context.mock(CmdiCorpusStructureDB.class);
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
         final ZipService zipService = context.mock(ZipService.class);
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
@@ -118,7 +117,7 @@ public class CMDIMultipleDownloadNodeActionTest {
                 allowing(node).getName();
                 will(returnValue("nodeName"));
                 
-                oneOf(csdb).getChildrenCMDIs(NODE_ID);
+                oneOf(csdb).getChildrenNodes(NODE_ID);
                 will(returnValue(childrenList));
                 
                 oneOf(zipService).createZipFileForNodes(childrenList, userId);

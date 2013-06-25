@@ -35,5 +35,5 @@ public interface NodePresentationProvider {
      * @param nodeType the type of the node identified by nodeUri
      * @return a Wicket Component representing
      */
-    Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes);
+    Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException;
 }

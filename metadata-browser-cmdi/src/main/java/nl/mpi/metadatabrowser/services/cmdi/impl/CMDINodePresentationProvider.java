@@ -18,6 +18,8 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.common.util.spring.SpringContextLoader;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AdvAuthorizationService;
@@ -25,8 +27,9 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
+import nl.mpi.metadatabrowser.services.NodePresentationException;
+import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
 import org.apache.wicket.Component;
@@ -36,42 +39,44 @@ import org.apache.wicket.markup.html.basic.Label;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDINodePresentationProvider implements nl.mpi.metadatabrowser.services.NodePresentationProvider {
+public class CMDINodePresentationProvider implements NodePresentationProvider {
 
     private AdvAuthorizationService authoSrv;
     private LicenseService licSrv;
-    private CmdiCorpusStructureDB csdb;
-    
-    
+    private CorpusStructureProvider csdb;
     //TODO : decide where does userId comes from and implement accordingly
     private String userId;
 
-    public CMDINodePresentationProvider(CmdiCorpusStructureDB csdb){
-        this.csdb = csdb;        
+    public CMDINodePresentationProvider(CorpusStructureProvider csdb) {
+	this.csdb = csdb;
     }
 
     @Override
-    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) {
-        //TODO: Implement actual presentation
+    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
+	//TODO: Implement actual presentation
 
-        //TODO: for resource for id "resourcePresentation" 
-        //get TypedCorpusNode node, 
-        //getCmdiCorpusStructureDB csdb, 
-        //get String userid, 
-        //get LicenseService licenseService, 
-        //get AdvAuthorizationService aSrv.
-        // mostly beans ????
-       licSrv = new MockLicenseService();
-       authoSrv = new MockAuthorizationService();
-        Iterator<TypedCorpusNode> iterator = nodes.iterator();
-        while (iterator.hasNext()) {
-            TypedCorpusNode node = iterator.next();
-            if (node.getNodeType() instanceof CMDIMetadata) {
-                //TODO : implement metadata presentation
-            } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
-                return new ResourcePresentation(wicketId, node , csdb, userId, licSrv, authoSrv);
-            }
-        }
-        return new Label(wicketId, nodes.toString());
+	//TODO: for resource for id "resourcePresentation" 
+	//get TypedCorpusNode node, 
+	//getCmdiCorpusStructureDB csdb, 
+	//get String userid, 
+	//get LicenseService licenseService, 
+	//get AdvAuthorizationService aSrv.
+	// mostly beans ????
+	licSrv = new MockLicenseService();
+	authoSrv = new MockAuthorizationService();
+	Iterator<TypedCorpusNode> iterator = nodes.iterator();
+	while (iterator.hasNext()) {
+	    TypedCorpusNode node = iterator.next();
+	    try {
+		if (node.getNodeType() instanceof CMDIMetadata) {
+		    //TODO : implement metadata presentation
+		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
+		    return new ResourcePresentation(wicketId, node, csdb, userId, licSrv, authoSrv);
+		}
+	    } catch (UnknownNodeException ex) {
+		throw new NodePresentationException("Could not find node while building presentation for node " + node.getNodeId(), ex);
+	    }
+	}
+	return new Label(wicketId, nodes.toString());
     }
 }

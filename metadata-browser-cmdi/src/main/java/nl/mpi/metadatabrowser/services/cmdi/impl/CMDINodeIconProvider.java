@@ -16,35 +16,30 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.URI;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
-import nl.mpi.corpusstructure.AccessInfo;
 import nl.mpi.metadatabrowser.model.NodeType;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import javax.swing.ImageIcon;
-import nl.mpi.metadatabrowser.services.cmdi.CompoundIcon;
-
-;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -52,6 +47,7 @@ import nl.mpi.metadatabrowser.services.cmdi.CompoundIcon;
  */
 public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
     
+    private final Logger logger = LoggerFactory.getLogger(CMDINodeIconProvider.class);
     private final ResourceReference sessionIcon = new PackageResourceReference(CMDINodeIconProvider.class, "session_color.gif");
     private final ResourceReference corpusIcon = new PackageResourceReference(CMDINodeIconProvider.class, "corpusnode_color.gif");
     private final ResourceReference fileIcon = new PackageResourceReference(CMDINodeIconProvider.class, "mediafile.gif");
@@ -62,31 +58,29 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final ResourceReference closedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_red.png");
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final NodeTypeIdentifier nodeTypeIdentifier;
-    private final CmdiCorpusStructureDB csdb;
+    private final CorpusStructureProvider csdb;
     float[] scales = {1f, 1f, 1f, 0.5f};
     float[] offsets = new float[4];
     RescaleOp rop;
     
-    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CmdiCorpusStructureDB csdb) {
-        this.nodeTypeIdentifier = nodeTypeIdentifier;
-        this.csdb = csdb;
+    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csdb) {
+	this.nodeTypeIdentifier = nodeTypeIdentifier;
+	this.csdb = csdb;
     }
     
     @Override
     public ResourceReference getNodeIcon(T contentNode) {
-        
-        final ImageIcon se = new ImageIcon(CMDINodeIconProvider.class.getResource("session_color.gif"));
-        final ImageIcon red = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
-        Icon[] icons = new Icon[2];
-        icons[0] = se;
-        icons[1] = red;
-        
-        
-
-        final nl.mpi.metadatabrowser.services.cmdi.CompoundIcon ic = new CompoundIcon(icons);
-        
-        // try {
-        // load source images
+	
+	final ImageIcon se = new ImageIcon(CMDINodeIconProvider.class.getResource("session_color.gif"));
+	final ImageIcon red = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
+	Icon[] icons = new Icon[2];
+	icons[0] = se;
+	icons[1] = red;
+	
+	
+	
+	// try {
+	// load source images
 //            File session = new File(getClass().getResource("/icons/session_color.gif").toURI());
 //File green = new File(getClass().getResource("/icons/al_circle_green.png").toURI());
 //
@@ -105,9 +99,9 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 //g.drawImage(overlay, image.getWidth(), 0, null);
 //g.dispose();
 
-        /*
-         * Create a rescale filter op that makes the image 50% opaque.
-         */
+	/*
+	 * Create a rescale filter op that makes the image 50% opaque.
+	 */
 //float[] scales = { 1f, 1f, 1f, 0.5f };
 //float[] offsets = new float[4];
 //RescaleOp rop = new RescaleOp(scales, offsets, null);
@@ -117,83 +111,87 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 //g2d.drawImage(combined, rop, 0, 0);
 
 
-        //   ImageIO.write(combined, "PNG", new File("combined.png"));
-        ResourceReference test = new ResourceReference("combined.png") {
-            
-            @Override
-            public IResource getResource() {
-                try {
-                   // File session = new File(getClass().getResource("/icons/session_color.gif").toURI());
-                   // File green = new File(getClass().getResource("/icons/al_circle_red.png").toURI());
-                    InputStream session = CMDINodeIconProvider.class.getResourceAsStream("session_color.gif");
-                    InputStream green = ResourcePresentation.class.getResourceAsStream("al_circle_red.png");
-
-                    
-                    
-                    final BufferedImage image = ImageIO.read(session);
-                    final BufferedImage overlay = ImageIO.read(green);
-                    
-                    int type = image.getType();
-                    
-                    final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
-                    final BufferedImage images = new BufferedImage(image.getWidth()* 10, image.getHeight(), type);
-                    Graphics2D g = images.createGraphics();
-                    g.drawImage(image, null, 0, 0);
-                    g.drawImage(overlay, null, image.getWidth(), 0);
-                    //images.createGraphics().drawImage(image, 1, 0, null);
-                    //images.createGraphics().drawImage(overlay, image.getWidth(),  0, null);
-                    //g.drawImage(image, image.getWidth(), image.getHeight(), null);
-                    //g.drawImage(overlay, image.getWidth() * 2, image.getHeight() * 2, null);
-                    //g.setBackground(Color.WHITE);
-                    //g.drawImage(image, 0, 0, null);
-                    //g.drawImage(overlay, image.getWidth(), 0, null);
-                    //g.dispose();
-                    //drawCircle((Graphics2D)image.getGraphics());
-                    // ImageIO.write(images, "jpeg", new File("combined.jpg")); 
-                   //g.setBackground(Color.WHITE);
-                    //resource.setImage(images);
-                    
-                    int w = (int) (se.getImage().getWidth(null) + (float)red.getImage().getWidth(null));
-                    int h = Math.max(se.getImage().getHeight(null), red.getImage().getHeight(null));
-                    
-                    final BufferedImage testing = new BufferedImage(w , h, BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D g2 = testing.createGraphics();
-                    //g2.drawImage(se.getImage(), 0, 0, null);
-                    //g2.drawImage(red.getImage(), se.getImage().getWidth(null), 0, null);
-                    se.paintIcon(null, g2, 1, 0);
-                    red.paintIcon(null, g2, se.getImage().getWidth(null), 0);
-                    g2.dispose();
-                    resource.setImage(testing);
-                    resource.setFormat("PNG");
-                    return resource;
-                } catch (IOException ex) {
-                    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
+	//   ImageIO.write(combined, "PNG", new File("combined.png"));
+	ResourceReference test = new ResourceReference("combined.png") {
+	    @Override
+	    public IResource getResource() {
+		try {
+		    // File session = new File(getClass().getResource("/icons/session_color.gif").toURI());
+		    // File green = new File(getClass().getResource("/icons/al_circle_red.png").toURI());
+		    InputStream session = CMDINodeIconProvider.class.getResourceAsStream("session_color.gif");
+		    InputStream green = ResourcePresentation.class.getResourceAsStream("al_circle_red.png");
+		    
+		    
+		    
+		    final BufferedImage image = ImageIO.read(session);
+		    final BufferedImage overlay = ImageIO.read(green);
+		    
+		    int type = image.getType();
+		    
+		    final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
+		    final BufferedImage images = new BufferedImage(image.getWidth() * 10, image.getHeight(), type);
+		    Graphics2D g = images.createGraphics();
+		    g.drawImage(image, null, 0, 0);
+		    g.drawImage(overlay, null, image.getWidth(), 0);
+		    //images.createGraphics().drawImage(image, 1, 0, null);
+		    //images.createGraphics().drawImage(overlay, image.getWidth(),  0, null);
+		    //g.drawImage(image, image.getWidth(), image.getHeight(), null);
+		    //g.drawImage(overlay, image.getWidth() * 2, image.getHeight() * 2, null);
+		    //g.setBackground(Color.WHITE);
+		    //g.drawImage(image, 0, 0, null);
+		    //g.drawImage(overlay, image.getWidth(), 0, null);
+		    //g.dispose();
+		    //drawCircle((Graphics2D)image.getGraphics());
+		    // ImageIO.write(images, "jpeg", new File("combined.jpg")); 
+		    //g.setBackground(Color.WHITE);
+		    //resource.setImage(images);
+		    
+		    int w = (int) (se.getImage().getWidth(null) + (float) red.getImage().getWidth(null));
+		    int h = Math.max(se.getImage().getHeight(null), red.getImage().getHeight(null));
+		    
+		    final BufferedImage testing = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		    Graphics2D g2 = testing.createGraphics();
+		    //g2.drawImage(se.getImage(), 0, 0, null);
+		    //g2.drawImage(red.getImage(), se.getImage().getWidth(null), 0, null);
+		    se.paintIcon(null, g2, 1, 0);
+		    red.paintIcon(null, g2, se.getImage().getWidth(null), 0);
+		    g2.dispose();
+		    resource.setImage(testing);
+		    resource.setFormat("PNG");
+		    return resource;
+		} catch (IOException ex) {
+		    logger.error("Could not get icon image", ex);
 //                } catch (URISyntaxException ex) {
 //                    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                return null;                
-            }
-        };
-        
-        final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
-        if (nodeType.getName().equalsIgnoreCase("Collection")) {
-            // return corpusIcon;
-            return test;
-        } else if (nodeType.getName().equalsIgnoreCase("Root")) {
-            return corpusIcon;
-        } else if (nodeType.getName().equalsIgnoreCase("ResourceAudioVideo")) {
-            return fileIcon;
-        } else if (nodeType.getName().equalsIgnoreCase("ResourceTxt")) {
-            return fileIconTxt;
-        } else {
-            return test;
-        }
+		}
+		return null;		
+	    }
+	};
+	
+	try {
+	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
+	    if (nodeType.getName().equalsIgnoreCase("Collection")) {
+		// return corpusIcon;
+		return test;
+	    } else if (nodeType.getName().equalsIgnoreCase("Root")) {
+		return corpusIcon;
+	    } else if (nodeType.getName().equalsIgnoreCase("ResourceAudioVideo")) {
+		return fileIcon;
+	    } else if (nodeType.getName().equalsIgnoreCase("ResourceTxt")) {
+		return fileIconTxt;
+	    } else {
+		return test;
+	    }
+	} catch (NodeTypeIdentifierException ex) {
+	    logger.warn("Could not identify node type", ex);
+	    return fileIcon;//TODO: error icon
+	}
 //        } catch (IOException ex) {
 //            Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
 //        }catch (URISyntaxException ex) {
 //                Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
 //            }
-        //return sessionIcon;
+	//return sessionIcon;
     }
 
 //    @Override
@@ -227,35 +225,35 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 //            return iconList;
 //        }
 //    }
-    private ResourceReference checkNodeAccess(T contentNode, CmdiCorpusStructureDB csdb) {
-        String nodeId = Integer.toString(contentNode.getNodeId());
-        AccessInfo nAccessInfo = csdb.getObjectAccessInfo(nodeId);
-        
-        ResourceReference refIcon = null;
-        int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
-        if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
-            nodeAccessLevel = nAccessInfo.getAccessLevel();
-        }
-        
-        if (nodeAccessLevel == 1) {
-            
-            refIcon = openIcon;
-            
-            
-        } else if (nodeAccessLevel == 2) {
-            
-            refIcon = licensedIcon;
-            
-        } else if (nodeAccessLevel == 3) {
-            refIcon = restrictedIcon;
-            
-        } else if (nodeAccessLevel == 4) {
-            
-            refIcon = closedIcon;
-        } else if (nodeAccessLevel == 5) {
-            refIcon = externalIcon;
-            
-        }
-        return refIcon;
+    private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb) throws UnknownNodeException {
+	URI nodeId = contentNode.getNodeId();
+	AccessInfo nAccessInfo = csdb.getObjectAccessInfo(nodeId);
+	
+	ResourceReference refIcon = null;
+	int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
+	if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
+	    nodeAccessLevel = nAccessInfo.getAccessLevel();
+	}
+	
+	if (nodeAccessLevel == 1) {
+	    
+	    refIcon = openIcon;
+	    
+	    
+	} else if (nodeAccessLevel == 2) {
+	    
+	    refIcon = licensedIcon;
+	    
+	} else if (nodeAccessLevel == 3) {
+	    refIcon = restrictedIcon;
+	    
+	} else if (nodeAccessLevel == 4) {
+	    
+	    refIcon = closedIcon;
+	} else if (nodeAccessLevel == 5) {
+	    refIcon = externalIcon;
+	    
+	}
+	return refIcon;
     }
 }

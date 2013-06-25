@@ -18,9 +18,12 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.io.Serializable;
 import java.net.URI;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.services.NodeResolver;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,14 +31,20 @@ import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
  */
 public class TypedCorpusNodeResolver implements NodeResolver, Serializable {
 
-    private final CmdiCorpusStructureDB csdb;
+    private final static Logger logger = LoggerFactory.getLogger(TypedCorpusNodeResolver.class);
+    private final CorpusStructureProvider csdb;
 
-    public TypedCorpusNodeResolver(CmdiCorpusStructureDB csdb) {
+    public TypedCorpusNodeResolver(CorpusStructureProvider csdb) {
 	this.csdb = csdb;
     }
 
     @Override
     public URI getUri(CorpusNode node) {
-	return csdb.getObjectURI(node.getNodeId());
+	try {
+	    return csdb.getObjectURI(node.getNodeId());
+	} catch (UnknownNodeException ex) {
+	    logger.warn("Failed to resolve node location, unknown node ", node.getNodeId());
+	    return null;
+	}
     }
 }

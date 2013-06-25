@@ -40,23 +40,22 @@ public class CMDITrovaNodeAction implements NodeAction {
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        Map<String, String> parameters = new HashMap<String, String>();
-        for (TypedCorpusNode node : nodes) {
-            URI nodeUri = node.getUri();
-            int nodeId = node.getNodeId();
-            logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+	Map<String, String> parameters = new HashMap<String, String>();
+	for (TypedCorpusNode node : nodes) {
+	    URI nodeUri = node.getUri();
+	    logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-            // HANDLE trova action here
-            parameters.put("nodeId", Integer.toString(nodeId));
-            parameters.put("jessionID", "session number");
-        }
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
+	    // HANDLE trova action here
+	    parameters.put("nodeId", node.getNodeId().toString());
+	    parameters.put("jessionID", "session number");
+	}
+	final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
 
-        return new SimpleNodeActionResult(request);
+	return new SimpleNodeActionResult(request);
     }
 }

@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBFactory;
-import nl.mpi.metadatabrowser.model.cmdi.CmdiCorpusStructureDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,18 +28,19 @@ import org.slf4j.LoggerFactory;
 public class CmdiCorpusStructureDBFactoryImpl implements CorpusStructureDBFactory {
 
     private final static Logger logger = LoggerFactory.getLogger(CmdiCorpusStructureDBFactoryImpl.class);
-    private CmdiCorpusStructureDB csdb;
+    private CorpusStructureProvider csdb;
     //private final String dbname;
 
-    public CmdiCorpusStructureDBFactoryImpl(CmdiCorpusStructureDB cmdiCsdb) {
+    public CmdiCorpusStructureDBFactoryImpl(CorpusStructureProvider cmdiCsdb) {
 	//logger.info("Constructed with dbname='{}'", dbname);
 	this.csdb = cmdiCsdb;
     }
 
     @Override
-    public CmdiCorpusStructureDB createCorpusStructureDB() {
+    public CorpusStructureProvider createCorpusStructureDB() {
+	logger.debug("Returning singleton CSDB");
+	return csdb;
 	//logger.debug("Creating new CmdiCorpusStructureDB with dbname='{}'", dbname);
-	throw new UnsupportedOperationException();
 	//TODO: Implement CmdiCorpusStructureDB and return an instance here
 	//return new CmdiCorpusStructureDBImpl(dbname); 
     }

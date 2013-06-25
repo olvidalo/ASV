@@ -44,7 +44,7 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
     }
 
     @Override
-    public int getNodeId() {
+    public URI getNodeId() {
 	return corpusNode.getNodeId();
     }
 

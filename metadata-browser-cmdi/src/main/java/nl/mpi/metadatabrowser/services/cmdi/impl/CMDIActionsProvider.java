@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
@@ -40,7 +41,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     public final List<NodeAction> multipleNodeActionList;
     // private final List<NodeAction> extraNodeActionList;
 
-    public CMDIActionsProvider(CmdiCorpusStructureDB csdb, ZipService zipService) {
+    public CMDIActionsProvider(CorpusStructureProvider csdb, ZipService zipService) {
         metadataNodeActionList = Arrays.<NodeAction>asList(
                 new CMDISearchNodeAction(),
                 new CMDITrovaNodeAction(),

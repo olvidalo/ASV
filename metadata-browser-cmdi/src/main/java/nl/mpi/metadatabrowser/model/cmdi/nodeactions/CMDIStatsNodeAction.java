@@ -40,23 +40,22 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction 
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        URI nodeUri = node.getUri();
-        int nodeId = node.getNodeId();
+	URI nodeUri = node.getUri();
 
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
+	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
 
-        // HANDLE access statistics action here
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("nodeId", Integer.toString(nodeId));
+	// HANDLE access statistics action here
+	Map<String, String> parameters = new HashMap<String, String>();
+	parameters.put("nodeId", node.getNodeId().toString());
 
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, parameters);
+	final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, parameters);
 
-        return new SimpleNodeActionResult(request);
+	return new SimpleNodeActionResult(request);
 
 
     }

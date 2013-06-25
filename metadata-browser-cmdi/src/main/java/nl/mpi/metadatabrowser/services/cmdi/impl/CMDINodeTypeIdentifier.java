@@ -17,48 +17,58 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
+import nl.mpi.archiving.corpusstructure.provider.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeType;
-import nl.mpi.metadatabrowser.model.cmdi.*;
+import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDINodeTypeIdentifier implements nl.mpi.metadatabrowser.services.NodeTypeIdentifier {
+public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
-    private final CmdiCorpusStructureDB csdb;
-    
+    private final CorpusStructureProvider csdb;
     //TODO had a list of profileID or add correct profileID
-    private String collectionProfileId = "profile";
+    private URI collectionProfileId = URI.create("profile");
 
-    public CMDINodeTypeIdentifier(CmdiCorpusStructureDB csdb) {
-        this.csdb = csdb;
+    public CMDINodeTypeIdentifier(CorpusStructureProvider csdb) {
+	this.csdb = csdb;
     }
 
     @Override
-    public NodeType getNodeType(CorpusNode node) {
-        URI nodeUri = node.getUri();
-        if (nodeUri == null) {
-            return null;
-        }
-        ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
-        final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeId());
-        
-        if (corpusNodeType == CorpusNodeType.RESOURCE_VIDEO || corpusNodeType == CorpusNodeType.RESOURCE_AUDIO
-                || corpusNodeType == CorpusNodeType.RESOURCE_OTHER) {
-            return new CMDIResourceType();
-        } else if (corpusNodeType == CorpusNodeType.RESOURCE_ANNOTATION || corpusNodeType == CorpusNodeType.RESOURCE_LEXICAL) {
-            return new CMDIResourceTxtType();
-        } else if (corpusNodeType == CorpusNodeType.METADATA){
-            return new CMDIMetadata();
-        }
-        //TODO: loop through list ???
-        else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
-            return new CMDICollectionType();
-        } //todo extend for special profile support (configurable probably)
-        else {
-            return new CMDIMetadata();
-        }
+    public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
+	URI nodeUri = node.getUri();
+	if (nodeUri == null) {
+	    return null;
+	}
+	ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
+	try {
+	    final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeId());
+
+	    if (corpusNodeType == CorpusNodeType.RESOURCE_VIDEO || corpusNodeType == CorpusNodeType.RESOURCE_AUDIO
+		    || corpusNodeType == CorpusNodeType.RESOURCE_OTHER) {
+		return new CMDIResourceType();
+	    } else if (corpusNodeType == CorpusNodeType.RESOURCE_ANNOTATION || corpusNodeType == CorpusNodeType.RESOURCE_LEXICAL) {
+		return new CMDIResourceTxtType();
+	    } else if (corpusNodeType == CorpusNodeType.METADATA) {
+		return new CMDIMetadata();
+	    } //TODO: loop through list ???
+	    else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
+		return new CMDICollectionType();
+	    } //todo extend for special profile support (configurable probably)
+	    else {
+		return new CMDIMetadata();
+	    }
+	} catch (UnknownNodeException ex) {
+	    throw new NodeTypeIdentifierException(ex);
+	}
     }
 }
