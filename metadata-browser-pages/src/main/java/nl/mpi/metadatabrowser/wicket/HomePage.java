@@ -9,6 +9,7 @@ import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.tree.LinkType;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -26,6 +27,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 	super();
 
 	final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
+	treePanel.setLinkType(LinkType.AJAX_FALLBACK);
 	add(treePanel);
 
 	nodesPanel = new NodesPanel("nodesPanel", new CollectionModel(treePanel.getSelectedNodes()));
@@ -36,7 +38,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 	    @Override
 	    public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {
 		nodesPanel.setModelObject(treePanel.getSelectedNodes());
-		target.add(nodesPanel);
+		if (target != null) {
+		    target.add(nodesPanel);
+		}
 	    }
 	});
     }
