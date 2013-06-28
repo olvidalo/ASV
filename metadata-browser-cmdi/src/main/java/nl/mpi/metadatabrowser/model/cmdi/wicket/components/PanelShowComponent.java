@@ -18,11 +18,9 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.Date;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
-import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
