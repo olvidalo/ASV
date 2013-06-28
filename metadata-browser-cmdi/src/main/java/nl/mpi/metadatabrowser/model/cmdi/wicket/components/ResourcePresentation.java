@@ -33,6 +33,7 @@ import nl.mpi.latimpl.fabric.NodeIDImpl;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
 import nl.mpi.util.OurURL;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -203,8 +204,11 @@ public final class ResourcePresentation extends Panel {
 
     private List<NodeLicense> getLicenses(TypedCorpusNode node, AdvAuthorizationService aSrv) {
 	List<NodeLicense> result = Collections.EMPTY_LIST;
+        
+        MockAuthorizationService asrv = (MockAuthorizationService) aSrv;// TODO : remove mock once next TODO is done
 	try {
-	    result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeId().toString()), null); //TODO: Accept URI nodeId's in AMS libraries
+	    //result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeId().toString()), null); //TODO: Accept URI nodeId's in AMS libraries
+            result = asrv.getLicenseAcceptance(node.getNodeId(), null); //TODO: remove line and uncomment previous line when previous TODO is fixed
 	} catch (DataSourceException e) {
 	    logger.error("Cannot get licenses from AMS for node: " + node + " (This can happen when AMS is not deployed or not running).");
 	}

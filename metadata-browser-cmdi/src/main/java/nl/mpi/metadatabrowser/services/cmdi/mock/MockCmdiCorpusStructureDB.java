@@ -18,12 +18,15 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
 import nl.mpi.archiving.corpusstructure.provider.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -202,7 +205,14 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 
     @Override
     public URI getObjectURI(URI id, int context) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        URI newURI = null;
+        try {
+            newURI = new URI("www.anewurifortestnode.com");
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(MockCmdiCorpusStructureDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return newURI;
+
     }
 
     @Override
@@ -237,7 +247,13 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 
     @Override
     public URI getObjectPID(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	URI pid = null;
+        try {
+            pid = new URI("123456789321");
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(MockCmdiCorpusStructureDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pid;
     }
 
     @Override

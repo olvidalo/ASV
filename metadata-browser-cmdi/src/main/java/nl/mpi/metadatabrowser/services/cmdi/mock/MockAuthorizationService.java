@@ -256,6 +256,23 @@ public class MockAuthorizationService implements AdvAuthorizationService {
 ////        }
 //        return result;
     }
+    public List<NodeLicense> getLicenseAcceptance(URI nid, LatUser usr) {
+        return new ArrayList<NodeLicense>();
+//        License l = new License();
+//       // try {
+//        //URI url = new URI("");
+//           // url = getClass().getClassLoader().getResource("dobes_coc_v2.html").toURI();
+//
+//
+//        //l.setFile(url.toString());
+//        NodeLicense lic = new NodeLicense();
+//        lic.setLicense(l);
+//        result.add(lic);
+////                } catch (URISyntaxException ex) {
+////            Logger.getLogger(MockAuthorizationService.class.getName()).log(Level.SEVERE, null, ex);
+////        }
+//        return result;
+    }
 
     @Override
     public Set<NodePcplLicense> getLicenseAcceptance(License lics) {
