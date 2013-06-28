@@ -50,10 +50,8 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIStatsNodeAction(),
                 new CMDIBookmarkNodeAction(csdb),
                 new CMDIDownloadNodeAction(csdb),
-                new CMDIMultipleDownloadNodeAction(csdb, zipService) 
-                //            new CMDIVersionInfoAction();
-                //            new CMDIAMSNodeAction("View Images")
-                );
+                new CMDIMultipleDownloadNodeAction(csdb, zipService),
+                new CMDIVersionNodeAction(csdb));
 
         collectionNodeActionList = Arrays.<NodeAction>asList(
                 new CMDISearchNodeAction(),
@@ -69,8 +67,8 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIStatsNodeAction(),
                 new CMDIViewNodeAction(csdb),
                 new CMDIBookmarkNodeAction(csdb),
-                new CMDIDownloadNodeAction(csdb));
-        //            new CMDIVersionInfoAction();
+                new CMDIDownloadNodeAction(csdb),
+                new CMDIVersionNodeAction(csdb));
 
         resourcetxtNodeActionList = Arrays.<NodeAction>asList(
                 new CMDITrovaNodeAction(),
@@ -79,9 +77,9 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 new CMDIStatsNodeAction(),
                 new CMDIViewNodeAction(csdb),
                 new CMDIBookmarkNodeAction(csdb),
-                new CMDIDownloadNodeAction(csdb));
-        //            new CMDIVersionInfoAction();
-        
+                new CMDIDownloadNodeAction(csdb),
+                new CMDIVersionNodeAction(csdb));
+
         multipleNodeActionList = Arrays.<NodeAction>asList(
                 new CMDISearchNodeAction(),
                 new CMDITrovaNodeAction(),
