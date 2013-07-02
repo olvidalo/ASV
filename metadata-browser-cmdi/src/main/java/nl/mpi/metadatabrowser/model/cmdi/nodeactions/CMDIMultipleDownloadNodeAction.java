@@ -24,11 +24,7 @@ import java.util.List;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeActionException;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.SingleNodeAction;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
@@ -50,41 +46,42 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     private String userid;
 
     public CMDIMultipleDownloadNodeAction(CorpusStructureProvider csdb, ZipService zipService) {
-	this.csdb = csdb;
-	this.zipService = zipService;
+        this.csdb = csdb;
+        this.zipService = zipService;
 
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-	URI nodeUri = node.getUri();
-	logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-	URI nodeid = node.getNodeId();
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+        URI nodeid = node.getNodeId();
 
-	try {
-	    List<CorpusNode> childrenNodes = csdb.getChildrenNodes(nodeid);
-	    final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
-	    IResourceStream resStream = new FileResourceStream(zipFile) {
-		@Override
-		public void close() throws IOException {
-		    super.close();
-		    zipFile.delete();
-		}
-	    };
-	    DownloadActionRequest.setStreamContent(resStream);
-	    DownloadActionRequest.setFileName("package_" + node.getName());
-	    final DownloadActionRequest request = new DownloadActionRequest();
+        try {
+            List<CorpusNode> childrenNodes = csdb.getChildrenNodes(nodeid);
+            final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
+            IResourceStream resStream = new FileResourceStream(zipFile) {
 
-	    return new SimpleNodeActionResult(request);
-	} catch (IOException ex) {
-	    throw new NodeActionException(this, ex);
-	} catch (UnknownNodeException ex) {
-	    throw new NodeActionException(this, ex);
-	}
+                @Override
+                public void close() throws IOException {
+                    super.close();
+                    zipFile.delete();
+                }
+            };
+            DownloadActionRequest.setStreamContent(resStream);
+            DownloadActionRequest.setFileName("package_" + node.getName());
+            final DownloadActionRequest request = new DownloadActionRequest();
+
+            return new SimpleNodeActionResult(request);
+        } catch (IOException ex) {
+            logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
+            throw new NodeActionException(this, ex);
+        } catch (UnknownNodeException ex) {
+            throw new NodeActionException(this, ex);
+        }
     }
 }

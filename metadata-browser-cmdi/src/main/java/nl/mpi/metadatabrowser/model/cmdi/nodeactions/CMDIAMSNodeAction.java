@@ -45,14 +45,14 @@ public class CMDIAMSNodeAction implements NodeAction {
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-                Map<String, String> parameters = new HashMap<String, String>();
+        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+        Map<String, String> parameters = new HashMap<String, String>();
         for (TypedCorpusNode node : nodes) {
-        URI nodeId = node.getNodeId();
-        logger.info("Action [{}] invoked on {}", getName(), nodeId);
+            URI nodeId = node.getNodeId();
 
-        // HANDLE ams action here        
-        parameters.put("nodeId", nodeId.toString());
-        parameters.put("jsessionID", "session id"); // use only for LANA
+            // HANDLE ams action here        
+            parameters.put("nodeId", nodeId.toString());
+            parameters.put("jsessionID", "session id"); // use only for LANA
         }
 
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.AMS, parameters);

@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.URI;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
@@ -30,27 +29,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction{
-    
-        private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction {
+
+    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "version";
     private final CorpusStructureProvider csdb;
-    
-        //TODO : decide where does userId comes from and implement accordingly
+    //TODO : decide where does userId comes from and implement accordingly
     private String userId;
-    
-        public CMDIVersionNodeAction(CorpusStructureProvider csdb) {
+
+    public CMDIVersionNodeAction(CorpusStructureProvider csdb) {
         this.csdb = csdb;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-        URI nodeUri = node.getUri();
-        logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-        
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+
         //TO DO connect to versionAPI DB
         final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
-        
+
         final ShowComponentRequest request = new ShowComponentRequest() {
 
             @Override
@@ -58,7 +55,6 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
                 // create panel form for version action
                 return new PanelVersionComponent(id, node, csdb, userId, versions);
             }
-            
         };
         return new SimpleNodeActionResult(request);
     }
@@ -67,5 +63,4 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
     public String getName() {
         return name;
     }
-    
 }

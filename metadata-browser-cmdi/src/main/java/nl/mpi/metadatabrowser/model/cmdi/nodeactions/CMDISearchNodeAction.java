@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,15 +44,11 @@ public class CMDISearchNodeAction implements NodeAction {
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
+        logger.debug("Action [{}] invoked on {}", getName(), nodes);
         Map<String, String> parameters = new HashMap<String, String>();
         for (TypedCorpusNode node : nodes) {
-            URI nodeUri = node.getUri();
-
-            logger.info("Action [{}] invoked on {}", getName(), nodeUri);
-
             // HANDLE search action here        
-
-	    parameters.put("nodeId", node.getNodeId().toString());
+            parameters.put("nodeId", node.getNodeId().toString());
             parameters.put("jessionID", "session number");
         }
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.CMDISEARCH, parameters);

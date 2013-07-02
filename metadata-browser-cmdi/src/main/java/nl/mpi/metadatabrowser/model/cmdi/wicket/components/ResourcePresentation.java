@@ -17,24 +17,19 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import java.util.*;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
-import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AdvAuthorizationService;
 import nl.mpi.lat.dao.DataSourceException;
-import nl.mpi.latimpl.fabric.NodeIDImpl;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
-import nl.mpi.util.OurURL;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
