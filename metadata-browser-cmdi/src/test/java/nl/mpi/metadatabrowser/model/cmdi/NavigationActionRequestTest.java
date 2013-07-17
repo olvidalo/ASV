@@ -101,20 +101,20 @@ final NavigationTarget target = NavigationTarget.AMS;
         System.out.println("getParameters");
         final NavigationRequest request = context.mock(NavigationRequest.class);
         Map<String, String> parameters = null;
-//        NavigationActionRequest instance = new NavigationActionRequest(request.getTarget(), parameters);
-//
-//        context.checking(new Expectations() {
-//
-//            {
-//                oneOf(request).getTarget();
-//                will(returnValue(NavigationTarget.AMS));
-//                oneOf(request).getParameters();
-//                will(returnValue(null));
-//            }
-//        });
-//        Map expResult = null;
-//        Map result = instance.getParameters();
-//        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        
+
+        context.checking(new Expectations() {
+
+            {
+                oneOf(request).getTarget();
+                will(returnValue(NavigationTarget.AMS));
+                oneOf(request).getParameters();
+                will(returnValue(null));
+            }
+        });
+        NavigationActionRequest instance = new NavigationActionRequest(request.getTarget(), parameters);
+        Map expResult = null;
+        Map result = instance.getParameters();
+        assertEquals(expResult, result);
     }
 }

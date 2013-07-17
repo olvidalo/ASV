@@ -31,11 +31,8 @@ public class ShowComponentActionRequest implements ShowComponentRequest, Seriali
     public TextArea content;
     public Panel nodeFormPanel;
 
-    public ShowComponentActionRequest(TextArea textArea) {
+    public ShowComponentActionRequest(TextArea textArea, Panel nodeFormPanel) {
         this.content = textArea;
-    }
-
-    ShowComponentActionRequest(Panel nodeFormPanel) {
         this.nodeFormPanel = nodeFormPanel;
     }
 
