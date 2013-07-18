@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -34,12 +36,10 @@ import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 public class CMDIActionsProvider implements NodeActionsProvider {
 
     private final List<NodeAction> resourcetxtNodeActionList;
-    //private final List<NodeAction> resourcetxtNodeActionList;
     private final List<NodeAction> resourceAudioVideoNodeActionList;
-    private final List<NodeAction> metadataNodeActionList;
+    public final List<NodeAction> metadataNodeActionList;
     public final List<NodeAction> collectionNodeActionList;
     public final List<NodeAction> multipleNodeActionList;
-    // private final List<NodeAction> extraNodeActionList;
 
     public CMDIActionsProvider(CorpusStructureProvider csdb, ZipService zipService) {
         metadataNodeActionList = Arrays.<NodeAction>asList(
@@ -104,6 +104,8 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 }
                 if (node.getNodeType() instanceof CMDIResourceTxtType) {
                     return resourcetxtNodeActionList;
+                } else {
+                    return metadataNodeActionList;
                 }
             }
         } else if (nodes.size() > 1) {

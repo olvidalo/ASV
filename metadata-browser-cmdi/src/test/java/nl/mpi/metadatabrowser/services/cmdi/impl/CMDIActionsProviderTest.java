@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.impl.cmdi;
+package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeActionTest;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider;
@@ -31,6 +31,10 @@ import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import static nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImplTest.NODE1_ID;
+import static nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImplTest.NODE2_ID;
+import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.*;
@@ -43,54 +47,55 @@ import static org.junit.Assert.*;
 public class CMDIActionsProviderTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
-
-        @Override
-        public URI getNodeId() {
-            return URI.create("node:1");
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public URI getUri() {
-            try {
-                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-                return uri;
-            } catch (URISyntaxException ex) {
-                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public GenericTreeNode getChild(int index) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int getChildCount() {
-            return 0;
-        }
-
-        @Override
-        public int getIndexOfChild(GenericTreeNode child) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public GenericTreeNode getParent() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDICollectionType();
-        }
-    };
+   // private TypedCorpusNode corpType = context.mock(TypedCorpusNode.class);
+//new TypedCorpusNode() {
+//
+//        @Override
+//        public URI getNodeId() {
+//            return URI.create("node:1");
+//        }
+//
+//        @Override
+//        public String getName() {
+//            return "1";
+//        }
+//
+//        @Override
+//        public URI getUri() {
+//            try {
+//                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+//                return uri;
+//            } catch (URISyntaxException ex) {
+//                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        public GenericTreeNode getChild(int index) {
+//            throw new UnsupportedOperationException("Not supported yet.");
+//        }
+//
+//        @Override
+//        public int getChildCount() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public int getIndexOfChild(GenericTreeNode child) {
+//            throw new UnsupportedOperationException("Not supported yet.");
+//        }
+//
+//        @Override
+//        public GenericTreeNode getParent() {
+//            throw new UnsupportedOperationException("Not supported yet.");
+//        }
+//
+//        @Override
+//        public NodeType getNodeType() {
+//            return new CMDICollectionType();
+//        }
+//    };
 
     public CMDIActionsProviderTest() {
     }
@@ -117,15 +122,22 @@ public class CMDIActionsProviderTest {
     @Test
     public void testGetNodeActions() {
         System.out.println("getNodeActions");
-
-        Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-
+         final TypedCorpusNode corpType =  context.mock(TypedCorpusNode.class);
+        final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
         CMDIActionsProvider instance = new CMDIActionsProvider(context.mock(CorpusStructureProvider.class), context.mock(ZipService.class));
-        List expResult = instance.collectionNodeActionList;
+        
+        context.checking(new Expectations() {
+            {
+                allowing(corpType).getNodeType();
+                will(returnValue(NodeType.UNKNOWN));
+            }
+        });
+        
+        List expResult = instance.metadataNodeActionList;
         List result = instance.getNodeActions(collectionCorpus);
         System.out.println(expResult.size());
+        assertNotNull(result);
         assertEquals(expResult.size(), result.size());
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
     }
 }
