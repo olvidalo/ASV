@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import org.apache.bcel.generic.INSTANCEOF;
+import java.net.URI;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -32,10 +32,10 @@ import static org.junit.Assert.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class SimpleNodeActionResultTest {
+public class ProfileIdentifierImplTest {
     private final Mockery context = new JUnit4Mockery();
     
-    public SimpleNodeActionResultTest() {
+    public ProfileIdentifierImplTest() {
     }
     
     @BeforeClass
@@ -49,38 +49,25 @@ public class SimpleNodeActionResultTest {
     @Before
     public void setUp() {
     }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
-     * Test of getControllerActionRequest method, of class SimpleNodeActionResult.
+     * Test of getProfile method, of class ProfileIdentifierImpl.
      */
     @Test
-    public void testGetControllerActionRequest() {
-        System.out.println("getControllerActionRequest");
-        ControllerActionRequest crequest = context.mock(ControllerActionRequest.class);
-        SimpleNodeActionResult instance = new SimpleNodeActionResult(crequest);
+    public void testGetProfile() throws Exception {
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+        System.out.println("getProfile");
 
-        assertNotNull(instance.getControllerActionRequest());
-        assertEquals(crequest, instance.getControllerActionRequest());
+        context.checking(new Expectations() {
 
- 
-   }
-
-    /**
-     * Test of getFeedbackMessage method, of class SimpleNodeActionResult.
-     */
-    @Test
-    public void testGetFeedbackMessage() {
-        System.out.println("getFeedbackMessage");
-        SimpleNodeActionResult instance = new SimpleNodeActionResult("this is a feedback message");
-        assertNotNull(instance.getFeedbackMessage());
-        
-        String expResult = "this is a feedback message";
-        String result = instance.getFeedbackMessage();
+            {
+                oneOf(csdb).getProfileSchemaLocation(new URI("nodeUri"));
+                will(returnValue(URI.create("profile1")));
+            }
+        });
+        ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
+        URI expResult = URI.create("profile1");
+        URI result = instance.getProfile(new URI("nodeUri"));
         assertEquals(expResult, result);
-
     }
 }

@@ -72,8 +72,6 @@ public class CMDIViewNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 
-        
-
         context.checking(new Expectations() {
             {
                 oneOf(node).getUri();

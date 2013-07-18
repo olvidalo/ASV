@@ -16,20 +16,21 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeActionTest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.*;
-import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeActionTest;
+import nl.mpi.metadatabrowser.services.NodePresentationException;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -40,9 +41,44 @@ import static org.junit.Assert.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIActionsProviderTest {
-
+public class CMDINodePresentationProviderTest {
     private final Mockery context = new JUnit4Mockery();
+    
+    public CMDINodePresentationProviderTest() {
+    }
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of getNodePresentation method, of class CMDINodePresentationProvider.
+     */
+    @Test
+    public void testGetNodePresentation() throws NodePresentationException {
+        System.out.println("getNodePresentation");
+        WicketTester tester = new WicketTester();
+        final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
+        String wicketId = "test";
+        CMDINodePresentationProvider instance = new CMDINodePresentationProvider(context.mock(CorpusStructureProvider.class));
+        Component result = instance.getNodePresentation(wicketId, collectionCorpus);
+        assertNotNull(result);
+        assertEquals(result.getId(), "test");
+    }
+    
+    
     private TypedCorpusNode corpType = new TypedCorpusNode() {
 
         @Override
@@ -91,40 +127,4 @@ public class CMDIActionsProviderTest {
             return new CMDICollectionType();
         }
     };
-
-    public CMDIActionsProviderTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of getNodeActions method, of class CMDIActionsProvider.
-     */
-    @Test
-    public void testGetNodeActions() {
-        System.out.println("getNodeActions");
-        final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-        CMDIActionsProvider instance = new CMDIActionsProvider(context.mock(CorpusStructureProvider.class), context.mock(ZipService.class));
-        
-        List expResult = instance.collectionNodeActionList;
-        List result = instance.getNodeActions(collectionCorpus);
-        System.out.println(expResult.size());
-        assertNotNull(result);
-        assertEquals(expResult.size(), result.size());
-        assertEquals(expResult, result);
-    }
 }
