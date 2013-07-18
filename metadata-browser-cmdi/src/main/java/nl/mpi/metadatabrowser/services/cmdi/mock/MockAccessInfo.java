@@ -23,7 +23,7 @@ import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-class MockAccessInfo implements AccessInfo {
+public class MockAccessInfo implements AccessInfo {
 
     @Override
     public int getAccessLevel() {
