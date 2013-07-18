@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,7 +40,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "view Node";
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, URI> parameters = new HashMap<String, URI>();
     private final CorpusStructureProvider csdb;
     private boolean navType = false;
 
@@ -101,9 +102,14 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
                         }
                     }
                 } else if (node.getNodeType() instanceof CMDIResourceTxtType) {
-                    parameters.put("nodeId", node.getNodeId().toString());
-                    parameters.put("jsessionID", "jsessioID");
-                    navType = true;
+                    //TODO get session id
+                    try {
+                        parameters.put("nodeId", node.getNodeId());
+                        parameters.put("jsessionID", new URI("jsessioID"));
+                        navType = true;
+                    } catch (URISyntaxException ex) {
+                        logger.error("URI syntax exception in parameter session id: " + ex);
+                    }
                 } else {
                     xmlContent = nodeURL.toString();
                 }
@@ -117,7 +123,6 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
                 return new SimpleNodeActionResult(request);
             } else {
                 final ShowComponentRequest request = new ShowComponentRequest() {
-
                     @Override
                     public Component getComponent(String id) {
                         return new PanelViewNodeShowComponent(id, xmlText);

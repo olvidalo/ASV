@@ -17,9 +17,11 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
@@ -46,13 +48,18 @@ public class CMDIAMSNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, URI> parameters = new HashMap<String, URI>();
         for (TypedCorpusNode node : nodes) {
-            URI nodeId = node.getNodeId();
+            try {
+                URI nodeId = node.getNodeId();
 
-            // HANDLE ams action here        
-            parameters.put("nodeId", nodeId.toString());
-            parameters.put("jsessionID", "session id"); // use only for LANA
+                // HANDLE ams action here    
+                // TODO get sessionid from somewhere
+                parameters.put("nodeId", nodeId);
+                parameters.put("jsessionID", new URI("session_id")); // use only for LANA
+            } catch (URISyntaxException ex) {
+                logger.error("URI suntax exception:" + ex);
+            }
         }
 
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.AMS, parameters);

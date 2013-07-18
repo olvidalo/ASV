@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,11 +47,16 @@ public class CMDITrovaNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, URI> parameters = new HashMap<String, URI>();
         for (TypedCorpusNode node : nodes) {
-            // HANDLE trova action here
-            parameters.put("nodeId", node.getNodeId().toString());
-            parameters.put("jessionID", "session number");
+            try {
+                // HANDLE trova action here
+                //TODO get session id
+                parameters.put("nodeId", node.getNodeId());
+                parameters.put("jessionID", new URI("session_number"));
+            } catch (URISyntaxException ex) {
+                logger.error("URI syntax exception: " + ex);
+            }
         }
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
 

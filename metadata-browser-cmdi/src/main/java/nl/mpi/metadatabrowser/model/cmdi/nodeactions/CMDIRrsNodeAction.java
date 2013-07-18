@@ -50,11 +50,10 @@ public class CMDIRrsNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), nodes);
-	Map<String, String> parameters = new HashMap<String, String>();
+	Map<String, URI> parameters = new HashMap<String, URI>();
         for (TypedCorpusNode node : nodes) {
-	    URI nodeUri = node.getUri();
 	    // HANDLE rrs navigation action here       
-	    parameters.put("nodeId", node.getNodeId().toString());
+	    parameters.put("nodeId", node.getNodeId());
 	}
 	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
 

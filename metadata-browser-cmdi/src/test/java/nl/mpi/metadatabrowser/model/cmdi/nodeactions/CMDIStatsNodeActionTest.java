@@ -81,9 +81,9 @@ public class CMDIStatsNodeActionTest {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, URI> map = new HashMap<String, URI>();
 
-        map.put("nodeId", NODE_ID.toString());
+        map.put("nodeId", NODE_ID);
 
         context.checking(new Expectations() {
 

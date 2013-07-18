@@ -84,9 +84,9 @@ public class CMDIRrsNodeActionTest {
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, URI> map = new HashMap<String, URI>();
 
-        map.put("nodeId", NODE_ID.toString());
+        map.put("nodeId", NODE_ID);
 
         context.checking(new Expectations() {
 

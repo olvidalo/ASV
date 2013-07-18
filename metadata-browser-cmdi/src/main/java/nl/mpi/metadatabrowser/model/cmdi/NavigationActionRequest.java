@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 
@@ -27,9 +28,9 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 public class NavigationActionRequest implements NavigationRequest, Serializable {
 
     private NavigationTarget target;
-    private Map<String, String> parameters;
+    private Map<String, URI> parameters;
 
-    public NavigationActionRequest(NavigationTarget navigationTarget, Map<String, String> parameters) {
+    public NavigationActionRequest(NavigationTarget navigationTarget, Map<String, URI> parameters) {
         this.parameters = parameters;
         this.target =navigationTarget;
     }
@@ -43,12 +44,12 @@ public class NavigationActionRequest implements NavigationRequest, Serializable 
         return target;
     }
 
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(Map<String, URI> parameters) {
         this.parameters = parameters;
     }
 
     @Override
-    public Map<String, String> getParameters() {
+    public Map<String, URI> getParameters() {
         return parameters;
     }
 }
