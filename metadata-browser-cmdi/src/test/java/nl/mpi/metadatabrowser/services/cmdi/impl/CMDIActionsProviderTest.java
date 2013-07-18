@@ -47,55 +47,54 @@ import static org.junit.Assert.*;
 public class CMDIActionsProviderTest {
 
     private final Mockery context = new JUnit4Mockery();
-   // private TypedCorpusNode corpType = context.mock(TypedCorpusNode.class);
-//new TypedCorpusNode() {
-//
-//        @Override
-//        public URI getNodeId() {
-//            return URI.create("node:1");
-//        }
-//
-//        @Override
-//        public String getName() {
-//            return "1";
-//        }
-//
-//        @Override
-//        public URI getUri() {
-//            try {
-//                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
-//                return uri;
-//            } catch (URISyntaxException ex) {
-//                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        public GenericTreeNode getChild(int index) {
-//            throw new UnsupportedOperationException("Not supported yet.");
-//        }
-//
-//        @Override
-//        public int getChildCount() {
-//            return 0;
-//        }
-//
-//        @Override
-//        public int getIndexOfChild(GenericTreeNode child) {
-//            throw new UnsupportedOperationException("Not supported yet.");
-//        }
-//
-//        @Override
-//        public GenericTreeNode getParent() {
-//            throw new UnsupportedOperationException("Not supported yet.");
-//        }
-//
-//        @Override
-//        public NodeType getNodeType() {
-//            return new CMDICollectionType();
-//        }
-//    };
+    private TypedCorpusNode corpType = new TypedCorpusNode() {
+
+        @Override
+        public URI getNodeId() {
+            return URI.create("node:1");
+        }
+
+        @Override
+        public String getName() {
+            return "1";
+        }
+
+        @Override
+        public URI getUri() {
+            try {
+                URI uri = new URI("http://lux16.mpi.nl/corpora/lams_demo/Corpusstructure/1.imdi");
+                return uri;
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(CMDIDownloadNodeActionTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+        }
+
+        @Override
+        public GenericTreeNode getChild(int index) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public int getChildCount() {
+            return 0;
+        }
+
+        @Override
+        public int getIndexOfChild(GenericTreeNode child) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public GenericTreeNode getParent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public NodeType getNodeType() {
+            return new CMDICollectionType();
+        }
+    };
 
     public CMDIActionsProviderTest() {
     }
@@ -122,18 +121,10 @@ public class CMDIActionsProviderTest {
     @Test
     public void testGetNodeActions() {
         System.out.println("getNodeActions");
-         final TypedCorpusNode corpType =  context.mock(TypedCorpusNode.class);
         final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
         CMDIActionsProvider instance = new CMDIActionsProvider(context.mock(CorpusStructureProvider.class), context.mock(ZipService.class));
         
-        context.checking(new Expectations() {
-            {
-                allowing(corpType).getNodeType();
-                will(returnValue(NodeType.UNKNOWN));
-            }
-        });
-        
-        List expResult = instance.metadataNodeActionList;
+        List expResult = instance.collectionNodeActionList;
         List result = instance.getNodeActions(collectionCorpus);
         System.out.println(expResult.size());
         assertNotNull(result);

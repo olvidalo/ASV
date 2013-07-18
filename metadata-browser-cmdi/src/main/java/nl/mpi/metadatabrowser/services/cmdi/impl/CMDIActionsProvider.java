@@ -104,8 +104,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 }
                 if (node.getNodeType() instanceof CMDIResourceTxtType) {
                     return resourcetxtNodeActionList;
-                } else {
-                    return metadataNodeActionList;
                 }
             }
         } else if (nodes.size() > 1) {
