@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -68,5 +69,5 @@ public interface NavigationRequest extends ControllerActionRequest {
      *
      * @return named parameters (name, value) that should be applied to the navigation action
      */
-    Map<String, String> getParameters();
+    Map<String, URI> getParameters();
 }
