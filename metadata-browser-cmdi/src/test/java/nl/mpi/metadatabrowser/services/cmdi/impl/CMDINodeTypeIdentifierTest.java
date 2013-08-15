@@ -17,7 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.provider.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;

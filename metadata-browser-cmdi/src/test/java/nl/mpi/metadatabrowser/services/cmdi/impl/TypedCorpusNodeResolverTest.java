@@ -19,7 +19,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.net.URI;
 import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 import org.jmock.Expectations;
 import static org.jmock.Expectations.returnValue;

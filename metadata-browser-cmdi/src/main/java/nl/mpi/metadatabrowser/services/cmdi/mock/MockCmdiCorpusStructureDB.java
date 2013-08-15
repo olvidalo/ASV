@@ -27,10 +27,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
-import nl.mpi.archiving.corpusstructure.provider.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 
 /**
@@ -139,17 +139,17 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.provider.CorpusNodeType nodeType, String format) throws UnknownNodeException {
+    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, String format) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.provider.CorpusNodeType nodeType, Collection<String> formats) throws UnknownNodeException {
+    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.provider.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onsite) throws UnknownNodeException {
+    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onsite) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -159,7 +159,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<URI> getResourcesFromArchive(nl.mpi.archiving.corpusstructure.provider.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onlyAvailable, boolean onlyOnSite) {
+    public List<URI> getResourcesFromArchive(nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onlyAvailable, boolean onlyOnSite) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

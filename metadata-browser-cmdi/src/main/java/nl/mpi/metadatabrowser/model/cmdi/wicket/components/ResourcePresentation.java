@@ -17,10 +17,14 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
-import java.util.*;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;

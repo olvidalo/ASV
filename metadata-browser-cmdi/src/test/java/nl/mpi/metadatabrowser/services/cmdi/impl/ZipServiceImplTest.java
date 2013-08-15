@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipFile;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import static org.hamcrest.Matchers.instanceOf;

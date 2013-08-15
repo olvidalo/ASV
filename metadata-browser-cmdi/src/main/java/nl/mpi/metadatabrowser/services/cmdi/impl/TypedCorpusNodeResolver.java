@@ -19,7 +19,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.io.Serializable;
 import java.net.URI;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.archiving.tree.services.NodeResolver;
 import org.slf4j.Logger;

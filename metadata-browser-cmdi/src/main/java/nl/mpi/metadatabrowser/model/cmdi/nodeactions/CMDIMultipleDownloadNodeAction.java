@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.provider.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;

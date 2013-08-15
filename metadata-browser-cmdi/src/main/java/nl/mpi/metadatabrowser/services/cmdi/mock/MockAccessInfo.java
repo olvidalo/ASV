@@ -17,7 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.util.List;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 
 /**
  *
