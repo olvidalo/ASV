@@ -39,21 +39,6 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 	this.children = children;
     }
 
-    @Override
-    public GenericTreeNode getChild(int index) {
-	return children.get(index);
-    }
-
-    @Override
-    public int getChildCount() {
-	return children.size();
-    }
-
-    @Override
-    public int getIndexOfChild(GenericTreeNode child) {
-	return children.indexOf(child);
-    }
-
     public void setName(String name) {
 	this.name = name;
     }
@@ -62,12 +47,7 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     public String getName() {
 	return name;
     }
-
-    @Override
-    public GenericTreeNode getParent() {
-	return parent;
-    }
-
+    
     public void setParent(GenericTreeNode parent) {
 	this.parent = parent;
     }

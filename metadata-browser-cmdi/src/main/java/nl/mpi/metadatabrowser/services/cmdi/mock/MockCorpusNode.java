@@ -88,26 +88,6 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 	return uri;
     }
 
-    @Override
-    public GenericTreeNode getChild(int index) {
-	return children.get(index);
-    }
-
-    @Override
-    public int getChildCount() {
-	return children.size();
-    }
-
-    @Override
-    public int getIndexOfChild(GenericTreeNode child) {
-	return children.indexOf(child);
-    }
-
-    @Override
-    public GenericTreeNode getParent() {
-	return parent;
-    }
-
     public CorpusNodeType getCorpusNodeType() {
 	return corpusNodeType;
     }

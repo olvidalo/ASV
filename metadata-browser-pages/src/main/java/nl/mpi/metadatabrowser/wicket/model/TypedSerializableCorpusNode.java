@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.wicket.model;
 import java.io.Serializable;
 import java.net.URI;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
@@ -56,26 +55,6 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
     @Override
     public URI getUri() {
 	return corpusNode.getUri();
-    }
-
-    @Override
-    public GenericTreeNode getChild(int index) {
-	return corpusNode.getChild(index);
-    }
-
-    @Override
-    public int getChildCount() {
-	return corpusNode.getChildCount();
-    }
-
-    @Override
-    public int getIndexOfChild(GenericTreeNode child) {
-	return corpusNode.getIndexOfChild(child);
-    }
-
-    @Override
-    public GenericTreeNode getParent() {
-	return corpusNode.getParent();
     }
 
     public CorpusNode getCorpusNode() {
