@@ -12,10 +12,6 @@
 	Spring configuration of a MOCK corpus structure database implementation for usage in a TESTING environment.
     -->
     
-    
-    <!-- TODO: Replace with mock resolver that maps node id's defined below to the sample resources -->
-    <bean id="nodeResolver" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
-    
     <!-- Mock CSDB  -->
     <bean id="csdb" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCmdiCorpusStructureDB">
 	<property name="rootNode" ref="rootNode" />
@@ -72,5 +68,20 @@
 	<property name="corpusNodeType" value="RESOURCE_AUDIO" />
 	<property name="parent" ref="child1" />
 	<!-- resource -->
+    </bean>
+    
+    <bean id="nodeResolver" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeResolver">
+	<!-- Node URI -> resource mappings -->
+	<constructor-arg>
+	    <map>
+		<entry key="node:01" value="/mock-data/collection-cgn.cmdi" />
+		<entry key="node:021" value="/mock-data/talkbank.imdi" />
+		<entry key="node:022" value="/mock-data/collection-talkbank.cmdi" />
+	    </map>
+	</constructor-arg>
+	<constructor-arg>
+	    <!-- Base resolver -->
+	    <bean class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
+	</constructor-arg>
     </bean>
 </beans>
