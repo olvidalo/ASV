@@ -78,11 +78,6 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 	return name;
     }
 
-    @Override
-    public URI getUri() {
-	return nodeId;
-    }
-
     public CorpusNodeType getCorpusNodeType() {
 	return corpusNodeType;
     }

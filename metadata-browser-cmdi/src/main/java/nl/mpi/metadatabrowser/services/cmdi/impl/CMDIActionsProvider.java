@@ -23,8 +23,20 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.*;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.*;
+import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIRrsNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIVersionNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 
@@ -48,7 +60,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIRrsNodeAction(),
 		new CMDIStatsNodeAction(),
 		new CMDIBookmarkNodeAction(csdb),
-		new CMDIDownloadNodeAction(csdb),
+		new CMDIDownloadNodeAction(csdb, nodeResolver),
 		new CMDIMultipleDownloadNodeAction(csdb, zipService),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
 
@@ -58,7 +70,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIAMSNodeAction(),
 		new CMDIRrsNodeAction(),
 		new CMDIBookmarkNodeAction(csdb),
-		new CMDIDownloadNodeAction(csdb));
+		new CMDIDownloadNodeAction(csdb, nodeResolver));
 
 	resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
 		new CMDIAMSNodeAction(),
@@ -66,7 +78,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIStatsNodeAction(),
 		new CMDIViewNodeAction(nodeResolver),
 		new CMDIBookmarkNodeAction(csdb),
-		new CMDIDownloadNodeAction(csdb),
+		new CMDIDownloadNodeAction(csdb, nodeResolver),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
 
 	resourcetxtNodeActionList = Arrays.<NodeAction>asList(
@@ -76,7 +88,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIStatsNodeAction(),
 		new CMDIViewNodeAction(nodeResolver),
 		new CMDIBookmarkNodeAction(csdb),
-		new CMDIDownloadNodeAction(csdb),
+		new CMDIDownloadNodeAction(csdb, nodeResolver),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
 
 	multipleNodeActionList = Arrays.<NodeAction>asList(

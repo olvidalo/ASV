@@ -24,11 +24,19 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.tree.services.NodeResolver;
-import nl.mpi.metadatabrowser.model.*;
-import nl.mpi.metadatabrowser.model.cmdi.*;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
 import org.apache.wicket.Component;
 import org.slf4j.Logger;
@@ -53,7 +61,6 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
-	final URI nodeUri = node.getUri();
 	final URL nodeURL = nodeResolver.getUrl(node);
 	String xmlContent = null;
 
@@ -63,7 +70,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 		InputStream in = null;
 		try {
 		    in = nodeURL.openStream();
-		    StringBuffer sb = new StringBuffer();
+		    StringBuilder sb = new StringBuilder();
 		    byte[] buffer = new byte[256];
 		    while (true) {
 			int byteRead = in.read(buffer);

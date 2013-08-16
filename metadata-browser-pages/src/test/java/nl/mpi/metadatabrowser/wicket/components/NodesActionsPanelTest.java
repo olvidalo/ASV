@@ -66,9 +66,6 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
 		allowing(testNode).getName();
 		will(returnValue("test node name"));
 
-		allowing(testNode).getUri();
-		will(returnValue(new URI("nodeUri")));
-
 		allowing(testNode).getNodeType();
 		will(returnValue(testNodeType));
 	    }

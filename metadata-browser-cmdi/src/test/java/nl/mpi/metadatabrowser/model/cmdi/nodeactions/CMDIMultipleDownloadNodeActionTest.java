@@ -110,8 +110,6 @@ public class CMDIMultipleDownloadNodeActionTest {
         context.checking(new Expectations() {
 
             {
-                allowing(node).getUri();
-                will(returnValue(new URI("nodeUri")));
                 allowing(node).getNodeId();
                 will(returnValue(NODE_ID));
                 allowing(node).getName();

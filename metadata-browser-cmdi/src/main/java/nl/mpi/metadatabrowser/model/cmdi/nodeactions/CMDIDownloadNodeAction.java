@@ -19,10 +19,16 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.corpusstructure.AccessInfo;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -38,54 +44,57 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "download";
-    private CorpusStructureProvider csdb;
+    private final CorpusStructureProvider csdb;
+    private final NodeResolver nodeResolver;
     //TODO: decide where does userid comes from and implement accordingly
     private String userid;
 
-    public CMDIDownloadNodeAction(CorpusStructureProvider csdb) {
-        this.csdb = csdb;
+    public CMDIDownloadNodeAction(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
+	this.csdb = csdb;
+	this.nodeResolver = nodeResolver;
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        URI nodeUri = node.getUri();
-        URI nodeId = node.getNodeId();
+	logger.debug("Action [{}] invoked on {}", getName(), node);
+	final URL nodeUri = nodeResolver.getUrl(node);
+	final URI nodeId = node.getNodeId();
 
-        // HANDLE download action here
-        String fileName = nodeUri.toString().substring(nodeUri.toString().lastIndexOf('/') + 1, nodeUri.toString().length());
-        //String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+	// HANDLE download action here
+	final String fileName = new File(nodeUri.getPath()).getName();
 
-        try {
-            boolean hasaccess;
-            try {
-                if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-                    hasaccess = csdb.hasReadAccess(nodeId, AccessInfo.EVERYBODY);
-                } else {
-                    hasaccess = csdb.hasReadAccess(nodeId, userid);
-                }
-            } catch (UnknownNodeException ex) {
-                throw new NodeActionException(this, ex);
-            }
-            logger.debug("resource-download, access for " + nodeUri.toString() + ", " + userid + ", " + hasaccess);
-            if (hasaccess) {
-                File file = new File(nodeUri.getPath());
-                IResourceStream resStream = new FileResourceStream(file);
-                DownloadActionRequest.setStreamContent(resStream);
-                DownloadActionRequest.setFileName(fileName);
-            } else {
-                return new SimpleNodeActionResult("User " + userid + " has no access to this node " + nodeUri.toString());
-            }
-            final DownloadActionRequest request = new DownloadActionRequest();
-            return new SimpleNodeActionResult(request);
-        } catch (NullPointerException e) {
-            logger.error("unvalid type of file. Could not find path for this file : " + fileName);
-        }
-        return new SimpleNodeActionResult("Download action could not be performed due to a invalid path with the file. Filepath = " + nodeUri.getPath());
+	//String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+
+	try {
+	    boolean hasaccess;
+	    try {
+		if (userid == null || userid.equals("") || userid.equals("anonymous")) {
+		    hasaccess = csdb.hasReadAccess(nodeId, AccessInfo.EVERYBODY);
+		} else {
+		    hasaccess = csdb.hasReadAccess(nodeId, userid);
+		}
+	    } catch (UnknownNodeException ex) {
+		throw new NodeActionException(this, ex);
+	    }
+	    logger.debug("resource-download, access for " + nodeUri.toString() + ", " + userid + ", " + hasaccess);
+	    if (hasaccess) {
+		File file = new File(nodeUri.getPath());
+		IResourceStream resStream = new FileResourceStream(file);
+		DownloadActionRequest.setStreamContent(resStream);
+		DownloadActionRequest.setFileName(fileName);
+	    } else {
+		return new SimpleNodeActionResult("User " + userid + " has no access to this node " + nodeUri.toString());
+	    }
+	    final DownloadActionRequest request = new DownloadActionRequest();
+	    return new SimpleNodeActionResult(request);
+	} catch (NullPointerException e) {
+	    logger.error("unvalid type of file. Could not find path for this file : {}", fileName);
+	}
+	return new SimpleNodeActionResult("Download action could not be performed due to a invalid path with the file. Filepath = " + nodeUri.getPath());
     }
 }

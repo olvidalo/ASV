@@ -74,8 +74,6 @@ public class CMDIViewNodeActionTest {
 	
         context.checking(new Expectations() {
             {
-                oneOf(node).getUri();
-                will(returnValue(new URI("nodeUri")));
                 oneOf(nodeResolver).getUrl(node);
                 will(returnValue(new URL("http://nodeUri")));
                 allowing(node).getNodeType();

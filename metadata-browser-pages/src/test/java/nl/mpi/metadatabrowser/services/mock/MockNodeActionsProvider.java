@@ -42,7 +42,7 @@ public class MockNodeActionsProvider implements NodeActionsProvider {
 	    return Collections.emptyList();
 	} else {
 	    // Take first node, get actions from map
-	    return uriNodeActionMap.get(nodes.iterator().next().getUri().toString());
+	    return uriNodeActionMap.get(nodes.iterator().next().getNodeId().toString());
 	}
     }
 }

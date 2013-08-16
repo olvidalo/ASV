@@ -17,8 +17,10 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -68,7 +70,8 @@ public class CMDIDownloadNodeActionTest {
     public void testGetName() {
 	System.out.println("getName");
 	CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb);
+	NodeResolver nodeResolver = context.mock(NodeResolver.class);
+	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb, nodeResolver);
 	String expResult = "download";
 	String result = instance.getName();
 	assertEquals(expResult, result);
@@ -83,12 +86,12 @@ public class CMDIDownloadNodeActionTest {
 	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	//final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
 	final AccessInfo ai = context.mock(AccessInfo.class);
-	System.out.println("execute");
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 
 	context.checking(new Expectations() {
 	    {
-		oneOf(node).getUri();
-		will(returnValue(new URI("nodeUri")));
+		oneOf(nodeResolver).getUrl(node);
+		will(returnValue(new URL("http://my/nodeUri")));
 
 		allowing(node).getNodeId();
 		will(returnValue(NODE_ID));
@@ -101,7 +104,7 @@ public class CMDIDownloadNodeActionTest {
 	    }
 	});
 
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb);
+	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb, nodeResolver);
 	NodeActionResult result = instance.execute(node);
 	ControllerActionRequest actionRequest = result.getControllerActionRequest();
 	assertNotNull(actionRequest);

@@ -16,11 +16,10 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Date;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -43,7 +42,6 @@ public final class PanelShowComponent extends Panel {
 	final Form form = new Form("nodeInfoForm");
 	String nodeName = node.getName();
 	URI nodeId = node.getNodeId();
-	URI nodeUri = node.getUri();
 	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodeIds(nodeId).toString() + "\"";
 
 	Date objectFileTime = csdb.getObjectFileTime(nodeId);
@@ -63,12 +61,7 @@ public final class PanelShowComponent extends Panel {
 	final String archiveName = archive_name;
 	final String resolvedHandle = resolver.concat(handle);
 
-	String url = null;
-	try {
-	    url = nodeUri.toURL().toString();
-	} catch (MalformedURLException ex) {
-	    logger.error("url error while getting URL", ex);
-	}
+	String url = node.getNodeId().toString();
 
 	// create citations to be displayed
 	StringBuilder sb = new StringBuilder();

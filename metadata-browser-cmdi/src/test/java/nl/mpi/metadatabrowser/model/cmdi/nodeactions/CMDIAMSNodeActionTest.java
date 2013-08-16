@@ -92,8 +92,6 @@ public class CMDIAMSNodeActionTest {
         context.checking(new Expectations() {
 
             {
-                oneOf(node).getUri();
-                will(returnValue(new URI("nodeUri")));
                 allowing(node).getNodeId();
                 will(returnValue(NODE_ID));
             }

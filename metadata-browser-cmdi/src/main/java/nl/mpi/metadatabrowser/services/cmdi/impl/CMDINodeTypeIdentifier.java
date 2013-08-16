@@ -45,10 +45,6 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
     @Override
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
-	URI nodeUri = node.getUri();
-	if (nodeUri == null) {
-	    return null;
-	}
 	ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
 	try {
 	    final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeId());
@@ -61,7 +57,7 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 	    } else if (corpusNodeType == CorpusNodeType.METADATA) {
 		return new CMDIMetadata();
 	    } //TODO: loop through list ???
-	    else if (profileid.getProfile(nodeUri).equals(collectionProfileId)) {
+	    else if (profileid.getProfile(node.getNodeId()).equals(collectionProfileId)) {
 		return new CMDICollectionType();
 	    } //todo extend for special profile support (configurable probably)
 	    else {
