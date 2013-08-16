@@ -117,7 +117,7 @@ public class CMDIMultipleDownloadNodeActionTest {
                 allowing(node).getName();
                 will(returnValue("nodeName"));
                 
-                oneOf(csdb).getChildrenNodes(NODE_ID);
+                oneOf(csdb).getChildNodes(NODE_ID);
                 will(returnValue(childrenList));
                 
                 oneOf(zipService).createZipFileForNodes(childrenList, userId);

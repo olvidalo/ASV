@@ -20,11 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.*;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
@@ -41,102 +43,98 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "view Node";
     private Map<String, URI> parameters = new HashMap<String, URI>();
-    private final CorpusStructureProvider csdb;
     private boolean navType = false;
+    private final NodeResolver nodeResolver;
 
-    public CMDIViewNodeAction(CorpusStructureProvider csdb) {
-        this.csdb = csdb;
+    public CMDIViewNodeAction(NodeResolver nodeResolver) {
+	this.nodeResolver = nodeResolver;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        try {
-            final URI nodeUri = node.getUri();
-            final URI nodeURL = csdb.getObjectURI(nodeUri); // Get the XML file
-            String xmlContent = null;
+	logger.debug("Action [{}] invoked on {}", getName(), node);
+	final URI nodeUri = node.getUri();
+	final URL nodeURL = nodeResolver.getUrl(node);
+	String xmlContent = null;
 
-            if ((nodeURL != null) && (node != null)) {
-                if (node.getNodeType() instanceof CMDIMetadata
-                        || node.getNodeType() instanceof CMDICollectionType) {
-                    InputStream in = null;
-                    try {
-                        in = nodeURL.toURL().openStream();
-                        StringBuffer sb = new StringBuffer();
-                        byte[] buffer = new byte[256];
-                        while (true) {
-                            int byteRead = in.read(buffer);
-                            if (byteRead == -1) {
-                                break;
-                            }
-                            for (int i = 0; i < byteRead; i++) {
-                                sb.append((char) buffer[i]);
-                            }
-                        }
-                        xmlContent = sb.toString();
-                        //return sb.toString();
-                        //      try {
-                        //                            JAXBContext jc = JAXBContext.newInstance(String.class);
-                        //
-                        //            File xml = new File(nodeURL.toString());
-                        //            Unmarshaller unmarshaller = jc.createUnmarshaller();
-                        //            String recon = (String) unmarshaller.unmarshal(xml);
-                        //
-                        //            Marshaller marshaller = jc.createMarshaller();
-                        //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                        //            marshaller.marshal(recon, System.out);
-                        //
-                        //                    xmlContent = nodeURL.toString();
-                        //                } //all formats that should be handled by annex
-                        //                catch (JAXBException ex) {
-                        //                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-                        //                }
-                    } //      try {
-                    catch (IOException ex) {
-                        java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-                    } finally {
-                        try {
-                            in.close();
-                        } catch (IOException ex) {
-                            java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                } else if (node.getNodeType() instanceof CMDIResourceTxtType) {
-                    //TODO get session id
-                    try {
-                        parameters.put("nodeId", node.getNodeId());
-                        parameters.put("jsessionID", new URI("jsessioID"));
-                        navType = true;
-                    } catch (URISyntaxException ex) {
-                        logger.error("URI syntax exception in parameter session id: " + ex);
-                    }
-                } else {
-                    xmlContent = nodeURL.toString();
-                }
-            }
+	if ((nodeURL != null) && (node != null)) {
+	    if (node.getNodeType() instanceof CMDIMetadata
+		    || node.getNodeType() instanceof CMDICollectionType) {
+		InputStream in = null;
+		try {
+		    in = nodeURL.openStream();
+		    StringBuffer sb = new StringBuffer();
+		    byte[] buffer = new byte[256];
+		    while (true) {
+			int byteRead = in.read(buffer);
+			if (byteRead == -1) {
+			    break;
+			}
+			for (int i = 0; i < byteRead; i++) {
+			    sb.append((char) buffer[i]);
+			}
+		    }
+		    xmlContent = sb.toString();
+		    //return sb.toString();
+		    //      try {
+		    //                            JAXBContext jc = JAXBContext.newInstance(String.class);
+		    //
+		    //            File xml = new File(nodeURL.toString());
+		    //            Unmarshaller unmarshaller = jc.createUnmarshaller();
+		    //            String recon = (String) unmarshaller.unmarshal(xml);
+		    //
+		    //            Marshaller marshaller = jc.createMarshaller();
+		    //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		    //            marshaller.marshal(recon, System.out);
+		    //
+		    //                    xmlContent = nodeURL.toString();
+		    //                } //all formats that should be handled by annex
+		    //                catch (JAXBException ex) {
+		    //                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+		    //                }
+		} //      try {
+		catch (IOException ex) {
+		    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+		    try {
+			in.close();
+		    } catch (IOException ex) {
+			java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+		    }
+		}
+	    } else if (node.getNodeType() instanceof CMDIResourceTxtType) {
+		//TODO get session id
+		try {
+		    parameters.put("nodeId", node.getNodeId());
+		    parameters.put("jsessionID", new URI("jsessioID"));
+		    navType = true;
+		} catch (URISyntaxException ex) {
+		    logger.error("URI syntax exception in parameter session id: " + ex);
+		}
+	    } else {
+		xmlContent = nodeURL.toString();
+	    }
+	}
 
-            final String xmlText = xmlContent;
+	final String xmlText = xmlContent;
 
-            if (navType
-                    == true) {
-                final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
-                return new SimpleNodeActionResult(request);
-            } else {
-                final ShowComponentRequest request = new ShowComponentRequest() {
-                    @Override
-                    public Component getComponent(String id) {
-                        return new PanelViewNodeShowComponent(id, xmlText);
-                    }
-                };
-                return new SimpleNodeActionResult(request);
-            }
-        } catch (UnknownNodeException ex) {
-            throw new NodeActionException(this, ex);
-        }
+	if (navType
+		== true) {
+	    final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
+	    return new SimpleNodeActionResult(request);
+	} else {
+	    final ShowComponentRequest request = new ShowComponentRequest() {
+		@Override
+		public Component getComponent(String id) {
+		    return new PanelViewNodeShowComponent(id, xmlText);
+		}
+	    };
+	    return new SimpleNodeActionResult(request);
+	}
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 }

@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,6 +26,7 @@ import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;
@@ -59,12 +61,12 @@ public final class ResourcePresentation extends Panel {
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
-    public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) throws UnknownNodeException {
+    public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) throws UnknownNodeException {
 	super(id);
 	//String nodeId = Integer.toString(node.getNodeId());
 	URI nodeId = node.getNodeId();
 
-	URI nodeURL = csdb.getObjectURI(nodeId);
+	URL nodeURL = resolver.getUrl(node);
 	if ((nodeURL != null) && (node != null)) {
 	    Boolean hasaccess;
 	    if (userid == null || userid.equals("") || userid.equals("anonymous")) {

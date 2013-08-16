@@ -59,16 +59,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 	}
     }
 
-    @Override
-    public URI getObjectURI(URI id) throws UnknownNodeException {
-	final CorpusNode node = getNode(id);
-	if (node != null) {
-	    return node.getUri();
-	} else {
-	    return null;
-	}
-    }
-
     //@Override
     public String getProfileId(URI uri) {
 	return "profile";
@@ -119,8 +109,8 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<URI> getSubnodes(URI nodeId) throws UnknownNodeException {
-	List<CorpusNode> childrenNodes = getChildrenNodes(nodeId);
+    public List<URI> getChildNodeIds(URI nodeId) throws UnknownNodeException {
+	List<CorpusNode> childrenNodes = getChildNodes(nodeId);
 	List<URI> subUris = new ArrayList<URI>(childrenNodes.size());
 	for (CorpusNode node : childrenNodes) {
 	    subUris.add(node.getNodeId());
@@ -129,17 +119,12 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<CorpusNode> getChildrenNodes(URI nodeId) throws UnknownNodeException {
+    public List<CorpusNode> getChildNodes(URI nodeId) throws UnknownNodeException {
 	return getChildrenCMDIs(nodeId);
     }
 
     @Override
-    public List<URI> getParentNodes(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, String format) throws UnknownNodeException {
+    public List<URI> getParentNodeIds(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -150,11 +135,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 
     @Override
     public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onsite) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<CorpusNode> getDescendantResources(URI nodeId, boolean onsiteOnly, String userToRead, String userToWrite) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -184,54 +164,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<String> translateToNamePath(List<URI> nodeids) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI resolveNameInAnnotationContext(URI annotationNodeId, String name, String function) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI resolveNameInSessionContext(URI sessionNodeId, String name, String function) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public String getCanonicalParent(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI getObjectURI(URI id, int context) throws UnknownNodeException {
-        URI newURI = null;
-        try {
-            newURI = new URI("www.anewurifortestnode.com");
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(MockCmdiCorpusStructureDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            return newURI;
-
-    }
-
-    @Override
-    public URI getObjectURIForPid(URI pid) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI getObjectId(URI uri, int context) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI getObjectForPID(String pid) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI getObjectId(URI uri) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -243,17 +176,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     @Override
     public Date getObjectTimestamp(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public URI getObjectPID(URI nodeId) throws UnknownNodeException {
-	URI pid = null;
-        try {
-            pid = new URI("123456789321");
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(MockCmdiCorpusStructureDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return pid;
     }
 
     @Override

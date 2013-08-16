@@ -17,13 +17,13 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.net.URL;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDINodeType;
-import nl.mpi.metadatabrowser.model.cmdi.ShowComponentActionRequest;
-import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
@@ -70,20 +70,20 @@ public class CMDIViewNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+	
         context.checking(new Expectations() {
             {
                 oneOf(node).getUri();
                 will(returnValue(new URI("nodeUri")));
-                oneOf(csdb).getObjectURI(new URI("nodeUri"));
-                will(returnValue(new URI("nodeUri")));
+                oneOf(nodeResolver).getUrl(node);
+                will(returnValue(new URL("http://nodeUri")));
                 allowing(node).getNodeType();
                 will(returnValue(new CMDINodeType()));
             }
         });
 
-        CMDIViewNodeAction instance = new CMDIViewNodeAction(csdb);
+        CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeResolver);
         NodeActionResult result = instance.execute(node);
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
@@ -96,8 +96,8 @@ public class CMDIViewNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        CMDIViewNodeAction instance = new CMDIViewNodeAction(csdb);
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+	CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeResolver);
         String expResult = "view Node";
         String result = instance.getName();
         assertEquals(expResult, result);

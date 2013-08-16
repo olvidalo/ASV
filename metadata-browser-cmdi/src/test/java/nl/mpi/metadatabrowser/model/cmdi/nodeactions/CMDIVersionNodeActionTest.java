@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
@@ -66,8 +67,9 @@ public class CMDIVersionNodeActionTest {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 
-        CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb);
+        CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
         NodeActionResult result = instance.execute(node);
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
@@ -82,7 +84,8 @@ public class CMDIVersionNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb);
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+	CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
         String expResult = "version";
         String result = instance.getName();
         assertEquals(expResult, result);

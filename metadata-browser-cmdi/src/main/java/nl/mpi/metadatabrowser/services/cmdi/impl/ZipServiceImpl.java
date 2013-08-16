@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -30,6 +31,7 @@ import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -42,11 +44,13 @@ import org.slf4j.LoggerFactory;
 public class ZipServiceImpl implements ZipService, Serializable {
 
     private final CorpusStructureProvider csdb;
+    private final NodeResolver nodeResolver;
     private final Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
     private static final long MAX_LIMIT = FileUtils.ONE_GB * 2; // 200000000L ; //4000000000L  //4GB
 
-    public ZipServiceImpl(CorpusStructureProvider csdb) {
+    public ZipServiceImpl(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
 	this.csdb = csdb;
+	this.nodeResolver = nodeResolver;
     }
 
     @Override
@@ -62,10 +66,10 @@ public class ZipServiceImpl implements ZipService, Serializable {
         // HANDLE multiple download action here
         if (childrenNodes.size() > 0) {
             for (CorpusNode childNode : childrenNodes) {
-                URI childUri = csdb.getObjectURI(childNode.getNodeId());
+                final URI childUri = childNode.getNodeId();
                 if (itemsAdded == 0) { // check if at least one resource is accessible for user
                     if (childUri != null) {
-                        hasaccess = checkAccess(userid, childNode.getNodeId(), childUri);// get access rights for each resource
+                        hasaccess = checkAccess(userid, childNode.getNodeId());// get access rights for each resource
                         logger.debug("resources-download, access for " + childUri + ", " + userid + ", " + hasaccess);
                         if (hasaccess) {
                             itemsAdded++;
@@ -77,14 +81,14 @@ public class ZipServiceImpl implements ZipService, Serializable {
                 long overallSize = 0;
                 byte[] buffer = new byte[1024];
                 for (CorpusNode childNode : childrenNodes) {
-                    URI childUri = csdb.getObjectURI(childNode.getNodeId());
+                    final URL childUri = nodeResolver.getUrl(childNode);
                     if (overallSize > MAX_LIMIT) { // check size limit 4GB
                         overallSize = 0;
                         zout.close();
                         logger.info("maximum size limit of 4GB reached");
                     }
                     if (childUri != null) {
-                        hasaccess = checkAccess(userid, childNode.getNodeId(), childUri);// get access rights for each resource
+                        hasaccess = checkAccess(userid, childNode.getNodeId());// get access rights for each resource
                         if (hasaccess) {
                             logger.info("resources-download: " + childUri.toString());
                             FileInputStream is;
@@ -124,14 +128,14 @@ public class ZipServiceImpl implements ZipService, Serializable {
         return tmp;
     }
 
-    private boolean checkAccess(String userid, URI nodeId, URI childUri) throws UnknownNodeException {
+    private boolean checkAccess(String userid, URI nodeId) throws UnknownNodeException {
         boolean hasaccess;
         if (userid == null || userid.equals("") || userid.equals("anonymous")) {
             hasaccess = csdb.getObjectAccessInfo(nodeId).hasReadAccess(AccessInfo.EVERYBODY);
         } else {
             hasaccess = csdb.getObjectAccessInfo(nodeId).hasReadAccess(userid);
         }
-        logger.debug("resource-download, access for " + childUri.toString() + ", " + userid + ", " + hasaccess);
+        logger.debug("resource-download, access for " + nodeId + ", " + userid + ", " + hasaccess);
         return hasaccess;
     }
 }

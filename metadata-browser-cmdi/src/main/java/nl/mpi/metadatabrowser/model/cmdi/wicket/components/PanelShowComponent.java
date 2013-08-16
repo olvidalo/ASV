@@ -44,7 +44,7 @@ public final class PanelShowComponent extends Panel {
 	String nodeName = node.getName();
 	URI nodeId = node.getNodeId();
 	URI nodeUri = node.getUri();
-	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodes(nodeId).toString() + "\"";
+	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodeIds(nodeId).toString() + "\"";
 
 	Date objectFileTime = csdb.getObjectFileTime(nodeId);
 	String lastModified = "";

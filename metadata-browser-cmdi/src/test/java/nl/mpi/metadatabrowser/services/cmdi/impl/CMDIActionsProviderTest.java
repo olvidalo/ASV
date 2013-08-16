@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.*;
@@ -98,7 +99,10 @@ public class CMDIActionsProviderTest {
     public void testGetNodeActions() {
         System.out.println("getNodeActions");
         final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-        CMDIActionsProvider instance = new CMDIActionsProvider(context.mock(CorpusStructureProvider.class), context.mock(ZipService.class));
+	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+	final ZipService zipService = context.mock(ZipService.class);
+	CMDIActionsProvider instance = new CMDIActionsProvider(cs, nodeResolver, zipService);
         
         List expResult = instance.collectionNodeActionList;
         List result = instance.getNodeActions(collectionCorpus);

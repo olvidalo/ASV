@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
@@ -72,7 +73,9 @@ public class CMDINodePresentationProviderTest {
         WicketTester tester = new WicketTester();
         final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
         String wicketId = "test";
-        CMDINodePresentationProvider instance = new CMDINodePresentationProvider(context.mock(CorpusStructureProvider.class));
+	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
+	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver);
         Component result = instance.getNodePresentation(wicketId, collectionCorpus);
         assertNotNull(result);
         assertEquals(result.getId(), "test");

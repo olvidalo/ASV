@@ -19,9 +19,7 @@
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
         <constructor-arg ref="csdbFactory" />
         <constructor-arg>
-            <bean class="nl.mpi.metadatabrowser.services.cmdi.impl.TypedCorpusNodeResolver">
-                <constructor-arg ref="csdb" />
-            </bean>
+            <bean class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
         </constructor-arg>
     </bean>
     

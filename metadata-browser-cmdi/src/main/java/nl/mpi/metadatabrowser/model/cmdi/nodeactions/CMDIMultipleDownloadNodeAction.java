@@ -62,7 +62,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
         URI nodeid = node.getNodeId();
 
         try {
-            List<CorpusNode> childrenNodes = csdb.getChildrenNodes(nodeid);
+            List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);
             final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
             IResourceStream resStream = new FileResourceStream(zipFile) {
 

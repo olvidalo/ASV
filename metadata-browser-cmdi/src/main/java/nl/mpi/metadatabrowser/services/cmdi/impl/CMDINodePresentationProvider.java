@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.common.util.spring.SpringContextLoader;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AdvAuthorizationService;
@@ -43,12 +44,14 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 
     private AdvAuthorizationService authoSrv;
     private LicenseService licSrv;
-    private CorpusStructureProvider csdb;
+    private final CorpusStructureProvider csdb;
+    private final NodeResolver nodeResolver;
     //TODO : decide where does userId comes from and implement accordingly
     private String userId;
 
-    public CMDINodePresentationProvider(CorpusStructureProvider csdb) {
+    public CMDINodePresentationProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
 	this.csdb = csdb;
+	this.nodeResolver = nodeResolver;
     }
 
     @Override
@@ -71,7 +74,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		if (node.getNodeType() instanceof CMDIMetadata) {
 		    //TODO : implement metadata presentation
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
-		    return new ResourcePresentation(wicketId, node, csdb, userId, licSrv, authoSrv);
+		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
 		}
 	    } catch (UnknownNodeException ex) {
 		throw new NodePresentationException("Could not find node while building presentation for node " + node.getNodeId(), ex);

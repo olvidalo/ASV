@@ -18,14 +18,15 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.corpusstructure.AccessInfo;
-import nl.mpi.corpusstructure.ArchiveAccessContext;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
@@ -42,7 +43,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public class PanelVersionComponent extends Panel {
 
-    public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, String userid, MockVersioningAPI versions) {
+    public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, MockVersioningAPI versions) {
         super(id);
         try {
             List versionsNodeIds = null;
@@ -60,7 +61,7 @@ public class PanelVersionComponent extends Panel {
                     versionsNodeIds = versions.getAllVersions(nodeId, showRetired);
                 }
             }
-            URI nodeURL = csdb.getObjectURI(nodeId, ArchiveAccessContext.HTTP_URL); // Get the XML file
+            URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null) && (node != null)) {
                 Boolean hasaccess; // check accessibility node for the user
                 if (userid == null || userid.equals("") || userid.equals("anonymous")) {
@@ -77,16 +78,19 @@ public class PanelVersionComponent extends Panel {
                         repeating.add(item);
 
                         URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
-                        URI currentNodePid = csdb.getObjectPID(currentNodeId);
-                        URI currentNodeUrlStr = null;
-                        if (currentNodePid != null) {
-                            currentNodeUrlStr = csdb.getObjectPID(nodeId);
-                        } else {
-                            URI currentNodeUrl = csdb.getObjectURI(currentNodeId);
-                            if (currentNodeUrl != null) {
-                                currentNodeUrlStr = currentNodeUrl;
-                            }
-                        }
+//                        URI currentNodePid = csdb.getObjectPID(currentNodeId);
+//                        URI currentNodeUrlStr = null;
+//                        if (currentNodePid != null) {
+//                            currentNodeUrlStr = csdb.getObjectPID(nodeId);
+//                        } else {
+//                            URI currentNodeUrl = csdb.getObjectURI(currentNodeId);
+//                            if (currentNodeUrl != null) {
+//                                currentNodeUrlStr = currentNodeUrl;
+//                            }
+//                        }
+			
+			URI currentNodePid = node.getNodeId();
+			URL currentNodeUrlStr = resolver.getUrl(node);
 
                         // add fields for each row
                         // TODO check wicket links when real node URI is available

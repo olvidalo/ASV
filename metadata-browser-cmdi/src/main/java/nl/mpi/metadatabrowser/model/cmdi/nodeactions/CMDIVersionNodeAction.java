@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.services.NodeResolver;
 import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelVersionComponent;
@@ -34,33 +35,34 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "version";
     private final CorpusStructureProvider csdb;
+    private final NodeResolver resolver;
     //TODO : decide where does userId comes from and implement accordingly
     private String userId;
 
-    public CMDIVersionNodeAction(CorpusStructureProvider csdb) {
-        this.csdb = csdb;
+    public CMDIVersionNodeAction(CorpusStructureProvider csdb, NodeResolver resolver) {
+	this.csdb = csdb;
+	this.resolver = resolver;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
+	logger.debug("Action [{}] invoked on {}", getName(), node);
 
-        //TO DO connect to versionAPI DB
-        final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
+	//TO DO connect to versionAPI DB
+	final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
 
-        final ShowComponentRequest request = new ShowComponentRequest() {
-
-            @Override
-            public Component getComponent(String id) {
-                // create panel form for version action
-                return new PanelVersionComponent(id, node, csdb, userId, versions);
-            }
-        };
-        return new SimpleNodeActionResult(request);
+	final ShowComponentRequest request = new ShowComponentRequest() {
+	    @Override
+	    public Component getComponent(String id) {
+		// create panel form for version action
+		return new PanelVersionComponent(id, node, csdb, resolver, userId, versions);
+	    }
+	};
+	return new SimpleNodeActionResult(request);
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 }
