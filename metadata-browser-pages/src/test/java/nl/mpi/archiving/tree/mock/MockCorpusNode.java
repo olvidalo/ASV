@@ -21,22 +21,36 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import nl.mpi.archiving.tree.CorpusNode;
-import nl.mpi.archiving.tree.GenericTreeNode;
+import nl.mpi.archiving.tree.LinkedTreeNode;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockCorpusNode implements CorpusNode, Serializable {
+public class MockCorpusNode implements CorpusNode, LinkedTreeNode, Serializable {
 
-    private GenericTreeNode parent;
-    private List<GenericTreeNode> children = Collections.emptyList();
+    private LinkedTreeNode parent;
+    private List<LinkedTreeNode> children = Collections.emptyList();
     private String name = "";
     private URI nodeId;
-    private URI nodeUri;
 
-    public void setChildren(List<GenericTreeNode> children) {
+    public void setChildren(List<LinkedTreeNode> children) {
 	this.children = children;
+    }
+
+    @Override
+    public LinkedTreeNode getChild(int index) {
+	return children.get(index);
+    }
+
+    @Override
+    public int getChildCount() {
+	return children.size();
+    }
+
+    @Override
+    public int getIndexOfChild(LinkedTreeNode child) {
+	return children.indexOf(child);
     }
 
     public void setName(String name) {
@@ -47,8 +61,13 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     public String getName() {
 	return name;
     }
-    
-    public void setParent(GenericTreeNode parent) {
+
+    @Override
+    public LinkedTreeNode getParent() {
+	return parent;
+    }
+
+    public void setParent(LinkedTreeNode parent) {
 	this.parent = parent;
     }
 
@@ -64,9 +83,5 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     @Override
     public String toString() {
 	return name;
-    }
-
-    public void setUri(URI nodeUri) {
-	this.nodeUri = nodeUri;
     }
 }
