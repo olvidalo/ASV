@@ -11,6 +11,11 @@
     <!-- 
 	Spring configuration of a MOCK corpus structure database implementation for usage in a TESTING environment.
     -->
+    
+    
+    <!-- TODO: Replace with mock resolver that maps node id's defined below to the sample resources -->
+    <bean id="nodeResolver" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
+    
     <!-- Mock CSDB  -->
     <bean id="csdb" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCmdiCorpusStructureDB">
 	<property name="rootNode" ref="rootNode" />
@@ -22,8 +27,7 @@
     </bean>
     
     <bean id="rootNode" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
-	<property name="nodeId" value="0" />
-	<property name="uri" value="node:0" />
+	<property name="nodeId" value="node:0" />
 	<property name="name" value="Root" />
 	<property name="profileId" value="collection" />
 	<property name="children">
@@ -35,8 +39,7 @@
     </bean>
     
     <bean id="child1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
-	<property name="nodeId" value="01" />
-	<property name="uri" value="file:Users/jeafer/Documents/CMDI/collection-cgn.cmdi" />
+	<property name="nodeId" value="node:01" />
 	<property name="name" value="Child 1" />
 	<property name="profileId" value="profile100" />
 	<property name="parent" ref="rootNode" />
@@ -49,16 +52,14 @@
     </bean>
     
     <bean id="child2" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
-	<property name="nodeId" value="02" />
-	<property name="uri" value="node:0/2" />
+	<property name="nodeId" value="node:02" />
 	<property name="name" value="Child 2" />
 	<property name="profileId" value="profile101" />
 	<property name="parent" ref="rootNode" />
     </bean>
     
     <bean id="resource1" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
-	<property name="nodeId" value="021" />
-	<property name="uri" value="file:Users/jeafer/Documents/CMDI/resources/talkbank.imdi" />
+	<property name="nodeId" value="node:021" />
 	<property name="name" value="Video resource" />
 	<property name="corpusNodeType" value="RESOURCE_VIDEO" />
 	<property name="parent" ref="child1" />
@@ -66,8 +67,7 @@
     </bean>
     
     <bean id="resource2" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCorpusNode">
-	<property name="nodeId" value="022" />
-	<property name="uri" value="file:Users/jeafer/Documents/CMDI/collection-talkbank.cmdi" />
+	<property name="nodeId" value="node:022" />
 	<property name="name" value="Audio resource" />
 	<property name="corpusNodeType" value="RESOURCE_AUDIO" />
 	<property name="parent" ref="child1" />

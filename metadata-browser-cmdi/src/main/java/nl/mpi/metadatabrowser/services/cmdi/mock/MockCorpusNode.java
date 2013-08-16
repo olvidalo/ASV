@@ -32,7 +32,6 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 
     private URI nodeId;
     private String name;
-    private URI uri;
     private String profileId;
     private MockCorpusNode parent;
     private List<MockCorpusNode> children;
@@ -55,10 +54,6 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 
     public void setName(String name) {
 	this.name = name;
-    }
-
-    public void setUri(URI uri) {
-	this.uri = uri;
     }
 
     public void setParent(GenericTreeNode parent) {
@@ -85,7 +80,7 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 
     @Override
     public URI getUri() {
-	return uri;
+	return nodeId;
     }
 
     public CorpusNodeType getCorpusNodeType() {

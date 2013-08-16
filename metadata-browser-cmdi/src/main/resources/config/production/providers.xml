@@ -14,35 +14,36 @@
 	    These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
 	    or 'cmdi-production-providers' is active.
     -->
-    
-	<!-- Tree model provider based on corpus structure -->    
+
+    <!-- Tree model provider based on corpus structure -->    
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
-        <constructor-arg ref="csdbFactory" />
-        <constructor-arg>
-            <bean class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
-        </constructor-arg>
+	<constructor-arg ref="csdbFactory" />
+	<constructor-arg ref="nodeResolver" />
     </bean>
     
-	<!-- CMDI implementations for metadata browser providers -->
+    <!-- CMDI implementations for metadata browser providers -->
     <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier">
-        <constructor-arg ref="csdb" />
+	<constructor-arg ref="csdb" />
     </bean>
 
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider">
-        <constructor-arg ref="csdb" />
-        <constructor-arg>
-            <bean class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl">
-                <constructor-arg ref="csdb" />
-            </bean>
-        </constructor-arg>
+	<constructor-arg ref="csdb" />
+	<constructor-arg ref="nodeResolver" />
+	<constructor-arg>
+	    <bean class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl">
+		<constructor-arg ref="csdb" />
+		<constructor-arg ref="nodeResolver" />
+	    </bean>
+	</constructor-arg>
     </bean>    
     
     <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider">
-        <constructor-arg ref="csdb" />
+	<constructor-arg ref="csdb" />
+	<constructor-arg ref="nodeResolver" />
     </bean>
     
     <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider">
-        <constructor-arg ref="nodeTypeIdentifier" />
-        <constructor-arg ref="csdb" />
+	<constructor-arg ref="nodeTypeIdentifier" />
+	<constructor-arg ref="csdb" />
     </bean>
 </beans>
