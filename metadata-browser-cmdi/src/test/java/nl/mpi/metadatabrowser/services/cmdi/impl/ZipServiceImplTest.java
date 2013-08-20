@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.zip.ZipFile;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.services.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;

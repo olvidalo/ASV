@@ -1,7 +1,7 @@
 package nl.mpi.metadatabrowser.wicket;
 
 import java.io.Serializable;
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;

@@ -31,7 +31,7 @@ import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 
 /**
  *

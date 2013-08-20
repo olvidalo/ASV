@@ -16,7 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 
 /**
  * Interface for a Corpus Node that has type information (by means of {@link NodeType}) in addition

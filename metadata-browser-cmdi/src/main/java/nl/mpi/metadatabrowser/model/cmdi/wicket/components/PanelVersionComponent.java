@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.tree.services.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.corpusstructure.AccessInfo;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;

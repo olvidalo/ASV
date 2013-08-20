@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.services.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.corpusstructure.AccessInfo;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;

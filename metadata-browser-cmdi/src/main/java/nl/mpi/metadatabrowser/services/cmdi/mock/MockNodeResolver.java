@@ -19,9 +19,9 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 import java.net.URI;
 import java.net.URL;
 import java.util.Map;
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver;
-import nl.mpi.archiving.tree.services.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 
 /**
  * Node resolver that resolves URI's to resource file locations using a static map while wrapping another resolver

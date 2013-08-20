@@ -18,7 +18,7 @@ package nl.mpi.metadatabrowser.wicket.model;
 
 import java.io.Serializable;
 import java.net.URI;
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 

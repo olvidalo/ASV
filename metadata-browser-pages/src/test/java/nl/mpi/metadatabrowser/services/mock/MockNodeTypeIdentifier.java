@@ -17,7 +17,7 @@
 package nl.mpi.metadatabrowser.services.mock;
 
 import java.util.Map;
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 

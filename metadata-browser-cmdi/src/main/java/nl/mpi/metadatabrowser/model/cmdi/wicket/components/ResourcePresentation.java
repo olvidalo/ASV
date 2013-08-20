@@ -26,7 +26,7 @@ import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.services.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;

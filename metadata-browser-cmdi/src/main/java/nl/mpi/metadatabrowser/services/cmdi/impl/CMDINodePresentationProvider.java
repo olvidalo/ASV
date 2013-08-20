@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.tree.services.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.common.util.spring.SpringContextLoader;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AdvAuthorizationService;

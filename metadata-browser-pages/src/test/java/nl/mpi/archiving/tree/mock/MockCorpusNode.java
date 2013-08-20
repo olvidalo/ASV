@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
-import nl.mpi.archiving.tree.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.tree.LinkedTreeNode;
 
 /**
