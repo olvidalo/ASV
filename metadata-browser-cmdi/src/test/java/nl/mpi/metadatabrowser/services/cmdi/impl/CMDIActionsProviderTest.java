@@ -16,25 +16,21 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeActionTest;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.*;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
-import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -44,23 +40,7 @@ import static org.junit.Assert.*;
 public class CMDIActionsProviderTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
-
-        @Override
-        public URI getNodeURI() {
-            return URI.create("node:1");
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDICollectionType();
-        }
-    };
+    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1","1");
 
     public CMDIActionsProviderTest() {
     }
@@ -86,18 +66,18 @@ public class CMDIActionsProviderTest {
      */
     @Test
     public void testGetNodeActions() {
-        System.out.println("getNodeActions");
-        final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
+	System.out.println("getNodeActions");
+	final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
 	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 	final ZipService zipService = context.mock(ZipService.class);
 	CMDIActionsProvider instance = new CMDIActionsProvider(cs, nodeResolver, zipService);
-        
-        List expResult = instance.collectionNodeActionList;
-        List result = instance.getNodeActions(collectionCorpus);
-        System.out.println(expResult.size());
-        assertNotNull(result);
-        assertEquals(expResult.size(), result.size());
-        assertEquals(expResult, result);
+
+	List expResult = instance.collectionNodeActionList;
+	List result = instance.getNodeActions(collectionCorpus);
+	System.out.println(expResult.size());
+	assertNotNull(result);
+	assertEquals(expResult.size(), result.size());
+	assertEquals(expResult, result);
     }
 }

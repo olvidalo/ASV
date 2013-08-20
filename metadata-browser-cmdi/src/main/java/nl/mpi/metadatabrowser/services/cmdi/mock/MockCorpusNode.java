@@ -19,9 +19,12 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.tree.GenericTreeNode;
 
 /**
@@ -109,5 +112,40 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     @Override
     public String toString() {
 	return getName();
+    }
+
+    @Override
+    public URI getProfile() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FileInfo getFileInfo() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public CorpusNodeType getType() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public AccessInfo getAuthorization() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Date getLastUpdate() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isOnSite() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getFormat() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

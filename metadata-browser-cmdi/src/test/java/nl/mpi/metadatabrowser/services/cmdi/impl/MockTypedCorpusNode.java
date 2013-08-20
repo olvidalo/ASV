@@ -14,89 +14,78 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.wicket.model;
+package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
 
 /**
- * Wrapper for {@link CorpusNode} that also encapsulates a {@link NodeType}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, Serializable {
+class MockTypedCorpusNode implements TypedCorpusNode {
+    private final String uri;
+    private final String name;
 
-    private final SerializableCorpusNode corpusNode;
-    private final NodeType nodeType;
-
-    public TypedSerializableCorpusNode(SerializableCorpusNode corpusNode, NodeType nodeType) {
-	this.corpusNode = corpusNode;
-	this.nodeType = nodeType;
-    }
-
-    public CorpusNode getCorpusNode() {
-	return corpusNode;
-    }
-
-    @Override
-    public NodeType getNodeType() {
-	return nodeType;
+    public MockTypedCorpusNode(String uri, String name) {
+	this.uri = uri;
+	this.name = name;
     }
 
     @Override
     public URI getNodeURI() {
-	return corpusNode.getNodeURI();
+	return URI.create(uri);
     }
 
     @Override
     public String getName() {
-	return corpusNode.getName();
+	return name;
+    }
+
+    @Override
+    public NodeType getNodeType() {
+	return new CMDICollectionType();
     }
 
     @Override
     public URI getProfile() {
-	return corpusNode.getProfile();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public FileInfo getFileInfo() {
-	return corpusNode.getFileInfo();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public CorpusNodeType getType() {
-	return corpusNode.getType();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public AccessInfo getAuthorization() {
-	return corpusNode.getAuthorization();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Date getLastUpdate() {
-	return corpusNode.getLastUpdate();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean isOnSite() {
-	return corpusNode.isOnSite();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getFormat() {
-	return corpusNode.getFormat();
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public String toString() {
-	return corpusNode.toString();
-    }
 }

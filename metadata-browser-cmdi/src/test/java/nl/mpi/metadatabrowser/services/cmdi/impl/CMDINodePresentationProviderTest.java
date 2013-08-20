@@ -16,26 +16,21 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeActionTest;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -43,8 +38,10 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodePresentationProviderTest {
+
     private final Mockery context = new JUnit4Mockery();
-    
+    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1", "1");
+
     public CMDINodePresentationProviderTest() {
     }
 
@@ -55,11 +52,11 @@ public class CMDINodePresentationProviderTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -69,34 +66,15 @@ public class CMDINodePresentationProviderTest {
      */
     @Test
     public void testGetNodePresentation() throws NodePresentationException {
-        System.out.println("getNodePresentation");
-        WicketTester tester = new WicketTester();
-        final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-        String wicketId = "test";
+	System.out.println("getNodePresentation");
+	WicketTester tester = new WicketTester();
+	final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
+	String wicketId = "test";
 	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-        CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver);
-        Component result = instance.getNodePresentation(wicketId, collectionCorpus);
-        assertNotNull(result);
-        assertEquals(result.getId(), "test");
+	CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver);
+	Component result = instance.getNodePresentation(wicketId, collectionCorpus);
+	assertNotNull(result);
+	assertEquals(result.getId(), "test");
     }
-    
-    
-    private TypedCorpusNode corpType = new TypedCorpusNode() {
-
-        @Override
-        public URI getNodeURI() {
-            return URI.create("node:1");
-        }
-
-        @Override
-        public String getName() {
-            return "1";
-        }
-
-        @Override
-        public NodeType getNodeType() {
-            return new CMDICollectionType();
-        }
-    };
 }
