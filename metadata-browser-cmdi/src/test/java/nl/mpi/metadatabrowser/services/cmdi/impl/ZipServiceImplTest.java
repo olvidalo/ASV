@@ -77,9 +77,9 @@ public class ZipServiceImplTest {
 
 	context.checking(new Expectations() {
 	    {
-		allowing(child1).getNodeId();
+		allowing(child1).getNodeURI();
 		will(returnValue(NODE1_ID));
-		allowing(child2).getNodeId();
+		allowing(child2).getNodeURI();
 		will(returnValue(NODE2_ID));
 
 		allowing(nodeResolver).getUrl(child1);

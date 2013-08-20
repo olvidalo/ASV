@@ -53,7 +53,7 @@ public class CMDIRrsNodeAction implements NodeAction {
 	Map<String, URI> parameters = new HashMap<String, URI>();
         for (TypedCorpusNode node : nodes) {
 	    // HANDLE rrs navigation action here       
-	    parameters.put("nodeId", node.getNodeId());
+	    parameters.put("nodeId", node.getNodeURI());
 	}
 	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
 

@@ -47,7 +47,7 @@ public class PanelVersionComponent extends Panel {
         super(id);
         try {
             List versionsNodeIds = null;
-            URI nodeId = node.getNodeId();
+            URI nodeId = node.getNodeURI();
 
             // create marker for html wicket table
             RepeatingView repeating = new RepeatingView("rowItems");
@@ -89,7 +89,7 @@ public class PanelVersionComponent extends Panel {
 //                            }
 //                        }
 			
-			URI currentNodePid = node.getNodeId();
+			URI currentNodePid = node.getNodeURI();
 			URL currentNodeUrlStr = resolver.getUrl(node);
 
                         // add fields for each row

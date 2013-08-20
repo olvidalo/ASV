@@ -71,7 +71,7 @@ public class CMDINodeTypeIdentifierTest {
         context.checking(new Expectations() {
 
             {
-                oneOf(node).getNodeId();
+                oneOf(node).getNodeURI();
                 will(returnValue(NODE_1_ID));
                 allowing(csdb).getCorpusNodeType(NODE_1_ID);
                 will(returnValue(CorpusNodeType.RESOURCE_ANNOTATION));

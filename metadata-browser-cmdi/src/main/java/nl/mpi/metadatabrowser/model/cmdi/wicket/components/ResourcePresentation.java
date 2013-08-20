@@ -63,8 +63,8 @@ public final class ResourcePresentation extends Panel {
 
     public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) throws UnknownNodeException {
 	super(id);
-	//String nodeId = Integer.toString(node.getNodeId());
-	URI nodeId = node.getNodeId();
+	//String nodeId = Integer.toString(node.getNodeURI());
+	URI nodeId = node.getNodeURI();
 
 	URL nodeURL = resolver.getUrl(node);
 	if ((nodeURL != null) && (node != null)) {
@@ -75,13 +75,13 @@ public final class ResourcePresentation extends Panel {
 		hasaccess = Boolean.valueOf(csdb.hasReadAccess(nodeId, userid));
 	    }
 
-	    String handle = csdb.getHandle(node.getNodeId());
+	    String handle = csdb.getHandle(node.getNodeURI());
 	    String nodetype = "unknown";
 	    String format = node.getNodeType().getName();
-	    String checksum = csdb.getObjectChecksum(node.getNodeId());
+	    String checksum = csdb.getObjectChecksum(node.getNodeURI());
 	    String size = "unknown";
 	    String lastmodified = "unknown";
-	    long isize = csdb.getObjectSize(node.getNodeId());
+	    long isize = csdb.getObjectSize(node.getNodeURI());
 
 	    if (isize > 0) {
 		if (isize < (10 * 1024)) {
@@ -208,8 +208,8 @@ public final class ResourcePresentation extends Panel {
         
         MockAuthorizationService asrv = (MockAuthorizationService) aSrv;// TODO : remove mock once next TODO is done
 	try {
-	    //result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeId().toString()), null); //TODO: Accept URI nodeId's in AMS libraries
-            result = asrv.getLicenseAcceptance(node.getNodeId(), null); //TODO: remove line and uncomment previous line when previous TODO is fixed
+	    //result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeURI().toString()), null); //TODO: Accept URI nodeId's in AMS libraries
+            result = asrv.getLicenseAcceptance(node.getNodeURI(), null); //TODO: remove line and uncomment previous line when previous TODO is fixed
 	} catch (DataSourceException e) {
 	    logger.error("Cannot get licenses from AMS for node: " + node + " (This can happen when AMS is not deployed or not running).");
 	}

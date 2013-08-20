@@ -51,7 +51,7 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
                     // create panel form for bookmark action
                     return new PanelShowComponent(id, node, csdb);
                 } catch (UnknownNodeException ex) {
-                    throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeId(), ex);
+                    throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeURI(), ex);
                 }
             }
         };

@@ -52,7 +52,7 @@ public class CMDITrovaNodeAction implements NodeAction {
             try {
                 // HANDLE trova action here
                 //TODO get session id
-                parameters.put("nodeId", node.getNodeId());
+                parameters.put("nodeId", node.getNodeURI());
                 parameters.put("jessionID", new URI("session_number"));
             } catch (URISyntaxException ex) {
                 logger.error("URI syntax exception: " + ex);

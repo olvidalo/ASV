@@ -104,16 +104,16 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public URI getRootNodeId() {
-	return rootNode.getNodeId();
+    public URI getRootNodeURI() {
+	return rootNode.getNodeURI();
     }
 
     @Override
-    public List<URI> getChildNodeIds(URI nodeId) throws UnknownNodeException {
+    public List<URI> getChildNodeURIs(URI nodeId) throws UnknownNodeException {
 	List<CorpusNode> childrenNodes = getChildNodes(nodeId);
 	List<URI> subUris = new ArrayList<URI>(childrenNodes.size());
 	for (CorpusNode node : childrenNodes) {
-	    subUris.add(node.getNodeId());
+	    subUris.add(node.getNodeURI());
 	}
 	return subUris;
     }
@@ -124,7 +124,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<URI> getParentNodeIds(URI nodeId) throws UnknownNodeException {
+    public List<URI> getParentNodeURIs(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

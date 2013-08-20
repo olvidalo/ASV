@@ -143,7 +143,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ImageIcon, corresponding to access level
      */
     private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
-        URI nodeId = contentNode.getNodeId();
+        URI nodeId = contentNode.getNodeURI();
         AccessInfo nAccessInfo = csdb.getObjectAccessInfo(nodeId);
         HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
         ImageIcon accessIcon = null;

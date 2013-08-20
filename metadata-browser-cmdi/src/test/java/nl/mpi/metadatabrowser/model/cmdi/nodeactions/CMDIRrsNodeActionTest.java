@@ -91,7 +91,7 @@ public class CMDIRrsNodeActionTest {
         context.checking(new Expectations() {
 
             {
-                allowing(node).getNodeId();
+                allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));
             }
         });

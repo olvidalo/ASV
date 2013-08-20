@@ -97,13 +97,13 @@ public class NavigationActionRequestTest {
         
                 context.checking(new Expectations() {
             {
-                oneOf(node).getNodeId();
+                oneOf(node).getNodeURI();
                 will(returnValue(new URI("nodeid")));
 
             }
         });
         
-        parameters.put("nodeId", node.getNodeId());
+        parameters.put("nodeId", node.getNodeURI());
         parameters.put("jessionID", new URI("session_number"));
         NavigationActionRequest instance = new NavigationActionRequest(NavigationTarget.AMS, parameters);
         assertNotNull(instance);

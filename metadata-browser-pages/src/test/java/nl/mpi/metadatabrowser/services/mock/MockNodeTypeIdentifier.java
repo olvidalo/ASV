@@ -38,7 +38,7 @@ public class MockNodeTypeIdentifier implements NodeTypeIdentifier {
 	if (node == null) {
 	    return null;
 	} else {
-	    return uriNodeTypeMap.get(node.getNodeId().toString());
+	    return uriNodeTypeMap.get(node.getNodeURI().toString());
 	}
     }
 }

@@ -52,7 +52,7 @@ public class CMDISearchNodeAction implements NodeAction {
         for (TypedCorpusNode node : nodes) {
             // HANDLE search action here    
             //TODO get sessionId
-            parameters.put("nodeId", node.getNodeId());
+            parameters.put("nodeId", node.getNodeURI());
             try {
                 parameters.put("jessionID", new URI("session_number"));
             } catch (URISyntaxException ex) {

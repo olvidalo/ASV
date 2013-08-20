@@ -47,7 +47,7 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction 
         logger.debug("Action [{}] invoked on {}", getName(), node);
         // HANDLE access statistics action here
         Map<String, URI> parameters = new HashMap<String, URI>();
-        parameters.put("nodeId", node.getNodeId());
+        parameters.put("nodeId", node.getNodeURI());
 
         final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, parameters);
 

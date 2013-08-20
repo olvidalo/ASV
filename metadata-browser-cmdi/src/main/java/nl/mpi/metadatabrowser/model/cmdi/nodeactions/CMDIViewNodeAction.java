@@ -112,7 +112,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 	    } else if (node.getNodeType() instanceof CMDIResourceTxtType) {
 		//TODO get session id
 		try {
-		    parameters.put("nodeId", node.getNodeId());
+		    parameters.put("nodeId", node.getNodeURI());
 		    parameters.put("jsessionID", new URI("jsessioID"));
 		    navType = true;
 		} catch (URISyntaxException ex) {

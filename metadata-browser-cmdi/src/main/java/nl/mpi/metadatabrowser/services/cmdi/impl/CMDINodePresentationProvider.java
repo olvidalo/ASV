@@ -77,7 +77,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
 		}
 	    } catch (UnknownNodeException ex) {
-		throw new NodePresentationException("Could not find node while building presentation for node " + node.getNodeId(), ex);
+		throw new NodePresentationException("Could not find node while building presentation for node " + node.getNodeURI(), ex);
 	    }
 	}
 	return new Label(wicketId, nodes.toString());

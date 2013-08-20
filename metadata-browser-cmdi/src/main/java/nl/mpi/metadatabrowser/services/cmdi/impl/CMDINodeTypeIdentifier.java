@@ -47,7 +47,7 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
 	ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
 	try {
-	    final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeId());
+	    final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeURI());
 
 	    if (corpusNodeType == CorpusNodeType.RESOURCE_VIDEO || corpusNodeType == CorpusNodeType.RESOURCE_AUDIO
 		    || corpusNodeType == CorpusNodeType.RESOURCE_OTHER) {
@@ -57,7 +57,7 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 	    } else if (corpusNodeType == CorpusNodeType.METADATA) {
 		return new CMDIMetadata();
 	    } //TODO: loop through list ???
-	    else if (profileid.getProfile(node.getNodeId()).equals(collectionProfileId)) {
+	    else if (profileid.getProfile(node.getNodeURI()).equals(collectionProfileId)) {
 		return new CMDICollectionType();
 	    } //todo extend for special profile support (configurable probably)
 	    else {

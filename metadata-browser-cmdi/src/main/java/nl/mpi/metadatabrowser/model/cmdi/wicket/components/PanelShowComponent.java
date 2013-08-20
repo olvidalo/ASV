@@ -41,8 +41,8 @@ public final class PanelShowComponent extends Panel {
 	super(id);
 	final Form form = new Form("nodeInfoForm");
 	String nodeName = node.getName();
-	URI nodeId = node.getNodeId();
-	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodeIds(nodeId).toString() + "\"";
+	URI nodeId = node.getNodeURI();
+	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodeURIs(nodeId).toString() + "\"";
 
 	Date objectFileTime = csdb.getObjectFileTime(nodeId);
 	String lastModified = "";
@@ -56,12 +56,12 @@ public final class PanelShowComponent extends Panel {
 	    archive_name = "unknown";
 	}
 
-	String handle = csdb.getHandle(node.getNodeId());
+	String handle = csdb.getHandle(node.getNodeURI());
 
 	final String archiveName = archive_name;
 	final String resolvedHandle = resolver.concat(handle);
 
-	String url = node.getNodeId().toString();
+	String url = node.getNodeURI().toString();
 
 	// create citations to be displayed
 	StringBuilder sb = new StringBuilder();

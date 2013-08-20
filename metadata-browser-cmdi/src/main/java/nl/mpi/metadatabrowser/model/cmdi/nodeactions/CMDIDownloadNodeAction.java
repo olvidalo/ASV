@@ -63,7 +63,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
 	final URL nodeUri = nodeResolver.getUrl(node);
-	final URI nodeId = node.getNodeId();
+	final URI nodeId = node.getNodeURI();
 
 	// HANDLE download action here
 	final String fileName = new File(nodeUri.getPath()).getName();

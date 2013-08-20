@@ -75,7 +75,7 @@ public class CMDINodeIconProviderTest {
             {
                 oneOf(nodeTypeId).getNodeType(contentNode);
                 will(returnValue(new CMDIMetadata()));
-                allowing(contentNode).getNodeId();
+                allowing(contentNode).getNodeURI();
                 will(returnValue(nodeid));
                 oneOf(csdb).getObjectAccessInfo(nodeid);
                 will(returnValue(new MockAccessInfo()));

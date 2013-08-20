@@ -85,7 +85,7 @@ public class CMDINodePresentationProviderTest {
     private TypedCorpusNode corpType = new TypedCorpusNode() {
 
         @Override
-        public URI getNodeId() {
+        public URI getNodeURI() {
             return URI.create("node:1");
         }
 

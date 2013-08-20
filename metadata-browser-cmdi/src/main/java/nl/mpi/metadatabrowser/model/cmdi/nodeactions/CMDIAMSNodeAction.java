@@ -51,7 +51,7 @@ public class CMDIAMSNodeAction implements NodeAction {
         Map<String, URI> parameters = new HashMap<String, URI>();
         for (TypedCorpusNode node : nodes) {
             try {
-                URI nodeId = node.getNodeId();
+                URI nodeId = node.getNodeURI();
 
                 // HANDLE ams action here    
                 // TODO get sessionid from somewhere

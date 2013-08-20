@@ -93,7 +93,7 @@ public class CMDIDownloadNodeActionTest {
 		oneOf(nodeResolver).getUrl(node);
 		will(returnValue(new URL("http://my/nodeUri")));
 
-		allowing(node).getNodeId();
+		allowing(node).getNodeURI();
 		will(returnValue(NODE_ID));
 
 		allowing(node).getName();

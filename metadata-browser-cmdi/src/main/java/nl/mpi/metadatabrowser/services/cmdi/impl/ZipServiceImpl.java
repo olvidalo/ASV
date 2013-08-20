@@ -66,10 +66,10 @@ public class ZipServiceImpl implements ZipService, Serializable {
         // HANDLE multiple download action here
         if (childrenNodes.size() > 0) {
             for (CorpusNode childNode : childrenNodes) {
-                final URI childUri = childNode.getNodeId();
+                final URI childUri = childNode.getNodeURI();
                 if (itemsAdded == 0) { // check if at least one resource is accessible for user
                     if (childUri != null) {
-                        hasaccess = checkAccess(userid, childNode.getNodeId());// get access rights for each resource
+                        hasaccess = checkAccess(userid, childNode.getNodeURI());// get access rights for each resource
                         logger.debug("resources-download, access for " + childUri + ", " + userid + ", " + hasaccess);
                         if (hasaccess) {
                             itemsAdded++;
@@ -88,7 +88,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
                         logger.info("maximum size limit of 4GB reached");
                     }
                     if (childUri != null) {
-                        hasaccess = checkAccess(userid, childNode.getNodeId());// get access rights for each resource
+                        hasaccess = checkAccess(userid, childNode.getNodeURI());// get access rights for each resource
                         if (hasaccess) {
                             logger.info("resources-download: " + childUri.toString());
                             FileInputStream is;

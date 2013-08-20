@@ -49,7 +49,7 @@ public class MockNodeResolver implements NodeResolver {
 
     @Override
     public URL getUrl(CorpusNode node) {
-	final URI nodeId = node.getNodeId();
+	final URI nodeId = node.getNodeURI();
 	if (nodeResourcesMap.containsKey(nodeId)) {
 	    String resourceLocation = nodeResourcesMap.get(nodeId);
 	    return getClass().getResource(resourceLocation);
