@@ -44,7 +44,7 @@ public final class PanelShowComponent extends Panel {
 	URI nodeId = node.getNodeURI();
 	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodeURIs(nodeId).toString() + "\"";
 
-	Date objectFileTime = csdb.getObjectFileTime(nodeId);
+	Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
 	String lastModified = "";
 	if (objectFileTime != null) {
 	    lastModified = new Date(objectFileTime.getTime()).toString();
@@ -56,7 +56,8 @@ public final class PanelShowComponent extends Panel {
 	    archive_name = "unknown";
 	}
 
-	String handle = csdb.getHandle(node.getNodeURI());
+	//TODO: Check if nodeURI is handle or skip
+	String handle = node.getNodeURI().toString();
 
 	final String archiveName = archive_name;
 	final String resolvedHandle = resolver.concat(handle);

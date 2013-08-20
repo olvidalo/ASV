@@ -20,10 +20,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.corpusstructure.AccessInfo;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -73,10 +73,11 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	try {
 	    boolean hasaccess;
 	    try {
+		final AccessInfo nodeAuthorization = csdb.getNode(nodeId).getAuthorization();
 		if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		    hasaccess = csdb.hasReadAccess(nodeId, AccessInfo.EVERYBODY);
+		    hasaccess = nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
 		} else {
-		    hasaccess = csdb.hasReadAccess(nodeId, userid);
+		    hasaccess = nodeAuthorization.hasReadAccess(userid);
 		}
 	    } catch (UnknownNodeException ex) {
 		throw new NodeActionException(this, ex);

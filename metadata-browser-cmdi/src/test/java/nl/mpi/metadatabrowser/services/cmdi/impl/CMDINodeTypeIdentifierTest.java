@@ -36,8 +36,8 @@ import static org.junit.Assert.assertThat;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodeTypeIdentifierTest {
-    public static final URI NODE_1_ID = URI.create("node:1");
 
+    public static final URI NODE_1_ID = URI.create("node:1");
     private final Mockery context = new JUnit4Mockery();
 
     public CMDINodeTypeIdentifierTest() {
@@ -64,23 +64,26 @@ public class CMDINodeTypeIdentifierTest {
      */
     @Test
     public void testGetNodeType() throws Exception {
-        System.out.println("getNodeType");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+	System.out.println("getNodeType");
+	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 
-        context.checking(new Expectations() {
+	context.checking(new Expectations() {
+	    {
+		oneOf(node).getNodeURI();
+		will(returnValue(NODE_1_ID));
 
-            {
-                oneOf(node).getNodeURI();
-                will(returnValue(NODE_1_ID));
-                allowing(csdb).getCorpusNodeType(NODE_1_ID);
-                will(returnValue(CorpusNodeType.RESOURCE_ANNOTATION));
-            }
-        });
-        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
-        NodeType expResult = new CMDIResourceTxtType();
-        NodeType result = instance.getNodeType(node);
-        assertThat(result, instanceOf(CMDIResourceTxtType.class));
-        assertEquals(expResult.getName(), result.getName());
+		allowing(csdb).getNode(NODE_1_ID);
+		will(returnValue(node));
+
+		allowing(node).getType();
+		will(returnValue(CorpusNodeType.RESOURCE_ANNOTATION));
+	    }
+	});
+	CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
+	NodeType expResult = new CMDIResourceTxtType();
+	NodeType result = instance.getNodeType(node);
+	assertThat(result, instanceOf(CMDIResourceTxtType.class));
+	assertEquals(expResult.getName(), result.getName());
     }
 }

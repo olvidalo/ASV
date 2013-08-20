@@ -18,17 +18,18 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
@@ -143,8 +144,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ImageIcon, corresponding to access level
      */
     private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
-        URI nodeId = contentNode.getNodeURI();
-        AccessInfo nAccessInfo = csdb.getObjectAccessInfo(nodeId);
+        final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
         HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
         ImageIcon accessIcon = null;
         ResourceReference combinedIcon = null;

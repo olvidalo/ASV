@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -121,31 +122,31 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 
     @Override
     public FileInfo getFileInfo() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return new MockFileInfo();
     }
 
     @Override
     public CorpusNodeType getType() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return CorpusNodeType.METADATA;
     }
 
     @Override
     public AccessInfo getAuthorization() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return new MockAccessInfo();
     }
 
     @Override
     public Date getLastUpdate() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return new Date();
     }
 
     @Override
     public boolean isOnSite() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return true;
     }
 
     @Override
     public String getFormat() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return "test/test-format";
     }
 }

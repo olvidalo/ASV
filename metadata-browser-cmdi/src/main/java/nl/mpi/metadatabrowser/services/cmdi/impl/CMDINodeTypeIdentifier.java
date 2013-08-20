@@ -17,10 +17,10 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
@@ -47,7 +47,7 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
 	ProfileIdentifierImpl profileid = new ProfileIdentifierImpl(csdb);
 	try {
-	    final CorpusNodeType corpusNodeType = csdb.getCorpusNodeType(node.getNodeURI());
+	    final CorpusNodeType corpusNodeType = csdb.getNode(node.getNodeURI()).getType();
 
 	    if (corpusNodeType == CorpusNodeType.RESOURCE_VIDEO || corpusNodeType == CorpusNodeType.RESOURCE_AUDIO
 		    || corpusNodeType == CorpusNodeType.RESOURCE_OTHER) {

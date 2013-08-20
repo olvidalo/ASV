@@ -24,9 +24,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;
@@ -67,21 +69,26 @@ public final class ResourcePresentation extends Panel {
 	URI nodeId = node.getNodeURI();
 
 	URL nodeURL = resolver.getUrl(node);
-	if ((nodeURL != null) && (node != null)) {
+	if (nodeURL != null) {
 	    Boolean hasaccess;
+	    final CorpusNode corpusNode = csdb.getNode(nodeId);
+	    final AccessInfo nodeAuthorization = corpusNode.getAuthorization();
 	    if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		hasaccess = Boolean.valueOf(csdb.hasReadAccess(nodeId, AccessInfo.EVERYBODY));
+		hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY));
 	    } else {
-		hasaccess = Boolean.valueOf(csdb.hasReadAccess(nodeId, userid));
+		hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(userid));
 	    }
 
-	    String handle = csdb.getHandle(node.getNodeURI());
+	    //TODO: May not be handle, check
+	    String handle = corpusNode.getNodeURI().toString();
 	    String nodetype = "unknown";
-	    String format = node.getNodeType().getName();
-	    String checksum = csdb.getObjectChecksum(node.getNodeURI());
+	    String format = corpusNode.getFormat();
+
+	    final FileInfo fileInfo = corpusNode.getFileInfo();
+	    String checksum = fileInfo.getChecksum();
 	    String size = "unknown";
 	    String lastmodified = "unknown";
-	    long isize = csdb.getObjectSize(node.getNodeURI());
+	    long isize = fileInfo.getSize();
 
 	    if (isize > 0) {
 		if (isize < (10 * 1024)) {
@@ -91,7 +98,7 @@ public final class ResourcePresentation extends Panel {
 		} else {
 		    size = String.valueOf(isize / (1024 * 1024)) + " MB";
 		}
-		Date filetime = csdb.getObjectFileTime(nodeId);
+		final Date filetime = fileInfo.getFileTime();
 		if (filetime != null) {
 		    lastmodified = new Date(filetime.getTime()).toString();
 		}
@@ -107,7 +114,7 @@ public final class ResourcePresentation extends Panel {
 		checksum = "unknown";
 	    }
 
-	    AccessInfo nAccessInfo = csdb.getObjectAccessInfo(nodeId);
+	    final AccessInfo nAccessInfo = corpusNode.getAuthorization();
 
 	    int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
 	    if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
@@ -205,11 +212,11 @@ public final class ResourcePresentation extends Panel {
 
     private List<NodeLicense> getLicenses(TypedCorpusNode node, AdvAuthorizationService aSrv) {
 	List<NodeLicense> result = Collections.EMPTY_LIST;
-        
-        MockAuthorizationService asrv = (MockAuthorizationService) aSrv;// TODO : remove mock once next TODO is done
+
+	MockAuthorizationService asrv = (MockAuthorizationService) aSrv;// TODO : remove mock once next TODO is done
 	try {
 	    //result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeURI().toString()), null); //TODO: Accept URI nodeId's in AMS libraries
-            result = asrv.getLicenseAcceptance(node.getNodeURI(), null); //TODO: remove line and uncomment previous line when previous TODO is fixed
+	    result = asrv.getLicenseAcceptance(node.getNodeURI(), null); //TODO: remove line and uncomment previous line when previous TODO is fixed
 	} catch (DataSourceException e) {
 	    logger.error("Cannot get licenses from AMS for node: " + node + " (This can happen when AMS is not deployed or not running).");
 	}

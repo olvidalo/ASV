@@ -23,10 +23,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.corpusstructure.AccessInfo;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
@@ -64,10 +64,11 @@ public class PanelVersionComponent extends Panel {
             URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null) && (node != null)) {
                 Boolean hasaccess; // check accessibility node for the user
+		final AccessInfo nodeAuthorization = csdb.getNode(nodeId).getAuthorization();
                 if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-                    hasaccess = Boolean.valueOf(csdb.getObjectAccessInfo(nodeId).hasReadAccess(AccessInfo.EVERYBODY));
+                    hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY));
                 } else {
-                    hasaccess = Boolean.valueOf(csdb.getObjectAccessInfo(nodeId).hasReadAccess(userid));
+                    hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(userid));
                 }
 
                 // loop through the list of versions for a node to write them in the table.

@@ -56,86 +56,88 @@ public class ZipServiceImpl implements ZipService, Serializable {
     @Override
     public File createZipFileForNodes(List<? extends CorpusNode> childrenNodes, String userid) throws IOException, UnknownNodeException, FileNotFoundException {
 	//create object of FileOutputStream
-	File tmp = File.createTempFile("mdtbrowser", ".zip");
-	FileOutputStream fout = new FileOutputStream(tmp);
+	final File tmpFile = File.createTempFile("mdtbrowser", ".zip");
+	final FileOutputStream fout = new FileOutputStream(tmpFile);
 	//create object of ZipOutputStream from FileOutputStream
-	ZipOutputStream zout = new ZipOutputStream(fout);
-	int itemsAdded = 0;
-	boolean hasaccess;
+	final ZipOutputStream zout = new ZipOutputStream(fout);
+	try {
+	    int itemsAdded = 0;
+	    boolean hasaccess;
 
-	// HANDLE multiple download action here
-	if (childrenNodes.size() > 0) {
-	    for (CorpusNode childNode : childrenNodes) {
-		final URI childUri = childNode.getNodeURI();
-		if (itemsAdded == 0) { // check if at least one resource is accessible for user
-		    if (childUri != null) {
-			hasaccess = checkAccess(userid, childNode.getNodeURI());// get access rights for each resource
-			logger.debug("resources-download, access for " + childUri + ", " + userid + ", " + hasaccess);
-			if (hasaccess) {
-			    itemsAdded++;
-			}
-		    }//else start to zip
-		}
-	    }
-	    if (itemsAdded > 0) { // must be minimum 1 to proceed = 1 accessible resource for user
-		long overallSize = 0;
-		byte[] buffer = new byte[1024];
+	    // HANDLE multiple download action here
+	    if (childrenNodes.size() > 0) {
 		for (CorpusNode childNode : childrenNodes) {
-		    final URL childNodeUrl = nodeResolver.getUrl(childNode);
-		    if (overallSize > MAX_LIMIT) { // check size limit 4GB
-			overallSize = 0;
-			zout.close();
-			logger.info("maximum size limit of 4GB reached");
-		    }
-		    if (childNodeUrl != null) {
-			hasaccess = checkAccess(userid, childNode.getNodeURI());// get access rights for each resource
-			if (hasaccess) {
-			    logger.info("resources-download: " + childNodeUrl.toString());
-
-			    String fileName = new File(childNodeUrl.getPath()).getName();
-			    //String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-			    final InputStream is = childNodeUrl.openStream();
-			    try {
-				final ZipEntry ze = new ZipEntry(fileName);
-				zout.putNextEntry(ze);
-
-				int length;
-				while ((length = is.read(buffer)) > 0) {
-				    zout.write(buffer, 0, length);
-				}
-				zout.closeEntry();
-				overallSize += ze.getCompressedSize();
-				logger.info("Copied resource: " + childNodeUrl + "  to zipFile");
-			    } catch (NullPointerException e) {
-				logger.error("unvalid type of file. Could not find path for this file : {}", fileName, e);
-			    } finally {
-				is.close();
+		    final URI childUri = childNode.getNodeURI();
+		    if (itemsAdded == 0) { // check if at least one resource is accessible for user
+			if (childUri != null) {
+			    hasaccess = checkAccess(userid, childUri);// get access rights for each resource
+			    logger.debug("resources-download, access for " + childUri + ", " + userid + ", " + hasaccess);
+			    if (hasaccess) {
+				itemsAdded++;
 			    }
-			} else {
-			    logger.info("User " + userid + " has no access to " + childNodeUrl);
-			}
-
-		    } else {
-			logger.error("Error: nodeurl for resourcenode " + childNode + " was not found");
+			}//else start to zip
 		    }
 		}
+		if (itemsAdded > 0) { // must be minimum 1 to proceed = 1 accessible resource for user
+		    long overallSize = 0;
+		    byte[] buffer = new byte[1024];
+		    for (CorpusNode childNode : childrenNodes) {
+			final URL childNodeUrl = nodeResolver.getUrl(childNode);
+			if (overallSize > MAX_LIMIT) { // check size limit 4GB
+			    overallSize = 0;
+			    zout.close();
+			    logger.info("maximum size limit of 4GB reached");
+			}
+			if (childNodeUrl != null) {
+			    final URI childNodeURI = childNode.getNodeURI();
+			    hasaccess = checkAccess(userid, childNodeURI);// get access rights for each resource
+			    logger.debug("resources-download, access for " + childNodeURI + ", " + userid + ", " + hasaccess);
+			    if (hasaccess) {
+				logger.info("resources-download: " + childNodeUrl.toString());
+
+				String fileName = new File(childNodeUrl.getPath()).getName();
+				//String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+				final InputStream is = childNodeUrl.openStream();
+				try {
+				    final ZipEntry ze = new ZipEntry(fileName);
+				    zout.putNextEntry(ze);
+
+				    int length;
+				    while ((length = is.read(buffer)) > 0) {
+					zout.write(buffer, 0, length);
+				    }
+				    zout.closeEntry();
+				    overallSize += ze.getCompressedSize();
+				    logger.info("Copied resource: " + childNodeUrl + "  to zipFile");
+				} catch (NullPointerException e) {
+				    logger.error("unvalid type of file. Could not find path for this file : {}", fileName, e);
+				} finally {
+				    is.close();
+				}
+			    } else {
+				logger.info("User " + userid + " has no access to " + childNodeUrl);
+			    }
+
+			} else {
+			    logger.error("Error: nodeurl for resourcenode " + childNode + " was not found");
+			}
+		    }
+		}
+	    } else {
+		logger.error("Error: called resources-download for  node without children");
 	    }
-	} else {
-	    logger.error("Error: called resources-download for  node without children");
+	} finally {
+	    zout.close();
 	}
-	zout.close();
-	fout.close();
-	return tmp;
+	return tmpFile;
     }
 
     private boolean checkAccess(String userid, URI nodeId) throws UnknownNodeException {
-	boolean hasaccess;
+	final AccessInfo nodeAuthorization = csdb.getNode(nodeId).getAuthorization();
 	if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-	    hasaccess = csdb.getObjectAccessInfo(nodeId).hasReadAccess(AccessInfo.EVERYBODY);
+	    return nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
 	} else {
-	    hasaccess = csdb.getObjectAccessInfo(nodeId).hasReadAccess(userid);
+	    return nodeAuthorization.hasReadAccess(userid);
 	}
-	logger.debug("resource-download, access for " + nodeId + ", " + userid + ", " + hasaccess);
-	return hasaccess;
     }
 }

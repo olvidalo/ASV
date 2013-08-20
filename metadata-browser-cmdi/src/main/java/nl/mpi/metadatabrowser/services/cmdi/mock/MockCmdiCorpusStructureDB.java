@@ -18,20 +18,14 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 
 /**
  *
@@ -84,26 +78,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public String getHandle(URI nodeid) {
-	return "11142/00-021C2EA5-66DB-4363-A957-CE9FEE4226CD";
-    }
-
-    @Override
-    public Timestamp getObjectFileTime(URI node) {
-	return new Timestamp(1368520487);
-    }
-
-    @Override
-    public String getObjectChecksum(URI node) {
-	return "adab88ba00910f9591df887f45a05419";
-    }
-
-    @Override
-    public long getObjectSize(URI node) {
-	return 2640;
-    }
-
-    @Override
     public URI getRootNodeURI() {
 	return rootNode.getNodeURI();
     }
@@ -149,11 +123,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public CorpusNodeType getCorpusNodeType(URI nodeId) throws UnknownNodeException {
-	return getNode(nodeId).getCorpusNodeType();
-    }
-
-    @Override
     public String getCanonicalVPath(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -174,32 +143,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public Date getObjectTimestamp(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isAccessible(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isOnSite(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean hasReadAccess(URI nodeid, String uid) throws UnknownNodeException {
-	return true;
-    }
-
-    @Override
     public List<URI> getNewArchiveObjectsSince(Date timestamp, boolean onsiteonly, boolean urlformat, boolean usefiletime) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public AccessInfo getObjectAccessInfo(URI nodeId) throws UnknownNodeException {
-	return new MockAccessInfo();
     }
 }

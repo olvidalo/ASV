@@ -32,6 +32,8 @@ import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+import static org.jmock.Expectations.returnValue;
+
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
@@ -79,18 +81,25 @@ public class ZipServiceImplTest {
 	    {
 		allowing(child1).getNodeURI();
 		will(returnValue(NODE1_ID));
+
+		allowing(csdb).getNode(NODE1_ID);
+		will(returnValue(child1));
+
 		allowing(child2).getNodeURI();
 		will(returnValue(NODE2_ID));
+
+		allowing(csdb).getNode(NODE2_ID);
+		will(returnValue(child2));
 
 		allowing(nodeResolver).getUrl(child1);
 		will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi")));
 		allowing(nodeResolver).getUrl(child2);
 		will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Corpora.cmdi")));
 
-		allowing(csdb).getObjectAccessInfo(NODE1_ID);
+		allowing(child1).getAuthorization();
 		will(returnValue(ai));
 
-		allowing(csdb).getObjectAccessInfo(NODE2_ID);
+		allowing(child2).getAuthorization();
 		will(returnValue(ai));
 
 		allowing(ai).hasReadAccess(userId);

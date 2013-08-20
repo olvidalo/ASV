@@ -19,8 +19,9 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -99,7 +100,13 @@ public class CMDIDownloadNodeActionTest {
 		allowing(node).getName();
 		will(returnValue("nodeName"));
 
-		allowing(csdb).hasReadAccess(NODE_ID, nl.mpi.corpusstructure.AccessInfo.EVERYBODY);
+		allowing(csdb).getNode(NODE_ID);
+		will(returnValue(node));
+
+		allowing(node).getAuthorization();
+		will(returnValue(ai));
+
+		allowing(ai).hasReadAccess("everybody");
 		will(returnValue(true));
 	    }
 	});
