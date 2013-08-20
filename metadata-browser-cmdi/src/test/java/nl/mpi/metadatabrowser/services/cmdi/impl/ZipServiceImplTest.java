@@ -105,5 +105,11 @@ public class ZipServiceImplTest {
 	assertNotNull(result.getPath());
 	assertNotNull(result.length());
 	assertEquals(2, zip.size());
+	assertNotNull(zip.getEntry("IPROSLA_Nijmegen.cmdi"));
+	assertNotNull(zip.getEntry("IPROSLA_Corpora.cmdi"));
+	// delete result
+	if (!result.delete()) {
+	    System.err.println("Could not delete " + result.getAbsolutePath() + " in " + getClass().getName());
+	}
     }
 }
