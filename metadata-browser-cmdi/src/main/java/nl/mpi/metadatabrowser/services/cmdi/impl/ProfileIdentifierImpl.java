@@ -39,9 +39,9 @@ public class ProfileIdentifierImpl implements ProfileIdentifier {
     @Override
     public URI getProfile(URI uri) {
 	try {
-	    return csdb.getProfileSchemaLocation(uri);
+	    return csdb.getNode(uri).getProfile();
 	} catch (UnknownNodeException ex) {
-	    logger.warn("Failed to get profile, unknown node at {}", uri);
+	    logger.warn("Failed to get profile, unknown node at {}", uri, ex);
 	    return null;
 	}
     }

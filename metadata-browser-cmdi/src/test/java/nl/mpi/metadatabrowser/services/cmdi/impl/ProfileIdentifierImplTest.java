@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import org.jmock.Expectations;
 import static org.jmock.Expectations.returnValue;
@@ -33,19 +34,20 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class ProfileIdentifierImplTest {
+
     private final Mockery context = new JUnit4Mockery();
-    
+
     public ProfileIdentifierImplTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
@@ -55,19 +57,22 @@ public class ProfileIdentifierImplTest {
      */
     @Test
     public void testGetProfile() throws Exception {
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        System.out.println("getProfile");
+	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+	final CorpusNode node = context.mock(CorpusNode.class);
+	System.out.println("getProfile");
 
-        context.checking(new Expectations() {
+	context.checking(new Expectations() {
+	    {
+		oneOf(csdb).getNode(URI.create("nodeUri"));
+		will(returnValue(node));
 
-            {
-                oneOf(csdb).getProfileSchemaLocation(new URI("nodeUri"));
-                will(returnValue(URI.create("profile1")));
-            }
-        });
-        ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
-        URI expResult = URI.create("profile1");
-        URI result = instance.getProfile(new URI("nodeUri"));
-        assertEquals(expResult, result);
+		oneOf(node).getProfile();
+		will(returnValue(URI.create("profile1")));
+	    }
+	});
+	ProfileIdentifierImpl instance = new ProfileIdentifierImpl(csdb);
+	URI expResult = URI.create("profile1");
+	URI result = instance.getProfile(new URI("nodeUri"));
+	assertEquals(expResult, result);
     }
 }

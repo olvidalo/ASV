@@ -118,11 +118,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public URI getProfileSchemaLocation(URI nodeId) throws UnknownNodeException {
-	return URI.create("profile");
-    }
-
-    @Override
     public String getCanonicalVPath(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
