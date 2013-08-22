@@ -18,7 +18,7 @@
     </bean>
     
     <!-- Mock factory just returning the CSDB -->
-    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCmdiCorpusStructureDatabaseFactory">
+    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockCmdiCorpusStructureProviderFactory">
 	<constructor-arg ref="csdb" />
     </bean>
     

@@ -18,7 +18,7 @@
     <bean id="nodeResolver" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
     
     <!-- CSDB factory -->
-    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.CmdiCorpusStructureDBFactoryImpl">
+    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.CmdiCorpusStructureProviderFactoryImpl">
 	<constructor-arg value="dbname" />
     </bean>
     

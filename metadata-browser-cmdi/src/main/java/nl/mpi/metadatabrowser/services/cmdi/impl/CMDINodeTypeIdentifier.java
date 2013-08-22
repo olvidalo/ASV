@@ -57,7 +57,7 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 	    } else if (corpusNodeType == CorpusNodeType.METADATA) {
 		return new CMDIMetadata();
 	    } //TODO: loop through list ???
-	    else if (profileid.getProfile(node.getNodeURI()).equals(collectionProfileId)) {
+	    else if (collectionProfileId.equals(profileid.getProfile(node.getNodeURI()))) {
 		return new CMDICollectionType();
 	    } //todo extend for special profile support (configurable probably)
 	    else {

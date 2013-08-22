@@ -117,7 +117,11 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 
     @Override
     public URI getProfile() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	if (profileId == null) {
+	    return URI.create(profileId);
+	} else {
+	    return null;
+	}
     }
 
     @Override
@@ -127,7 +131,7 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 
     @Override
     public CorpusNodeType getType() {
-	return CorpusNodeType.METADATA;
+	return corpusNodeType;
     }
 
     @Override
