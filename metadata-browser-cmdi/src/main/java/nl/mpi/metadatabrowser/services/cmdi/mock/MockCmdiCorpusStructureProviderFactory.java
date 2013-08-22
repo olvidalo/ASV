@@ -18,17 +18,17 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.io.Serializable;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBFactory;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProviderFactory;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockCmdiCorpusStructureDatabaseFactory implements CorpusStructureDBFactory, Serializable {
+public class MockCmdiCorpusStructureProviderFactory implements CorpusStructureProviderFactory, Serializable {
 
     private final CorpusStructureProvider cmdiCsdb;
 
-    public MockCmdiCorpusStructureDatabaseFactory(CorpusStructureProvider cmdiCsdb) {
+    public MockCmdiCorpusStructureProviderFactory(CorpusStructureProvider cmdiCsdb) {
 	this.cmdiCsdb = cmdiCsdb;
     }
 

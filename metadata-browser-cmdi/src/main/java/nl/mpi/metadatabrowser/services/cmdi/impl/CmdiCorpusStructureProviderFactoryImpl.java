@@ -17,7 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBFactory;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +25,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class CmdiCorpusStructureDBFactoryImpl implements CorpusStructureDBFactory {
+public class CmdiCorpusStructureProviderFactoryImpl implements CorpusStructureProviderFactory {
 
-    private final static Logger logger = LoggerFactory.getLogger(CmdiCorpusStructureDBFactoryImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(CmdiCorpusStructureProviderFactoryImpl.class);
     private CorpusStructureProvider csdb;
     //private final String dbname;
 
-    public CmdiCorpusStructureDBFactoryImpl(CorpusStructureProvider cmdiCsdb) {
+    public CmdiCorpusStructureProviderFactoryImpl(CorpusStructureProvider cmdiCsdb) {
 	//logger.info("Constructed with dbname='{}'", dbname);
 	this.csdb = cmdiCsdb;
     }

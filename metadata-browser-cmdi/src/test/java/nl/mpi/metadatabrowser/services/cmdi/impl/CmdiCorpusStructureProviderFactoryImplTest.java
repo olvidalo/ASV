@@ -18,24 +18,25 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import org.jmock.Expectations;
-import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.jmock.Expectations.returnValue;
 import static org.junit.Assert.*;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CmdiCorpusStructureDBFactoryImplTest {
+public class CmdiCorpusStructureProviderFactoryImplTest {
 
     private final Mockery context = new JUnit4Mockery();
 
-    public CmdiCorpusStructureDBFactoryImplTest() {
+    public CmdiCorpusStructureProviderFactoryImplTest() {
     }
 
     @BeforeClass
@@ -52,13 +53,13 @@ public class CmdiCorpusStructureDBFactoryImplTest {
 
     /**
      * Test of createCorpusStructureDB method, of class
-     * CmdiCorpusStructureDBFactoryImpl.
+     * CmdiCorpusStructureProviderFactoryImpl.
      */
     @Test
     public void testCreateCorpusStructureDB() {
         System.out.println("createCorpusStructureDB");
         final CorpusStructureProvider cmdicsdb = context.mock(CorpusStructureProvider.class);
-        CmdiCorpusStructureDBFactoryImpl instance = new CmdiCorpusStructureDBFactoryImpl(cmdicsdb);
+        CmdiCorpusStructureProviderFactoryImpl instance = new CmdiCorpusStructureProviderFactoryImpl(cmdicsdb);
         final CorpusStructureProvider result = instance.createCorpusStructureDB();
         context.checking(new Expectations() {
             {
