@@ -35,10 +35,14 @@ div#treePanel{
     border-right: 1px solid;
 }
 
-div#treePanel div.wicket-tree{
+
+div#treePanel div.archiveTree{
     width: auto;
     margin-right: 0px;
     min-height: 500px;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .feedbackPanelERROR{
