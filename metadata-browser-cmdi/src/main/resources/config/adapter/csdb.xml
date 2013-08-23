@@ -22,7 +22,7 @@
 	<constructor-arg value="java:comp/env/jdbc/CSDB" />
     </bean>
     
-        <!-- CSDB created from factory (not sure if this will work because Wicket requires serializability -->
+    <!-- CSDB created from factory -->
     <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
     
 </beans>
