@@ -15,8 +15,6 @@
 	or 'cmdi-production-csdb' is active.
     -->
     
-    <bean id="nodeResolver" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
-    
     <!-- CSDB factory -->
     <bean id="csdbFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
 	<constructor-arg value="java:comp/env/jdbc/CSDB" />
@@ -24,5 +22,8 @@
     
     <!-- CSDB created from factory -->
     <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
+
+    <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
+    <bean id="nodeResolver" factory-bean="csdbFactory" factory-method="createNodeResolver" />
     
 </beans>
