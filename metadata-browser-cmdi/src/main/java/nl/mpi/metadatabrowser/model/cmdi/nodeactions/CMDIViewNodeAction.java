@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -61,66 +60,65 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
-	final URL nodeURL = nodeResolver.getUrl(node);
 	String xmlContent = null;
-
-	if ((nodeURL != null) && (node != null)) {
-	    if (node.getNodeType() instanceof CMDIMetadata
-		    || node.getNodeType() instanceof CMDICollectionType) {
-		InputStream in = null;
-		try {
-		    in = nodeURL.openStream();
-		    StringBuilder sb = new StringBuilder();
-		    byte[] buffer = new byte[256];
-		    while (true) {
-			int byteRead = in.read(buffer);
-			if (byteRead == -1) {
-			    break;
-			}
-			for (int i = 0; i < byteRead; i++) {
-			    sb.append((char) buffer[i]);
-			}
+	
+	//TODO: Metadata case can be removed, as this action is not in the list for metadata node actions in the CMDIActionsProvider anyway?
+	if (node.getNodeType() instanceof CMDIMetadata
+		|| node.getNodeType() instanceof CMDICollectionType) {
+	    InputStream in = null;
+	    try {
+		in = nodeResolver.getInputStream(node);
+		StringBuilder sb = new StringBuilder();
+		byte[] buffer = new byte[256];
+		while (true) {
+		    int byteRead = in.read(buffer);
+		    if (byteRead == -1) {
+			break;
 		    }
-		    xmlContent = sb.toString();
-		    //return sb.toString();
-		    //      try {
-		    //                            JAXBContext jc = JAXBContext.newInstance(String.class);
-		    //
-		    //            File xml = new File(nodeURL.toString());
-		    //            Unmarshaller unmarshaller = jc.createUnmarshaller();
-		    //            String recon = (String) unmarshaller.unmarshal(xml);
-		    //
-		    //            Marshaller marshaller = jc.createMarshaller();
-		    //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		    //            marshaller.marshal(recon, System.out);
-		    //
-		    //                    xmlContent = nodeURL.toString();
-		    //                } //all formats that should be handled by annex
-		    //                catch (JAXBException ex) {
-		    //                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-		    //                }
-		} //      try {
-		catch (IOException ex) {
+		    for (int i = 0; i < byteRead; i++) {
+			sb.append((char) buffer[i]);
+		    }
+		}
+		xmlContent = sb.toString();
+		//return sb.toString();
+		//      try {
+		//                            JAXBContext jc = JAXBContext.newInstance(String.class);
+		//
+		//            File xml = new File(nodeURL.toString());
+		//            Unmarshaller unmarshaller = jc.createUnmarshaller();
+		//            String recon = (String) unmarshaller.unmarshal(xml);
+		//
+		//            Marshaller marshaller = jc.createMarshaller();
+		//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		//            marshaller.marshal(recon, System.out);
+		//
+		//                    xmlContent = nodeURL.toString();
+		//                } //all formats that should be handled by annex
+		//                catch (JAXBException ex) {
+		//                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+		//                }
+	    } //      try {
+	    catch (IOException ex) {
+		java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
+	    } finally {
+		try {
+		    in.close();
+		} catch (IOException ex) {
 		    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-		} finally {
-		    try {
-			in.close();
-		    } catch (IOException ex) {
-			java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-		    }
 		}
-	    } else if (node.getNodeType() instanceof CMDIResourceTxtType) {
-		//TODO get session id
-		try {
-		    parameters.put("nodeId", node.getNodeURI());
-		    parameters.put("jsessionID", new URI("jsessioID"));
-		    navType = true;
-		} catch (URISyntaxException ex) {
-		    logger.error("URI syntax exception in parameter session id: " + ex);
-		}
-	    } else {
-		xmlContent = nodeURL.toString();
 	    }
+	} else if (node.getNodeType() instanceof CMDIResourceTxtType) {
+	    //TODO get session id
+	    try {
+		parameters.put("nodeId", node.getNodeURI());
+		parameters.put("jsessionID", new URI("jsessioID"));
+		navType = true;
+	    } catch (URISyntaxException ex) {
+		logger.error("URI syntax exception in parameter session id: " + ex);
+	    }
+	} else {
+	    //TODO: Maybe replace this with some informative message, just URL is a bit pointless 
+	    xmlContent = nodeResolver.getUrl(node).toString();
 	}
 
 	final String xmlText = xmlContent;
