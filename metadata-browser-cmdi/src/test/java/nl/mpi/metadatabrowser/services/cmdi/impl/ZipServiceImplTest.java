@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipFile;
@@ -92,9 +93,14 @@ public class ZipServiceImplTest {
 		will(returnValue(child2));
 
 		allowing(nodeResolver).getUrl(child1);
-		will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi")));
+		will(returnValue(new URL("file://test/first")));
+		oneOf(nodeResolver).getInputStream(child1);
+		will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Nijmegen.cmdi")));
+		
 		allowing(nodeResolver).getUrl(child2);
-		will(returnValue(getClass().getClassLoader().getResource("IPROSLA_Corpora.cmdi")));
+		will(returnValue(new URL("file://test/second")));
+		oneOf(nodeResolver).getInputStream(child2);
+		will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Corpora.cmdi")));
 
 		allowing(child1).getAuthorization();
 		will(returnValue(ai));
@@ -114,8 +120,9 @@ public class ZipServiceImplTest {
 	assertNotNull(result.getPath());
 	assertNotNull(result.length());
 	assertEquals(2, zip.size());
-	assertNotNull(zip.getEntry("IPROSLA_Nijmegen.cmdi"));
-	assertNotNull(zip.getEntry("IPROSLA_Corpora.cmdi"));
+	assertNotNull(zip.getEntry("first"));
+	assertNotNull(zip.getEntry("second"));
+	//TODO: verify contents??
 	// delete result
 	if (!result.delete()) {
 	    System.err.println("Could not delete " + result.getAbsolutePath() + " in " + getClass().getName());

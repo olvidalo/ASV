@@ -117,6 +117,6 @@ public class CMDIDownloadNodeActionTest {
 	DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
 	assertEquals("nodeUri", downloadActionRequest.getFileName());
 	IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
-	assertThat(downloadStream, instanceOf(FileResourceStream.class));
+	assertNotNull(downloadStream);
     }
 }

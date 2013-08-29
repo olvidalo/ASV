@@ -97,7 +97,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
 
 				String fileName = new File(childNodeUrl.getPath()).getName();
 				//String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-				final InputStream is = childNodeUrl.openStream();
+				final InputStream is = nodeResolver.getInputStream(childNode);
 				try {
 				    final ZipEntry ze = new ZipEntry(fileName);
 				    zout.putNextEntry(ze);
