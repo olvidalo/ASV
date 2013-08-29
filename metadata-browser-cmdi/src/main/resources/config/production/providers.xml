@@ -18,7 +18,6 @@
     <!-- Tree model provider based on corpus structure -->    
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
 	<constructor-arg ref="csdbFactory" />
-	<constructor-arg ref="nodeResolver" />
     </bean>
     
     <!-- CMDI implementations for metadata browser providers -->
