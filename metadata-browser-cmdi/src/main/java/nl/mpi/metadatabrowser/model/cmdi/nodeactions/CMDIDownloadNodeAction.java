@@ -42,13 +42,11 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "download";
-    private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
     //TODO: decide where does userid comes from and implement accordingly
     private String userid;
 
-    public CMDIDownloadNodeAction(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
-	this.csdb = csdb;
+    public CMDIDownloadNodeAction(NodeResolver nodeResolver) {
 	this.nodeResolver = nodeResolver;
     }
 

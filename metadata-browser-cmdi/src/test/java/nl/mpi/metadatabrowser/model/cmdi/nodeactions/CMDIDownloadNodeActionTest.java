@@ -70,9 +70,8 @@ public class CMDIDownloadNodeActionTest {
     @Test
     public void testGetName() {
 	System.out.println("getName");
-	CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb, nodeResolver);
+	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver);
 	String expResult = "download";
 	String result = instance.getName();
 	assertEquals(expResult, result);
@@ -84,7 +83,6 @@ public class CMDIDownloadNodeActionTest {
     @Test
     public void testExecute() throws Exception {
 	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	//final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
 	final AccessInfo ai = context.mock(AccessInfo.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
@@ -100,9 +98,6 @@ public class CMDIDownloadNodeActionTest {
 		allowing(node).getName();
 		will(returnValue("nodeName"));
 
-		allowing(csdb).getNode(NODE_ID);
-		will(returnValue(node));
-
 		allowing(node).getAuthorization();
 		will(returnValue(ai));
 
@@ -111,7 +106,7 @@ public class CMDIDownloadNodeActionTest {
 	    }
 	});
 
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(csdb, nodeResolver);
+	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver);
 	NodeActionResult result = instance.execute(node);
 	ControllerActionRequest actionRequest = result.getControllerActionRequest();
 	assertNotNull(actionRequest);
