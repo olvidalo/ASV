@@ -20,6 +20,7 @@
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<!-- Version of Wicket to depend on in module projects -->
 	<wicket.version>1.5.10</wicket.version>
+	<jmock.version>2.6.0</jmock.version>
 	<!-- Hint for NetBeans to insert license header -->
 	<netbeans.hint.license>gpl30</netbeans.hint.license>
     </properties>
@@ -67,12 +68,17 @@
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <version>4.11</version>
-	    <scope>test</scope>
 	</dependency>
 	<dependency>
 	    <groupId>org.jmock</groupId>
 	    <artifactId>jmock-junit4</artifactId>
-	    <version>2.5.1</version>
+	    <version>${jmock.version}</version>
+	    <scope>test</scope>
+	</dependency>
+	<dependency>
+	    <groupId>org.jmock</groupId>
+	    <artifactId>jmock-legacy</artifactId>
+	    <version>${jmock.version}</version>
 	    <scope>test</scope>
 	</dependency>
 	<!-- Logging in testing -->
