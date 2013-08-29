@@ -20,8 +20,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.BaseNodeResolver;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver;
 
 /**
  * Node resolver that resolves URI's to resource file locations using a static map while wrapping another resolver
@@ -29,7 +30,7 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockNodeResolver implements NodeResolver {
+public class MockNodeResolver extends BaseNodeResolver {
 
     private final NodeResolver baseResolver;
     private final Map<URI, String> nodeResourcesMap;
