@@ -60,31 +60,29 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	final URL nodeUri = nodeResolver.getUrl(node);
 
 	// HANDLE download action here
-	final String fileName = new File(nodeUri.getPath()).getName();
+	if (userHasAccess(node, nodeUri)) {
+	    final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
+	    DownloadActionRequest.setStreamContent(resStream);
 
-	//String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-
-	try {
-	    boolean hasaccess;
-	    final AccessInfo nodeAuthorization = node.getAuthorization();
-	    if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		hasaccess = nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
-	    } else {
-		hasaccess = nodeAuthorization.hasReadAccess(userid);
-	    }
-	    logger.debug("resource-download, access for " + nodeUri.toString() + ", " + userid + ", " + hasaccess);
-	    if (hasaccess) {
-		IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-		DownloadActionRequest.setStreamContent(resStream);
-		DownloadActionRequest.setFileName(fileName);
-	    } else {
-		return new SimpleNodeActionResult("User " + userid + " has no access to this node " + nodeUri.toString());
-	    }
-	    final DownloadActionRequest request = new DownloadActionRequest();
-	    return new SimpleNodeActionResult(request);
-	} catch (NullPointerException e) {
-	    logger.error("unvalid type of file. Could not find path for this file : {}", fileName);
+	    final String fileName = new File(nodeUri.getPath()).getName();
+	    DownloadActionRequest.setFileName(fileName);
+	} else {
+	    return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
 	}
-	return new SimpleNodeActionResult("Download action could not be performed due to a invalid path with the file. Filepath = " + nodeUri.getPath());
+	final DownloadActionRequest request = new DownloadActionRequest();
+	return new SimpleNodeActionResult(request);
+    }
+
+    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri) {
+	//String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
+	final AccessInfo nodeAuthorization = node.getAuthorization();
+	final boolean hasaccess;
+	if (userid == null || userid.equals("") || userid.equals("anonymous")) {
+	    hasaccess = nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
+	} else {
+	    hasaccess = nodeAuthorization.hasReadAccess(userid);
+	}
+	logger.debug("resource-download, access for {}, {}: {}", nodeUri, userid, hasaccess);
+	return hasaccess;
     }
 }
