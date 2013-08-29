@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -29,7 +28,7 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import org.apache.wicket.util.resource.FileResourceStream;
+import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,8 +74,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	    }
 	    logger.debug("resource-download, access for " + nodeUri.toString() + ", " + userid + ", " + hasaccess);
 	    if (hasaccess) {
-		File file = new File(nodeUri.getPath());
-		IResourceStream resStream = new FileResourceStream(file);
+		IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
 		DownloadActionRequest.setStreamContent(resStream);
 		DownloadActionRequest.setFileName(fileName);
 	    } else {
