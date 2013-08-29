@@ -26,4 +26,12 @@
     <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
     <bean id="nodeResolver" factory-bean="csdbFactory" factory-method="createNodeResolver" />
     
+    <!--     Wrapper node resolver that wraps metadata URL's in the translation service to always get the CMDI version     
+    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.adapter.TranslatingNodeResolver">
+	<constructor-arg name="baseNodeResolver">
+	     Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider 
+	    <bean factory-bean="csdbFactory" factory-method="createNodeResolver" />
+	</constructor-arg>
+	<constructor-arg name="translationServiceBaseUri" value="http://tlatest01.mpi.nl/ds/TranslationService/" />
+    </bean>-->
 </beans>

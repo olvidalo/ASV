@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -66,13 +64,10 @@ public final class ResourcePresentation extends Panel {
     public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) throws UnknownNodeException {
 	super(id);
 	//String nodeId = Integer.toString(node.getNodeURI());
-	URI nodeId = node.getNodeURI();
-
-	URL nodeURL = resolver.getUrl(node);
+	final URL nodeURL = resolver.getUrl(node);
 	if (nodeURL != null) {
 	    Boolean hasaccess;
-	    final CorpusNode corpusNode = csdb.getNode(nodeId);
-	    final AccessInfo nodeAuthorization = corpusNode.getAuthorization();
+	    final AccessInfo nodeAuthorization = node.getAuthorization();
 	    if (userid == null || userid.equals("") || userid.equals("anonymous")) {
 		hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY));
 	    } else {
@@ -80,11 +75,11 @@ public final class ResourcePresentation extends Panel {
 	    }
 
 	    //TODO: May not be handle, check
-	    String handle = corpusNode.getNodeURI().toString();
+	    String handle = node.getNodeURI().toString();
 	    String nodetype = "unknown";
-	    String format = corpusNode.getFormat();
+	    String format = node.getFormat();
 
-	    final FileInfo fileInfo = corpusNode.getFileInfo();
+	    final FileInfo fileInfo = node.getFileInfo();
 	    String checksum = fileInfo.getChecksum();
 	    String size = "unknown";
 	    String lastmodified = "unknown";
@@ -114,7 +109,7 @@ public final class ResourcePresentation extends Panel {
 		checksum = "unknown";
 	    }
 
-	    final AccessInfo nAccessInfo = corpusNode.getAuthorization();
+	    final AccessInfo nAccessInfo = node.getAuthorization();
 
 	    int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
 	    if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
@@ -190,7 +185,7 @@ public final class ResourcePresentation extends Panel {
 	    tableContainer.add(licensesLabel);
 
 	    tableContainer.add(new Label("hasaccess", hasaccess.toString()));
-	    tableContainer.add(new Label("nodeId", nodeId.toString()));
+	    tableContainer.add(new Label("nodeId", node.getNodeURI().toString()));
 	    tableContainer.add(new Label("handle", handle));
 //            tableContainer.add(new Label("urid", urid));
 	    tableContainer.add(new Label("url", nodeURL.toString()));

@@ -18,10 +18,8 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -63,7 +61,6 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
 	final URL nodeUri = nodeResolver.getUrl(node);
-	final URI nodeId = node.getNodeURI();
 
 	// HANDLE download action here
 	final String fileName = new File(nodeUri.getPath()).getName();
@@ -72,15 +69,11 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
 	try {
 	    boolean hasaccess;
-	    try {
-		final AccessInfo nodeAuthorization = csdb.getNode(nodeId).getAuthorization();
-		if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		    hasaccess = nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
-		} else {
-		    hasaccess = nodeAuthorization.hasReadAccess(userid);
-		}
-	    } catch (UnknownNodeException ex) {
-		throw new NodeActionException(this, ex);
+	    final AccessInfo nodeAuthorization = node.getAuthorization();
+	    if (userid == null || userid.equals("") || userid.equals("anonymous")) {
+		hasaccess = nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
+	    } else {
+		hasaccess = nodeAuthorization.hasReadAccess(userid);
 	    }
 	    logger.debug("resource-download, access for " + nodeUri.toString() + ", " + userid + ", " + hasaccess);
 	    if (hasaccess) {
