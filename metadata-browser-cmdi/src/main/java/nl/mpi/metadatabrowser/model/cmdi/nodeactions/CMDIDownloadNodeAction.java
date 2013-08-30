@@ -34,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * TODO: Merge with CMDIDownloadNodeAction?
+ * TODO: Add support for multiple node selection?
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
@@ -62,9 +64,11 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	// HANDLE download action here
 	if (userHasAccess(node, nodeUri)) {
 	    final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
+	    //TODO: get rid of this static method
 	    DownloadActionRequest.setStreamContent(resStream);
 
 	    final String fileName = new File(nodeUri.getPath()).getName();
+	    //TODO: get rid of this static method
 	    DownloadActionRequest.setFileName(fileName);
 	} else {
 	    return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));

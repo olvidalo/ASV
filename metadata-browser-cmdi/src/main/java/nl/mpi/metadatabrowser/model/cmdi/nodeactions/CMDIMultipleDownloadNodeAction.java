@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * TODO: Merge with CMDIDownloadNodeAction?
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
@@ -46,42 +47,41 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     private String userid;
 
     public CMDIMultipleDownloadNodeAction(CorpusStructureProvider csdb, ZipService zipService) {
-        this.csdb = csdb;
-        this.zipService = zipService;
+	this.csdb = csdb;
+	this.zipService = zipService;
 
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        URI nodeid = node.getNodeURI();
+	logger.debug("Action [{}] invoked on {}", getName(), node);
+	URI nodeid = node.getNodeURI();
 
-        try {
-            List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);
-            final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
-            IResourceStream resStream = new FileResourceStream(zipFile) {
+	try {
+	    List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);
+	    final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
+	    IResourceStream resStream = new FileResourceStream(zipFile) {
+		@Override
+		public void close() throws IOException {
+		    super.close();
+		    zipFile.delete();
+		}
+	    };
+	    DownloadActionRequest.setStreamContent(resStream);
+	    DownloadActionRequest.setFileName("package_" + node.getName());
+	    final DownloadActionRequest request = new DownloadActionRequest();
 
-                @Override
-                public void close() throws IOException {
-                    super.close();
-                    zipFile.delete();
-                }
-            };
-            DownloadActionRequest.setStreamContent(resStream);
-            DownloadActionRequest.setFileName("package_" + node.getName());
-            final DownloadActionRequest request = new DownloadActionRequest();
-
-            return new SimpleNodeActionResult(request);
-        } catch (IOException ex) {
-            logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
-            throw new NodeActionException(this, ex);
-        } catch (UnknownNodeException ex) {
-            throw new NodeActionException(this, ex);
-        }
+	    return new SimpleNodeActionResult(request);
+	} catch (IOException ex) {
+	    logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
+	    throw new NodeActionException(this, ex);
+	} catch (UnknownNodeException ex) {
+	    throw new NodeActionException(this, ex);
+	}
     }
 }

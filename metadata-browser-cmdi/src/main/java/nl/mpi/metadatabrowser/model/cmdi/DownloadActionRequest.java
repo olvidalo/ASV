@@ -21,41 +21,38 @@ import nl.mpi.metadatabrowser.model.DownloadRequest;
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
+ * TODO: THIS CANNOT HAVE setStreamContent AND setFileName AS STATIC METHODS!!! Preferably make immutable through final fields.
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class DownloadActionRequest implements DownloadRequest, Serializable {
-    
+
     private static String fileName;
     private static IResourceStream streamContent;
 
     public static void setFileName(String name) {
-        DownloadActionRequest.fileName = name;
+	DownloadActionRequest.fileName = name;
     }
 
     public DownloadActionRequest(String fileName, IResourceStream resStream) {
-        this.fileName = fileName;
-        this.streamContent = resStream;
+	this.fileName = fileName;
+	this.streamContent = resStream;
     }
 
     public DownloadActionRequest() {
     }
-    
-
 
     public static void setStreamContent(IResourceStream streamContent) {
 	DownloadActionRequest.streamContent = streamContent;
     }
-    
+
     @Override
     public IResourceStream getDownloadStream() {
-        return streamContent;
+	return streamContent;
     }
 
-    
     @Override
     public String getFileName() {
-        return fileName;
+	return fileName;
     }
-    
 }
