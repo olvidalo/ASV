@@ -29,6 +29,7 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.Model;
 
 /**
+ * Panel that shows {@link NodeActionButton}s for each of the actions in the model of type {@link NodeActionsStructure}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */

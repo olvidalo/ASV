@@ -26,14 +26,17 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     public HomePage(final PageParameters parameters) {
 	super();
 
+	// Add a panel hosting the archive tree, taking its structure from the injected tree model provider
 	final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
 	treePanel.setLinkType(LinkType.AJAX_FALLBACK);
 	add(treePanel);
 
+	// Add a panel to show information and actions on the currently selected node(s)
 	nodesPanel = new NodesPanel("nodesPanel", new CollectionModel(treePanel.getSelectedNodes()));
 	nodesPanel.setOutputMarkupId(true);
 	add(nodesPanel);
 
+	// Link up the tree panel and nodes panel so that changes in the former get reflected in the latter
 	treePanel.addArchiveTreePanelListener(new ArchiveTreePanelListener<SerializableCorpusNode>() {
 	    @Override
 	    public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {

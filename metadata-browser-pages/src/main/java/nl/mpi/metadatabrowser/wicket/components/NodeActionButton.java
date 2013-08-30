@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Button for offering and handling {@link NodeAction}s
+ * Button for offering and handling {@link NodeAction}s on a collection of nodes
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */

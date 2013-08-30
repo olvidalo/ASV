@@ -63,10 +63,12 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
 	super(id, model);
 
+	// Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
 	nodeActionsPanel = new NodesActionsPanel("nodeActions");
 	nodeActionsPanel.setOutputMarkupId(true);
 	add(nodeActionsPanel);
 
+	// Add a panel for node visualisation and/or output of node actions (updated on model change, i.e. node selection)
 	nodePresentationContainer = new WebMarkupContainer("nodePresentationContainer");
 	nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
 	nodePresentationContainer.setOutputMarkupId(true);
@@ -75,6 +77,7 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 
     @Override
     protected void onModelChanged() {
+	// This gets called when the node selection changes, e.g. one or more new nodes get selected or unselected
 	super.onModelChanged();
 
 	final Collection<TypedCorpusNode> typedNodes = getTypedCorpusNodes(getModelObject());
@@ -82,6 +85,12 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 	updateNodePresentation(typedNodes);
     }
 
+    /**
+     * Wraps the selected nodes into typed corpus nodes (using the {@link NodeTypeIdentifier} to get the node type for each node)
+     *
+     * @param selectedNodes nodes to get typed versions for
+     * @return
+     */
     private Collection<TypedCorpusNode> getTypedCorpusNodes(final Collection<SerializableCorpusNode> selectedNodes) {
 	final Collection<TypedCorpusNode> typedNodes = new ArrayList<TypedCorpusNode>(selectedNodes.size());
 	for (SerializableCorpusNode node : selectedNodes) {
@@ -98,14 +107,22 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 	return typedNodes;
     }
 
+    /**
+     * Gets the node actions and update the model of the node actions panel
+     *
+     * @param typedNodes selected nodes with type information
+     */
     private void updateNodeActions(final Collection<TypedCorpusNode> typedNodes) {
-	// Get the node actions and update the model of the node actions panel
 	final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(typedNodes);
 	nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, selectedNodeActions));
     }
 
+    /**
+     * Adds the node presentation component to the presentation container (or remove if none is available)
+     *
+     * @param typedNodes selected nodes with type information
+     */
     private void updateNodePresentation(final Collection<TypedCorpusNode> typedNodes) {
-	// Add the node presentation component to the presentation container (or remove if none is available)
 	try {
 	    final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
 	    if (nodePresentation == null) {
