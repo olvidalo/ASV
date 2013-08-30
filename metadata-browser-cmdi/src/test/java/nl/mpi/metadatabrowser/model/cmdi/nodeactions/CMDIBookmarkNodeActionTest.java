@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -38,23 +39,24 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIBookmarkNodeActionTest {
-        private final Mockery context = new JUnit4Mockery();
-    
+
+    private final Mockery context = new JUnit4Mockery();
+
     public CMDIBookmarkNodeActionTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -64,20 +66,21 @@ public class CMDIBookmarkNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-        System.out.println("execute bookmark test");        
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        
-        Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
-        nodes.add(node);
+	System.out.println("execute bookmark test");
+	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+	final NodeResolver resolver = context.mock(NodeResolver.class);
 
-        CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb);
-        NodeActionResult result = instance.execute(nodes);
-        assertEquals("bookmark", instance.getName());
+	Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
+	nodes.add(node);
 
-        ControllerActionRequest actionRequest = result.getControllerActionRequest();
-        assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
+	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb, resolver);
+	NodeActionResult result = instance.execute(nodes);
+	assertEquals("bookmark", instance.getName());
+
+	ControllerActionRequest actionRequest = result.getControllerActionRequest();
+	assertNotNull(actionRequest);
+	assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
     }
 
     /**
@@ -85,11 +88,12 @@ public class CMDIBookmarkNodeActionTest {
      */
     @Test
     public void testGetName() {
-        System.out.println("getName");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb);
-        String expResult = "bookmark";
-        String result = instance.getName();
-        assertEquals(expResult, result);
+	System.out.println("getName");
+	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+	final NodeResolver resolver = context.mock(NodeResolver.class);
+	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb, resolver);
+	String expResult = "bookmark";
+	String result = instance.getName();
+	assertEquals(expResult, result);
     }
 }

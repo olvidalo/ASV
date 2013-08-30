@@ -16,9 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelShowComponent;
 import org.apache.wicket.Component;
@@ -34,9 +41,11 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "bookmark";
     private final CorpusStructureProvider csdb;
+    private final NodeResolver nodeResolver;
 
-    public CMDIBookmarkNodeAction(CorpusStructureProvider csdb) {
+    public CMDIBookmarkNodeAction(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
         this.csdb = csdb;
+	this.nodeResolver = nodeResolver;
     }
 
     @Override
@@ -49,7 +58,7 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
             public Component getComponent(String id) throws ControllerActionRequestException {
                 try {
                     // create panel form for bookmark action
-                    return new PanelShowComponent(id, node, csdb);
+                    return new PanelShowComponent(id, node, csdb, nodeResolver);
                 } catch (UnknownNodeException ex) {
                     throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeURI(), ex);
                 }

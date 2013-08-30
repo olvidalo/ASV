@@ -59,7 +59,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIAMSNodeAction(),
 		new CMDIRrsNodeAction(),
 		new CMDIStatsNodeAction(),
-		new CMDIBookmarkNodeAction(csdb),
+		new CMDIBookmarkNodeAction(csdb, nodeResolver),
 		new CMDIDownloadNodeAction(nodeResolver),
 		new CMDIMultipleDownloadNodeAction(csdb, zipService),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
@@ -69,7 +69,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDITrovaNodeAction(),
 		new CMDIAMSNodeAction(),
 		new CMDIRrsNodeAction(),
-		new CMDIBookmarkNodeAction(csdb),
+		new CMDIBookmarkNodeAction(csdb, nodeResolver),
 		new CMDIDownloadNodeAction(nodeResolver));
 
 	resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
@@ -77,7 +77,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIRrsNodeAction(),
 		new CMDIStatsNodeAction(),
 		new CMDIViewNodeAction(nodeResolver),
-		new CMDIBookmarkNodeAction(csdb),
+		new CMDIBookmarkNodeAction(csdb, nodeResolver),
 		new CMDIDownloadNodeAction(nodeResolver),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
 
@@ -87,7 +87,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIRrsNodeAction(),
 		new CMDIStatsNodeAction(),
 		new CMDIViewNodeAction(nodeResolver),
-		new CMDIBookmarkNodeAction(csdb),
+		new CMDIBookmarkNodeAction(csdb, nodeResolver),
 		new CMDIDownloadNodeAction(nodeResolver),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
 

@@ -17,8 +17,10 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.MarkupContainer;
@@ -37,12 +39,12 @@ public final class PanelShowComponent extends Panel {
 
     private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
 
-    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb) throws UnknownNodeException {
+    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnknownNodeException {
 	super(id);
 	final Form form = new Form("nodeInfoForm");
 	String nodeName = node.getName();
 	URI nodeId = node.getNodeURI();
-	String title = "Resource \"" + node.getName() + "\" + from \"" + csdb.getParentNodeURIs(nodeId).toString() + "\"";
+	String title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getParentNodeURIs(nodeId));
 
 	Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
 	String lastModified = "";
@@ -62,7 +64,7 @@ public final class PanelShowComponent extends Panel {
 	final String archiveName = archive_name;
 	final String resolvedHandle = resolver.concat(handle);
 
-	String url = node.getNodeURI().toString();
+	URL url = nodeResolver.getUrl(node);
 
 	// create citations to be displayed
 	StringBuilder sb = new StringBuilder();
@@ -99,7 +101,7 @@ public final class PanelShowComponent extends Panel {
 	form.add(new Label("nodeId", nodeId.toString()));
 	form.add(new Label("name", nodeName));
 	form.add(new Label("handle", handle));
-	form.add(new Label("url", url));
+	form.add(new Label("url", url == null ? "-" : url.toString()));
 	form.add(new Label("title", title));
 	Label bookmarkLabel = new Label("bookmark", sb.toString());
 	bookmarkLabel.setEscapeModelStrings(false);
