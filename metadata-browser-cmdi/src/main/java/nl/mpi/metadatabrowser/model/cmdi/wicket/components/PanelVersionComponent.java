@@ -111,8 +111,8 @@ public class PanelVersionComponent extends Panel {
 		    //TODO decide if it is revelant to display table with no value or simply return a message.
 		    repeating.add(new Label("hasaccess", hasaccess.toString()));
 		    repeating.add(new Label("currentNodeDate", "unknown"));
-		    repeating.add(new ExternalLink("linktoNode", "no verison found", "link to the node"));
-		    repeating.add(new ExternalLink("linktoPID", "no verison found", "link to the PID of the node"));
+		    repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
+		    repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
 		    add(repeating);
 		}
 	    }
