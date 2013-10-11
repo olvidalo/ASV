@@ -73,7 +73,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 		}
 	    };
 	    DownloadActionRequest.setStreamContent(resStream);
-	    DownloadActionRequest.setFileName("package_" + node.getName());
+	    DownloadActionRequest.setFileName("package_" + node.getName() + ".zip");
 	    final DownloadActionRequest request = new DownloadActionRequest();
 
 	    return new SimpleNodeActionResult(request);

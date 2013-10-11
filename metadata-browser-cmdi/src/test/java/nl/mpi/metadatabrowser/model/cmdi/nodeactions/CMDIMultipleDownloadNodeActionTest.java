@@ -130,7 +130,7 @@ public class CMDIMultipleDownloadNodeActionTest {
         assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
         
         DownloadActionRequest downloadActionRequest = (DownloadActionRequest)actionRequest;
-        assertEquals("package_nodeName", downloadActionRequest.getFileName());
+        assertEquals("package_nodeName.zip", downloadActionRequest.getFileName());
         IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
         assertThat(downloadStream, instanceOf(FileResourceStream.class));
         
