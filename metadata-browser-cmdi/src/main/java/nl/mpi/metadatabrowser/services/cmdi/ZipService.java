@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
  *
@@ -29,6 +30,6 @@ import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
  */
 public interface ZipService {
 
-    File createZipFileForNodes(List<? extends CorpusNode> childrenNodes, String userid) throws IOException, UnknownNodeException, FileNotFoundException;
+    File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, UnknownNodeException, FileNotFoundException;
     
 }

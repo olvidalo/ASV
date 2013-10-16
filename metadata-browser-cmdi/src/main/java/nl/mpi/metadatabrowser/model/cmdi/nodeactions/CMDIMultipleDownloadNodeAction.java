@@ -17,10 +17,13 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
@@ -28,6 +31,7 @@ import nl.mpi.metadatabrowser.model.*;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
@@ -63,8 +67,9 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 	URI nodeid = node.getNodeURI();
 
 	try {
-	    List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);
-	    final File zipFile = zipService.createZipFileForNodes(childrenNodes, userid);
+//	    List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);
+//            childrenNodes.add(node);
+	    final File zipFile = zipService.createZipFileForNodes(node, userid);
 	    IResourceStream resStream = new FileResourceStream(zipFile) {
 		@Override
 		public void close() throws IOException {
@@ -73,7 +78,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 		}
 	    };
 	    DownloadActionRequest.setStreamContent(resStream);
-	    DownloadActionRequest.setFileName("package_" + node.getName() + ".zip");
+	    DownloadActionRequest.setFileName("package_" + FilenameUtils.getBaseName(node.getName()) + ".zip");
 	    final DownloadActionRequest request = new DownloadActionRequest();
 
 	    return new SimpleNodeActionResult(request);
@@ -84,4 +89,6 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 	    throw new NodeActionException(this, ex);
 	}
     }
+
+    
 }
