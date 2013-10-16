@@ -16,9 +16,13 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -49,10 +53,13 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     private final List<NodeAction> resourcetxtNodeActionList;
     private final List<NodeAction> resourceAudioVideoNodeActionList;
     public final List<NodeAction> metadataNodeActionList;
+    public final List<NodeAction> singleMetadataNodeActionList;
     public final List<NodeAction> collectionNodeActionList;
     public final List<NodeAction> multipleNodeActionList;
+    private final CorpusStructureProvider csdb;
 
     public CMDIActionsProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, ZipService zipService) {
+         this.csdb = csdb;
 	metadataNodeActionList = Arrays.<NodeAction>asList(
 		new CMDISearchNodeAction(),
 		new CMDITrovaNodeAction(),
@@ -62,6 +69,16 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIBookmarkNodeAction(csdb, nodeResolver),
 		new CMDIDownloadNodeAction(nodeResolver),
 		new CMDIMultipleDownloadNodeAction(csdb, zipService),
+		new CMDIVersionNodeAction(csdb, nodeResolver));
+        
+        singleMetadataNodeActionList = Arrays.<NodeAction>asList(
+		new CMDISearchNodeAction(),
+		new CMDITrovaNodeAction(),
+		new CMDIAMSNodeAction(),
+		new CMDIRrsNodeAction(),
+		new CMDIStatsNodeAction(),
+		new CMDIBookmarkNodeAction(csdb, nodeResolver),
+		new CMDIDownloadNodeAction(nodeResolver),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
 
 	collectionNodeActionList = Arrays.<NodeAction>asList(
@@ -104,6 +121,13 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
 	if (nodes.size() > 0 && nodes.size() == 1) {
 	    for (TypedCorpusNode node : nodes) {
+                try {
+                    if(csdb.getChildNodes(node.getNodeURI()).isEmpty()){
+                    return singleMetadataNodeActionList;                        
+                    }
+                } catch (UnknownNodeException ex) {
+                    return null;
+                }
 		if (node.getNodeType() instanceof CMDICollectionType) {
 		    return collectionNodeActionList;
 		}
