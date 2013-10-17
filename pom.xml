@@ -19,7 +19,7 @@
     <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<!-- Version of Wicket to depend on in module projects -->
-	<wicket.version>1.5.10</wicket.version>
+	<wicket.version>6.11.0</wicket.version>
 	<jmock.version>2.6.0</jmock.version>
 	<!-- Hint for NetBeans to insert license header -->
 	<netbeans.hint.license>gpl30</netbeans.hint.license>
