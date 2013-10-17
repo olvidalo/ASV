@@ -26,6 +26,13 @@ import nl.mpi.metadatabrowser.model.NodeType;
  */
 public interface NodeTypeIdentifier {
 
+    public final static NodeType UNKNOWN_NODE_TYPE = new NodeType() {
+	@Override
+	public String getName() {
+	    return "Unknown node type";
+	}
+    };
+
     /**
      * Gets the node type for the specified node
      *
