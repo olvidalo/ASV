@@ -64,7 +64,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
-	URI nodeid = node.getNodeURI();
+	//URI nodeid = node.getNodeURI();
 
 	try {
 //	    List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);

@@ -19,7 +19,9 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipFile;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
@@ -41,8 +43,10 @@ import static org.jmock.Expectations.returnValue;
  */
 public class ZipServiceImplTest {
 
+    private final static URI NODE_ID = URI.create("node:0");
     public static final URI NODE1_ID = URI.create("node:1");
     public static final URI NODE2_ID = URI.create("node:2");
+    public static final URI NODE3_ID = URI.create("node:3");
     private final Mockery context = new JUnit4Mockery();
 
     public ZipServiceImplTest() {
@@ -69,20 +73,42 @@ public class ZipServiceImplTest {
      */
     @Test
     public void testCreateZipFileForNodes() throws Exception {
-	System.out.println("createZipFileForNodes");
-	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
-	final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
-	final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1, child2);
-	final AccessInfo ai = context.mock(AccessInfo.class);
-	final String userId = "corpman";
+        System.out.println("createZipFileForNodes");
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
+        final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
+        final TypedCorpusNode child3 = context.mock(TypedCorpusNode.class, "child3");
+        final List<TypedCorpusNode> childrenNodes = Arrays.asList(child1, child2);
+        final List<TypedCorpusNode> childrenNodes2 = Arrays.asList(child3);
+        final AccessInfo ai = context.mock(AccessInfo.class);
+        final String userId = "corpman";
 
-	context.checking(new Expectations() {
-	    {
+        context.checking(new Expectations() {
+            {
+
+                oneOf(node).getNodeURI();
+                will(returnValue(NODE_ID));
+
+                oneOf(csdb).getChildNodes(NODE_ID);
+                will(returnValue(childrenNodes));
+                
+                allowing(csdb).getChildNodes(NODE1_ID);
+                will(returnValue(childrenNodes2));
+                
 		allowing(child1).getNodeURI();
 		will(returnValue(NODE1_ID));
 
+                allowing(child3).getNodeURI();
+		will(returnValue(NODE3_ID));
+
+		allowing(csdb).getNode(NODE3_ID);
+		will(returnValue(child3));
+                
+                oneOf(csdb).getChildNodes(NODE3_ID);
+                will(returnValue(Collections.emptyList()));
+                
 		allowing(csdb).getNode(NODE1_ID);
 		will(returnValue(child1));
 
@@ -91,15 +117,24 @@ public class ZipServiceImplTest {
 
 		allowing(csdb).getNode(NODE2_ID);
 		will(returnValue(child2));
+                
+                oneOf(csdb).getChildNodes(NODE2_ID);
+                will(returnValue(Collections.emptyList()));
+                
 
 		allowing(nodeResolver).getUrl(child1);
 		will(returnValue(new URL("file://test/first")));
-		oneOf(nodeResolver).getInputStream(child1);
+		allowing(nodeResolver).getInputStream(child1);
 		will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Nijmegen.cmdi")));
 		
 		allowing(nodeResolver).getUrl(child2);
 		will(returnValue(new URL("file://test/second")));
-		oneOf(nodeResolver).getInputStream(child2);
+		allowing(nodeResolver).getInputStream(child2);
+		will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Corpora.cmdi")));
+                
+                allowing(nodeResolver).getUrl(child3);
+		will(returnValue(new URL("file://test/third")));
+		allowing(nodeResolver).getInputStream(child3);
 		will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Corpora.cmdi")));
 
 		allowing(child1).getAuthorization();
@@ -107,25 +142,28 @@ public class ZipServiceImplTest {
 
 		allowing(child2).getAuthorization();
 		will(returnValue(ai));
+		
+                allowing(child3).getAuthorization();
+		will(returnValue(ai));
 
 		allowing(ai).hasReadAccess(userId);
 		will(returnValue(true));
-	    }
-	});
+            }
+        });
 
-	ZipServiceImpl instance = new ZipServiceImpl(csdb, nodeResolver);
-	File result = instance.createZipFileForNodes(childrenNodes, userId);
-	ZipFile zip = new ZipFile(result);
-	assertThat(result, instanceOf(File.class));
-	assertNotNull(result.getPath());
-	assertNotNull(result.length());
-	assertEquals(2, zip.size());
-	assertNotNull(zip.getEntry("first"));
-	assertNotNull(zip.getEntry("second"));
-	//TODO: verify contents??
-	// delete result
-	if (!result.delete()) {
-	    System.err.println("Could not delete " + result.getAbsolutePath() + " in " + getClass().getName());
-	}
+        ZipServiceImpl instance = new ZipServiceImpl(csdb, nodeResolver);
+        File result = instance.createZipFileForNodes(node, userId);
+        ZipFile zip = new ZipFile(result);
+        assertThat(result, instanceOf(File.class));
+        assertNotNull(result.getPath());
+        assertNotNull(result.length());
+        assertEquals(3, zip.size());
+        assertNotNull(zip.getEntry("first"));
+        assertNotNull(zip.getEntry("second"));
+        //TODO: verify contents??
+        // delete result
+        if (!result.delete()) {
+            System.err.println("Could not delete " + result.getAbsolutePath() + " in " + getClass().getName());
+        }
     }
 }

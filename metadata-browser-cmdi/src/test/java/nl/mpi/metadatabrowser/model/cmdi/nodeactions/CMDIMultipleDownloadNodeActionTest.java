@@ -85,7 +85,6 @@ public class CMDIMultipleDownloadNodeActionTest {
         String result = instance.getName();
         assertEquals(expResult, result);
     }
-    private final static URI NODE_ID = URI.create("node:1");
 
     /**
      * Test of execute method, of class CMDIMultipleDownloadNodeAction.
@@ -97,9 +96,6 @@ public class CMDIMultipleDownloadNodeActionTest {
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
         final ZipService zipService = context.mock(ZipService.class);
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
-        final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
-        final List<TypedCorpusNode> childrenList = Arrays.asList(child1,child2);
         final String userId = null;
 
         final File zipFile = File.createTempFile("test", "txt");
@@ -110,15 +106,10 @@ public class CMDIMultipleDownloadNodeActionTest {
         context.checking(new Expectations() {
 
             {
-                allowing(node).getNodeURI();
-                will(returnValue(NODE_ID));
                 allowing(node).getName();
                 will(returnValue("nodeName"));
                 
-                oneOf(csdb).getChildNodes(NODE_ID);
-                will(returnValue(childrenList));
-                
-                oneOf(zipService).createZipFileForNodes(childrenList, userId);
+                oneOf(zipService).createZipFileForNodes(node, userId);
                 will(returnValue(zipFile));
             }
         });

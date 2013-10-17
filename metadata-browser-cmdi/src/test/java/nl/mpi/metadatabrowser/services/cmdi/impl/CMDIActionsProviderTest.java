@@ -19,10 +19,13 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -40,7 +43,7 @@ import static org.junit.Assert.*;
 public class CMDIActionsProviderTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1","1");
+    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1", "1");
 
     public CMDIActionsProviderTest() {
     }
@@ -65,19 +68,30 @@ public class CMDIActionsProviderTest {
      * Test of getNodeActions method, of class CMDIActionsProvider.
      */
     @Test
-    public void testGetNodeActions() {
-	System.out.println("getNodeActions");
-	final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	final ZipService zipService = context.mock(ZipService.class);
-	CMDIActionsProvider instance = new CMDIActionsProvider(cs, nodeResolver, zipService);
+    public void testGetNodeActions() throws UnknownNodeException {
+        System.out.println("getNodeActions");
+        final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
+        final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
+        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        final ZipService zipService = context.mock(ZipService.class);
+        final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
+        final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
+        final List<TypedCorpusNode> childrenList = Arrays.asList(child1, child2);
 
-	List expResult = instance.collectionNodeActionList;
-	List result = instance.getNodeActions(collectionCorpus);
-	System.out.println(expResult.size());
-	assertNotNull(result);
-	assertEquals(expResult.size(), result.size());
-	assertEquals(expResult, result);
+        context.checking(new Expectations() {
+            {
+                oneOf(cs).getChildNodes(corpType.getNodeURI());
+                will(returnValue(childrenList));
+            }
+        });
+
+        CMDIActionsProvider instance = new CMDIActionsProvider(cs, nodeResolver, zipService);
+
+        List expResult = instance.collectionNodeActionList;
+        List result = instance.getNodeActions(collectionCorpus);
+        System.out.println(expResult.size());
+        assertNotNull(result);
+        assertEquals(expResult.size(), result.size());
+        assertEquals(expResult, result);
     }
 }
