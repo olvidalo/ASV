@@ -31,9 +31,9 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
@@ -63,7 +63,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 	String xmlContent = null;
 	
 	//TODO: Metadata case can be removed, as this action is not in the list for metadata node actions in the CMDIActionsProvider anyway?
-	if (node.getNodeType() instanceof CMDIMetadata
+	if (node.getNodeType() instanceof CMDIMetadataType
 		|| node.getNodeType() instanceof CMDICollectionType) {
 	    InputStream in = null;
 	    try {

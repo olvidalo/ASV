@@ -16,21 +16,20 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
@@ -59,7 +58,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     private final CorpusStructureProvider csdb;
 
     public CMDIActionsProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, ZipService zipService) {
-         this.csdb = csdb;
+	this.csdb = csdb;
 	metadataNodeActionList = Arrays.<NodeAction>asList(
 		new CMDISearchNodeAction(),
 		new CMDITrovaNodeAction(),
@@ -70,8 +69,8 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		new CMDIDownloadNodeAction(nodeResolver),
 		new CMDIMultipleDownloadNodeAction(csdb, zipService),
 		new CMDIVersionNodeAction(csdb, nodeResolver));
-        
-        singleMetadataNodeActionList = Arrays.<NodeAction>asList(
+
+	singleMetadataNodeActionList = Arrays.<NodeAction>asList(
 		new CMDISearchNodeAction(),
 		new CMDITrovaNodeAction(),
 		new CMDIAMSNodeAction(),
@@ -121,17 +120,17 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
 	if (nodes.size() > 0 && nodes.size() == 1) {
 	    for (TypedCorpusNode node : nodes) {
-                try {
-                    if(csdb.getChildNodes(node.getNodeURI()).isEmpty()){
-                    return singleMetadataNodeActionList;                        
-                    }
-                } catch (UnknownNodeException ex) {
-                    return null;
-                }
-		if (node.getNodeType() instanceof CMDICollectionType) {
+		try {
+		    if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
+			return singleMetadataNodeActionList;
+		    }
+		} catch (UnknownNodeException ex) {
+		    return null;
+		}
+		if (node.getNodeType() instanceof CollectionType) {
 		    return collectionNodeActionList;
 		}
-		if (node.getNodeType() instanceof CMDIMetadata) {
+		if (node.getNodeType() instanceof MetadataType) {
 		    return metadataNodeActionList;
 		}
 		if (node.getNodeType() instanceof CMDIResourceType) {

@@ -14,18 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.type;
+
+import nl.mpi.metadatabrowser.model.NodeType;
 
 /**
  *
- * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class CMDIResourceType extends CMDINodeType {
-
-    private String name = "resourceAudioVideo";
-
-    @Override
-    public String getName() {
-        return name;
-    }
+public interface CollectionType extends NodeType {
 }

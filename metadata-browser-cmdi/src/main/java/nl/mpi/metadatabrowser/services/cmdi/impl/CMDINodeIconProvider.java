@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,11 @@ import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
@@ -52,6 +58,8 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("corpusnode_color.gif"));
     private final ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("mediafile.gif"));
     private final ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("file.gif"));
+    private final ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("clarin.png"));
+    private final ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("unknown.png"));
     private final ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
     private final ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_yellow.png"));
     private final ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
@@ -68,9 +76,9 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @param csdb
      */
     public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csdb) {
-        this.nodeTypeIdentifier = nodeTypeIdentifier;
-        this.csdb = csdb;
-        populateIconMap();
+	this.nodeTypeIdentifier = nodeTypeIdentifier;
+	this.csdb = csdb;
+	populateIconMap();
     }
 
     /**
@@ -82,26 +90,28 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      */
     @Override
     public ResourceReference getNodeIcon(T contentNode) {
-        ResourceReference combinedIcon = null;
-        try {
-            final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
-            if (nodeType.getName().equalsIgnoreCase("Collection")) {
-                combinedIcon = checkNodeAccess(contentNode, csdb, corpusIcon);
-            } else if (nodeType.getName().equalsIgnoreCase("Root")) {
-                combinedIcon = checkNodeAccess(contentNode, csdb, corpusIcon);
-            } else if (nodeType.getName().equalsIgnoreCase("ResourceAudioVideo")) {
-                combinedIcon = checkNodeAccess(contentNode, csdb, fileIcon);
-            } else if (nodeType.getName().equalsIgnoreCase("ResourceTxt")) {
-                combinedIcon = checkNodeAccess(contentNode, csdb, fileIconTxt);
-            } else {
-                combinedIcon = checkNodeAccess(contentNode, csdb, sessionIcon);
-            }
-        } catch (UnknownNodeException ex) {
-            Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NodeTypeIdentifierException ex) {
-            Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return combinedIcon;
+	ResourceReference combinedIcon = null;
+	try {
+	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
+	    if (nodeType instanceof CMDIResourceType) {
+		combinedIcon = checkNodeAccess(contentNode, csdb, fileIcon);
+	    } else if (nodeType instanceof CMDIResourceTxtType) {
+		combinedIcon = checkNodeAccess(contentNode, csdb, fileIconTxt);
+	    } else if (nodeType instanceof IMDISessionType) {
+		combinedIcon = checkNodeAccess(contentNode, csdb, sessionIcon);
+	    } else if (nodeType instanceof IMDICorpusType) {
+		combinedIcon = checkNodeAccess(contentNode, csdb, corpusIcon);
+	    } else if (nodeType instanceof CMDIMetadataType) {
+		combinedIcon = checkNodeAccess(contentNode, csdb, cmdiIcon);
+	    } else {
+		combinedIcon = checkNodeAccess(contentNode, csdb, unknownIcon);
+	    }
+	} catch (UnknownNodeException ex) {
+	    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
+	} catch (NodeTypeIdentifierException ex) {
+	    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
+	}
+	return combinedIcon;
     }
 
     /**
@@ -114,25 +124,24 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ResourceReference, combination of both icon given as parameters.
      */
     private ResourceReference createCombinedIcon(final ImageIcon typeIcon, final ImageIcon accessLevel, String name) {
-        ResourceReference combinedIcon = new ResourceReference(name) {
+	ResourceReference combinedIcon = new ResourceReference(name) {
+	    @Override
+	    public IResource getResource() {
+		final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
+		int w = (int) (typeIcon.getImage().getWidth(null) + (float) accessLevel.getImage().getWidth(null));
+		int h = Math.max(typeIcon.getImage().getHeight(null), accessLevel.getImage().getHeight(null));
 
-            @Override
-            public IResource getResource() {
-                final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
-                int w = (int) (typeIcon.getImage().getWidth(null) + (float) accessLevel.getImage().getWidth(null));
-                int h = Math.max(typeIcon.getImage().getHeight(null), accessLevel.getImage().getHeight(null));
-
-                final BufferedImage testing = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2 = testing.createGraphics();
-                typeIcon.paintIcon(null, g2, 1, 0);
-                accessLevel.paintIcon(null, g2, typeIcon.getImage().getWidth(null), 0);
-                g2.dispose();
-                resource.setImage(testing);
-                resource.setFormat("PNG");
-                return resource;
-            }
-        };
-        return combinedIcon;
+		final BufferedImage testing = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = testing.createGraphics();
+		typeIcon.paintIcon(null, g2, 1, 0);
+		accessLevel.paintIcon(null, g2, typeIcon.getImage().getWidth(null), 0);
+		g2.dispose();
+		resource.setImage(testing);
+		resource.setFormat("PNG");
+		return resource;
+	    }
+	};
+	return combinedIcon;
     }
 
     /**
@@ -144,66 +153,49 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ImageIcon, corresponding to access level
      */
     private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
-        final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
-        HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
-        ImageIcon accessIcon = null;
-        ResourceReference combinedIcon = null;
+	final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
+	HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
+	ImageIcon accessIcon = null;
+	ResourceReference combinedIcon = null;
 
-        int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
-        if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
-            nodeAccessLevel = nAccessInfo.getAccessLevel();
-        }
+	int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
+	if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
+	    nodeAccessLevel = nAccessInfo.getAccessLevel();
+	}
 
-        if (nodeAccessLevel == 1) {
-            accessIcon = openIcon;
-        } else if (nodeAccessLevel == 2) {
-            accessIcon = licensedIcon;
-        } else if (nodeAccessLevel == 3) {
-            accessIcon = restrictedIcon;
-        } else if (nodeAccessLevel == 4) {
-            accessIcon = closedIcon;
-        } else if (nodeAccessLevel == 5) {
-            accessIcon = externalIcon;
-        }
+	if (nodeAccessLevel == 1) {
+	    accessIcon = openIcon;
+	} else if (nodeAccessLevel == 2) {
+	    accessIcon = licensedIcon;
+	} else if (nodeAccessLevel == 3) {
+	    accessIcon = restrictedIcon;
+	} else if (nodeAccessLevel == 4) {
+	    accessIcon = closedIcon;
+	} else if (nodeAccessLevel == 5) {
+	    accessIcon = externalIcon;
+	}
 
-        valuesMap.put(typeNode, accessIcon);
-        // retrieve the corresponding combined icon based on nodetype and accesslevel
-        for (Entry<Map<ImageIcon, ImageIcon>, ResourceReference> entry : IconMap.entrySet()) {
-            if (entry.getKey().equals(valuesMap)) {
-                combinedIcon = entry.getValue();
-            }
-        }
-        return combinedIcon;
+	valuesMap.put(typeNode, accessIcon);
+	// retrieve the corresponding combined icon based on nodetype and accesslevel
+	for (Entry<Map<ImageIcon, ImageIcon>, ResourceReference> entry : IconMap.entrySet()) {
+	    if (entry.getKey().equals(valuesMap)) {
+		combinedIcon = entry.getValue();
+	    }
+	}
+	return combinedIcon;
     }
 
     private void populateIconMap() {
-        List<ImageIcon> nodeIcon = new ArrayList<ImageIcon>() {
-            {
-                add(sessionIcon);
-                add(corpusIcon);
-                add(fileIcon);
-                add(fileIconTxt);
-            }
-        };
+	final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, fileIcon, cmdiIcon, unknownIcon);
+	final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon);
 
-        List<ImageIcon> accessIcon = new ArrayList<ImageIcon>() {
-            {
-                add(openIcon);
-                add(licensedIcon);
-                add(restrictedIcon);
-                add(closedIcon);
-                add(externalIcon);
-            }
-        };
-
-        
-        for(ImageIcon nodetypeIcon: nodeIcon){
-            for(ImageIcon accesslevelIcon: accessIcon){
-                String name = StringRandomGenerator.generateRandomString();
-                HashMap<ImageIcon, ImageIcon> iconsMap = new HashMap<ImageIcon, ImageIcon>();
-                iconsMap.put(nodetypeIcon, accesslevelIcon);
-                IconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
-            }
-        }
+	for (ImageIcon nodetypeIcon : nodeIcon) {
+	    for (ImageIcon accesslevelIcon : accessIcon) {
+		String name = StringRandomGenerator.generateRandomString();
+		HashMap<ImageIcon, ImageIcon> iconsMap = new HashMap<ImageIcon, ImageIcon>();
+		iconsMap.put(nodetypeIcon, accesslevelIcon);
+		IconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
+	    }
+	}
     }
 }

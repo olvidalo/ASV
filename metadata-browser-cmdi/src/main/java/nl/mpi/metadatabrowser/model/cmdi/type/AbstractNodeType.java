@@ -14,45 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
-
-import org.junit.*;
-import static org.junit.Assert.*;
+package nl.mpi.metadatabrowser.model.cmdi.type;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIResourceTypeTest {
-    
-    public CMDIResourceTypeTest() {
+abstract class AbstractNodeType implements nl.mpi.metadatabrowser.model.NodeType {
+
+    private final String name;
+
+    public AbstractNodeType(String name) {
+	this.name = name;
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    @Override
+    public String getName() {
+	return name;
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of getName method, of class CMDIResourceType.
-     */
-    @Test
-    public void testGetName() {
-        System.out.println("getName");
-        CMDIResourceType instance = new CMDIResourceType();
-        String expResult = "resourceAudioVideo";
-        String result = instance.getName();
-        assertEquals(expResult, result);
+    @Override
+    public String toString() {
+	return getName();
     }
 }

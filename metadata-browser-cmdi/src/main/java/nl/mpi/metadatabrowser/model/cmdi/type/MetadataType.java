@@ -14,18 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
+package nl.mpi.metadatabrowser.model.cmdi.type;
+
+import nl.mpi.metadatabrowser.model.NodeType;
 
 /**
+ * Marker interface to indicate type is a metadata type
  *
- * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class CMDIMetadata extends CMDINodeType {
-
-    private String name = "Metadata";
-
-    @Override
-    public String getName() {
-        return name;
-    }
+public interface MetadataType extends NodeType {
 }

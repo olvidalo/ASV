@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.CMDIMetadata;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockAccessInfo;
@@ -74,14 +74,14 @@ public class CMDINodeIconProviderTest {
         context.checking(new Expectations() {
             {
                 oneOf(nodeTypeId).getNodeType(contentNode);
-                will(returnValue(new CMDIMetadata()));
-                allowing(contentNode).getNodeURI();
+                will(returnValue(new CMDIMetadataType()));
+                atLeast(1).of(contentNode).getNodeURI();
                 will(returnValue(nodeid));
 		
-		allowing(csdb).getNode(nodeid);
+		atLeast(1).of(csdb).getNode(nodeid);
 		will(returnValue(contentNode));
 		
-		allowing(contentNode).getAuthorization();
+		atLeast(1).of(contentNode).getAuthorization();
 		will(returnValue(new MockAccessInfo()));
             }
         });

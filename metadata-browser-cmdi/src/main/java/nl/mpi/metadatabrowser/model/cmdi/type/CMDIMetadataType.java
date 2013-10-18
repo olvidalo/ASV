@@ -14,45 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi;
-
-import org.junit.*;
-import static org.junit.Assert.*;
+package nl.mpi.metadatabrowser.model.cmdi.type;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIResourceTxtTypeTest {
-    
-    public CMDIResourceTxtTypeTest() {
-    }
+public class CMDIMetadataType extends AbstractNodeType implements MetadataType {
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of getName method, of class CMDIResourceTxtType.
-     */
-    @Test
-    public void testGetName() {
-        System.out.println("getName");
-        CMDIResourceTxtType instance = new CMDIResourceTxtType();
-        String expResult = "resourceTxt";
-        String result = instance.getName();
-        assertEquals(expResult, result);
+    public CMDIMetadataType() {
+	super("Metadata");
     }
 }
