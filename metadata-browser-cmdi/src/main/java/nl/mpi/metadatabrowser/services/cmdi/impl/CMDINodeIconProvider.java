@@ -188,7 +188,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	int i = 0;
 	for (ImageIcon nodetypeIcon : nodeIcon) {
 	    for (ImageIcon accesslevelIcon : accessIcon) {
-		final String name = String.format("icon%d", i++);
+		final String name = String.format("node_icon_%d", i++);
 		final Entry<ImageIcon, ImageIcon> iconsMap = new SimpleEntry<ImageIcon, ImageIcon>(nodetypeIcon, accesslevelIcon);
 		iconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
 	    }
