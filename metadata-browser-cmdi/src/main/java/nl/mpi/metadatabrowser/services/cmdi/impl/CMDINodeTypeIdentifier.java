@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.net.URI;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
@@ -30,6 +29,8 @@ import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+
+import static nl.mpi.metadatabrowser.services.NodeTypeIdentifier.UNKNOWN_NODE_TYPE;
 
 /**
  *
@@ -49,30 +50,47 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
 	final CorpusNodeType corpusNodeType = node.getType();
 
-	if (corpusNodeType == CorpusNodeType.RESOURCE_VIDEO
-		|| corpusNodeType == CorpusNodeType.RESOURCE_AUDIO
-		|| corpusNodeType == CorpusNodeType.RESOURCE_OTHER) {
-	    return new CMDIResourceType();
-	} else if (corpusNodeType == CorpusNodeType.RESOURCE_ANNOTATION
-		|| corpusNodeType == CorpusNodeType.RESOURCE_LEXICAL) {
-	    return new CMDIResourceTxtType();
-	} else if (corpusNodeType == CorpusNodeType.METADATA) {
-	    //TODO: extend for special profile support (configurable probably)
-	    if (node.getFormat().equals(IMDI_MIME_TYPE)) {
-		return new IMDISessionType();
-	    } else {
-		return new CMDIMetadataType();
-	    }
-	} else if (node.getType() == CorpusNodeType.COLLECTION) {
-	    if (node.getFormat().equals(IMDI_MIME_TYPE)) {
-		return new IMDICorpusType();
-	    } else {
-		return new CMDICollectionType();
-	    }
-	} else if (COLLECTION_PROFILE_ID.equals(profileid.getProfile(node.getNodeURI()))) {
+	switch (corpusNodeType) {
+	    case RESOURCE_VIDEO:
+		return new CMDIResourceType();
+	    case RESOURCE_AUDIO:
+		return new CMDIResourceType();
+	    case RESOURCE_OTHER:
+		return new CMDIResourceType();
+	    case RESOURCE_ANNOTATION:
+		return new CMDIResourceTxtType();
+	    case RESOURCE_LEXICAL:
+		return new CMDIResourceTxtType();
+	    case METADATA:
+		return getMetadataType(node);
+	    case COLLECTION:
+		return getCollectionType(node);
+	    default:
+		return UNKNOWN_NODE_TYPE;
+	}
+    }
+
+    private NodeType getMetadataType(CorpusNode node) {
+	if (node.getFormat().equals(IMDI_MIME_TYPE)) {
+	    return new IMDISessionType();
+	} else {
+	    return getCMDIType(node);
+	}
+    }
+
+    private NodeType getCMDIType(CorpusNode node) {
+	if (COLLECTION_PROFILE_ID.equals(profileid.getProfile(node.getNodeURI()))) {
 	    return new CMDICollectionType();
 	} else {
-	    return UNKNOWN_NODE_TYPE;
+	    return new CMDIMetadataType();
+	}
+    }
+
+    private NodeType getCollectionType(CorpusNode node) {
+	if (node.getFormat().equals(IMDI_MIME_TYPE)) {
+	    return new IMDICorpusType();
+	} else {
+	    return new CMDICollectionType();
 	}
     }
 }

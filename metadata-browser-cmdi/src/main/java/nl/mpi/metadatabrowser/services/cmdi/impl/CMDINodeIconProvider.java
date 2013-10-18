@@ -93,25 +93,51 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	ResourceReference combinedIcon = null;
 	try {
 	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
-	    if (nodeType instanceof CMDIResourceType) {
-		combinedIcon = checkNodeAccess(contentNode, csdb, fileIcon);
-	    } else if (nodeType instanceof CMDIResourceTxtType) {
-		combinedIcon = checkNodeAccess(contentNode, csdb, fileIconTxt);
-	    } else if (nodeType instanceof IMDISessionType) {
-		combinedIcon = checkNodeAccess(contentNode, csdb, sessionIcon);
-	    } else if (nodeType instanceof IMDICorpusType) {
-		combinedIcon = checkNodeAccess(contentNode, csdb, corpusIcon);
-	    } else if (nodeType instanceof CMDIMetadataType) {
-		combinedIcon = checkNodeAccess(contentNode, csdb, cmdiIcon);
-	    } else {
-		combinedIcon = checkNodeAccess(contentNode, csdb, unknownIcon);
-	    }
+	    final ImageIcon nodeTypeIcon = getNodeTypeIcon(nodeType);
+	    combinedIcon = checkNodeAccess(contentNode, csdb, nodeTypeIcon);
 	} catch (UnknownNodeException ex) {
 	    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
 	} catch (NodeTypeIdentifierException ex) {
 	    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
 	}
 	return combinedIcon;
+    }
+
+    /**
+     * Method return an ImageIcon reflecting the access level for a particular
+     * node. Access is requested to corpusStructureDB
+     *
+     * @param contentNode, node for which access level have to be requested
+     * @param csdb , instance of corpusStructureDb
+     * @return ImageIcon, corresponding to access level
+     */
+    private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
+	final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
+	//HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
+
+	int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
+	if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
+	    nodeAccessLevel = nAccessInfo.getAccessLevel();
+	}
+
+	final ImageIcon accessIcon = getNodeAccessIcon(nodeAccessLevel);
+	// retrieve the corresponding combined icon based on nodetype and accesslevel
+	final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);
+	return iconMap.get(iconTuple);
+    }
+
+    private void populateIconMap() {
+	final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, fileIcon, cmdiIcon, unknownIcon);
+	final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
+
+	int i = 0;
+	for (ImageIcon nodetypeIcon : nodeIcon) {
+	    for (ImageIcon accesslevelIcon : accessIcon) {
+		final String name = String.format("node_icon_%d", i++);
+		final Entry<ImageIcon, ImageIcon> iconsMap = new SimpleEntry<ImageIcon, ImageIcon>(nodetypeIcon, accesslevelIcon);
+		iconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
+	    }
+	}
     }
 
     /**
@@ -144,54 +170,38 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	return combinedIcon;
     }
 
-    /**
-     * Method return an ImageIcon reflecting the access level for a particular
-     * node. Access is requested to corpusStructureDB
-     *
-     * @param contentNode, node for which access level have to be requested
-     * @param csdb , instance of corpusStructureDb
-     * @return ImageIcon, corresponding to access level
-     */
-    private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
-	final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
-	//HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
-
-	int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
-	if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
-	    nodeAccessLevel = nAccessInfo.getAccessLevel();
-	}
-
-	final ImageIcon accessIcon;	
-	if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY) {
-	    accessIcon = openIcon;
-	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_OPEN_REGISTERED_USERS) {
-	    accessIcon = licensedIcon;
-	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_PERMISSION_NEEDED) {
-	    accessIcon = restrictedIcon;
-	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_CLOSED) {
-	    accessIcon = closedIcon;
-	} else if (nodeAccessLevel == 5) { //No level 5 is specified in AccessInfo!
-	    accessIcon = externalIcon;
+    private ImageIcon getNodeTypeIcon(final NodeType nodeType) {
+	final ImageIcon nodeTypeIcon;
+	if (nodeType instanceof CMDIResourceType) {
+	    nodeTypeIcon = fileIcon;
+	} else if (nodeType instanceof CMDIResourceTxtType) {
+	    nodeTypeIcon = fileIconTxt;
+	} else if (nodeType instanceof IMDISessionType) {
+	    nodeTypeIcon = sessionIcon;
+	} else if (nodeType instanceof IMDICorpusType) {
+	    nodeTypeIcon = corpusIcon;
+	} else if (nodeType instanceof CMDIMetadataType) {
+	    nodeTypeIcon = cmdiIcon;
 	} else {
-	    accessIcon = unknownIcon;
+	    nodeTypeIcon = unknownIcon;
 	}
-
-	// retrieve the corresponding combined icon based on nodetype and accesslevel
-	final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);
-	return iconMap.get(iconTuple);
+	return nodeTypeIcon;
     }
 
-    private void populateIconMap() {
-	final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, fileIcon, cmdiIcon, unknownIcon);
-	final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
-
-	int i = 0;
-	for (ImageIcon nodetypeIcon : nodeIcon) {
-	    for (ImageIcon accesslevelIcon : accessIcon) {
-		final String name = String.format("node_icon_%d", i++);
-		final Entry<ImageIcon, ImageIcon> iconsMap = new SimpleEntry<ImageIcon, ImageIcon>(nodetypeIcon, accesslevelIcon);
-		iconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
-	    }
+    private ImageIcon getNodeAccessIcon(int nodeAccessLevel) {
+	switch (nodeAccessLevel) {
+	    case AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY:
+		return openIcon;
+	    case AccessInfo.ACCESS_LEVEL_OPEN_REGISTERED_USERS:
+		return licensedIcon;
+	    case AccessInfo.ACCESS_LEVEL_PERMISSION_NEEDED:
+		return restrictedIcon;
+	    case AccessInfo.ACCESS_LEVEL_CLOSED:
+		return closedIcon;
+	    case 5: //No level 5 is specified in AccessInfo!
+		return externalIcon;
+	    default:
+		return unknownIcon;
 	}
     }
 }
