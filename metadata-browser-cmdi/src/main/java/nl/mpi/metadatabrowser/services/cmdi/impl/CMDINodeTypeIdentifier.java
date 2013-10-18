@@ -35,6 +35,7 @@ import static nl.mpi.metadatabrowser.services.NodeTypeIdentifier.UNKNOWN_NODE_TY
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
@@ -46,6 +47,15 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 	this.profileid = new ProfileIdentifierImpl(csProvider);
     }
 
+    /**
+     * Determines the type of the specified corpus node, primarily on basis of the value of {@link CorpusNode#getType() }.
+     * Futher disambiguation may happen on basis of other properties.
+     *
+     * @param node node to determine type for
+     * @return metadata browser internal node type
+     * @throws NodeTypeIdentifierException
+     * @see CorpusNodeType
+     */
     @Override
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
 	final CorpusNodeType corpusNodeType = node.getType();
@@ -70,6 +80,13 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 	}
     }
 
+    /**
+     * Determines type for non-collection (according to {@link CorpusNode#getType() }) metadata node
+     *
+     * @param node node to determine type for
+     * @return either IMDI session or CMDI type
+     * @see CorpusNodeType#METADATA
+     */
     private NodeType getMetadataType(CorpusNode node) {
 	if (node.getFormat().equals(IMDI_MIME_TYPE)) {
 	    return new IMDISessionType();
@@ -86,6 +103,13 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 	}
     }
 
+    /**
+     * Determines type for collection (according to {@link CorpusNode#getType() }) metadata node
+     *
+     * @param node
+     * @return
+     * @see CorpusNodeType#COLLECTION
+     */
     private NodeType getCollectionType(CorpusNode node) {
 	if (node.getFormat().equals(IMDI_MIME_TYPE)) {
 	    return new IMDICorpusType();

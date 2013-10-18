@@ -48,9 +48,12 @@ import org.apache.wicket.request.resource.ResourceReference;
 ;
 
 /**
+ * Icon provider for {@link CorpusNode}, primarily CMDI but with support for {@link IMDICorpusType} and {@link IMDISessionType}.
+ * Icons are based on the {@link NodeType} and the access level as reported by the {@link CorpusStructureProvider}
  *
  * @param <T>
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
 
@@ -66,18 +69,18 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
     private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
     private final NodeTypeIdentifier nodeTypeIdentifier;
-    private final CorpusStructureProvider csdb;
+    private final CorpusStructureProvider csProvider;
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
 
     /**
      * Constructor
      *
      * @param nodeTypeIdentifier
-     * @param csdb
+     * @param csProvider
      */
-    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csdb) {
+    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csProvider) {
 	this.nodeTypeIdentifier = nodeTypeIdentifier;
-	this.csdb = csdb;
+	this.csProvider = csProvider;
 	populateIconMap();
     }
 
@@ -94,7 +97,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	try {
 	    final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
 	    final ImageIcon nodeTypeIcon = getNodeTypeIcon(nodeType);
-	    combinedIcon = checkNodeAccess(contentNode, csdb, nodeTypeIcon);
+	    combinedIcon = checkNodeAccess(contentNode, nodeTypeIcon);
 	} catch (UnknownNodeException ex) {
 	    Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
 	} catch (NodeTypeIdentifierException ex) {
@@ -111,16 +114,10 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @param csdb , instance of corpusStructureDb
      * @return ImageIcon, corresponding to access level
      */
-    private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
-	final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
-	//HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
-
-	int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
-	if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
-	    nodeAccessLevel = nAccessInfo.getAccessLevel();
-	}
-
-	final ImageIcon accessIcon = getNodeAccessIcon(nodeAccessLevel);
+    private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) throws UnknownNodeException {
+	final AccessInfo nAccessInfo = csProvider.getNode(contentNode.getNodeURI()).getAuthorization();
+	final ImageIcon accessIcon = getNodeAccessIcon(nAccessInfo.getAccessLevel());
+	
 	// retrieve the corresponding combined icon based on nodetype and accesslevel
 	final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);
 	return iconMap.get(iconTuple);
