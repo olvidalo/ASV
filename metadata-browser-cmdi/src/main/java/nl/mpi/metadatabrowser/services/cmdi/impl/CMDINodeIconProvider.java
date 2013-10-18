@@ -161,7 +161,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	    nodeAccessLevel = nAccessInfo.getAccessLevel();
 	}
 
-	final ImageIcon accessIcon;
+	final ImageIcon accessIcon;	
 	if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY) {
 	    accessIcon = openIcon;
 	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_OPEN_REGISTERED_USERS) {
@@ -173,7 +173,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	} else if (nodeAccessLevel == 5) { //No level 5 is specified in AccessInfo!
 	    accessIcon = externalIcon;
 	} else {
-	    accessIcon = null;
+	    accessIcon = unknownIcon;
 	}
 
 	// retrieve the corresponding combined icon based on nodetype and accesslevel
@@ -183,7 +183,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 
     private void populateIconMap() {
 	final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, fileIcon, cmdiIcon, unknownIcon);
-	final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon);
+	final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
 
 	int i = 0;
 	for (ImageIcon nodetypeIcon : nodeIcon) {
