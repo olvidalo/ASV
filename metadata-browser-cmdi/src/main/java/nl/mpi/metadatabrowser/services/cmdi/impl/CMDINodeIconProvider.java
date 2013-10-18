@@ -18,7 +18,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,20 +54,20 @@ import org.apache.wicket.request.resource.ResourceReference;
  */
 public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
 
-    private final ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("session_color.gif"));
-    private final ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("corpusnode_color.gif"));
-    private final ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("mediafile.gif"));
-    private final ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("file.gif"));
-    private final ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("clarin.png"));
-    private final ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("unknown.png"));
-    private final ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
-    private final ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_yellow.png"));
-    private final ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
-    private final ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
-    private final ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
+    private final static ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("session_color.gif"));
+    private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("corpusnode_color.gif"));
+    private final static ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("mediafile.gif"));
+    private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("file.gif"));
+    private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("clarin.png"));
+    private final static ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("unknown.png"));
+    private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
+    private final static ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_yellow.png"));
+    private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
+    private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
+    private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final CorpusStructureProvider csdb;
-    private HashMap<Map<ImageIcon, ImageIcon>, ResourceReference> IconMap = new HashMap<Map<ImageIcon, ImageIcon>, ResourceReference>();
+    private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
 
     /**
      * Constructor
@@ -154,47 +154,43 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      */
     private ResourceReference checkNodeAccess(T contentNode, CorpusStructureProvider csdb, ImageIcon typeNode) throws UnknownNodeException {
 	final AccessInfo nAccessInfo = csdb.getNode(contentNode.getNodeURI()).getAuthorization();
-	HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
-	ImageIcon accessIcon = null;
-	ResourceReference combinedIcon = null;
+	//HashMap<ImageIcon, ImageIcon> valuesMap = new HashMap<ImageIcon, ImageIcon>();
 
 	int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
 	if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
 	    nodeAccessLevel = nAccessInfo.getAccessLevel();
 	}
 
-	if (nodeAccessLevel == 1) {
+	final ImageIcon accessIcon;
+	if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY) {
 	    accessIcon = openIcon;
-	} else if (nodeAccessLevel == 2) {
+	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_OPEN_REGISTERED_USERS) {
 	    accessIcon = licensedIcon;
-	} else if (nodeAccessLevel == 3) {
+	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_PERMISSION_NEEDED) {
 	    accessIcon = restrictedIcon;
-	} else if (nodeAccessLevel == 4) {
+	} else if (nodeAccessLevel == AccessInfo.ACCESS_LEVEL_CLOSED) {
 	    accessIcon = closedIcon;
-	} else if (nodeAccessLevel == 5) {
+	} else if (nodeAccessLevel == 5) { //No level 5 is specified in AccessInfo!
 	    accessIcon = externalIcon;
+	} else {
+	    accessIcon = null;
 	}
 
-	valuesMap.put(typeNode, accessIcon);
 	// retrieve the corresponding combined icon based on nodetype and accesslevel
-	for (Entry<Map<ImageIcon, ImageIcon>, ResourceReference> entry : IconMap.entrySet()) {
-	    if (entry.getKey().equals(valuesMap)) {
-		combinedIcon = entry.getValue();
-	    }
-	}
-	return combinedIcon;
+	final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);
+	return iconMap.get(iconTuple);
     }
 
     private void populateIconMap() {
 	final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, fileIcon, cmdiIcon, unknownIcon);
 	final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon);
 
+	int i = 0;
 	for (ImageIcon nodetypeIcon : nodeIcon) {
 	    for (ImageIcon accesslevelIcon : accessIcon) {
-		String name = StringRandomGenerator.generateRandomString();
-		HashMap<ImageIcon, ImageIcon> iconsMap = new HashMap<ImageIcon, ImageIcon>();
-		iconsMap.put(nodetypeIcon, accesslevelIcon);
-		IconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
+		final String name = String.format("icon%d", i++);
+		final Entry<ImageIcon, ImageIcon> iconsMap = new SimpleEntry<ImageIcon, ImageIcon>(nodetypeIcon, accesslevelIcon);
+		iconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
 	    }
 	}
     }
