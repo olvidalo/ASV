@@ -24,6 +24,7 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -59,10 +60,10 @@ class NodeActionButton extends Button {
 	    handleActionRequest(result);
 	} catch (NodeActionException ex) {
 	    logger.warn("Error in execution of action {} on nodes {}", action.getName(), nodes, ex);
-	    error(ex.getMessage());
+	    Session.get().error(ex.getMessage());
 	} catch (RequestHandlerException ex) {
 	    logger.warn("Error in handling action request returned by action {} on nodes {}", action.getName(), nodes, ex);
-	    warn("Could not complete action. Please contact the administrator.");
+	    Session.get().warn("Could not complete action. Please contact the administrator.");
 	}
     }
 
@@ -70,7 +71,7 @@ class NodeActionButton extends Button {
 	final String feedbackMessage = result.getFeedbackMessage();
 	if (feedbackMessage != null) {
 	    logger.debug("Feedback from action {} on node {}: {}", action.getName(), nodes, feedbackMessage);
-	    info(feedbackMessage);
+	    Session.get().info(feedbackMessage);
 	}
     }
 
