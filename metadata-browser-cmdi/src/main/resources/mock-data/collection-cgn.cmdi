@@ -1,1 +1,52 @@
-<!-- Empty for now -->
+<?xml version="1.0" encoding="UTF-8"?>
+<CMD xmlns="http://www.clarin.eu/cmd/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CMDVersion="1.1" xsi:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd">
+    <Header>
+<MdCreator>Dieter</MdCreator>
+<MdCreationDate>2012-08-23</MdCreationDate>
+<MdSelfLink>http://hdl.handle.net/LUX16/00-A8D3E316-A30D-4D74-BE23-38F25D760287</MdSelfLink>
+<MdProfile>clarin.eu:cr1:p_1345561703620</MdProfile><MdCollectionDisplayName>TLA Collections</MdCollectionDisplayName>
+</Header>
+    <Resources>
+        <ResourceProxyList><ResourceProxy id="cmdi"><ResourceType>Metadata</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-E7EF572D-664C-45E0-96A1-9240DE2B433B</ResourceRef></ResourceProxy><ResourceProxy id="entry"><ResourceType>Resource</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-5F5C12F9-F0D4-4EB1-9D12-8957B6B7CCF9</ResourceRef></ResourceProxy><ResourceProxy id="design"><ResourceType>Resource</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-C4B30F0C-AF1F-45B3-AA72-0876D00EED61</ResourceRef></ResourceProxy><ResourceProxy id="searchpage"><ResourceType>SearchPage</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-5F689AF0-D649-40BF-B1FA-86DC33F9B7C0</ResourceRef></ResourceProxy><ResourceProxy id="sru"><ResourceType>SearchService</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-8A8B02A0-3E0D-4FA5-B9A8-17480F0017E1</ResourceRef></ResourceProxy></ResourceProxyList>
+        <JournalFileProxyList/>
+        <ResourceRelationList/>
+    </Resources>
+    <Components>
+        <collection>
+            <CollectionInfo>
+                <Name xml:lang="nld">Corpus Gesproken Nederlands</Name>
+                <Name xml:lang="eng">Corpus Spoken Dutch</Name>
+                <ISO639>
+                    <iso-639-3-code>nld</iso-639-3-code>
+                </ISO639>
+                <Modality>
+                    <Modality>Spoken</Modality>
+                </Modality>
+                <TimeCoverage>
+                    <StartYear>1998</StartYear>
+                    <EndYear>2004</EndYear>
+                </TimeCoverage>
+                <Description>
+                    <Description xml:lang="nld">een databank voor het hedendaags Nederlands zoals
+                        dat door volwassen sprekers in Nederland en Vlaanderen wordt
+                        gesproken</Description>
+                    <Description xml:lang="eng">a corpus of contemporary Dutch as spoken by adults
+                        in Flanders and the Netherlands</Description>
+                </Description>
+            </CollectionInfo>
+            <License>
+                <DistributionType>academic</DistributionType>
+                <LicenseName/>
+                <LicenseURL/>
+            </License>
+            <WebReference ref="design">
+                <Website/>
+                <Description>Corpus Design</Description>
+            </WebReference>
+            <WebReference ref="entry">
+                <Website/>
+                <Description>Entry page</Description>
+            </WebReference>
+        </collection>
+    </Components>
+</CMD>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METATRANSCRIPT xmlns="http://www.mpi.nl/IMDI/Schema/IMDI"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                Date="2010-11-18"
+                FormatId="IMDI 3.03"
+                Originator="imdi.app"
+                Type="CORPUS"
+                Version="0"
+                xsi:schemaLocation="http://www.mpi.nl/IMDI/Schema/IMDI ./IMDI_3.0.xsd">
+  <Corpus>
+      <Name>talkbank</Name>
+      <Title>Corpus "talkbank"</Title>
+      <Description LanguageId="" Link="">Participants' Annotations</Description>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      <CorpusLink Name="Exploration">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/Exploration.imdi</CorpusLink>
+      <CorpusLink Name="Tutoring">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/Tutoring.imdi</CorpusLink>
+      <CorpusLink Name="Clinical">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/Clinical.imdi</CorpusLink>
+      <CorpusLink Name="ClassBank">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/ClassBank.imdi</CorpusLink>
+      <CorpusLink Name="CABank">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/CABank.imdi</CorpusLink>
+      <CorpusLink Name="DementiaBank">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/DementiaBank.imdi</CorpusLink>
+      <CorpusLink Name="Gesture">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/Gesture.imdi</CorpusLink>
+      <CorpusLink Name="Meeting">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/Meeting.imdi</CorpusLink>
+      <CorpusLink Name="BilingBank">file:/data/corpora/qfs1/media-archive/mirrored_corpora/talkbank/Corpusstructure/BilingBank.imdi</CorpusLink>
+   </Corpus>
+</METATRANSCRIPT>

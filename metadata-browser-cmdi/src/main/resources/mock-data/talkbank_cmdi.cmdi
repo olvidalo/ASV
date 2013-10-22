@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><CMD xmlns="http://www.clarin.eu/cmd/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CMDVersion="1.1" xsi:schemaLocation="http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd">
+    <Header><MdCreator>Dieter</MdCreator><MdCreationDate>2012-08-23</MdCreationDate><MdSelfLink>http://hdl.handle.net/LUX16/00-153B192A-2C35-4E6E-8EA9-E2F528BC315C</MdSelfLink><MdProfile>clarin.eu:cr1:p_1345561703620</MdProfile><MdCollectionDisplayName>TLA Collections</MdCollectionDisplayName></Header>
+    <Resources>
+        <ResourceProxyList><ResourceProxy id="cmdi"><ResourceType>Metadata</ResourceType><ResourceRef>LUX16/00-62881ECC-C417-48D4-B1C7-ACC1C8FB01A9</ResourceRef></ResourceProxy><ResourceProxy id="entry"><ResourceType>Resource</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-93120549-F471-4C7F-A115-52941AE64D24</ResourceRef></ResourceProxy><ResourceProxy id="design"><ResourceType>Resource</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-904F9188-9083-4199-9680-339FA1423A5D</ResourceRef></ResourceProxy><ResourceProxy id="searchpage"><ResourceType>SearchPage</ResourceType><ResourceRef>http://hdl.handle.net/LUX16/00-9C3D0997-6CAE-4016-86A5-D6FD7750F5FB</ResourceRef></ResourceProxy><ResourceProxy id="sru"><ResourceType>SearchService</ResourceType><ResourceRef>LUX16/00-A6333A26-C99E-4764-B1A0-81D258908DB5</ResourceRef></ResourceProxy></ResourceProxyList>
+        <JournalFileProxyList/>
+        <ResourceRelationList/>
+    </Resources>
+    <Components>
+        <collection>
+            <CollectionInfo>
+                <Name xml:lang="eng">TalkBank corpus</Name>
+                <ISO639>
+                    <iso-639-3-code>afr</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>ara</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>eus</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>cat</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>zho</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>hrv</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>dan</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>jpn</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>eng</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>est</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>fas</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>far</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>fra</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>glg</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>deu</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>haw</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>heb</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>hun</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>ind</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>jav</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>xmm</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>gle</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>ita</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>kik</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>kor</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>ell</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>nep</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>sme</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>esk</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>nor</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>pol</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>por</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>ron</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>rus</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>spa</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>swe</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>tam</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>tha</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>tur</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>cym</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>yid</iso-639-3-code>
+                </ISO639>
+                <ISO639>
+                    <iso-639-3-code>nld</iso-639-3-code>
+                </ISO639>
+                <Modality>
+                    <Modality>Spoken</Modality>
+                </Modality>
+                <TimeCoverage>
+                    <StartYear>2002</StartYear>
+                </TimeCoverage>
+                <Description>
+                    <Description xml:lang="eng">TalkBank is a multilingual corpus established in
+                        2002 and currently directed and maintained by Brian MacWhinney. The goal of
+                        TalkBank is to foster fundamental research in the study of human and animal
+                        communication. It contains sample databases from within several subfields of
+                        communication, including first language acquisition, second language
+                        acquisition, conversation analysis, classroom discourse, and aphasic
+                        language. It uses these databases to advance the development of standards
+                        and tools for creating, sharing, searching, and commenting upon primary
+                        linguistic materials via networked computers.</Description>
+                </Description>
+            </CollectionInfo>
+            <License>
+                <DistributionType>public</DistributionType>
+                <LicenseName>CC BY-NC-SA 3.0</LicenseName>
+                <LicenseURL>http://creativecommons.org/licenses/by-nc-sa/3.0/</LicenseURL>
+                <NonCommercialUsageOnly>true</NonCommercialUsageOnly>
+                <ModificationsRequireRedeposition>true</ModificationsRequireRedeposition>                
+            </License>
+            <Contact>
+                <Person>Brian MacWhinney</Person>
+                <Email>MacW@cmu.edu</Email>
+                <Organisation>CMU</Organisation>
+                <Website>http://psyling.psy.cmu.edu/brian/</Website>
+            </Contact>
+            <WebReference ref="design">
+                <Website/>
+                <Description>Corpus Design</Description>
+            </WebReference>
+            <WebReference ref="entry">
+                <Website/>
+                <Description>Entry page</Description>
+            </WebReference>
+        </collection>
+    </Components>
+</CMD>

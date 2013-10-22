@@ -75,8 +75,8 @@
 	<constructor-arg>
 	    <map>
 		<entry key="node:01" value="/mock-data/collection-cgn.cmdi" />
-		<entry key="node:021" value="/mock-data/talkbank.imdi" />
-		<entry key="node:022" value="/mock-data/collection-talkbank.cmdi" />
+		<entry key="node:021" value="/mock-data/talkbank_imdi.imdi" />
+		<entry key="node:022" value="/mock-data/talkbank_cmdi.cmdi" />
 	    </map>
 	</constructor-arg>
 	<constructor-arg>
