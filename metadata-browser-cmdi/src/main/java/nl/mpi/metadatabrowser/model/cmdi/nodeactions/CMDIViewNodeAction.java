@@ -16,13 +16,10 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -31,12 +28,11 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
+import nl.mpi.metadatabrowser.services.NodePresentationException;
 import org.apache.wicket.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,92 +50,52 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final NodeResolver nodeResolver;
 
     public CMDIViewNodeAction(NodeResolver nodeResolver) {
-	this.nodeResolver = nodeResolver;
+        this.nodeResolver = nodeResolver;
     }
 
     @Override
-    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), node);
-	String xmlContent = null;
-	
-	//TODO: Metadata case can be removed, as this action is not in the list for metadata node actions in the CMDIActionsProvider anyway?
-	if (node.getNodeType() instanceof CMDIMetadataType
-		|| node.getNodeType() instanceof CMDICollectionType) {
-	    InputStream in = null;
-	    try {
-		in = nodeResolver.getInputStream(node);
-		StringBuilder sb = new StringBuilder();
-		byte[] buffer = new byte[256];
-		while (true) {
-		    int byteRead = in.read(buffer);
-		    if (byteRead == -1) {
-			break;
-		    }
-		    for (int i = 0; i < byteRead; i++) {
-			sb.append((char) buffer[i]);
-		    }
-		}
-		xmlContent = sb.toString();
-		//return sb.toString();
-		//      try {
-		//                            JAXBContext jc = JAXBContext.newInstance(String.class);
-		//
-		//            File xml = new File(nodeURL.toString());
-		//            Unmarshaller unmarshaller = jc.createUnmarshaller();
-		//            String recon = (String) unmarshaller.unmarshal(xml);
-		//
-		//            Marshaller marshaller = jc.createMarshaller();
-		//            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		//            marshaller.marshal(recon, System.out);
-		//
-		//                    xmlContent = nodeURL.toString();
-		//                } //all formats that should be handled by annex
-		//                catch (JAXBException ex) {
-		//                    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-		//                }
-	    } //      try {
-	    catch (IOException ex) {
-		java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-	    } finally {
-		try {
-		    in.close();
-		} catch (IOException ex) {
-		    java.util.logging.Logger.getLogger(CMDIViewNodeAction.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	    }
-	} else if (node.getNodeType() instanceof CMDIResourceTxtType) {
-	    //TODO get session id
-	    try {
-		parameters.put("nodeId", node.getNodeURI());
-		parameters.put("jsessionID", new URI("jsessioID"));
-		navType = true;
-	    } catch (URISyntaxException ex) {
-		logger.error("URI syntax exception in parameter session id: " + ex);
-	    }
-	} else {
-	    //TODO: Maybe replace this with some informative message, just URL is a bit pointless 
-	    xmlContent = nodeResolver.getUrl(node).toString();
-	}
+    protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+        String xmlContent = null;
 
-	final String xmlText = xmlContent;
+        if (node.getNodeType() instanceof CMDIResourceTxtType) {
+            //TODO get session id
+            try {
+                parameters.put("nodeId", node.getNodeURI());
+                parameters.put("jsessionID", new URI("jsessioID"));
+                navType = true;
+            } catch (URISyntaxException ex) {
+                logger.error("URI syntax exception in parameter session id: " + ex);
+            }
+        } else {
+            //TODO: Maybe replace this with some informative message, just URL is a bit pointless
+            // maybe return error message because no other kind of nodes should end up here
+            xmlContent = nodeResolver.getUrl(node).toString();
+        }
 
-	if (navType
-		== true) {
-	    final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
-	    return new SimpleNodeActionResult(request);
-	} else {
-	    final ShowComponentRequest request = new ShowComponentRequest() {
-		@Override
-		public Component getComponent(String id) {
-		    return new PanelViewNodeShowComponent(id, xmlText);
-		}
-	    };
-	    return new SimpleNodeActionResult(request);
-	}
+        if (navType == true) {
+            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
+            return new SimpleNodeActionResult(request);
+        } else {
+            final ShowComponentRequest request = new ShowComponentRequest() {
+                @Override
+                public Component getComponent(String id) {
+                    try {
+                        return new PanelViewNodeShowComponent(id, nodeResolver, node);
+                    } catch (NodePresentationException ex) {
+                        logger.error("Error showing  View Component for node : " + node + " Error is " + ex);
+                        return null;
+                    }
+
+
+                }
+            };
+            return new SimpleNodeActionResult(request);
+        }
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 }
