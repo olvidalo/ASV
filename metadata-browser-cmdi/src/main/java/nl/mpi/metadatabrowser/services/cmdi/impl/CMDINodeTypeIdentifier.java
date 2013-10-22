@@ -60,6 +60,12 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
 	final CorpusNodeType corpusNodeType = node.getType();
 
+	// Explicit null check, the switch won't cope
+	if (corpusNodeType == null) {
+	    return UNKNOWN_NODE_TYPE;
+	}
+
+	// We have a type in the corpus node, determine CorpusNodeType
 	switch (corpusNodeType) {
 	    case RESOURCE_VIDEO:
 		return new CMDIResourceType();
