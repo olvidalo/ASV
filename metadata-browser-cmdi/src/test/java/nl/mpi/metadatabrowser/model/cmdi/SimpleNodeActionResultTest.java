@@ -17,8 +17,6 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import org.apache.bcel.generic.INSTANCEOF;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
