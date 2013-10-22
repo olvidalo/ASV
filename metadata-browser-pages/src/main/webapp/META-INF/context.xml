@@ -14,5 +14,5 @@
 	    * cmdi-adapter-csdb: adapter implementation of corpus structure provider that connects to the 'old' (IMDI) corpus structure API
     -->
 
-    <Parameter name="spring.profiles.active" value="cmdi-production-providers, cmdi-adapter-csdb" />
+    <Parameter name="spring.profiles.active" value="cmdi-production-providers, cmdi-mock-csdb" />
 </Context>
