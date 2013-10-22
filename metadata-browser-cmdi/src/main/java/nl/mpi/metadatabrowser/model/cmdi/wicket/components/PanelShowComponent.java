@@ -16,8 +16,10 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -39,13 +41,19 @@ public final class PanelShowComponent extends Panel {
 
     private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
 
-    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnknownNodeException {
+    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnknownNodeException, UnsupportedEncodingException {
 	super(id);
+        String encnodeid =  null;
 	final Form form = new Form("nodeInfoForm");
 	String nodeName = node.getName();
 	URI nodeId = node.getNodeURI();
 	String title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getParentNodeURIs(nodeId));
+       // String webapp = response.encodeRedirectURL(request.getContextPath( ));
 
+        if(nodeId !=null){
+            encnodeid=URLEncoder.encode(nodeId.toString(), "UTF-8");
+        }
+        
 	Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
 	String lastModified = "";
 	if (objectFileTime != null) {
@@ -103,6 +111,7 @@ public final class PanelShowComponent extends Panel {
 	form.add(new Label("handle", handle));
 	form.add(new Label("url", url == null ? "-" : url.toString()));
 	form.add(new Label("title", title));
+       // form.add(new Label("openTreeReference", ));
 	Label bookmarkLabel = new Label("bookmark", sb.toString());
 	bookmarkLabel.setEscapeModelStrings(false);
 	form.add(bookmarkLabel);
