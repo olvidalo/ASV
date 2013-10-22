@@ -34,7 +34,6 @@ import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -49,26 +48,19 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ZipServiceImpl implements ZipService, Serializable {
 
-    @Autowired
-    private CorpusStructureProvider csdb;
-    @Autowired
-    private NodeResolver nodeResolver;
-    private final Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
-    private static final long MAX_LIMIT = FileUtils.ONE_GB * 2; // 200000000L ; //4000000000L  //4GB
-    private static List<CorpusNode> childrenNodes = new CopyOnWriteArrayList<CorpusNode>();
+    private final static Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
+    private final static long MAX_LIMIT = FileUtils.ONE_GB * 2; // 200000000L ; //4000000000L  //4GB
+    private final CorpusStructureProvider csdb;
+    private final NodeResolver nodeResolver;
     private int overallSize = 0;
-
-    public ZipServiceImpl() {
-    }
 
     /**
      * Constructor
      *
      * @param csdb
      * @param nodeResolver
-     * @deprecated Use default constructor with autowiring
      */
-    @Deprecated
+    @Autowired
     public ZipServiceImpl(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
 	this.csdb = csdb;
 	this.nodeResolver = nodeResolver;
@@ -109,7 +101,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @throws UnknownNodeException
      */
     private void addChildren(ZipOutputStream zout, URI nodeUri, String userid, int itemsAdded) throws UnknownNodeException {
-	childrenNodes = csdb.getChildNodes(nodeUri); // get children for nodeURI
+	final List<CorpusNode> childrenNodes = new CopyOnWriteArrayList<CorpusNode>(csdb.getChildNodes(nodeUri));
 	boolean hasaccess;
 	if (childrenNodes.size() > 0) {
 	    for (CorpusNode childNode : childrenNodes) {

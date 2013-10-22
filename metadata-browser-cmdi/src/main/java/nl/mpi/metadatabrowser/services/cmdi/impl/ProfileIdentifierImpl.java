@@ -31,18 +31,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProfileIdentifierImpl implements ProfileIdentifier {
 
     private final static Logger logger = LoggerFactory.getLogger(ProfileIdentifierImpl.class);
-    @Autowired
-    private CorpusStructureProvider csdb;
-
-    public ProfileIdentifierImpl() {
-    }
+    private final CorpusStructureProvider csdb;
 
     /**
      *
      * @param csdb
-     * @deprecated Use default constructor with autowiring
      */
-    @Deprecated
+    @Autowired
     public ProfileIdentifierImpl(CorpusStructureProvider csdb) {
 	this.csdb = csdb;
     }

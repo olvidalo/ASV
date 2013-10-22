@@ -42,18 +42,13 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
     public static final String IMDI_MIME_TYPE = "application/imdi+xml";
     public static final URI COLLECTION_PROFILE_ID = URI.create("profile"); //TODO: have a list of profileID or add correct profileID
-    @Autowired
-    private ProfileIdentifierImpl profileIdentifier;
-
-    public CMDINodeTypeIdentifier() {
-    }
+    private final ProfileIdentifierImpl profileIdentifier;
 
     /**
      *
      * @param csProvider
-     * @deprecated Use default constructor with autowiring
      */
-    @Deprecated
+    @Autowired
     public CMDINodeTypeIdentifier(CorpusStructureProvider csProvider) {
 	this.profileIdentifier = new ProfileIdentifierImpl(csProvider);
     }

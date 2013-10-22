@@ -18,8 +18,10 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Arrays;
 import java.util.Collection;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.lat.ams.service.LicenseService;
+import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import org.apache.wicket.Component;
@@ -31,6 +33,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -67,12 +70,13 @@ public class CMDINodePresentationProviderTest {
     @Test
     public void testGetNodePresentation() throws NodePresentationException {
 	System.out.println("getNodePresentation");
-	WicketTester tester = new WicketTester();
 	final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
 	String wicketId = "test";
 	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver);
+	final AuthorizationService authSrv = context.mock(AuthorizationService.class);
+	final LicenseService licSrv = context.mock(LicenseService.class);
+	CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver, authSrv, licSrv);
 	Component result = instance.getNodePresentation(wicketId, collectionCorpus);
 	assertNotNull(result);
 	assertEquals(result.getId(), "test");

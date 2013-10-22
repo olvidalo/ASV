@@ -70,23 +70,16 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
     private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
-    @Autowired
-    private NodeTypeIdentifier nodeTypeIdentifier;
-    @Autowired
-    private CorpusStructureProvider csProvider;
-
-    public CMDINodeIconProvider() {
-	populateIconMap();
-    }
+    private final NodeTypeIdentifier nodeTypeIdentifier;
+    private final CorpusStructureProvider csProvider;
 
     /**
      * Constructor
      *
      * @param nodeTypeIdentifier
      * @param csProvider
-     * @deprecated Use default constructor with autowiring
      */
-    @Deprecated
+    @Autowired
     public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csProvider) {
 	this.nodeTypeIdentifier = nodeTypeIdentifier;
 	this.csProvider = csProvider;

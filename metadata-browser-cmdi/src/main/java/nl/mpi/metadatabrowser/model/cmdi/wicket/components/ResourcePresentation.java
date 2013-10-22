@@ -30,7 +30,7 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;
-import nl.mpi.lat.auth.authorization.AdvAuthorizationService;
+import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.lat.dao.DataSourceException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -61,7 +61,7 @@ public final class ResourcePresentation extends Panel {
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
-    public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, LicenseService licenseService, AdvAuthorizationService aSrv) throws UnknownNodeException {
+    public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, LicenseService licenseService, AuthorizationService aSrv) throws UnknownNodeException {
 	super(id);
 	//String nodeId = Integer.toString(node.getNodeURI());
 	final URL nodeURL = resolver.getUrl(node);
@@ -205,7 +205,7 @@ public final class ResourcePresentation extends Panel {
 	}
     }
 
-    private List<NodeLicense> getLicenses(TypedCorpusNode node, AdvAuthorizationService aSrv) {
+    private List<NodeLicense> getLicenses(TypedCorpusNode node, AuthorizationService aSrv) {
 	List<NodeLicense> result = Collections.EMPTY_LIST;
 
 	MockAuthorizationService asrv = (MockAuthorizationService) aSrv;// TODO : remove mock once next TODO is done

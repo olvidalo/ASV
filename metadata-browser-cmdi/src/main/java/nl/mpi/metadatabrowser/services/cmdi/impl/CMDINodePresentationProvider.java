@@ -18,12 +18,11 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
 import java.util.Iterator;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.common.util.spring.SpringContextLoader;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.lat.ams.service.LicenseService;
-import nl.mpi.lat.auth.authorization.AdvAuthorizationService;
+import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -32,9 +31,6 @@ import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComp
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeResolver;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,33 +41,24 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDINodePresentationProvider implements NodePresentationProvider {
 
-    @Autowired
-    private AdvAuthorizationService authoSrv;
-    @Autowired
-    private LicenseService licSrv;
-    @Autowired
-    private CorpusStructureProvider csdb;
-    @Autowired
-    private NodeResolver nodeResolver;
+    private final AuthorizationService authoSrv;
+    private final LicenseService licSrv;
+    private final CorpusStructureProvider csdb;
+    private final NodeResolver nodeResolver;
     //TODO : decide where does userId comes from and implement accordingly
     private String userId;
-
-    /**
-     * for the autowiring
-     */
-    public CMDINodePresentationProvider() {
-    }
 
     /**
      *
      * @param csdb
      * @param nodeResolver
-     * @deprecated Use default constructor with autowiring
      */
-    @Deprecated
-    public CMDINodePresentationProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
+    @Autowired
+    public CMDINodePresentationProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, AuthorizationService authoSrv, LicenseService licSrv) {
 	this.csdb = csdb;
 	this.nodeResolver = nodeResolver;
+	this.authoSrv = authoSrv;
+	this.licSrv = licSrv;
     }
 
     @Override
