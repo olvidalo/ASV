@@ -17,11 +17,12 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -30,8 +31,18 @@ import org.slf4j.LoggerFactory;
 public class ProfileIdentifierImpl implements ProfileIdentifier {
 
     private final static Logger logger = LoggerFactory.getLogger(ProfileIdentifierImpl.class);
-    private final CorpusStructureProvider csdb;
+    @Autowired
+    private CorpusStructureProvider csdb;
 
+    public ProfileIdentifierImpl() {
+    }
+
+    /**
+     *
+     * @param csdb
+     * @deprecated Use default constructor with autowiring
+     */
+    @Deprecated
     public ProfileIdentifierImpl(CorpusStructureProvider csdb) {
 	this.csdb = csdb;
     }

@@ -29,6 +29,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static nl.mpi.metadatabrowser.services.NodeTypeIdentifier.UNKNOWN_NODE_TYPE;
 
@@ -41,10 +42,20 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
     public static final String IMDI_MIME_TYPE = "application/imdi+xml";
     public static final URI COLLECTION_PROFILE_ID = URI.create("profile"); //TODO: have a list of profileID or add correct profileID
-    private final ProfileIdentifierImpl profileid;
+    @Autowired
+    private ProfileIdentifierImpl profileIdentifier;
 
+    public CMDINodeTypeIdentifier() {
+    }
+
+    /**
+     *
+     * @param csProvider
+     * @deprecated Use default constructor with autowiring
+     */
+    @Deprecated
     public CMDINodeTypeIdentifier(CorpusStructureProvider csProvider) {
-	this.profileid = new ProfileIdentifierImpl(csProvider);
+	this.profileIdentifier = new ProfileIdentifierImpl(csProvider);
     }
 
     /**
@@ -102,7 +113,7 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
     }
 
     private NodeType getCMDIType(CorpusNode node) {
-	if (COLLECTION_PROFILE_ID.equals(profileid.getProfile(node.getNodeURI()))) {
+	if (COLLECTION_PROFILE_ID.equals(profileIdentifier.getProfile(node.getNodeURI()))) {
 	    return new CMDICollectionType();
 	} else {
 	    return new CMDIMetadataType();

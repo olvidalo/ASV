@@ -21,29 +21,33 @@
     <!-- Annotation configuration needs to be enabled for the autowiring to work -->
     <context:annotation-config />
 
+    <!-- 'Local' services used by services required for Metadata Browser-->
+    
+    <!-- Profile identifier -->
+    <bean id="profileIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.ProfileIdentifierImpl" />
+    <!-- AMS2 license service. Todo: replace with non-mock -->
+    <bean id="licSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService"/>
+    <!-- AMS2 authorisation service. Todo: replace with non-mock -->
+    <bean id="authoSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService" />
+    
     <!-- Tree model provider based on corpus structure -->    
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">
 	<constructor-arg ref="csdbFactory" />
-    </bean>
+    </bean>    
     
     <!-- CMDI implementations for metadata browser providers -->
-    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier">
-	<constructor-arg ref="csdb" />
-    </bean>
+    <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier" />
 
     <bean id="zipService" class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl" />
+    
+    <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider" />
+    
+    <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider" />
 
+    <!-- Node actions provider. Todo: see if can be autowired -->
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider">
 	<constructor-arg ref="csdb" />
 	<constructor-arg ref="nodeResolver" />
 	<constructor-arg ref="zipService" />
     </bean>    
-    
-    <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider" />
-    
-    <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider" />
-    
-    <!-- Todo: replace with non-mock -->
-    <bean id="licSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService"/>
-    <bean id="authoSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService" />
 </beans>
