@@ -37,6 +37,7 @@ import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeResolver;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -44,13 +45,30 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class CMDINodePresentationProvider implements NodePresentationProvider {
 
+    @Autowired
     private AdvAuthorizationService authoSrv;
+    @Autowired
     private LicenseService licSrv;
-    private final CorpusStructureProvider csdb;
-    private final NodeResolver nodeResolver;
+    @Autowired
+    private CorpusStructureProvider csdb;
+    @Autowired
+    private NodeResolver nodeResolver;
     //TODO : decide where does userId comes from and implement accordingly
     private String userId;
 
+    /**
+     * for the autowiring
+     */
+    public CMDINodePresentationProvider() {
+    }
+
+    /**
+     *
+     * @param csdb
+     * @param nodeResolver
+     * @deprecated Use default constructor with autowiring
+     */
+    @Deprecated
     public CMDINodePresentationProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
 	this.csdb = csdb;
 	this.nodeResolver = nodeResolver;
@@ -67,8 +85,6 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	//get LicenseService licenseService, 
 	//get AdvAuthorizationService aSrv.
 	// mostly beans ????
-	licSrv = new MockLicenseService();
-	authoSrv = new MockAuthorizationService();
 	Iterator<TypedCorpusNode> iterator = nodes.iterator();
 	while (iterator.hasNext()) {
 	    TypedCorpusNode node = iterator.next();

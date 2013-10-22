@@ -44,6 +44,7 @@ import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.springframework.beans.factory.annotation.Autowired;
 
 ;
 
@@ -68,16 +69,24 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
     private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
     private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
-    private final NodeTypeIdentifier nodeTypeIdentifier;
-    private final CorpusStructureProvider csProvider;
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
+    @Autowired
+    private NodeTypeIdentifier nodeTypeIdentifier;
+    @Autowired
+    private CorpusStructureProvider csProvider;
+
+    public CMDINodeIconProvider() {
+	populateIconMap();
+    }
 
     /**
      * Constructor
      *
      * @param nodeTypeIdentifier
      * @param csProvider
+     * @deprecated Use default constructor with autowiring
      */
+    @Deprecated
     public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csProvider) {
 	this.nodeTypeIdentifier = nodeTypeIdentifier;
 	this.csProvider = csProvider;
@@ -117,7 +126,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) throws UnknownNodeException {
 	final AccessInfo nAccessInfo = csProvider.getNode(contentNode.getNodeURI()).getAuthorization();
 	final ImageIcon accessIcon = getNodeAccessIcon(nAccessInfo.getAccessLevel());
-	
+
 	// retrieve the corresponding combined icon based on nodetype and accesslevel
 	final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);
 	return iconMap.get(iconTuple);
