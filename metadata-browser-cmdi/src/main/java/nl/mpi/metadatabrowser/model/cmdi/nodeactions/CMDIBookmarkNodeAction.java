@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -61,6 +63,8 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
                     return new PanelShowComponent(id, node, csdb, nodeResolver);
                 } catch (UnknownNodeException ex) {
                     throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeURI(), ex);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new ControllerActionRequestException("Error due to encoding problem for creating display panel for node " + node.getNodeURI(), ex);
                 }
             }
         };
