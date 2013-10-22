@@ -34,8 +34,6 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIVersionNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
