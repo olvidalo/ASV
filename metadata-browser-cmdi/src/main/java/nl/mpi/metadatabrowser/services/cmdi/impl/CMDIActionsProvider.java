@@ -28,8 +28,6 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
@@ -52,97 +50,98 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     private final List<NodeAction> resourcetxtNodeActionList;
     private final List<NodeAction> resourceAudioVideoNodeActionList;
     public final List<NodeAction> metadataNodeActionList;
-    public final List<NodeAction> singleMetadataNodeActionList;
+    public final List<NodeAction> childLessMetadataNodeActionList;
     public final List<NodeAction> collectionNodeActionList;
     public final List<NodeAction> multipleNodeActionList;
     private final CorpusStructureProvider csdb;
 
     public CMDIActionsProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, ZipService zipService) {
-	this.csdb = csdb;
-	metadataNodeActionList = Arrays.<NodeAction>asList(
-		new CMDISearchNodeAction(),
-		new CMDITrovaNodeAction(),
-		new CMDIAMSNodeAction(),
-		new CMDIRrsNodeAction(),
-		new CMDIStatsNodeAction(),
-		new CMDIBookmarkNodeAction(csdb, nodeResolver),
-		new CMDIDownloadNodeAction(nodeResolver),
-		new CMDIMultipleDownloadNodeAction(csdb, zipService),
-		new CMDIVersionNodeAction(csdb, nodeResolver));
+        this.csdb = csdb;
+        metadataNodeActionList = Arrays.<NodeAction>asList(
+                new CMDISearchNodeAction(),
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIStatsNodeAction(),
+                new CMDIBookmarkNodeAction(csdb, nodeResolver),
+                new CMDIDownloadNodeAction(nodeResolver),
+                new CMDIMultipleDownloadNodeAction(csdb, zipService),
+                new CMDIVersionNodeAction(csdb, nodeResolver));
 
-	singleMetadataNodeActionList = Arrays.<NodeAction>asList(
-		new CMDISearchNodeAction(),
-		new CMDITrovaNodeAction(),
-		new CMDIAMSNodeAction(),
-		new CMDIRrsNodeAction(),
-		new CMDIStatsNodeAction(),
-		new CMDIBookmarkNodeAction(csdb, nodeResolver),
-		new CMDIDownloadNodeAction(nodeResolver),
-		new CMDIVersionNodeAction(csdb, nodeResolver));
+        childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
+                new CMDISearchNodeAction(),
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIStatsNodeAction(),
+                new CMDIBookmarkNodeAction(csdb, nodeResolver),
+                new CMDIDownloadNodeAction(nodeResolver),
+                new CMDIVersionNodeAction(csdb, nodeResolver));
 
-	collectionNodeActionList = Arrays.<NodeAction>asList(
-		new CMDISearchNodeAction(),
-		new CMDITrovaNodeAction(),
-		new CMDIAMSNodeAction(),
-		new CMDIRrsNodeAction(),
-		new CMDIBookmarkNodeAction(csdb, nodeResolver),
-		new CMDIDownloadNodeAction(nodeResolver));
+        collectionNodeActionList = Arrays.<NodeAction>asList(
+                new CMDISearchNodeAction(),
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIBookmarkNodeAction(csdb, nodeResolver),
+                new CMDIDownloadNodeAction(nodeResolver));
 
-	resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
-		new CMDIAMSNodeAction(),
-		new CMDIRrsNodeAction(),
-		new CMDIStatsNodeAction(),
-		new CMDIViewNodeAction(nodeResolver),
-		new CMDIBookmarkNodeAction(csdb, nodeResolver),
-		new CMDIDownloadNodeAction(nodeResolver),
-		new CMDIVersionNodeAction(csdb, nodeResolver));
+        resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIStatsNodeAction(),
+                new CMDIViewNodeAction(nodeResolver),
+                new CMDIBookmarkNodeAction(csdb, nodeResolver),
+                new CMDIDownloadNodeAction(nodeResolver),
+                new CMDIVersionNodeAction(csdb, nodeResolver));
 
-	resourcetxtNodeActionList = Arrays.<NodeAction>asList(
-		new CMDITrovaNodeAction(),
-		new CMDIAMSNodeAction(),
-		new CMDIRrsNodeAction(),
-		new CMDIStatsNodeAction(),
-		new CMDIViewNodeAction(nodeResolver),
-		new CMDIBookmarkNodeAction(csdb, nodeResolver),
-		new CMDIDownloadNodeAction(nodeResolver),
-		new CMDIVersionNodeAction(csdb, nodeResolver));
+        resourcetxtNodeActionList = Arrays.<NodeAction>asList(
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction(),
+                new CMDIStatsNodeAction(),
+                new CMDIViewNodeAction(nodeResolver),
+                new CMDIBookmarkNodeAction(csdb, nodeResolver),
+                new CMDIDownloadNodeAction(nodeResolver),
+                new CMDIVersionNodeAction(csdb, nodeResolver));
 
-	multipleNodeActionList = Arrays.<NodeAction>asList(
-		new CMDISearchNodeAction(),
-		new CMDITrovaNodeAction(),
-		new CMDIAMSNodeAction(),
-		new CMDIRrsNodeAction());
+        multipleNodeActionList = Arrays.<NodeAction>asList(
+                new CMDISearchNodeAction(),
+                new CMDITrovaNodeAction(),
+                new CMDIAMSNodeAction(),
+                new CMDIRrsNodeAction());
 
 
     }
 
     @Override
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
-	if (nodes.size() > 0 && nodes.size() == 1) {
-	    for (TypedCorpusNode node : nodes) {
-		try {
-		    if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
-			return singleMetadataNodeActionList;
-		    }
-		} catch (UnknownNodeException ex) {
-		    return null;
-		}
-		if (node.getNodeType() instanceof CollectionType) {
-		    return collectionNodeActionList;
-		}
-		if (node.getNodeType() instanceof MetadataType) {
-		    return metadataNodeActionList;
-		}
-		if (node.getNodeType() instanceof CMDIResourceType) {
-		    return resourceAudioVideoNodeActionList;
-		}
-		if (node.getNodeType() instanceof CMDIResourceTxtType) {
-		    return resourcetxtNodeActionList;
-		}
-	    }
-	} else if (nodes.size() > 1) {
-	    return multipleNodeActionList;
-	}
-	return null;
+        if (nodes.size() > 0 && nodes.size() == 1) {
+            for (TypedCorpusNode node : nodes) {
+                if (node.getNodeType() instanceof CMDICollectionType) {
+                    return collectionNodeActionList;
+                }
+                if (node.getNodeType() instanceof CMDIMetadataType) {
+                    try {
+                        if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
+                            return childLessMetadataNodeActionList;
+                        } else {
+                            return metadataNodeActionList;
+                        }
+                    } catch (UnknownNodeException ex) {
+                        return null;
+                    }
+                }
+                if (node.getNodeType() instanceof CMDIResourceType) {
+                    return resourceAudioVideoNodeActionList;
+                }
+                if (node.getNodeType() instanceof CMDIResourceTxtType) {
+                    return resourcetxtNodeActionList;
+                }
+            }
+        } else if (nodes.size() > 1) {
+            return multipleNodeActionList;
+        }
+        return null;
     }
 }
