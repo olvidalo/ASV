@@ -28,11 +28,13 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeResolver;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -72,7 +74,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	    TypedCorpusNode node = iterator.next();
 	    try {
 		if (node.getNodeType() instanceof CMDIMetadataType) {
-		    //TODO : implement metadata presentation
+		    return new PanelViewNodeShowComponent(wicketId, nodeResolver, node);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
 		}
