@@ -25,6 +25,8 @@
     
     <!-- Profile identifier -->
     <bean id="profileIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.ProfileIdentifierImpl" />
+    <!-- Zip creation service -->
+    <bean id="zipService" class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl" />
     <!-- AMS2 license service. Todo: replace with non-mock -->
     <bean id="licSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService"/>
     <!-- AMS2 authorisation service. Todo: replace with non-mock -->
@@ -37,17 +39,10 @@
     
     <!-- CMDI implementations for metadata browser providers -->
     <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier" />
-
-    <bean id="zipService" class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl" />
     
     <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider" />
     
     <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider" />
 
-    <!-- Node actions provider. Todo: see if can be autowired -->
-    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider">
-	<constructor-arg ref="csdb" />
-	<constructor-arg ref="nodeResolver" />
-	<constructor-arg ref="zipService" />
-    </bean>    
+    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider" />
 </beans>

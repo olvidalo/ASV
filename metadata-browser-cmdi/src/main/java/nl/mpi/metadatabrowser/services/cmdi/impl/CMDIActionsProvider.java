@@ -24,10 +24,6 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
@@ -38,8 +34,13 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIVersionNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -55,6 +56,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     public final List<NodeAction> multipleNodeActionList;
     private final CorpusStructureProvider csdb;
 
+    @Autowired
     public CMDIActionsProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, ZipService zipService) {
         this.csdb = csdb;
         metadataNodeActionList = Arrays.<NodeAction>asList(
