@@ -25,7 +25,6 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.jmock.Expectations;
-import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -34,6 +33,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.jmock.Expectations.returnValue;
 import static org.junit.Assert.*;
 
 /**
@@ -86,12 +86,7 @@ public class CMDIActionsProviderTest {
         });
 
         CMDIActionsProvider instance = new CMDIActionsProvider(cs, nodeResolver, zipService);
-
-        List expResult = instance.collectionNodeActionList;
         List result = instance.getNodeActions(collectionCorpus);
-        System.out.println(expResult.size());
         assertNotNull(result);
-        assertEquals(expResult.size(), result.size());
-        assertEquals(expResult, result);
     }
 }

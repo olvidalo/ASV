@@ -50,10 +50,10 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 
     private final List<NodeAction> resourcetxtNodeActionList;
     private final List<NodeAction> resourceAudioVideoNodeActionList;
-    public final List<NodeAction> metadataNodeActionList;
-    public final List<NodeAction> childLessMetadataNodeActionList;
-    public final List<NodeAction> collectionNodeActionList;
-    public final List<NodeAction> multipleNodeActionList;
+    private final List<NodeAction> metadataNodeActionList;
+    private final List<NodeAction> childLessMetadataNodeActionList;
+    private final List<NodeAction> collectionNodeActionList;
+    private final List<NodeAction> multipleNodeActionList;
     private final CorpusStructureProvider csdb;
 
     @Autowired
