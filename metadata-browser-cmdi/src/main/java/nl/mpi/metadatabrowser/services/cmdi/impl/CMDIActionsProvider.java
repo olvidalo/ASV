@@ -19,8 +19,8 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -38,8 +38,9 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
-import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -48,102 +49,128 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDIActionsProvider implements NodeActionsProvider {
 
-    private final List<NodeAction> resourcetxtNodeActionList;
-    private final List<NodeAction> resourceAudioVideoNodeActionList;
-    private final List<NodeAction> metadataNodeActionList;
-    private final List<NodeAction> childLessMetadataNodeActionList;
-    private final List<NodeAction> collectionNodeActionList;
-    private final List<NodeAction> multipleNodeActionList;
+    @Autowired(required = true)
+    private CMDIAMSNodeAction amsNodeAction;
+    @Autowired(required = true)
+    private CMDIBookmarkNodeAction bookmarkNodeAction;
+    @Autowired(required = true)
+    private CMDIDownloadNodeAction downloadNodeAction;
+    @Autowired(required = true)
+    private CMDIMultipleDownloadNodeAction multipleDownloadNodeAction;
+    @Autowired(required = true)
+    private CMDIRrsNodeAction rrsNodeAction;
+    @Autowired(required = true)
+    private CMDISearchNodeAction searchNodeAction;
+    @Autowired(required = true)
+    private CMDIStatsNodeAction statsNodeAction;
+    @Autowired(required = true)
+    private CMDITrovaNodeAction trovaNodeAction;
+    @Autowired(required = true)
+    private CMDIVersionNodeAction versionNodeAction;
+    @Autowired(required = true)
+    private CMDIViewNodeAction viewNodeAction;
+    @Autowired(required = true)
     private final CorpusStructureProvider csdb;
+    // Type dependent lists to be initialized
+    private List<NodeAction> resourcetxtNodeActionList;
+    private List<NodeAction> resourceAudioVideoNodeActionList;
+    private List<NodeAction> metadataNodeActionList;
+    private List<NodeAction> childLessMetadataNodeActionList;
+    private List<NodeAction> collectionNodeActionList;
+    private List<NodeAction> multipleNodeActionList;
 
     @Autowired
-    public CMDIActionsProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, ZipService zipService) {
-        this.csdb = csdb;
-        metadataNodeActionList = Arrays.<NodeAction>asList(
-                new CMDISearchNodeAction(),
-                new CMDITrovaNodeAction(),
-                new CMDIAMSNodeAction(),
-                new CMDIRrsNodeAction(),
-                new CMDIStatsNodeAction(),
-                new CMDIBookmarkNodeAction(csdb, nodeResolver),
-                new CMDIDownloadNodeAction(nodeResolver),
-                new CMDIMultipleDownloadNodeAction(csdb, zipService),
-                new CMDIVersionNodeAction(csdb, nodeResolver));
+    public CMDIActionsProvider(CorpusStructureProvider csdb) {
+	this.csdb = csdb;
+    }
 
-        childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
-                new CMDISearchNodeAction(),
-                new CMDITrovaNodeAction(),
-                new CMDIAMSNodeAction(),
-                new CMDIRrsNodeAction(),
-                new CMDIStatsNodeAction(),
-                new CMDIBookmarkNodeAction(csdb, nodeResolver),
-                new CMDIDownloadNodeAction(nodeResolver),
-                new CMDIVersionNodeAction(csdb, nodeResolver));
+    @PostConstruct
+    public void init() {
+	metadataNodeActionList = Arrays.<NodeAction>asList(
+		searchNodeAction,
+		trovaNodeAction,
+		amsNodeAction,
+		rrsNodeAction,
+		statsNodeAction,
+		bookmarkNodeAction,
+		downloadNodeAction,
+		multipleDownloadNodeAction,
+		versionNodeAction);
 
-        collectionNodeActionList = Arrays.<NodeAction>asList(
-                new CMDISearchNodeAction(),
-                new CMDITrovaNodeAction(),
-                new CMDIAMSNodeAction(),
-                new CMDIRrsNodeAction(),
-                new CMDIBookmarkNodeAction(csdb, nodeResolver),
-                new CMDIDownloadNodeAction(nodeResolver));
+	childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
+		searchNodeAction,
+		trovaNodeAction,
+		amsNodeAction,
+		rrsNodeAction,
+		statsNodeAction,
+		bookmarkNodeAction,
+		downloadNodeAction,
+		versionNodeAction);
 
-        resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
-                new CMDIAMSNodeAction(),
-                new CMDIRrsNodeAction(),
-                new CMDIStatsNodeAction(),
-                new CMDIViewNodeAction(nodeResolver),
-                new CMDIBookmarkNodeAction(csdb, nodeResolver),
-                new CMDIDownloadNodeAction(nodeResolver),
-                new CMDIVersionNodeAction(csdb, nodeResolver));
+	collectionNodeActionList = Arrays.<NodeAction>asList(
+		searchNodeAction,
+		trovaNodeAction,
+		amsNodeAction,
+		rrsNodeAction,
+		bookmarkNodeAction,
+		downloadNodeAction);
 
-        resourcetxtNodeActionList = Arrays.<NodeAction>asList(
-                new CMDITrovaNodeAction(),
-                new CMDIAMSNodeAction(),
-                new CMDIRrsNodeAction(),
-                new CMDIStatsNodeAction(),
-                new CMDIViewNodeAction(nodeResolver),
-                new CMDIBookmarkNodeAction(csdb, nodeResolver),
-                new CMDIDownloadNodeAction(nodeResolver),
-                new CMDIVersionNodeAction(csdb, nodeResolver));
+	resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
+		amsNodeAction,
+		rrsNodeAction,
+		statsNodeAction,
+		viewNodeAction,
+		bookmarkNodeAction,
+		downloadNodeAction,
+		versionNodeAction);
 
-        multipleNodeActionList = Arrays.<NodeAction>asList(
-                new CMDISearchNodeAction(),
-                new CMDITrovaNodeAction(),
-                new CMDIAMSNodeAction(),
-                new CMDIRrsNodeAction());
+	resourcetxtNodeActionList = Arrays.<NodeAction>asList(
+		trovaNodeAction,
+		amsNodeAction,
+		rrsNodeAction,
+		statsNodeAction,
+		viewNodeAction,
+		bookmarkNodeAction,
+		downloadNodeAction,
+		versionNodeAction);
+
+	multipleNodeActionList = Arrays.<NodeAction>asList(
+		searchNodeAction,
+		trovaNodeAction,
+		amsNodeAction,
+		rrsNodeAction);
 
 
     }
 
     @Override
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
-        if (nodes.size() > 0 && nodes.size() == 1) {
-            for (TypedCorpusNode node : nodes) {
-                if (node.getNodeType() instanceof CMDICollectionType) {
-                    return collectionNodeActionList;
-                }
-                if (node.getNodeType() instanceof CMDIMetadataType) {
-                    try {
-                        if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
-                            return childLessMetadataNodeActionList;
-                        } else {
-                            return metadataNodeActionList;
-                        }
-                    } catch (UnknownNodeException ex) {
-                        return null;
-                    }
-                }
-                if (node.getNodeType() instanceof CMDIResourceType) {
-                    return resourceAudioVideoNodeActionList;
-                }
-                if (node.getNodeType() instanceof CMDIResourceTxtType) {
-                    return resourcetxtNodeActionList;
-                }
-            }
-        } else if (nodes.size() > 1) {
-            return multipleNodeActionList;
-        }
-        return null;
+	if (nodes.size() > 0 && nodes.size() == 1) {
+	    for (TypedCorpusNode node : nodes) {
+		if (node.getNodeType() instanceof CollectionType) {
+		    return collectionNodeActionList;
+		}
+		if (node.getNodeType() instanceof MetadataType) {
+		    try {
+			if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
+			    return childLessMetadataNodeActionList;
+			} else {
+			    return metadataNodeActionList;
+			}
+		    } catch (UnknownNodeException ex) {
+			return null;
+		    }
+		}
+		if (node.getNodeType() instanceof CMDIResourceType) {
+		    return resourceAudioVideoNodeActionList;
+		}
+		if (node.getNodeType() instanceof CMDIResourceTxtType) {
+		    return resourcetxtNodeActionList;
+		}
+	    }
+	} else if (nodes.size() > 1) {
+	    return multipleNodeActionList;
+	}
+	return null;
     }
 }

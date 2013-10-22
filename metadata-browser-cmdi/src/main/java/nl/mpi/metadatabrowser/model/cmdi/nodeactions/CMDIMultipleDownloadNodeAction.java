@@ -17,17 +17,15 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipOutputStream;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
@@ -36,12 +34,15 @@ import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * TODO: Merge with CMDIDownloadNodeAction?
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
@@ -50,6 +51,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     private final ZipService zipService;
     private String userid;
 
+    @Autowired
     public CMDIMultipleDownloadNodeAction(CorpusStructureProvider csdb, ZipService zipService) {
 	this.csdb = csdb;
 	this.zipService = zipService;

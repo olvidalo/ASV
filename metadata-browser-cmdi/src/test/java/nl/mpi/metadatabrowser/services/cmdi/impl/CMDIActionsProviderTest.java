@@ -72,8 +72,6 @@ public class CMDIActionsProviderTest {
         System.out.println("getNodeActions");
         final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
         final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
-        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-        final ZipService zipService = context.mock(ZipService.class);
         final TypedCorpusNode child1 = context.mock(TypedCorpusNode.class, "child1");
         final TypedCorpusNode child2 = context.mock(TypedCorpusNode.class, "child2");
         final List<TypedCorpusNode> childrenList = Arrays.asList(child1, child2);
@@ -85,8 +83,10 @@ public class CMDIActionsProviderTest {
             }
         });
 
-        CMDIActionsProvider instance = new CMDIActionsProvider(cs, nodeResolver, zipService);
-        List result = instance.getNodeActions(collectionCorpus);
+        final CMDIActionsProvider instance = new CMDIActionsProvider(cs);
+	instance.init();
+	
+        final List result = instance.getNodeActions(collectionCorpus);
         assertNotNull(result);
     }
 }

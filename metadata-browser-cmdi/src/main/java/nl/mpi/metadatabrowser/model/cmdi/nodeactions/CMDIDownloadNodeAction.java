@@ -32,6 +32,8 @@ import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * TODO: Merge with CMDIDownloadNodeAction?
@@ -39,6 +41,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
@@ -47,6 +50,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     //TODO: decide where does userid comes from and implement accordingly
     private String userid;
 
+    @Autowired
     public CMDIDownloadNodeAction(NodeResolver nodeResolver) {
 	this.nodeResolver = nodeResolver;
     }

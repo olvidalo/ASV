@@ -21,28 +21,29 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDIAMSNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "ams";
-
-    public CMDIAMSNodeAction() {
-    }
 
     @Override
     public String getName() {
-        return name;
+        return "ams";
     }
 
     @Override

@@ -21,45 +21,47 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDITrovaNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "trova";
-
-    public CMDITrovaNodeAction() {
-    }
 
     @Override
     public String getName() {
-        return name;
+	return "trova";
     }
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        Map<String, URI> parameters = new HashMap<String, URI>();
-        for (TypedCorpusNode node : nodes) {
-            try {
-                // HANDLE trova action here
-                //TODO get session id
-                parameters.put("nodeId", node.getNodeURI());
-                parameters.put("jessionID", new URI("session_number"));
-            } catch (URISyntaxException ex) {
-                logger.error("URI syntax exception: " + ex);
-            }
-        }
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
+	logger.debug("Action [{}] invoked on {}", getName(), nodes);
+	Map<String, URI> parameters = new HashMap<String, URI>();
+	for (TypedCorpusNode node : nodes) {
+	    try {
+		// HANDLE trova action here
+		//TODO get session id
+		parameters.put("nodeId", node.getNodeURI());
+		parameters.put("jessionID", new URI("session_number"));
+	    } catch (URISyntaxException ex) {
+		logger.error("URI syntax exception: " + ex);
+	    }
+	}
+	final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
 
-        return new SimpleNodeActionResult(request);
+	return new SimpleNodeActionResult(request);
     }
 }

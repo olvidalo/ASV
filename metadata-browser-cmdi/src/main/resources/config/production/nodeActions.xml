@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+       profile="cmdi-production,cmdi-production-providers">
+    	
+
+    <!-- 
+	Spring configuration for node actions.
+	
+	    These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
+	    or 'cmdi-production-providers' is active.
+    -->
+
+    <context:annotation-config />
+    <!-- Node actions are components, use component scan to autoinstantiate -->
+    <context:component-scan base-package="nl.mpi.metadatabrowser.model.cmdi.nodeactions" />
+
+    <!-- Node actions get injected into actions provider. TODO: Define mapping here! -->
+    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider" />
+</beans>

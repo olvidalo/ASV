@@ -44,5 +44,4 @@
     
     <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider" />
 
-    <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider" />
 </beans>

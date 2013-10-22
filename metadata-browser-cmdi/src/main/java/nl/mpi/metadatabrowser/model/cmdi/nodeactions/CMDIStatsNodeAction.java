@@ -19,27 +19,30 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "accessStats";
-
-    public CMDIStatsNodeAction() {
-    }
 
     @Override
     public String getName() {
-        return name;
+        return "accessStats";
     }
 
     @Override

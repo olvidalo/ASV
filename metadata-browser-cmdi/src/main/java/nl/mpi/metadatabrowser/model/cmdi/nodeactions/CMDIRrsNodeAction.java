@@ -29,22 +29,20 @@ import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDIRrsNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
-    private final static String name = "rrs";
-
-    public CMDIRrsNodeAction() {
-    }
 
     @Override
     public String getName() {
-	return name;
+	return "rrs";
     }
 
     @Override

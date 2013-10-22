@@ -16,20 +16,27 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.*;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionException;
+import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelVersionComponent;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
-import org.apache.wicket.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
@@ -39,6 +46,7 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
     //TODO : decide where does userId comes from and implement accordingly
     private String userId;
 
+    @Autowired
     public CMDIVersionNodeAction(CorpusStructureProvider csdb, NodeResolver resolver) {
 	this.csdb = csdb;
 	this.resolver = resolver;
@@ -53,7 +61,7 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
 
 	final ShowComponentRequest request = new ShowComponentRequest() {
 	    @Override
-	    public Component getComponent(String id) {
+	    public org.apache.wicket.Component getComponent(String id) {
 		// create panel form for version action
 		return new PanelVersionComponent(id, node, csdb, resolver, userId, versions);
 	    }

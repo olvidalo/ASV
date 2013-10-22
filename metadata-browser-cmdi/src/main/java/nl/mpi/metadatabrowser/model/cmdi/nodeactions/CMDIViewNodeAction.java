@@ -28,19 +28,21 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
-import org.apache.wicket.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
+@Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
@@ -49,53 +51,54 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private boolean navType = false;
     private final NodeResolver nodeResolver;
 
+    @Autowired
     public CMDIViewNodeAction(NodeResolver nodeResolver) {
-        this.nodeResolver = nodeResolver;
+	this.nodeResolver = nodeResolver;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        String xmlContent = null;
+	logger.debug("Action [{}] invoked on {}", getName(), node);
+	String xmlContent = null;
 
-        if (node.getNodeType() instanceof CMDIResourceTxtType) {
-            //TODO get session id
-            try {
-                parameters.put("nodeId", node.getNodeURI());
-                parameters.put("jsessionID", new URI("jsessioID"));
-                navType = true;
-            } catch (URISyntaxException ex) {
-                logger.error("URI syntax exception in parameter session id: " + ex);
-            }
-        } else {
-            //TODO: Maybe replace this with some informative message, just URL is a bit pointless
-            // maybe return error message because no other kind of nodes should end up here
-            xmlContent = nodeResolver.getUrl(node).toString();
-        }
+	if (node.getNodeType() instanceof CMDIResourceTxtType) {
+	    //TODO get session id
+	    try {
+		parameters.put("nodeId", node.getNodeURI());
+		parameters.put("jsessionID", new URI("jsessioID"));
+		navType = true;
+	    } catch (URISyntaxException ex) {
+		logger.error("URI syntax exception in parameter session id: " + ex);
+	    }
+	} else {
+	    //TODO: Maybe replace this with some informative message, just URL is a bit pointless
+	    // maybe return error message because no other kind of nodes should end up here
+	    xmlContent = nodeResolver.getUrl(node).toString();
+	}
 
-        if (navType == true) {
-            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
-            return new SimpleNodeActionResult(request);
-        } else {
-            final ShowComponentRequest request = new ShowComponentRequest() {
-                @Override
-                public Component getComponent(String id) {
-                    try {
-                        return new PanelViewNodeShowComponent(id, nodeResolver, node);
-                    } catch (NodePresentationException ex) {
-                        logger.error("Error showing  View Component for node : " + node + " Error is " + ex);
-                        return null;
-                    }
+	if (navType == true) {
+	    final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
+	    return new SimpleNodeActionResult(request);
+	} else {
+	    final ShowComponentRequest request = new ShowComponentRequest() {
+		@Override
+		public org.apache.wicket.Component getComponent(String id) {
+		    try {
+			return new PanelViewNodeShowComponent(id, nodeResolver, node);
+		    } catch (NodePresentationException ex) {
+			logger.error("Error showing  View Component for node : " + node + " Error is " + ex);
+			return null;
+		    }
 
 
-                }
-            };
-            return new SimpleNodeActionResult(request);
-        }
+		}
+	    };
+	    return new SimpleNodeActionResult(request);
+	}
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 }
