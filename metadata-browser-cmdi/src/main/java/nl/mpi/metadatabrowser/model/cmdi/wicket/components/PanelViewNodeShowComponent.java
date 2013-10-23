@@ -63,6 +63,7 @@ public final class PanelViewNodeShowComponent extends Panel {
 		transformer.setOutputProperty(OutputKeys.METHOD, "html");
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		transformer.setParameter("DISPLAY_ONLY_BODY", "true"); // for IMDI
 
 		// Transform, outputting to string
 		final Source source = new StreamSource(in);
@@ -73,8 +74,7 @@ public final class PanelViewNodeShowComponent extends Panel {
 
 	    // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
 	    final Label cmdiLabel = new Label("cmdiView", strWriter.toString());
-	    //TODO: make this output valid HTML, then escape model strings!
-	    //cmdiLabel.setEscapeModelStrings(false);
+	    cmdiLabel.setEscapeModelStrings(false);
 	    add(cmdiLabel);
 	} catch (IOException ex) {
 	    throw new NodePresentationException("Could not read metadata for transformation", ex);
