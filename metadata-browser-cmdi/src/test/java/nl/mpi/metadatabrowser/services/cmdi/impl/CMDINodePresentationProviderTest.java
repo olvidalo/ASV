@@ -71,13 +71,17 @@ public class CMDINodePresentationProviderTest {
     public void testGetNodePresentation() throws NodePresentationException {
 	System.out.println("getNodePresentation");
 	final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
-	String wicketId = "test";
 	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 	final AuthorizationService authSrv = context.mock(AuthorizationService.class);
 	final LicenseService licSrv = context.mock(LicenseService.class);
 	CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver, authSrv, licSrv);
-	Component result = instance.getNodePresentation(wicketId, collectionCorpus);
+
+	// Wicket tester is required to provide a wicket application context
+	WicketTester tester = new WicketTester();
+	Component result = instance.getNodePresentation("test", collectionCorpus);
+	tester.startComponentInPage(result);
+
 	assertNotNull(result);
 	assertEquals(result.getId(), "test");
     }
