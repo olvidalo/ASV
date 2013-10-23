@@ -17,7 +17,6 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
-import java.util.Iterator;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -45,8 +44,6 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     private final LicenseService licSrv;
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
-    //TODO : decide where does userId comes from and implement accordingly
-    private String userId;
 
     /**
      *
@@ -63,28 +60,23 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
-	//TODO: Implement actual presentation
-
-	//TODO: for resource for id "resourcePresentation" 
-	//get TypedCorpusNode node, 
-	//getCmdiCorpusStructureDB csdb, 
-	//get String userid, 
-	//get LicenseService licenseService, 
-	//get AdvAuthorizationService aSrv.
-	// mostly beans ????
-	Iterator<TypedCorpusNode> iterator = nodes.iterator();
-	while (iterator.hasNext()) {
-	    TypedCorpusNode node = iterator.next();
+	//TODO : decide where does userId comes from and implement accordingly
+	final String userId = "";
+	if (nodes.size() == 1) {
+	    final TypedCorpusNode node = nodes.iterator().next();
 	    try {
 		if (node.getNodeType() instanceof CMDIMetadataType) {
 		    return new PanelViewNodeShowComponent(wicketId, nodeResolver, node);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
+		} else {
+		    return new Label(wicketId, node.toString());
 		}
 	    } catch (UnknownNodeException ex) {
 		throw new NodePresentationException("Could not find node while building presentation for node " + node.getNodeURI(), ex);
 	    }
+	} else {
+	    return new Label(wicketId, nodes.toString());
 	}
-	return new Label(wicketId, nodes.toString());
     }
 }

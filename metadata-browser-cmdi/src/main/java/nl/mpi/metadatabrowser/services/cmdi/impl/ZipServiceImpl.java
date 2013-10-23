@@ -117,7 +117,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
 		}
 		if (overallSize > MAX_LIMIT) { // check size limit 4GB
 		    overallSize = 0;
-		    logger.info("maximum size limit of 4GB reached");
+		    logger.info("maximum size limit of {} GB reached", ((double) MAX_LIMIT) / FileUtils.ONE_GB);
 		    break;
 		}
 		if (!csdb.getChildNodes(childUri).isEmpty()) {
