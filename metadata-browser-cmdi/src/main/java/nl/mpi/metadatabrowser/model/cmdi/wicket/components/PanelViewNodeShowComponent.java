@@ -1,24 +1,3 @@
-package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.net.URL;
-import javax.xml.transform.stream.StreamSource;
-import net.sf.saxon.s9api.Processor;
-import net.sf.saxon.s9api.SaxonApiException;
-import net.sf.saxon.s9api.Serializer;
-import net.sf.saxon.s9api.XdmNode;
-import net.sf.saxon.s9api.XsltCompiler;
-import net.sf.saxon.s9api.XsltExecutable;
-import net.sf.saxon.s9api.XsltTransformer;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.services.NodePresentationException;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
-
 /*
  * Copyright (C) 2013 Max Planck Institute for Psycholinguistics
  *
@@ -35,50 +14,71 @@ import org.apache.wicket.markup.html.panel.Panel;
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
+import nl.mpi.metadatabrowser.services.NodePresentationException;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public final class PanelViewNodeShowComponent extends Panel {
 
-    private final URL xslFile = getClass().getResource("/cmdi2xhtml.xsl");
-    private final URL imdiXSLFile = getClass().getResource("/imdi-viewer.xsl");
+    public static final String IMDI_XSL = "/imdi-viewer.xsl";
+    public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
 
     public PanelViewNodeShowComponent(String id, NodeResolver nodeResolver, TypedCorpusNode node) throws NodePresentationException {
 	super(id);
-
-	final Processor proc = new Processor(false);
-	final XsltCompiler comp = proc.newXsltCompiler();
+	final NodeType nodeType = node.getNodeType();
 
 	try {
+	    final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
 	    final InputStream in = nodeResolver.getInputStream(node);	// get the file
-	    final XsltExecutable exp;
-	    if (nodeResolver.getUrl(node).toString().endsWith(".imdi")) {
-		exp = comp.compile(new StreamSource(imdiXSLFile.getFile())); // compile the xslt imdi file
-	    } else {
-		exp = comp.compile(new StreamSource(xslFile.getFile())); // compile the xslt file
+	    try {
+		final Transformer transformer;
+		if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType) {
+		    transformer = transformerFactory.newTransformer(new StreamSource(getClass().getResourceAsStream(IMDI_XSL)));
+		} else {
+		    transformer = transformerFactory.newTransformer(new StreamSource(getClass().getResourceAsStream(CMDI_XSL)));
+		}
+		// set transformer options
+		transformer.setOutputProperty(OutputKeys.METHOD, "html");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+		// Transform, outputting to string
+		final Source source = new StreamSource(in);
+		final StringWriter strWriter = new StringWriter();
+		transformer.transform(source, new StreamResult(strWriter));
+
+		// write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
+		final Label cmdiLabel = new Label("cmdiView", strWriter.toString());
+		cmdiLabel.setEscapeModelStrings(false);
+		add(cmdiLabel);
+	    } finally {
+		in.close();
 	    }
-	    final XdmNode source = proc.newDocumentBuilder().build(
-		    new StreamSource(new InputStreamReader(in)));
-	    final Serializer out = new Serializer();
-	    final StringWriter strWriter = new StringWriter();
-	    out.setOutputWriter(strWriter);
-	    out.setOutputProperty(Serializer.Property.METHOD, "html");
-	    out.setOutputProperty(Serializer.Property.INDENT, "yes");
-	    out.setOutputProperty(Serializer.Property.ENCODING, "UTF-8");
-	    final XsltTransformer trans = exp.load();
-
-	    trans.setInitialContextNode(source);// parse xml via xslt
-	    trans.setDestination(out);
-	    trans.transform();
-
-	    // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-	    final Label cmdiLabel = new Label("cmdiView", strWriter.toString());
-	    cmdiLabel.setEscapeModelStrings(false);
-	    add(cmdiLabel);
 	} catch (IOException ex) {
 	    throw new NodePresentationException("Could not read metadata for transformation", ex);
-	} catch (SaxonApiException ex) {
+	} catch (TransformerException ex) {
 	    throw new NodePresentationException("Could not transform metadata", ex);
 	}
     }
