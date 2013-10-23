@@ -27,7 +27,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelViewNodeShowComponent;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MetadataTransformingPanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
@@ -67,7 +67,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	    final TypedCorpusNode node = nodes.iterator().next();
 	    try {
 		if (node.getNodeType() instanceof MetadataType || node.getNodeType() instanceof CollectionType) {
-		    return new PanelViewNodeShowComponent(wicketId, nodeResolver, node);
+		    return new MetadataTransformingPanel(wicketId, nodeResolver, node);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
 		} else {

@@ -39,12 +39,12 @@ import org.apache.wicket.markup.html.panel.Panel;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class PanelViewNodeShowComponent extends Panel {
+public final class MetadataTransformingPanel extends Panel {
 
     public static final String IMDI_XSL = "/imdi-viewer.xsl";
     public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
 
-    public PanelViewNodeShowComponent(String id, NodeResolver nodeResolver, TypedCorpusNode node) throws NodePresentationException {
+    public MetadataTransformingPanel(String id, NodeResolver nodeResolver, TypedCorpusNode node) throws NodePresentationException {
 	super(id);
 	final NodeType nodeType = node.getNodeType();
 
