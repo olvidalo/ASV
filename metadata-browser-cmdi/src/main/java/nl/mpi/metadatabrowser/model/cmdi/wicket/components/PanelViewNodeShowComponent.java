@@ -48,10 +48,10 @@ public final class PanelViewNodeShowComponent extends Panel {
 	super(id);
 	final NodeType nodeType = node.getNodeType();
 
+	final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 	try {
-	    final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-
 	    final InputStream in = nodeResolver.getInputStream(node);	// get the file
+	    final StringWriter strWriter = new StringWriter();
 	    try {
 		final Transformer transformer;
 		if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType) {
@@ -66,16 +66,16 @@ public final class PanelViewNodeShowComponent extends Panel {
 
 		// Transform, outputting to string
 		final Source source = new StreamSource(in);
-		final StringWriter strWriter = new StringWriter();
 		transformer.transform(source, new StreamResult(strWriter));
-
-		// write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-		final Label cmdiLabel = new Label("cmdiView", strWriter.toString());
-		cmdiLabel.setEscapeModelStrings(false);
-		add(cmdiLabel);
 	    } finally {
 		in.close();
 	    }
+
+	    // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
+	    final Label cmdiLabel = new Label("cmdiView", strWriter.toString());
+	    //TODO: make this output valid HTML, then escape model strings!
+	    //cmdiLabel.setEscapeModelStrings(false);
+	    add(cmdiLabel);
 	} catch (IOException ex) {
 	    throw new NodePresentationException("Could not read metadata for transformation", ex);
 	} catch (TransformerException ex) {
