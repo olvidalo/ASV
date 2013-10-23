@@ -31,8 +31,9 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MetadataTransformingPanel;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
+import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,9 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 		@Override
 		public org.apache.wicket.Component getComponent(String id) {
 		    try {
-			return new MetadataTransformingPanel(id, nodeResolver, node);
+			final Label contentLabel = new Label(id, new MetadataTransformingModel(nodeResolver, node));
+			contentLabel.setEscapeModelStrings(false);
+			return contentLabel;
 		    } catch (NodePresentationException ex) {
 			logger.error("Error showing  View Component for node : " + node + " Error is " + ex);
 			return null;

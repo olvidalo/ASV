@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
+package nl.mpi.metadatabrowser.model.cmdi.wicket.model;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,20 +32,19 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class MetadataTransformingPanel extends Panel {
+public final class MetadataTransformingModel extends AbstractReadOnlyModel<String> {
 
     public static final String IMDI_XSL = "/imdi-viewer.xsl";
     public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
+    private final String content;
 
-    public MetadataTransformingPanel(String id, NodeResolver nodeResolver, TypedCorpusNode node) throws NodePresentationException {
-	super(id);
+    public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node) throws NodePresentationException {
 	final NodeType nodeType = node.getNodeType();
 
 	final TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -73,13 +72,16 @@ public final class MetadataTransformingPanel extends Panel {
 	    }
 
 	    // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-	    final Label cmdiLabel = new Label("cmdiView", strWriter.toString());
-	    cmdiLabel.setEscapeModelStrings(false);
-	    add(cmdiLabel);
+	    content = strWriter.toString();
 	} catch (IOException ex) {
 	    throw new NodePresentationException("Could not read metadata for transformation", ex);
 	} catch (TransformerException ex) {
 	    throw new NodePresentationException("Could not transform metadata", ex);
 	}
+    }
+
+    @Override
+    public String getObject() {
+	return content;
     }
 }
