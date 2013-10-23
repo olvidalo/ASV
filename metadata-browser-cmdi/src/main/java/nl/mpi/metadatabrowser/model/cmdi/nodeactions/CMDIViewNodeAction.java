@@ -16,11 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -33,6 +35,7 @@ import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
+import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +54,12 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private Map<String, URI> parameters = new HashMap<String, URI>();
     private boolean navType = false;
     private final NodeResolver nodeResolver;
+    private final NodePresentationProvider presentationProvider;
 
     @Autowired
-    public CMDIViewNodeAction(NodeResolver nodeResolver) {
+    public CMDIViewNodeAction(NodeResolver nodeResolver, NodePresentationProvider presentationProvider) {
 	this.nodeResolver = nodeResolver;
+	this.presentationProvider = presentationProvider;
     }
 
     @Override
@@ -83,17 +88,12 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 	} else {
 	    final ShowComponentRequest request = new ShowComponentRequest() {
 		@Override
-		public org.apache.wicket.Component getComponent(String id) {
+		public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
 		    try {
-			final Label contentLabel = new Label(id, new MetadataTransformingModel(nodeResolver, node));
-			contentLabel.setEscapeModelStrings(false);
-			return contentLabel;
+			return presentationProvider.getNodePresentation(id, Collections.singleton(node));
 		    } catch (NodePresentationException ex) {
-			logger.error("Error showing  View Component for node : " + node + " Error is " + ex);
-			return null;
+			throw new ControllerActionRequestException(ex);
 		    }
-
-
 		}
 	    };
 	    return new SimpleNodeActionResult(request);

@@ -21,16 +21,13 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
@@ -40,24 +37,14 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public final class MetadataTransformingModel extends AbstractReadOnlyModel<String> {
 
-    public static final String IMDI_XSL = "/imdi-viewer.xsl";
-    public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
     private final String content;
 
-    public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node) throws NodePresentationException {
-	final NodeType nodeType = node.getNodeType();
-
-	final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates) throws NodePresentationException {
 	try {
 	    final InputStream in = nodeResolver.getInputStream(node);	// get the file
 	    final StringWriter strWriter = new StringWriter();
 	    try {
-		final Transformer transformer;
-		if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType) {
-		    transformer = transformerFactory.newTransformer(new StreamSource(getClass().getResourceAsStream(IMDI_XSL)));
-		} else {
-		    transformer = transformerFactory.newTransformer(new StreamSource(getClass().getResourceAsStream(CMDI_XSL)));
-		}
+		final Transformer transformer = templates.newTransformer();
 		// set transformer options
 		transformer.setOutputProperty(OutputKeys.METHOD, "html");
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");

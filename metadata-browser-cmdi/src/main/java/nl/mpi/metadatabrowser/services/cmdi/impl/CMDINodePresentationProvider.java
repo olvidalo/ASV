@@ -17,18 +17,25 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
+import javax.xml.transform.Templates;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AuthorizationService;
+import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import org.apache.wicket.Component;
@@ -41,10 +48,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDINodePresentationProvider implements NodePresentationProvider {
 
+    public static final String IMDI_XSL = "/imdi-viewer.xsl";
+    public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
     private final AuthorizationService authoSrv;
     private final LicenseService licSrv;
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
+    //TODO: get these templates injected
+    private final Templates imdiTemplates;
+    private final Templates cmdiTemplates;
 
     /**
      *
@@ -57,6 +69,15 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	this.nodeResolver = nodeResolver;
 	this.authoSrv = authoSrv;
 	this.licSrv = licSrv;
+
+	//TODO: get these injected
+	final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	try {
+	    imdiTemplates = transformerFactory.newTemplates(new StreamSource(getClass().getResourceAsStream(IMDI_XSL)));
+	    cmdiTemplates = transformerFactory.newTemplates(new StreamSource(getClass().getResourceAsStream(CMDI_XSL)));
+	} catch (TransformerException ex) {
+	    throw new RuntimeException("Error compiling template", ex);
+	}
     }
 
     @Override
@@ -67,9 +88,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	    final TypedCorpusNode node = nodes.iterator().next();
 	    try {
 		if (node.getNodeType() instanceof MetadataType || node.getNodeType() instanceof CollectionType) {
-		    final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node));
-		    contentLabel.setEscapeModelStrings(false);
-		    return contentLabel;
+		    return createMetadataTransformation(node, wicketId);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
 		} else {
@@ -81,5 +100,22 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	} else {
 	    return new Label(wicketId, nodes.toString());
 	}
+    }
+
+    private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException {
+	final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node)));
+	contentLabel.setEscapeModelStrings(false);
+	return contentLabel;
+    }
+
+    private Templates getTemplates(final TypedCorpusNode node) {
+	final NodeType nodeType = node.getNodeType();
+	final Templates templates;
+	if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType) {
+	    templates = imdiTemplates;
+	} else {
+	    templates = cmdiTemplates;
+	}
+	return templates;
     }
 }
