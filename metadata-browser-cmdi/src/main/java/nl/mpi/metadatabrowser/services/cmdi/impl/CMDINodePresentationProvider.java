@@ -40,14 +40,18 @@ import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class CMDINodePresentationProvider implements NodePresentationProvider {
 
+    private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     public static final String IMDI_XSL = "/imdi-viewer.xsl";
     public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
     private final AuthorizationService authoSrv;
@@ -72,8 +76,11 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 
 	//TODO: get these injected
 	final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	logger.info("Using {} for XSLT transformations for node presentation", transformerFactory.getClass());
 	try {
+	    logger.debug("Creating templates for IMDI XSLT from resource {}", IMDI_XSL);
 	    imdiTemplates = transformerFactory.newTemplates(new StreamSource(getClass().getResourceAsStream(IMDI_XSL)));
+	    logger.debug("Creating templates for CMDI XSLT from resource {}", CMDI_XSL);
 	    cmdiTemplates = transformerFactory.newTemplates(new StreamSource(getClass().getResourceAsStream(CMDI_XSL)));
 	} catch (TransformerException ex) {
 	    throw new RuntimeException("Error compiling template", ex);
@@ -83,21 +90,26 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
 	//TODO : decide where does userId comes from and implement accordingly
+	logger.debug("Making node presentation for nodes {}", nodes);
 	final String userId = "";
 	if (nodes.size() == 1) {
 	    final TypedCorpusNode node = nodes.iterator().next();
 	    try {
 		if (node.getNodeType() instanceof MetadataType || node.getNodeType() instanceof CollectionType) {
+		    logger.debug("Metadata: presentation through transformation");
 		    return createMetadataTransformation(node, wicketId);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
+		    logger.debug("Resource: presentation of resource info");
 		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
 		} else {
+		    logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
 		    return new Label(wicketId, node.toString());
 		}
 	    } catch (UnknownNodeException ex) {
-		throw new NodePresentationException("Could not find node while building presentation for node " + node.getNodeURI(), ex);
+		throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
 	    }
 	} else {
+	    logger.debug("Multiple nodes, present as string representation of collection");
 	    return new Label(wicketId, nodes.toString());
 	}
     }

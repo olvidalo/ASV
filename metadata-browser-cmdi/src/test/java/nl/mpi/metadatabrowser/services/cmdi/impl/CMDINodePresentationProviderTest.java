@@ -23,15 +23,11 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.services.NodePresentationException;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTester;
+import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -41,34 +37,15 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDINodePresentationProviderTest {
-
+    
     private final Mockery context = new JUnit4Mockery();
-    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1", "1");
-
-    public CMDINodePresentationProviderTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
+    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1", "MockNode 1");
 
     /**
      * Test of getNodePresentation method, of class CMDINodePresentationProvider.
      */
     @Test
-    public void testGetNodePresentation() throws NodePresentationException {
+    public void testGetNodePresentation() throws Exception {
 	System.out.println("getNodePresentation");
 	final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
 	final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);
@@ -76,12 +53,19 @@ public class CMDINodePresentationProviderTest {
 	final AuthorizationService authSrv = context.mock(AuthorizationService.class);
 	final LicenseService licSrv = context.mock(LicenseService.class);
 	CMDINodePresentationProvider instance = new CMDINodePresentationProvider(cs, nodeResolver, authSrv, licSrv);
+	
+	context.checking(new Expectations() {
+	    {
+		oneOf(nodeResolver).getInputStream(corpType);
+		will(returnValue(getClass().getResourceAsStream("/IPROSLA_Nijmegen.cmdi")));
+	    }
+	});
 
 	// Wicket tester is required to provide a wicket application context
 	WicketTester tester = new WicketTester();
 	Component result = instance.getNodePresentation("test", collectionCorpus);
 	tester.startComponentInPage(result);
-
+	
 	assertNotNull(result);
 	assertEquals(result.getId(), "test");
     }

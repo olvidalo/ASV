@@ -30,6 +30,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 class MockTypedCorpusNode implements TypedCorpusNode {
+
     private final String uri;
     private final String name;
 
@@ -88,4 +89,8 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public String toString() {
+	return getName();
+    }
 }

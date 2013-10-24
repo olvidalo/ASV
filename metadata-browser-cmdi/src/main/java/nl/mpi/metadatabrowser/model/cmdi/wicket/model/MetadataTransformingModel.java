@@ -29,7 +29,10 @@ import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
+import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -37,10 +40,12 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public final class MetadataTransformingModel extends AbstractReadOnlyModel<String> {
 
+    private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     private final String content;
 
     public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates) throws NodePresentationException {
 	try {
+	    logger.debug("Transforming node {} using templates {}", node, templates);
 	    final InputStream in = nodeResolver.getInputStream(node);	// get the file
 	    final StringWriter strWriter = new StringWriter();
 	    try {
