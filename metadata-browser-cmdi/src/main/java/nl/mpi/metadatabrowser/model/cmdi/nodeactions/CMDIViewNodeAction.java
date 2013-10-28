@@ -33,10 +33,8 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
-import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,19 +51,16 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final String name = "view Node";
     private Map<String, URI> parameters = new HashMap<String, URI>();
     private boolean navType = false;
-    private final NodeResolver nodeResolver;
     private final NodePresentationProvider presentationProvider;
 
-    @Autowired
-    public CMDIViewNodeAction(NodeResolver nodeResolver, NodePresentationProvider presentationProvider) {
-	this.nodeResolver = nodeResolver;
+    @Autowired    
+    public CMDIViewNodeAction(NodePresentationProvider presentationProvider) {
 	this.presentationProvider = presentationProvider;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
-	String xmlContent = null;
 
 	if (node.getNodeType() instanceof CMDIResourceTxtType) {
 	    //TODO get session id
@@ -79,7 +74,6 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 	} else {
 	    //TODO: Maybe replace this with some informative message, just URL is a bit pointless
 	    // maybe return error message because no other kind of nodes should end up here
-	    xmlContent = nodeResolver.getUrl(node).toString();
 	}
 
 	if (navType == true) {

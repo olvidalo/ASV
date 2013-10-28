@@ -33,10 +33,12 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 
     private final String uri;
     private final String name;
+    private final NodeType nodeType;
 
-    public MockTypedCorpusNode(String uri, String name) {
+    public MockTypedCorpusNode(NodeType nodeType, String uri, String name) {
 	this.uri = uri;
 	this.name = name;
+	this.nodeType = nodeType;
     }
 
     @Override
@@ -51,7 +53,7 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 
     @Override
     public NodeType getNodeType() {
-	return new CMDICollectionType();
+	return nodeType;
     }
 
     @Override

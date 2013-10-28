@@ -23,6 +23,7 @@ import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -43,7 +44,7 @@ import static org.junit.Assert.*;
 public class CMDIActionsProviderTest {
 
     private final Mockery context = new JUnit4Mockery();
-    private TypedCorpusNode corpType = new MockTypedCorpusNode("node:1", "1");
+    private TypedCorpusNode corpType = new MockTypedCorpusNode(new CMDICollectionType(), "node:1", "1");
 
     public CMDIActionsProviderTest() {
     }

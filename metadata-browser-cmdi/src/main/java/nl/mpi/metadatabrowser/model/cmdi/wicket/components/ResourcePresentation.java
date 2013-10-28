@@ -61,7 +61,7 @@ public final class ResourcePresentation extends Panel {
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
-    public ResourcePresentation(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, LicenseService licenseService, AuthorizationService aSrv) throws UnknownNodeException {
+    public ResourcePresentation(String id, TypedCorpusNode node, NodeResolver resolver, String userid, LicenseService licenseService, AuthorizationService aSrv) throws UnknownNodeException {
 	super(id);
 	//String nodeId = Integer.toString(node.getNodeURI());
 	final URL nodeURL = resolver.getUrl(node);

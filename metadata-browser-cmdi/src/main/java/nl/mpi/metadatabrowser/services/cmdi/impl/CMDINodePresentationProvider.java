@@ -18,9 +18,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
 import javax.xml.transform.Templates;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -43,6 +40,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  *
@@ -56,35 +54,27 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
     private final AuthorizationService authoSrv;
     private final LicenseService licSrv;
-    private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
-    //TODO: get these templates injected
-    private final Templates imdiTemplates;
-    private final Templates cmdiTemplates;
+    private Templates imdiTemplates;
+    private Templates cmdiTemplates;
 
     /**
-     *
-     * @param csdb
+     * 
      * @param nodeResolver
+     * @param authoSrv
+     * @param licSrv
+     * @param imdiTemplates
+     * @param cmdiTemplates 
      */
     @Autowired
-    public CMDINodePresentationProvider(CorpusStructureProvider csdb, NodeResolver nodeResolver, AuthorizationService authoSrv, LicenseService licSrv) {
-	this.csdb = csdb;
+    public CMDINodePresentationProvider(NodeResolver nodeResolver, AuthorizationService authoSrv, LicenseService licSrv,
+	    @Qualifier("imdiTemplates") Templates imdiTemplates,
+	    @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
 	this.nodeResolver = nodeResolver;
 	this.authoSrv = authoSrv;
 	this.licSrv = licSrv;
-
-	//TODO: get these injected
-	final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	logger.info("Using {} for XSLT transformations for node presentation", transformerFactory.getClass());
-	try {
-	    logger.debug("Creating templates for IMDI XSLT from resource {}", IMDI_XSL);
-	    imdiTemplates = transformerFactory.newTemplates(new StreamSource(getClass().getResourceAsStream(IMDI_XSL)));
-	    logger.debug("Creating templates for CMDI XSLT from resource {}", CMDI_XSL);
-	    cmdiTemplates = transformerFactory.newTemplates(new StreamSource(getClass().getResourceAsStream(CMDI_XSL)));
-	} catch (TransformerException ex) {
-	    throw new RuntimeException("Error compiling template", ex);
-	}
+	this.imdiTemplates = imdiTemplates;
+	this.cmdiTemplates = cmdiTemplates;
     }
 
     @Override
@@ -100,7 +90,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		    return createMetadataTransformation(node, wicketId);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    logger.debug("Resource: presentation of resource info");
-		    return new ResourcePresentation(wicketId, node, csdb, nodeResolver, userId, licSrv, authoSrv);
+		    return new ResourcePresentation(wicketId, node, nodeResolver, userId, licSrv, authoSrv);
 		} else {
 		    logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
 		    return new Label(wicketId, node.toString());

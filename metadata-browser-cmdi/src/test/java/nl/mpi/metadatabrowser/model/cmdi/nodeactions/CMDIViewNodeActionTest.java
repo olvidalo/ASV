@@ -17,15 +17,12 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
-import java.net.URL;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import org.jmock.Expectations;
-import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -33,6 +30,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.jmock.Expectations.returnValue;
 import static org.junit.Assert.*;
 
 /**
@@ -70,36 +69,20 @@ public class CMDIViewNodeActionTest {
     public void testExecute() throws Exception {
 	System.out.println("execute");
 	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 	final NodePresentationProvider presentationProvider = context.mock(NodePresentationProvider.class);
 
 	context.checking(new Expectations() {
 	    {
-		oneOf(nodeResolver).getUrl(node);
-		will(returnValue(new URL("http://nodeUri")));
 		allowing(node).getNodeType();
 		will(returnValue(context.mock(NodeType.class)));
 	    }
 	});
-
-	CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeResolver, presentationProvider);
+	
+	CMDIViewNodeAction instance = new CMDIViewNodeAction(presentationProvider);
 	NodeActionResult result = instance.execute(node);
 	ControllerActionRequest actionRequest = result.getControllerActionRequest();
 	assertNotNull(actionRequest);
-	//assertThat(actionRequest, instanceOf(ShowComponentActionRequest.class));
     }
-
-    /**
-     * Test of getName method, of class CMDIViewNodeAction.
-     */
-    @Test
-    public void testGetName() {
-	System.out.println("getName");
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	final NodePresentationProvider presentationProvider = context.mock(NodePresentationProvider.class);
-	CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeResolver, presentationProvider);
-	String expResult = "view Node";
-	String result = instance.getName();
-	assertEquals(expResult, result);
-    }
+    
+    //TODO: Add test for view node action cases
 }
