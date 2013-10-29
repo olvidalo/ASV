@@ -6,7 +6,7 @@
     <parent>
 	<artifactId>parent</artifactId>
 	<groupId>nl.mpi</groupId>
-	<version>1.6.4</version>
+	<version>1.7.0</version>
     </parent>
 
     <groupId>nl.mpi.metadata-browser</groupId>
@@ -17,7 +17,6 @@
     <description>A CMDI compatible metadata browser</description>
     
     <properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<!-- Version of Wicket to depend on in module projects -->
 	<wicket.version>6.11.0</wicket.version>
 	<jmock.version>2.6.0</jmock.version>
@@ -35,7 +34,7 @@
     
     <developers>
 	<developer>
-	    <id>twago</id>
+	    <id>twagoo</id>
 	    <name>Twan Goosen</name>
 	    <email>twagoo@mpi.nl</email>
 	    <organization>MPI</organization>
@@ -67,7 +66,7 @@
 	<dependency>
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
-	    <version>4.11</version>
+	    <version>${mpi.parent.junit.version}</version>
 	</dependency>
 	<dependency>
 	    <groupId>org.jmock</groupId>
@@ -85,7 +84,7 @@
 	<dependency>
 	    <groupId>org.slf4j</groupId>
 	    <artifactId>slf4j-log4j12</artifactId>
-	    <version>${project.logging.slf4jVersion}</version>
+	    <version>${mpi.parent.slf4j.version}</version>
 	    <scope>test</scope>
 	</dependency>
     </dependencies>
