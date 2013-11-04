@@ -24,12 +24,17 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
-import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import org.junit.*;
 
 /**
  *
@@ -64,12 +69,12 @@ public class CMDIStatsNodeActionTest {
      */
     @Test
     public void testGetName() {
-        System.out.println("getName");
-        CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
-        String expResult = "stats";
-        String result = instance.getName();
-        assertNotSame(expResult, result);
-        assertEquals("accessStats", result);
+	System.out.println("getName");
+	CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
+	String expResult = "stats";
+	String result = instance.getName();
+	assertThat(result, is(not(expResult)));
+	assertThat(result, is("accessStats"));
     }
 
     /**
@@ -77,34 +82,33 @@ public class CMDIStatsNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-        System.out.println("execute");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+	System.out.println("execute");
+	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 
-        Map<String, URI> map = new HashMap<String, URI>();
+	Map<String, URI> map = new HashMap<String, URI>();
 
-        map.put("nodeId", NODE_ID);
+	map.put("nodeId", NODE_ID);
 
-        context.checking(new Expectations() {
-
-            {
-                allowing(node).getNodeURI();
-                will(returnValue(NODE_ID));
-            }
-        });
-
+	context.checking(new Expectations() {
+	    {
+		allowing(node).getNodeURI();
+		will(returnValue(NODE_ID));
+	    }
+	});
 
 
-        CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
-        NodeActionResult result = instance.execute(node);
-        assertEquals("accessStats", instance.getName());
 
-        ControllerActionRequest actionRequest = result.getControllerActionRequest();
-        assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+	CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
+	NodeActionResult result = instance.execute(node);
+	assertEquals("accessStats", instance.getName());
 
-        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationRequest.NavigationTarget.STATS, navigationActionRequest.getTarget());
-        assertNotNull(navigationActionRequest.getParameters());
-        assertEquals(map, navigationActionRequest.getParameters());
+	ControllerActionRequest actionRequest = result.getControllerActionRequest();
+	assertNotNull(actionRequest);
+	assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+	NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+	assertEquals(NavigationRequest.NavigationTarget.STATS, navigationActionRequest.getTarget());
+	assertNotNull(navigationActionRequest.getParameters());
+	assertEquals(map, navigationActionRequest.getParameters());
     }
 }
