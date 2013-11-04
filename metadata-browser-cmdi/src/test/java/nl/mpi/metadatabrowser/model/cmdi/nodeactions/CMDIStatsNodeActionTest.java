@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class CMDIStatsNodeActionTest {
         CMDIStatsNodeAction instance = new CMDIStatsNodeAction();
         String expResult = "stats";
         String result = instance.getName();
-        assertNotEquals(expResult, result);
+        assertNotSame(expResult, result);
         assertEquals("accessStats", result);
     }
 
