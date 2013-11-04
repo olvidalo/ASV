@@ -104,9 +104,8 @@ public class DownloadActionRequestTest {
     public void testGetFileName() {
         System.out.println("getFileName");
         DownloadActionRequest instance = new DownloadActionRequest();
-        String expResult = "1.imdi";
+        String expResult = "IPROSLA_Nijmegen";
         String result = instance.getFileName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
     }
 }
