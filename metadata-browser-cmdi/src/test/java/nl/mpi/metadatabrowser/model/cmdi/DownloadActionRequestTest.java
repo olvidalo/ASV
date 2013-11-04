@@ -16,16 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Locale;
-import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.resource.*;
-import org.apache.wicket.util.time.Time;
-import org.junit.*;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -33,68 +30,17 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class DownloadActionRequestTest {
-    
-    public DownloadActionRequestTest() {
-    }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-
-
-    /**
-     * Test of setFileName method, of class DownloadActionRequest.
-     */
-    @Test
-    public void testSetFileName() {
-        System.out.println("setFileName");
-        String name = "1.imdi";
-        DownloadActionRequest.setFileName(name);
-        // TODO review the generated test code and remove the default call to fail.
-    }
-
-    /**
-     * Test of setStreamContent method, of class DownloadActionRequest.
-     */
-    @Test
-    public void testSetStreamContent() throws URISyntaxException {
-        System.out.println("setStreamContent");
-        URI nodeUri = new URI("/corpora/lams_demo/Corpusstructure/1.imdi");
-        File file = new File(nodeUri.getPath());
-        IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest instance = new DownloadActionRequest();
-        instance.setStreamContent(resStream);
-        // TODO review the generated test code and remove the default call to fail.
-    }
+    private Mockery context = new JUnit4Mockery();
 
     /**
      * Test of getDownloadStream method, of class DownloadActionRequest.
      */
     @Test
     public void testGetDownloadStream() throws ResourceStreamNotFoundException, URISyntaxException {
-        System.out.println("getDownloadStream");
-        URI nodeUri = getClass().getClassLoader().getResource("IPROSLA_Nijmegen.cmdi").toURI();
-        File file = new File(nodeUri.getPath());
-        IResourceStream resStream = new FileResourceStream(file);
-        DownloadActionRequest instance = new DownloadActionRequest("IPROSLA_Nijmegen", resStream);
-        IResourceStream result = instance.getDownloadStream();
-        System.out.println(instance.getFileName());
-        assertNotNull(result);
-        assertNotNull(result.getInputStream());
-        assertNull(result.getContentType());
-        // TODO review the generated test code and remove the default call to fail.
+	final IResourceStream resStream = context.mock(IResourceStream.class);
+	DownloadActionRequest instance = new DownloadActionRequest("1.cmdi", resStream);
+	assertSame(resStream, instance.getDownloadStream());
     }
 
     /**
@@ -102,10 +48,8 @@ public class DownloadActionRequestTest {
      */
     @Test
     public void testGetFileName() {
-        System.out.println("getFileName");
-        DownloadActionRequest instance = new DownloadActionRequest();
-        String expResult = "IPROSLA_Nijmegen";
-        String result = instance.getFileName();
-        assertEquals(expResult, result);
+	final IResourceStream resStream = context.mock(IResourceStream.class);
+	DownloadActionRequest instance = new DownloadActionRequest("1.cmdi", resStream);
+	assertEquals("1.cmdi", instance.getFileName());
     }
 }

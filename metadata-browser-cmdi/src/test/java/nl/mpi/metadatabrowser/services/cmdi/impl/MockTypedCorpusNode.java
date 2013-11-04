@@ -23,7 +23,6 @@ import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 
 /**
  *
@@ -34,6 +33,9 @@ class MockTypedCorpusNode implements TypedCorpusNode {
     private final String uri;
     private final String name;
     private final NodeType nodeType;
+    private String format = "application/xml";
+    private AccessInfo accessInfo;
+    private FileInfo fileInfo;
 
     public MockTypedCorpusNode(NodeType nodeType, String uri, String name) {
 	this.uri = uri;
@@ -63,7 +65,11 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 
     @Override
     public FileInfo getFileInfo() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return fileInfo;
+    }
+
+    public void setFileInfo(FileInfo fileInfo) {
+	this.fileInfo = fileInfo;
     }
 
     @Override
@@ -73,7 +79,11 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 
     @Override
     public AccessInfo getAuthorization() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return accessInfo;
+    }
+
+    public void setAccessInfo(AccessInfo accessInfo) {
+	this.accessInfo = accessInfo;
     }
 
     @Override
@@ -88,7 +98,11 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 
     @Override
     public String getFormat() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	return format;
+    }
+
+    public void setFormat(String format) {
+	this.format = format;
     }
 
     @Override

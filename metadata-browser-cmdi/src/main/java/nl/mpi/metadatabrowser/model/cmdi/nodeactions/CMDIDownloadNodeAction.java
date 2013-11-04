@@ -68,17 +68,12 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	// HANDLE download action here
 	if (userHasAccess(node, nodeUri)) {
 	    final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-	    //TODO: get rid of this static method
-	    DownloadActionRequest.setStreamContent(resStream);
-
 	    final String fileName = new File(nodeUri.getPath()).getName();
-	    //TODO: get rid of this static method
-	    DownloadActionRequest.setFileName(fileName);
+	    final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
+	    return new SimpleNodeActionResult(request);
 	} else {
 	    return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
 	}
-	final DownloadActionRequest request = new DownloadActionRequest();
-	return new SimpleNodeActionResult(request);
     }
 
     private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri) {

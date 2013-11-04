@@ -50,7 +50,7 @@ import static org.junit.Assert.*;
 public class CMDIMultipleDownloadNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
-    
+
     public CMDIMultipleDownloadNodeActionTest() {
     }
 
@@ -75,15 +75,14 @@ public class CMDIMultipleDownloadNodeActionTest {
      */
     @Test
     public void testGetName() {
-        System.out.println("getName");
+	System.out.println("getName");
 
-        CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        ZipService zipService = context.mock(ZipService.class);
-        CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(csdb, zipService);
+	ZipService zipService = context.mock(ZipService.class);
+	CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
 
-        String expResult = "multidownload";
-        String result = instance.getName();
-        assertEquals(expResult, result);
+	String expResult = "multidownload";
+	String result = instance.getName();
+	assertEquals(expResult, result);
     }
 
     /**
@@ -91,46 +90,44 @@ public class CMDIMultipleDownloadNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-        System.out.println("execute");
+	System.out.println("execute");
 
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        final ZipService zipService = context.mock(ZipService.class);
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final String userId = null;
+	final ZipService zipService = context.mock(ZipService.class);
+	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+	final String userId = null;
 
-        final File zipFile = File.createTempFile("test", "txt");
-        final FileWriter fileWriter = new FileWriter(zipFile);
-        fileWriter.write("Test content");
-        fileWriter.close();
-        
-        context.checking(new Expectations() {
+	final File zipFile = File.createTempFile("test", "txt");
+	final FileWriter fileWriter = new FileWriter(zipFile);
+	fileWriter.write("Test content");
+	fileWriter.close();
 
-            {
-                allowing(node).getName();
-                will(returnValue("nodeName"));
-                
-                oneOf(zipService).createZipFileForNodes(node, userId);
-                will(returnValue(zipFile));
-            }
-        });
+	context.checking(new Expectations() {
+	    {
+		allowing(node).getName();
+		will(returnValue("nodeName"));
 
-        CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(csdb, zipService);
-        NodeActionResult result = instance.execute(node);
-        ControllerActionRequest actionRequest = result.getControllerActionRequest();
-        assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
-        
-        DownloadActionRequest downloadActionRequest = (DownloadActionRequest)actionRequest;
-        assertEquals("package_nodeName.zip", downloadActionRequest.getFileName());
-        IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
-        assertThat(downloadStream, instanceOf(FileResourceStream.class));
-        
-        BufferedReader reader = new BufferedReader(new InputStreamReader(downloadStream.getInputStream()));
-        String readContent = reader.readLine();
-        assertEquals("Test content", readContent);
-        
-        assertTrue(zipFile.exists());
-        downloadStream.close();
-        assertFalse(zipFile.exists());
+		oneOf(zipService).createZipFileForNodes(node, userId);
+		will(returnValue(zipFile));
+	    }
+	});
+
+	CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
+	NodeActionResult result = instance.execute(node);
+	ControllerActionRequest actionRequest = result.getControllerActionRequest();
+	assertNotNull(actionRequest);
+	assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
+
+	DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
+	assertEquals("package_nodeName.zip", downloadActionRequest.getFileName());
+	IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
+	assertThat(downloadStream, instanceOf(FileResourceStream.class));
+
+	BufferedReader reader = new BufferedReader(new InputStreamReader(downloadStream.getInputStream()));
+	String readContent = reader.readLine();
+	assertEquals("Test content", readContent);
+
+	assertTrue(zipFile.exists());
+	downloadStream.close();
+	assertFalse(zipFile.exists());
     }
 }

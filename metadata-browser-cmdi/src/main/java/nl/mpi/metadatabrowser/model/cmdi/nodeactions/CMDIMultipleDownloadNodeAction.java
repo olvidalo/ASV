@@ -46,31 +46,24 @@ import org.springframework.stereotype.Component;
 public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "multidownload";
-    private final CorpusStructureProvider csdb;
     private final ZipService zipService;
     private String userid;
 
     @Autowired
-    public CMDIMultipleDownloadNodeAction(CorpusStructureProvider csdb, ZipService zipService) {
-	this.csdb = csdb;
+    public CMDIMultipleDownloadNodeAction(ZipService zipService) {
 	this.zipService = zipService;
 
     }
 
     @Override
     public String getName() {
-	return name;
+	return "multidownload";
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
-	//URI nodeid = node.getNodeURI();
-
 	try {
-//	    List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeid);
-//            childrenNodes.add(node);
 	    final File zipFile = zipService.createZipFileForNodes(node, userid);
 	    IResourceStream resStream = new FileResourceStream(zipFile) {
 		@Override
@@ -79,9 +72,8 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 		    zipFile.delete();
 		}
 	    };
-	    DownloadActionRequest.setStreamContent(resStream);
-	    DownloadActionRequest.setFileName("package_" + FilenameUtils.getBaseName(node.getName()) + ".zip");
-	    final DownloadActionRequest request = new DownloadActionRequest();
+	    final String filename = String.format("package_%s.zip", FilenameUtils.getBaseName(node.getName()));
+	    final DownloadActionRequest request = new DownloadActionRequest(filename, resStream);
 
 	    return new SimpleNodeActionResult(request);
 	} catch (IOException ex) {
@@ -91,6 +83,4 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 	    throw new NodeActionException(this, ex);
 	}
     }
-
-    
 }
