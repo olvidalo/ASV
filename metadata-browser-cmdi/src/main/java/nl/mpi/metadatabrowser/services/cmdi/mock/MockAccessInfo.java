@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
-import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 
 /**
@@ -48,33 +47,5 @@ public class MockAccessInfo implements AccessInfo {
     @Override
     public boolean hasWriteAccess(String username) {
 	return true;
-    }
-
-    @Override
-    public void setAccessLevel(int accessLevel) {
-    }
-
-    @Override
-    public void setReadRights(String privs) {
-    }
-
-    @Override
-    public void setReadRule(String privs) {
-    }
-
-    @Override
-    public void setReadUsers(List users) {
-    }
-
-    @Override
-    public void setWriteRights(String privs) {
-    }
-
-    @Override
-    public void setWriteRule(String privs) {
-    }
-
-    @Override
-    public void setWriteUsers(List users) {
     }
 }
