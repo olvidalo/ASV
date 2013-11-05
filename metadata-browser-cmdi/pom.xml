@@ -84,6 +84,10 @@
                     <artifactId>xalan</artifactId>
                     <groupId>xalan</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>hibernate</artifactId>
+                    <groupId>org.hibernate</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
