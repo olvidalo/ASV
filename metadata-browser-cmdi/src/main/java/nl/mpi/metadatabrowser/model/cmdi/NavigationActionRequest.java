@@ -18,8 +18,12 @@ package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URL;
+import java.util.EnumMap;
 import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,11 +32,13 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 public class NavigationActionRequest implements NavigationRequest, Serializable {
 
     private NavigationTarget target;
-    private Map<String, URI> parameters;
+//    private Map<String, URI> parameters;
+    private String targetUrl;
 
-    public NavigationActionRequest(NavigationTarget navigationTarget, Map<String, URI> parameters) {
-        this.parameters = parameters;
-        this.target =navigationTarget;
+    public NavigationActionRequest(NavigationTarget navigationTarget, String url) {
+//        this.parameters = parameters;
+        this.target = navigationTarget;
+        this.targetUrl = url;
     }
 
     public void setTarget(NavigationTarget target) {
@@ -44,12 +50,21 @@ public class NavigationActionRequest implements NavigationRequest, Serializable 
         return target;
     }
 
-    public void setParameters(Map<String, URI> parameters) {
-        this.parameters = parameters;
+//    public void setParameters(Map<String, URI> parameters) {
+//        this.parameters = parameters;
+//    }
+//
+//    @Override
+//    public Map<String, URI> getParameters() {
+//        return parameters;
+//    }
+    
+    public void setTargetUrl(String targetUrl) {
+        this.targetUrl = targetUrl;
     }
 
     @Override
-    public Map<String, URI> getParameters() {
-        return parameters;
+    public String getTargetURL() {
+        return targetUrl;
     }
 }

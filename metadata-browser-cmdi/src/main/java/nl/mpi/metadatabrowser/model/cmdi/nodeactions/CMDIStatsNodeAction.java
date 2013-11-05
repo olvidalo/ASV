@@ -16,9 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -48,11 +45,9 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
-        // HANDLE access statistics action here
-        Map<String, URI> parameters = new HashMap<String, URI>();
-        parameters.put("nodeId", node.getNodeURI());
+        // DEPRECATED : HANDLE access statistics action here
 
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, parameters);
+        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, null);
 
         return new SimpleNodeActionResult(request);
 

@@ -19,8 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -30,6 +28,7 @@ import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,29 +38,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDITrovaNodeAction implements NodeAction {
 
+    @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Override
     public String getName() {
-	return "trova";
+        return "trova";
     }
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), nodes);
-	Map<String, URI> parameters = new HashMap<String, URI>();
-	for (TypedCorpusNode node : nodes) {
-	    try {
-		// HANDLE trova action here
-		//TODO get session id
-		parameters.put("nodeId", node.getNodeURI());
-		parameters.put("jessionID", new URI("session_number"));
-	    } catch (URISyntaxException ex) {
-		logger.error("URI syntax exception: " + ex);
-	    }
-	}
-	final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, parameters);
+        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+        StringBuilder sb = new StringBuilder();
 
-	return new SimpleNodeActionResult(request);
+        for (TypedCorpusNode node : nodes) {
+            try {
+                // Build redirect to trova action here
+                //TODO get session id
+                sb.append(nodeActionsConfiguration.getTrovaURL());
+                sb.append("?nodeid=");
+                sb.append(node.getNodeURI());
+                sb.append("&jsessionID=");
+                sb.append(new URI("session_number"));
+
+            } catch (URISyntaxException ex) {
+                logger.error("URI syntax exception: " + ex);
+            }
+        }
+        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, sb.toString());
+
+        return new SimpleNodeActionResult(request);
     }
 }

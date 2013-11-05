@@ -16,10 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -29,6 +26,7 @@ import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -37,9 +35,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CMDIRrsNodeAction implements NodeAction {
+        @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration;
 
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
-
     @Override
     public String getName() {
 	return "rrs";
@@ -48,12 +47,14 @@ public class CMDIRrsNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), nodes);
-	Map<String, URI> parameters = new HashMap<String, URI>();
-        for (TypedCorpusNode node : nodes) {
-	    // HANDLE rrs navigation action here       
-	    parameters.put("nodeId", node.getNodeURI());
+        StringBuilder sb = new StringBuilder();
+        for (TypedCorpusNode node : nodes) { 
+            //Buil redirect to RRS here
+            sb.append(nodeActionsConfiguration.getRrsURL());
+            sb.append("?nodeid=");
+            sb.append(node.getNodeURI());
 	}
-	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, parameters);
+	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, sb.toString());
 
 	return new SimpleNodeActionResult(request);
     }

@@ -19,9 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -47,55 +44,60 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
+    @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "view Node";
-    private Map<String, URI> parameters = new HashMap<String, URI>();
     private boolean navType = false;
     private final NodePresentationProvider presentationProvider;
 
-    @Autowired    
+    @Autowired
     public CMDIViewNodeAction(NodePresentationProvider presentationProvider) {
-	this.presentationProvider = presentationProvider;
+        this.presentationProvider = presentationProvider;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), node);
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+        StringBuilder sb = new StringBuilder();
 
-	if (node.getNodeType() instanceof CMDIResourceTxtType) {
-	    //TODO get session id
-	    try {
-		parameters.put("nodeId", node.getNodeURI());
-		parameters.put("jsessionID", new URI("jsessioID"));
-		navType = true;
-	    } catch (URISyntaxException ex) {
-		logger.error("URI syntax exception in parameter session id: " + ex);
-	    }
-	} else {
-	    //TODO: Maybe replace this with some informative message, just URL is a bit pointless
-	    // maybe return error message because no other kind of nodes should end up here
-	}
+        if (node.getNodeType() instanceof CMDIResourceTxtType) {
+            //TODO get session id
+            try {
+                sb.append(nodeActionsConfiguration.getAnnexURL());
+                sb.append("?nodeId=");
+                sb.append(node.getNodeURI());
+                sb.append("&jsessionID=");
+                sb.append(new URI("jsessionID"));
+                navType = true;
+            } catch (URISyntaxException ex) {
+                logger.error("URI syntax exception in parameter session id: " + ex);
+            }
+        } else {
+            //TODO: Maybe replace this with some informative message, just URL is a bit pointless
+            // maybe return error message because no other kind of nodes should end up here
+        }
 
-	if (navType == true) {
-	    final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, parameters);
-	    return new SimpleNodeActionResult(request);
-	} else {
-	    final ShowComponentRequest request = new ShowComponentRequest() {
-		@Override
-		public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-		    try {
-			return presentationProvider.getNodePresentation(id, Collections.singleton(node));
-		    } catch (NodePresentationException ex) {
-			throw new ControllerActionRequestException(ex);
-		    }
-		}
-	    };
-	    return new SimpleNodeActionResult(request);
-	}
+        if (navType == true) {
+            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, sb.toString());
+            return new SimpleNodeActionResult(request);
+        } else {
+            final ShowComponentRequest request = new ShowComponentRequest() {
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                    try {
+                        return presentationProvider.getNodePresentation(id, Collections.singleton(node));
+                    } catch (NodePresentationException ex) {
+                        throw new ControllerActionRequestException(ex);
+                    }
+                }
+            };
+            return new SimpleNodeActionResult(request);
+        }
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 }

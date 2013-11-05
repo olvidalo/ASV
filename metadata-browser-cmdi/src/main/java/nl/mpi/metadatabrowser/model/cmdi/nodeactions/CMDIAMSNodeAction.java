@@ -19,8 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -30,6 +28,7 @@ import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,6 +38,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIAMSNodeAction implements NodeAction {
 
+    @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Override
@@ -49,21 +50,23 @@ public class CMDIAMSNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        Map<String, URI> parameters = new HashMap<String, URI>();
+        StringBuilder sb = new StringBuilder();
         for (TypedCorpusNode node : nodes) {
             try {
+                // Build redirect to AMS here
                 URI nodeId = node.getNodeURI();
-
-                // HANDLE ams action here    
+                sb.append(nodeActionsConfiguration.getAmsURL());
+                sb.append("?nodeid=");
+                sb.append(nodeId);
+                sb.append("&jsessionID=");
+                sb.append(new URI("session_id"));// use only for LANA                 
                 // TODO get sessionid from somewhere
-                parameters.put("nodeId", nodeId);
-                parameters.put("jsessionID", new URI("session_id")); // use only for LANA
             } catch (URISyntaxException ex) {
                 logger.error("URI suntax exception:" + ex);
             }
         }
 
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.AMS, parameters);
+        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.AMS, sb.toString());
 
         return new SimpleNodeActionResult(request);
 
