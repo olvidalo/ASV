@@ -84,10 +84,7 @@ public class CMDIAMSNodeActionTest {
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
 
-        Map<String, URI> map = new HashMap<String, URI>();
-
-        map.put("nodeId", NODE_ID);
-        map.put("jsessionID", new URI("session_id"));
+StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getAmsURL()+"?nodeid="+NODE_ID+"&jsessionID="+new URI("session_id"));
 
         context.checking(new Expectations() {
 
@@ -109,7 +106,7 @@ public class CMDIAMSNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertEquals(NavigationTarget.AMS, navigationActionRequest.getTarget());
-        assertNotNull(navigationActionRequest.getParameters());
-        assertEquals(map, navigationActionRequest.getParameters());
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(url.toString(), navigationActionRequest.getTargetURL());
     }
 }

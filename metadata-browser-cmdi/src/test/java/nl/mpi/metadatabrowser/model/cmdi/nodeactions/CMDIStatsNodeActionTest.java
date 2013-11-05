@@ -85,10 +85,6 @@ public class CMDIStatsNodeActionTest {
 	System.out.println("execute");
 	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 
-	Map<String, URI> map = new HashMap<String, URI>();
-
-	map.put("nodeId", NODE_ID);
-
 	context.checking(new Expectations() {
 	    {
 		allowing(node).getNodeURI();
@@ -108,7 +104,7 @@ public class CMDIStatsNodeActionTest {
 
 	NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
 	assertEquals(NavigationRequest.NavigationTarget.STATS, navigationActionRequest.getTarget());
-	assertNotNull(navigationActionRequest.getParameters());
-	assertEquals(map, navigationActionRequest.getParameters());
+	assertNull(navigationActionRequest.getTargetURL());
+	assertEquals(null, navigationActionRequest.getTargetURL());
     }
 }

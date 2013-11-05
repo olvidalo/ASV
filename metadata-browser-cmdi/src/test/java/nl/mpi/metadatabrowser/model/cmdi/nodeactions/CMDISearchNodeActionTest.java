@@ -83,10 +83,7 @@ public class CMDISearchNodeActionTest {
          Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
          nodes.add(node);
 
-        Map<String, URI> map = new HashMap<String, URI>();
-
-        map.put("nodeId", NODE_ID);
-        map.put("jessionID", new URI("session_number"));
+StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getMdSearchURL()+"?nodeid="+NODE_ID+"&jessionID="+new URI("session_number"));
 
         context.checking(new Expectations() {
 
@@ -108,7 +105,7 @@ public class CMDISearchNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertEquals(NavigationRequest.NavigationTarget.CMDISEARCH, navigationActionRequest.getTarget());
-        assertNotNull(navigationActionRequest.getParameters());
-        assertEquals(map, navigationActionRequest.getParameters());
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(url.toString(), navigationActionRequest.getTargetURL());
     }
 }

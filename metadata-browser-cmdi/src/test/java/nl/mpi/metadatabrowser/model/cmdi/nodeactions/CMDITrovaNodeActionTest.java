@@ -82,11 +82,7 @@ public class CMDITrovaNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-
-        Map<String, URI> map = new HashMap<String, URI>();
-
-        map.put("nodeId", NODE_ID);
-        map.put("jessionID", new URI("session_number"));
+StringBuilder targetURL = new StringBuilder(new NodeActionsConfiguration().getTrovaURL()+"?nodeid="+NODE_ID+"&jsessionID="+new URI("session_number"));
 
         context.checking(new Expectations() {
 
@@ -108,8 +104,8 @@ public class CMDITrovaNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertEquals(NavigationRequest.NavigationTarget.TROVA, navigationActionRequest.getTarget());
-        assertNotNull(navigationActionRequest.getParameters());
-        assertEquals(map, navigationActionRequest.getParameters());
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURL.toString(), navigationActionRequest.getTargetURL());
 
 
     }

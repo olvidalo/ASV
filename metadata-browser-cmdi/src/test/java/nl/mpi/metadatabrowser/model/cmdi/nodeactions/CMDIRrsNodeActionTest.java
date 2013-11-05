@@ -84,9 +84,7 @@ public class CMDIRrsNodeActionTest {
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
 
-        Map<String, URI> map = new HashMap<String, URI>();
-
-        map.put("nodeId", NODE_ID);
+        StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getRrsURL()+"?nodeid="+NODE_ID);
 
         context.checking(new Expectations() {
 
@@ -108,8 +106,7 @@ public class CMDIRrsNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertEquals(NavigationRequest.NavigationTarget.RRS, navigationActionRequest.getTarget());
-        assertNotNull(navigationActionRequest.getParameters());
-        assertEquals(map, navigationActionRequest.getParameters());
-        assertEquals("rrs", instance.getName());
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(url.toString(),navigationActionRequest.getTargetURL());
     }
 }

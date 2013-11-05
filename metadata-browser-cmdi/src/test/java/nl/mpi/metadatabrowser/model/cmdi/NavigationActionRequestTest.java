@@ -39,7 +39,7 @@ public class NavigationActionRequestTest {
     public NavigationActionRequestTest() {
     }
     private final Mockery context = new JUnit4Mockery();
-
+private final String url = "amsurl";
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
@@ -62,11 +62,11 @@ public class NavigationActionRequestTest {
     @Test
     public void testSetTarget() throws URISyntaxException {
         System.out.println("setTarget");
-        final NavigationTarget target = NavigationTarget.AMS;
-        final Map<String, URI> parameters = new HashMap<String, URI>();
-        parameters.put("nodeId", new URI("1"));
+        final NavigationTarget target = NavigationTarget.AMS;       
+//        final Map<String, URI> parameters = new HashMap<String, URI>();
+//        parameters.put("nodeId", new URI("1"));
 
-        NavigationActionRequest instance = new NavigationActionRequest(target, parameters);
+        NavigationActionRequest instance = new NavigationActionRequest(target, url);
         instance.setTarget(target);
         // TODO review the generated test code and remove the default call to fail.
     }
@@ -78,61 +78,61 @@ public class NavigationActionRequestTest {
     public void testGetTarget() {
         System.out.println("getTarget");
         final NavigationTarget target = NavigationTarget.AMS;
-        Map<String, URI> parameters = null;
-        NavigationActionRequest instance = new NavigationActionRequest(target, parameters);
+//        Map<String, URI> parameters = null;
+        NavigationActionRequest instance = new NavigationActionRequest(target, url);
         NavigationTarget expResult = NavigationTarget.AMS;
         NavigationTarget result = instance.getTarget();
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of setParameters method, of class NavigationActionRequest.
-     */
-    @Test
-    public void testSetParameters() throws URISyntaxException {
-        final CorpusNode node = context.mock(CorpusNode.class);
-        System.out.println("setParameters");
-        Map<String, URI> parameters = new HashMap<String, URI>();
-        
-        
-                context.checking(new Expectations() {
-            {
-                oneOf(node).getNodeURI();
-                will(returnValue(new URI("nodeid")));
-
-            }
-        });
-        
-        parameters.put("nodeId", node.getNodeURI());
-        parameters.put("jessionID", new URI("session_number"));
-        NavigationActionRequest instance = new NavigationActionRequest(NavigationTarget.AMS, parameters);
-        assertNotNull(instance);
-        instance.setParameters(parameters);
-        assertNotNull(instance.getParameters());
-
-    }
-
-    /**
-     * Test of getParameters method, of class NavigationActionRequest.
-     */
-    @Test
-    public void testGetParameters() {
-        System.out.println("getParameters");
-        final NavigationRequest request = context.mock(NavigationRequest.class);
-        Map<String, URI> parameters = null;
-
-
-        context.checking(new Expectations() {
-            {
-                oneOf(request).getTarget();
-                will(returnValue(NavigationTarget.AMS));
-                oneOf(request).getParameters();
-                will(returnValue(null));
-            }
-        });
-        NavigationActionRequest instance = new NavigationActionRequest(request.getTarget(), parameters);
-        Map expResult = null;
-        Map result = instance.getParameters();
-        assertEquals(expResult, result);
-    }
+//    /**
+//     * Test of setParameters method, of class NavigationActionRequest.
+//     */
+//    @Test
+//    public void testSetParameters() throws URISyntaxException {
+//        final CorpusNode node = context.mock(CorpusNode.class);
+//        System.out.println("setParameters");
+//        Map<String, URI> parameters = new HashMap<String, URI>();
+//        
+//        
+//                context.checking(new Expectations() {
+//            {
+//                oneOf(node).getNodeURI();
+//                will(returnValue(new URI("nodeid")));
+//
+//            }
+//        });
+//        
+//        parameters.put("nodeId", node.getNodeURI());
+//        parameters.put("jessionID", new URI("session_number"));
+//        NavigationActionRequest instance = new NavigationActionRequest(NavigationTarget.AMS, url);
+//        assertNotNull(instance);
+//        instance.setTargetUrl(url);
+//        assertNotNull(instance.getTargetURL());
+//
+//    }
+//
+//    /**
+//     * Test of getParameters method, of class NavigationActionRequest.
+//     */
+//    @Test
+//    public void testGetParameters() {
+//        System.out.println("getParameters");
+//        final NavigationRequest request = context.mock(NavigationRequest.class);
+////        Map<String, URI> parameters = null;
+//
+//
+//        context.checking(new Expectations() {
+//            {
+//                oneOf(request).getTarget();
+//                will(returnValue(NavigationTarget.AMS));
+////                oneOf(request).getParameters();
+////                will(returnValue(null));
+//            }
+//        });
+//        NavigationActionRequest instance = new NavigationActionRequest(request.getTarget(), url);
+//        String expResult = null;
+//        String result = instance.getTargetURL();
+//        assertEquals(expResult, result);
+//    }
 }
