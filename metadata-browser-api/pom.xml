@@ -15,6 +15,11 @@
 
     <name>Metadata Browser Services API</name>
     <dependencies>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-api</artifactId>
+	    <version>${mpi.parent.slf4j.version}</version>
+	</dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
