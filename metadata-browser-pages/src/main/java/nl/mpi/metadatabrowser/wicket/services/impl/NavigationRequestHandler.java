@@ -16,10 +16,7 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
-import java.util.EnumMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Page;
@@ -35,13 +32,12 @@ import org.slf4j.LoggerFactory;
 public class NavigationRequestHandler implements ControllerActionRequestHandler<NavigationRequest> {
 
     private final static Logger logger = LoggerFactory.getLogger(NavigationRequestHandler.class);
-    private final Map<NavigationTarget, String> targetUrls = new EnumMap<NavigationTarget, String>(NavigationTarget.class);
 
     @Override
     public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
-	logger.debug("Received request to navigate to RRS with parameters {}", actionRequest.getParameters());
-	if (targetUrls.containsKey(actionRequest.getTarget())) {
-	    redirectToUrl(requestCycle, targetUrls.get(actionRequest.getTarget()));
+	logger.debug("Received request to navigate to RRS with url {}", actionRequest.getTargetURL());
+	if (actionRequest.getTargetURL() != null) {
+	    redirectToUrl(requestCycle, actionRequest.getTargetURL());
 	} else {
 	    throw new RequestHandlerException("Don't know how to handle navigation request target " + actionRequest.getTarget());
 	}
@@ -52,33 +48,5 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
 	requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(url));
     }
 
-    /**
-     *
-     * @param rrsUrl Base URL of Resource Request System
-     * @see NavigationRequest.NavigationTarget#RRS
-     */
-    public void setRrsUrl(String rrsUrl) {
-	targetUrls.put(NavigationTarget.RRS, rrsUrl);
-	logger.info("RRS url set to {}", rrsUrl);
-    }
-
-    public void setAmsUrl(String amsUrl) {
-	targetUrls.put(NavigationTarget.AMS, amsUrl);
-	logger.info("AMS url set to {}", amsUrl);
-    }
-
-    public void setAnnexUrl(String annexUrl) {
-	targetUrls.put(NavigationTarget.ANNEX, annexUrl);
-	logger.info("Annex url set to {}", annexUrl);
-    }
-
-    public void setContentSearchUrl(String contentSearchUrl) {
-	targetUrls.put(NavigationTarget.TROVA, contentSearchUrl);
-	logger.info("Content search url set to {}", contentSearchUrl);
-    }
-
-    public void setMdSearchUrl(String mdSearchUrl) {
-	targetUrls.put(NavigationTarget.CMDISEARCH, mdSearchUrl);
-	logger.info("Metadata serach url set to {}", mdSearchUrl);
-    }
+    
 }

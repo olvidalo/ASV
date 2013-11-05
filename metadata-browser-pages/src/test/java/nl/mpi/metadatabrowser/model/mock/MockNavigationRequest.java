@@ -28,7 +28,8 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 public class MockNavigationRequest implements NavigationRequest, Serializable {
 
     private NavigationTarget target;
-    private Map<String, URI> parameters;
+//    private Map<String, URI> parameters;
+    private String targetUrl;
 
     public void setTarget(NavigationTarget target) {
 	this.target = target;
@@ -39,12 +40,17 @@ public class MockNavigationRequest implements NavigationRequest, Serializable {
 	return target;
     }
 
-    public void setParameters(Map<String, URI> parameters) {
-	this.parameters = parameters;
-    }
+//    public void setParameters(Map<String, URI> parameters) {
+//	this.parameters = parameters;
+//    }
+//
+//    @Override
+//    public Map<String, URI> getParameters() {
+//	return parameters;
+//    }
 
     @Override
-    public Map<String, URI> getParameters() {
-	return parameters;
+    public String getTargetURL() {
+        return targetUrl;
     }
 }

@@ -46,7 +46,6 @@ public class NavigationRequestHandlerTest {
 	tester = new WicketTester();
 	requestCycle = tester.getRequestCycle();
 	instance = new NavigationRequestHandler();
-	instance.setRrsUrl(rrsUrl);
     }
 
     /**
@@ -58,9 +57,8 @@ public class NavigationRequestHandlerTest {
 	final NavigationRequest actionRequest = context.mock(NavigationRequest.class);
 	context.checking(new Expectations() {
 	    {
-		allowing(actionRequest).getTarget();
-		will(returnValue(NavigationRequest.NavigationTarget.RRS));
-		allowing(actionRequest).getParameters();
+		allowing(actionRequest).getTargetURL();
+		will(returnValue(NavigationRequest.NavigationTarget.RRS.toString()));
 	    }
 	});
 	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());

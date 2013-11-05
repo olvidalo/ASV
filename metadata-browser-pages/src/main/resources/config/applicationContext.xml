@@ -9,25 +9,12 @@
     
     <!-- Global Spring configuration for the Metadata Browser (no profile specific configuration in here please) -->
 
-    <!-- Special bean to enable properties to be set from context parameters and/or a property file -->
-    <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
-	<!-- This properties file will serve as a fallback when context parameters are not available -->
-	<property name="location" value="classpath:config/defaultServiceLocations.properties"/>
-    </bean>
-
     <!-- Wicket application class -->	
     <bean id="wicketApplication" class="nl.mpi.metadatabrowser.wicket.MetadataBrowserApplication" />
     <!-- Services -->
     <bean id="actionRequestHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ControllerActionRequestHandlerImpl">
 	<property name="navigationRequestHandler">
-	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.NavigationRequestHandler">
-		<!-- Property values get read from context parameters with defaultServiceLocations.properties as fallback -->
-		<property name="rrsUrl" value="${RRSURL}" />
-		<property name="amsUrl" value="${AmsURL}" />
-		<property name="annexUrl" value="${AnnexURL}" />
-		<property name="mdSearchUrl" value="${mdSearchURL}" />
-		<property name="contentSearchUrl" value="${trova_url}" />
-	    </bean>
+	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.NavigationRequestHandler"/>
 	</property>
 	<property name="downloadRequestHandler">
 	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.DownloadRequestHandler" />
