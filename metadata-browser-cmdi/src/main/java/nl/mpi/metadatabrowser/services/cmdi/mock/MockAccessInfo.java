@@ -16,7 +16,9 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
+import java.util.Collection;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.ArchiveUser;
 
 /**
  *
@@ -30,13 +32,13 @@ public class MockAccessInfo implements AccessInfo {
     }
 
     @Override
-    public String getReadRights() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Collection<ArchiveUser> getReadRights() {
+	throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public String getWriteRights() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Collection<ArchiveUser> getWriteRights() {
+	throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
