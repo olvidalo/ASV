@@ -19,8 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -40,6 +38,7 @@ import static org.junit.Assert.*;
  */
 public class CMDIRrsNodeActionTest {
 
+    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
     private final static URI NODE_ID = URI.create("node:1");
 
@@ -68,7 +67,7 @@ public class CMDIRrsNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
+        CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration);
         String expResult = "rrs";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -83,11 +82,11 @@ public class CMDIRrsNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
+        nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/");
 
-        StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getRrsURL()+"?nodeid="+NODE_ID);
+        StringBuilder url = new StringBuilder(nodeActionsConfiguration.getRrsURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + "session_id");
 
         context.checking(new Expectations() {
-
             {
                 allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));
@@ -96,7 +95,7 @@ public class CMDIRrsNodeActionTest {
 
 
 
-        CMDIRrsNodeAction instance = new CMDIRrsNodeAction();
+        CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("rrs", instance.getName());
 
@@ -105,8 +104,7 @@ public class CMDIRrsNodeActionTest {
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationRequest.NavigationTarget.RRS, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(url.toString(),navigationActionRequest.getTargetURL());
+        assertEquals(url.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }

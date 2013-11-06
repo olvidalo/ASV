@@ -103,7 +103,7 @@ public class CMDIStatsNodeActionTest {
 	assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
 	NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-	assertEquals(NavigationRequest.NavigationTarget.STATS, navigationActionRequest.getTarget());
+	assertEquals(null, navigationActionRequest.getTargetURL());
 	assertNull(navigationActionRequest.getTargetURL());
 	assertEquals(null, navigationActionRequest.getTargetURL());
     }

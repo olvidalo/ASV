@@ -17,12 +17,11 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
@@ -32,6 +31,7 @@ import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -39,6 +39,8 @@ import org.junit.*;
  */
 public class CMDIAMSNodeActionTest {
 
+    @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
     private final static URI NODE_ID = URI.create("node:1");
 
@@ -67,7 +69,7 @@ public class CMDIAMSNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
         String expResult = "ams";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -83,11 +85,10 @@ public class CMDIAMSNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-
-StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getAmsURL()+"?nodeid="+NODE_ID+"&jsessionID="+new URI("session_id"));
+        nodeActionsConfiguration.setAmsURL("http://lux16.mpi.nl/am/ams2/index.face");
+        URL url = new URL(nodeActionsConfiguration.getAmsURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + new URI("session_id"));
 
         context.checking(new Expectations() {
-
             {
                 allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));
@@ -96,8 +97,8 @@ StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getAmsURL()
 
 
 
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction();
-        NodeActionResult result = instance.execute(nodes);
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
+        NodeActionResult result = instance.execute(node);
         assertEquals("ams", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
@@ -105,8 +106,7 @@ StringBuilder url = new StringBuilder(new NodeActionsConfiguration().getAmsURL()
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationTarget.AMS, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(url.toString(), navigationActionRequest.getTargetURL());
+        assertEquals(url.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }

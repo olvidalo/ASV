@@ -19,8 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -39,8 +37,10 @@ import org.junit.*;
  */
 public class CMDITrovaNodeActionTest {
 
+    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
     private final static URI NODE_ID = URI.create("node:1");
+    private final static URI NODE_ID2 = URI.create("node:2");
 
     public CMDITrovaNodeActionTest() {
     }
@@ -67,7 +67,7 @@ public class CMDITrovaNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
         String expResult = "trova";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -80,21 +80,24 @@ public class CMDITrovaNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final TypedCorpusNode node2 = context.mock(TypedCorpusNode.class, "child1");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-StringBuilder targetURL = new StringBuilder(new NodeActionsConfiguration().getTrovaURL()+"?nodeid="+NODE_ID+"&jsessionID="+new URI("session_number"));
+        nodes.add(node2);
+        nodeActionsConfiguration.setTrovaURL("http://lux16.mpi.nl/ds/trova/search.jsp");
+        StringBuilder targetURL = new StringBuilder(nodeActionsConfiguration.getTrovaURL() + "?nodeid=" + NODE_ID +"&nodeid=" + NODE_ID2 + "&jsessionID=" + new URI("session_number"));
 
         context.checking(new Expectations() {
-
             {
                 allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));
+                allowing(node2).getNodeURI();
+                will(returnValue(NODE_ID2));
             }
         });
 
 
-
-        CMDITrovaNodeAction instance = new CMDITrovaNodeAction();
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("trova", instance.getName());
 
@@ -103,9 +106,8 @@ StringBuilder targetURL = new StringBuilder(new NodeActionsConfiguration().getTr
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertEquals(NavigationRequest.NavigationTarget.TROVA, navigationActionRequest.getTarget());
         assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(targetURL.toString(), navigationActionRequest.getTargetURL());
+        assertEquals(targetURL.toString(), navigationActionRequest.getTargetURL().toString());
 
 
     }

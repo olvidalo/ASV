@@ -21,7 +21,9 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
+import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -40,6 +42,7 @@ import static org.junit.Assert.*;
  */
 public class CMDIViewNodeActionTest {
 
+    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
     private final static URI NODE_ID = URI.create("node:1");
 
@@ -67,22 +70,22 @@ public class CMDIViewNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-	System.out.println("execute");
-	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final NodePresentationProvider presentationProvider = context.mock(NodePresentationProvider.class);
+        System.out.println("execute");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final NodePresentationProvider presentationProvider = context.mock(NodePresentationProvider.class);
+        nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
+        StringBuilder url = new StringBuilder(nodeActionsConfiguration.getAnnexURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + new URI("session_number"));
+        context.checking(new Expectations() {
+            {
+                allowing(node).getNodeType();
+                will(returnValue(context.mock(NodeType.class)));
+            }
+        });
 
-	context.checking(new Expectations() {
-	    {
-		allowing(node).getNodeType();
-		will(returnValue(context.mock(NodeType.class)));
-	    }
-	});
-	
-	CMDIViewNodeAction instance = new CMDIViewNodeAction(presentationProvider);
-	NodeActionResult result = instance.execute(node);
-	ControllerActionRequest actionRequest = result.getControllerActionRequest();
-	assertNotNull(actionRequest);
+        CMDIViewNodeAction instance = new CMDIViewNodeAction(presentationProvider, nodeActionsConfiguration);
+        NodeActionResult result = instance.execute(node);
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
     }
-    
     //TODO: Add test for view node action cases
 }
