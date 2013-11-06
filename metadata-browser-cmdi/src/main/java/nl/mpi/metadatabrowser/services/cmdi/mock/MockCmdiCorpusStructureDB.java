@@ -128,7 +128,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public String getCanonicalParent(URI nodeId) throws UnknownNodeException {
+    public URI getCanonicalParent(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
