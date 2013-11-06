@@ -16,8 +16,10 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.Collection;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
+import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -35,27 +37,36 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CMDIRrsNodeAction implements NodeAction {
-        @Autowired
-    private NodeActionsConfiguration nodeActionsConfiguration;
 
+    private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
+
+    @Autowired
+    public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
+        this.nodeActionsConfiguration = nodeActionsConfiguration;
+    }
+    
     @Override
     public String getName() {
-	return "rrs";
+        return "rrs";
     }
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        StringBuilder sb = new StringBuilder();
-        for (TypedCorpusNode node : nodes) { 
+        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+        URI targetURI = null;
+        NavigationActionRequest request = null;
+        UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL());
+        for (TypedCorpusNode node : nodes) {
             //Buil redirect to RRS here
-            sb.append(nodeActionsConfiguration.getRrsURL());
-            sb.append("?nodeid=");
-            sb.append(node.getNodeURI());
-	}
-	final NavigationActionRequest request = new NavigationActionRequest(NavigationTarget.RRS, sb.toString());
-
-	return new SimpleNodeActionResult(request);
+            URI nodeId = node.getNodeURI();
+            targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+        }
+        try {
+            request = new NavigationActionRequest(targetURI.toURL());
+        } catch (MalformedURLException ex) {
+            logger.error("URL syntax exception:" + ex);
+        }
+        return new SimpleNodeActionResult(request);
     }
 }

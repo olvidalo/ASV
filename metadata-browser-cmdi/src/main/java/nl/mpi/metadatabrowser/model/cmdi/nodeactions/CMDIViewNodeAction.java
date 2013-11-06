@@ -17,8 +17,10 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -44,7 +46,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
-    @Autowired
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "view Node";
@@ -52,37 +53,51 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final NodePresentationProvider presentationProvider;
 
     @Autowired
-    public CMDIViewNodeAction(NodePresentationProvider presentationProvider) {
+    public CMDIViewNodeAction(NodePresentationProvider presentationProvider, NodeActionsConfiguration nodeActionsConfiguration) {
         this.presentationProvider = presentationProvider;
+        this.nodeActionsConfiguration = nodeActionsConfiguration;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
-        StringBuilder sb = new StringBuilder();
+       // StringBuilder sb = new StringBuilder();
+        URI targetURI = null;
+        //NavigationActionRequest request = null;
+        UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
 
         if (node.getNodeType() instanceof CMDIResourceTxtType) {
             //TODO get session id
-            try {
-                sb.append(nodeActionsConfiguration.getAnnexURL());
-                sb.append("?nodeId=");
-                sb.append(node.getNodeURI());
-                sb.append("&jsessionID=");
-                sb.append(new URI("jsessionID"));
+//            try {
+//                sb.append(nodeActionsConfiguration.getAnnexURL());
+//                sb.append("?nodeId=");
+//                sb.append(node.getNodeURI());
+//                sb.append("&jsessionID=");
+//                sb.append(new URI("jsessionID"));
+//            } catch (URISyntaxException ex) {
+//                logger.error("URI syntax exception in parameter session id: " + ex);
+//            }
+//        } else {
+//            //TODO: Maybe replace this with some informative message, just URL is a bit pointless
+//            // maybe return error message because no other kind of nodes should end up here
+//        }
+        
+
+            //Buil redirect to RRS here
+            URI nodeId = node.getNodeURI();
+            targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
                 navType = true;
-            } catch (URISyntaxException ex) {
-                logger.error("URI syntax exception in parameter session id: " + ex);
-            }
-        } else {
-            //TODO: Maybe replace this with some informative message, just URL is a bit pointless
-            // maybe return error message because no other kind of nodes should end up here
         }
 
         if (navType == true) {
-            final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.ANNEX, sb.toString());
+        try {
+            final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
             return new SimpleNodeActionResult(request);
+        } catch (MalformedURLException ex) {
+            logger.error("URL syntax exception:" + ex);
+        }
         } else {
-            final ShowComponentRequest request = new ShowComponentRequest() {
+            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
                     try {
@@ -92,8 +107,9 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
                     }
                 }
             };
-            return new SimpleNodeActionResult(request);
+            return new SimpleNodeActionResult(componentRequest);
         }
+        return null;
     }
 
     @Override

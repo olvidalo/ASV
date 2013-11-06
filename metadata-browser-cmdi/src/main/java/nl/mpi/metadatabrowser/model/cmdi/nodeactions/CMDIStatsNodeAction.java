@@ -47,7 +47,7 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction 
         logger.debug("Action [{}] invoked on {}", getName(), node);
         // DEPRECATED : HANDLE access statistics action here
 
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.STATS, null);
+        final NavigationActionRequest request = new NavigationActionRequest(null);
 
         return new SimpleNodeActionResult(request);
 

@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer;
-@PropertySource(value="classpath:config/production/defaultServiceLocations.properties")
+
+@PropertySource(value = "classpath:config/production/defaultServiceLocations.properties")
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
@@ -34,48 +34,64 @@ public class NodeActionsConfiguration {
 //    public static ServletContextPropertyPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 //        return new ServletContextPropertyPlaceholderConfigurer();
 //    }
-    
-    // otherwise the properties don't get automatically injected with the Value annotations
-	    @Bean
-	    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-	        return new PropertySourcesPlaceholderConfigurer();
-	    }
-    
-    public NodeActionsConfiguration(){
-    
-    }
-    @Value("${amsURL}")
-    private String amsURL;
-    @Value("${rrsURL}")
-    private String rrsURL;
-    @Value("${annexURL}")
-    private String annexURL;
-    @Value("${mdSearchURL}")
-    private String mdSearchURL;
-    @Value("${trova_url}")
-    private String trovaURL;    
 
-    
-    public String getTrovaURL(){
+    // otherwise the properties don't get automatically injected with the Value annotations
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    private String amsURL;
+    private String rrsURL;
+    private String annexURL;
+    private String mdSearchURL;
+    private String trovaURL;
+
+    public String getTrovaURL() {
         return trovaURL;
     }
-    public String getAmsURL(){
+
+    public String getAmsURL() {
         return amsURL;
     }
-    
-    public String getRrsURL(){
+
+    public String getRrsURL() {
         return rrsURL;
     }
-    
-    public String getAnnexURL(){
+
+    public String getAnnexURL() {
         return annexURL;
     }
-    
+
     /**
      *
      * @return
      */
-    public String getMdSearchURL(){
+    public String getMdSearchURL() {
         return mdSearchURL;
+    }
+    @Value("${amsURL}")
+    public void setAmsURL(String amsURL) {
+        this.amsURL = amsURL;
+    }
+
+    @Value("${rrsURL}")
+    public void setRrsURL(String rrsURL) {
+        this.rrsURL = rrsURL;
+    }
+
+    @Value("${annexURL}")
+    public void setAnnexURL(String annexURL) {
+        this.annexURL = annexURL;
+    }
+
+    @Value("${mdSearchURL}")
+    public void setMdSearchURL(String mdSearchURL) {
+        this.mdSearchURL = mdSearchURL;
+    }
+
+    @Value("${trova_url}")
+    public void setTrovaURL(String trovaURL) {
+        this.trovaURL = trovaURL;
     }
 }

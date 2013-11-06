@@ -16,9 +16,11 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -38,9 +40,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDITrovaNodeAction implements NodeAction {
 
-    @Autowired
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+
+    @Autowired
+    public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
+        this.nodeActionsConfiguration = nodeActionsConfiguration;
+    }
 
     @Override
     public String getName() {
@@ -50,24 +56,39 @@ public class CMDITrovaNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        StringBuilder sb = new StringBuilder();
-
+//        StringBuilder sb = new StringBuilder();
+//
+//        for (TypedCorpusNode node : nodes) {
+//            try {
+//                // Build redirect to trova action here
+//                //TODO get session id
+//                sb.append(nodeActionsConfiguration.getTrovaURL());
+//                sb.append("?nodeid=");
+//                sb.append(node.getNodeURI());
+//                sb.append("&jsessionID=");
+//                sb.append(new URI("session_number"));
+//
+//            } catch (URISyntaxException ex) {
+//                logger.error("URI syntax exception: " + ex);
+//            }
+//        }
+//        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, sb.toString());
+        URI targetURI;
+        NavigationActionRequest request = null;
+        UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getTrovaURL());
         for (TypedCorpusNode node : nodes) {
-            try {
-                // Build redirect to trova action here
-                //TODO get session id
-                sb.append(nodeActionsConfiguration.getTrovaURL());
-                sb.append("?nodeid=");
-                sb.append(node.getNodeURI());
-                sb.append("&jsessionID=");
-                sb.append(new URI("session_number"));
-
-            } catch (URISyntaxException ex) {
-                logger.error("URI syntax exception: " + ex);
-            }
+            //Buil redirect to trova action here
+            URI nodeId = node.getNodeURI();
+            uriBuilder = uriBuilder.queryParam("nodeid", nodeId);
         }
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.TROVA, sb.toString());
-
+        try {
+            // TODO think of jsessionID. Maybe needs to be added here
+            
+            targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
+            request = new NavigationActionRequest(targetURI.toURL());
+        } catch (MalformedURLException ex) {
+            logger.error("URL syntax exception:" + ex);
+        }
         return new SimpleNodeActionResult(request);
     }
 }

@@ -16,9 +16,11 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -38,9 +40,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDISearchNodeAction implements NodeAction {
 
-    @Autowired
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+
+    @Autowired
+    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
+        this.nodeActionsConfiguration = nodeActionsConfiguration;
+    }
 
     @Override
     public String getName() {
@@ -50,21 +56,35 @@ public class CMDISearchNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        StringBuilder sb = new StringBuilder();
-        for (TypedCorpusNode node : nodes) {
+        //StringBuilder sb = new StringBuilder();
+//        for (TypedCorpusNode node : nodes) {
             // Build  redirect to mdsearch here    
             //TODO get sessionId
-            sb.append(nodeActionsConfiguration.getMdSearchURL());
-            sb.append("?nodeid=");
-            sb.append(node.getNodeURI());
-            sb.append("&jessionID=");
-            try {
-                sb.append(new URI("session_number"));
-            } catch (URISyntaxException ex) {
-                logger.error("URI syntax exception: " + ex);
-            }
+//            sb.append(nodeActionsConfiguration.getMdSearchURL());
+//            sb.append("?nodeid=");
+//            sb.append(node.getNodeURI());
+//            sb.append("&jessionID=");
+//            try {
+//                sb.append(new URI("session_number"));
+//            } catch (URISyntaxException ex) {
+//                logger.error("URI syntax exception: " + ex);
+//            }
+//    }
+        
+       URI targetURI;
+        NavigationActionRequest request = null;
+        UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
+        for (TypedCorpusNode node : nodes) {
+            //Buil redirect to RRS here
+            URI nodeId = node.getNodeURI();
+            uriBuilder = uriBuilder.queryParam("nodeid", nodeId);
         }
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.CMDISEARCH, sb.toString());
+        try {
+            targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
+            request = new NavigationActionRequest(targetURI.toURL());
+        } catch (MalformedURLException ex) {
+            logger.error("URL syntax exception:" + ex);
+        }
 
         return new SimpleNodeActionResult(request);
     }

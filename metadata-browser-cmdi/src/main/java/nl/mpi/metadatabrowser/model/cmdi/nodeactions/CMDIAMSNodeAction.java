@@ -16,13 +16,17 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.logging.Level;
+import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
@@ -36,37 +40,45 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDIAMSNodeAction implements NodeAction {
+public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
-    @Autowired
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
+    @Autowired
+    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration){
+        this.nodeActionsConfiguration = nodeActionsCongiguration;
+    }
+    
     @Override
     public String getName() {
         return "ams";
     }
 
     @Override
-    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+    public NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+        logger.debug("Action [{}] invoked on {}", getName(), node);
         StringBuilder sb = new StringBuilder();
-        for (TypedCorpusNode node : nodes) {
-            try {
-                // Build redirect to AMS here
-                URI nodeId = node.getNodeURI();
-                sb.append(nodeActionsConfiguration.getAmsURL());
-                sb.append("?nodeid=");
-                sb.append(nodeId);
-                sb.append("&jsessionID=");
-                sb.append(new URI("session_id"));// use only for LANA                 
-                // TODO get sessionid from somewhere
-            } catch (URISyntaxException ex) {
-                logger.error("URI suntax exception:" + ex);
-            }
-        }
+  
 
-        final NavigationActionRequest request = new NavigationActionRequest(NavigationRequest.NavigationTarget.AMS, sb.toString());
+
+                // Build redirect to AMS here
+                        URI nodeId = node.getNodeURI();
+        URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+//                sb.append(nodeActionsConfiguration.getAmsURL());
+//                sb.append("?nodeid=");
+//                sb.append(nodeId);
+//                sb.append("&jsessionID=");
+//                sb.append(new URI("session_id"));// use only for LANA                 
+                // TODO get sessionid from somewhere
+
+
+        NavigationActionRequest request = null;
+        try {
+            request = new NavigationActionRequest(targetURI.toURL());
+        } catch (MalformedURLException ex) {
+            logger.error("URL syntax exception:" + ex);
+        }
 
         return new SimpleNodeActionResult(request);
 
