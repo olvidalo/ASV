@@ -16,11 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import java.net.URI;
-import java.util.Map;
-
 /**
- * Interface for a request to navigate to a certain (parameterised) location
+ * Interface for a request to navigate to a certain (parameterized) location
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
@@ -65,9 +62,15 @@ public interface NavigationRequest extends ControllerActionRequest {
      */
     NavigationTarget getTarget();
 
+    
+    /**
+     * @return the target url
+     */
+    String getTargetURL();
+    
     /**
      *
      * @return named parameters (name, value) that should be applied to the navigation action
      */
-    Map<String, URI> getParameters();
+//    Map<String, URI> getParameters();
 }
