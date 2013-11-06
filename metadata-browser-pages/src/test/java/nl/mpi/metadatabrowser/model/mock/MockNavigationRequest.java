@@ -17,8 +17,7 @@
 package nl.mpi.metadatabrowser.model.mock;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.util.Map;
+import java.net.URL;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 
 /**
@@ -26,31 +25,14 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class MockNavigationRequest implements NavigationRequest, Serializable {
+    private URL targetUrl;
 
-    private NavigationTarget target;
-//    private Map<String, URI> parameters;
-    private String targetUrl;
-
-    public void setTarget(NavigationTarget target) {
-	this.target = target;
+    public void setTargetURL(URL target) {
+	this.targetUrl = target;
     }
 
     @Override
-    public NavigationTarget getTarget() {
-	return target;
-    }
-
-//    public void setParameters(Map<String, URI> parameters) {
-//	this.parameters = parameters;
-//    }
-//
-//    @Override
-//    public Map<String, URI> getParameters() {
-//	return parameters;
-//    }
-
-    @Override
-    public String getTargetURL() {
+    public URL getTargetURL() {
         return targetUrl;
     }
 }

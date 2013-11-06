@@ -37,9 +37,9 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
     public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
 	logger.debug("Received request to navigate to RRS with url {}", actionRequest.getTargetURL());
 	if (actionRequest.getTargetURL() != null) {
-	    redirectToUrl(requestCycle, actionRequest.getTargetURL());
+	    redirectToUrl(requestCycle, actionRequest.getTargetURL().toString());
 	} else {
-	    throw new RequestHandlerException("Don't know how to handle navigation request target " + actionRequest.getTarget());
+	    throw new RequestHandlerException("Don't know how to handle navigation request target " + actionRequest.getTargetURL());
 	}
     }
 

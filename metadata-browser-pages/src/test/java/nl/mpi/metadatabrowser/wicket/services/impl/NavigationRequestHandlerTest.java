@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
 import nl.mpi.metadatabrowser.model.NavigationRequest;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -28,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.jmock.Expectations.returnValue;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -35,7 +37,8 @@ import static org.jmock.Expectations.returnValue;
  */
 public class NavigationRequestHandlerTest {
 
-    public final String rrsUrl = "RRSURL";
+        @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration;
     private final Mockery context = new JUnit4Mockery();
     private WicketTester tester;
     private RequestCycle requestCycle;
@@ -58,7 +61,7 @@ public class NavigationRequestHandlerTest {
 	context.checking(new Expectations() {
 	    {
 		allowing(actionRequest).getTargetURL();
-		will(returnValue(NavigationRequest.NavigationTarget.RRS.toString()));
+		will(returnValue(nodeActionsConfiguration.getRrsURL()));
 	    }
 	});
 	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());
