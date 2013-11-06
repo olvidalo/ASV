@@ -17,54 +17,27 @@
 package nl.mpi.metadatabrowser.model.cmdi;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URL;
-import java.util.EnumMap;
-import java.util.Map;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class NavigationActionRequest implements NavigationRequest, Serializable {
+    private URL targetUrl;
 
-    private NavigationTarget target;
-//    private Map<String, URI> parameters;
-    private String targetUrl;
-
-    public NavigationActionRequest(NavigationTarget navigationTarget, String url) {
-//        this.parameters = parameters;
-        this.target = navigationTarget;
+    public NavigationActionRequest(URL url) {
         this.targetUrl = url;
     }
 
-    public void setTarget(NavigationTarget target) {
-        this.target = target;
-    }
-
-    @Override
-    public NavigationTarget getTarget() {
-        return target;
-    }
-
-//    public void setParameters(Map<String, URI> parameters) {
-//        this.parameters = parameters;
-//    }
-//
-//    @Override
-//    public Map<String, URI> getParameters() {
-//        return parameters;
-//    }
     
-    public void setTargetUrl(String targetUrl) {
+    public void setTargetURL(URL targetUrl) {
         this.targetUrl = targetUrl;
     }
 
     @Override
-    public String getTargetURL() {
+        public URL getTargetURL() {
         return targetUrl;
     }
 }

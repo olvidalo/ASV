@@ -16,15 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest.NavigationTarget;
-import org.jmock.Expectations;
-import static org.jmock.Expectations.returnValue;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.*;
@@ -35,11 +28,13 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class NavigationActionRequestTest {
-
-    public NavigationActionRequestTest() {
-    }
     private final Mockery context = new JUnit4Mockery();
-private final String url = "amsurl";
+    private final URL url;
+
+    public NavigationActionRequestTest() throws MalformedURLException {
+        this.url = new URL("http://lux16.mpi.nl/am/ams2/index.face");
+    }
+
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
@@ -57,82 +52,29 @@ private final String url = "amsurl";
     }
 
     /**
-     * Test of setTarget method, of class NavigationActionRequest.
+     * Test of setTargetUrl method, of class NavigationActionRequest.
      */
     @Test
-    public void testSetTarget() throws URISyntaxException {
+    public void testSetTargetURL() {
         System.out.println("setTarget");
-        final NavigationTarget target = NavigationTarget.AMS;       
-//        final Map<String, URI> parameters = new HashMap<String, URI>();
-//        parameters.put("nodeId", new URI("1"));
 
-        NavigationActionRequest instance = new NavigationActionRequest(target, url);
-        instance.setTarget(target);
-        // TODO review the generated test code and remove the default call to fail.
+        NavigationActionRequest instance = new NavigationActionRequest(url);
+        instance.setTargetURL(url);
+        assertNotNull(instance.getTargetURL());
+
     }
 
     /**
-     * Test of getTarget method, of class NavigationActionRequest.
+     * Test of getTargetURL method, of class NavigationActionRequest.
      */
     @Test
-    public void testGetTarget() {
+    public void testGetTargetURL() throws MalformedURLException {
         System.out.println("getTarget");
-        final NavigationTarget target = NavigationTarget.AMS;
-//        Map<String, URI> parameters = null;
-        NavigationActionRequest instance = new NavigationActionRequest(target, url);
-        NavigationTarget expResult = NavigationTarget.AMS;
-        NavigationTarget result = instance.getTarget();
-        assertEquals(expResult, result);
-    }
 
-//    /**
-//     * Test of setParameters method, of class NavigationActionRequest.
-//     */
-//    @Test
-//    public void testSetParameters() throws URISyntaxException {
-//        final CorpusNode node = context.mock(CorpusNode.class);
-//        System.out.println("setParameters");
-//        Map<String, URI> parameters = new HashMap<String, URI>();
-//        
-//        
-//                context.checking(new Expectations() {
-//            {
-//                oneOf(node).getNodeURI();
-//                will(returnValue(new URI("nodeid")));
-//
-//            }
-//        });
-//        
-//        parameters.put("nodeId", node.getNodeURI());
-//        parameters.put("jessionID", new URI("session_number"));
-//        NavigationActionRequest instance = new NavigationActionRequest(NavigationTarget.AMS, url);
-//        assertNotNull(instance);
-//        instance.setTargetUrl(url);
-//        assertNotNull(instance.getTargetURL());
-//
-//    }
-//
-//    /**
-//     * Test of getParameters method, of class NavigationActionRequest.
-//     */
-//    @Test
-//    public void testGetParameters() {
-//        System.out.println("getParameters");
-//        final NavigationRequest request = context.mock(NavigationRequest.class);
-////        Map<String, URI> parameters = null;
-//
-//
-//        context.checking(new Expectations() {
-//            {
-//                oneOf(request).getTarget();
-//                will(returnValue(NavigationTarget.AMS));
-////                oneOf(request).getParameters();
-////                will(returnValue(null));
-//            }
-//        });
-//        NavigationActionRequest instance = new NavigationActionRequest(request.getTarget(), url);
-//        String expResult = null;
-//        String result = instance.getTargetURL();
-//        assertEquals(expResult, result);
-//    }
+        NavigationActionRequest instance = new NavigationActionRequest(url);
+        URL expResult = new URL("http://lux16.mpi.nl/am/ams2/index.face");
+        URL result = instance.getTargetURL();
+        assertEquals(expResult.toString(), result.toString());
+
+    }
 }
