@@ -16,61 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.net.URL;
+
 /**
  * Interface for a request to navigate to a certain (parameterized) location
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface NavigationRequest extends ControllerActionRequest {
-
-    /**
-     * Target of a {@link NavigationRequest}
-     */
-    public enum NavigationTarget {
-
-	/**
-	 * Resource Request System
-	 */
-	RRS,
-	/**
-	 * AMS access rights management
-	 */
-	AMS,
-	/**
-	 * TROVA content search
-	 */
-	TROVA,
-	/**
-	 * CMDI metadata search
-	 */
-	CMDISEARCH,
-	/**
-	 * ANNEX viewer
-	 */
-	ANNEX,
-	/**
-	 *
-	 * @deprecated statistics will not be a feature of this version of the metadata browser
-	 */
-	@Deprecated
-	STATS
-    }
-
-    /**
-     *
-     * @return the navigation target
-     */
-    NavigationTarget getTarget();
-
-    
+public interface NavigationRequest extends ControllerActionRequest {   
     /**
      * @return the target url
      */
-    String getTargetURL();
-    
-    /**
-     *
-     * @return named parameters (name, value) that should be applied to the navigation action
-     */
-//    Map<String, URI> getParameters();
+    URL getTargetURL();
 }
