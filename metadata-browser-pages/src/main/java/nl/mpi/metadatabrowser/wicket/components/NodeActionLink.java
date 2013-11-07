@@ -25,7 +25,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Session;
-import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-class NodeActionButton extends Button {
+class NodeActionLink extends Link {
 
-    private final static Logger logger = LoggerFactory.getLogger(NodeActionButton.class);
+    private final static Logger logger = LoggerFactory.getLogger(NodeActionLink.class);
     // Services
     @SpringBean
     private ControllerActionRequestHandler actionRequestHandler;
@@ -46,14 +46,14 @@ class NodeActionButton extends Button {
     private final NodeAction action;
     private Collection<TypedCorpusNode> nodes;
 
-    public NodeActionButton(String id, Collection<TypedCorpusNode> nodes, NodeAction action) {
+    public NodeActionLink(String id, Collection<TypedCorpusNode> nodes, NodeAction action) {
 	super(id, new Model<String>(action.getName()));
 	this.nodes = nodes;
 	this.action = action;
     }
 
     @Override
-    public void onSubmit() {
+    public void onClick() {
 	try {
 	    final NodeActionResult result = action.execute(nodes);
 	    handleFeedbackMessage(result);
@@ -81,4 +81,5 @@ class NodeActionButton extends Button {
 	    actionRequestHandler.handleActionRequest(getRequestCycle(), actionRequest, getPage());
 	}
     }
+
 }

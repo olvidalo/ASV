@@ -61,6 +61,7 @@ public class NavigationRequestHandlerTest {
 	context.checking(new Expectations() {
 	    {
 		allowing(actionRequest).getTargetURL();
+                nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/");
 		will(returnValue(nodeActionsConfiguration.getRrsURL()));
 	    }
 	});
