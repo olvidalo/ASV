@@ -18,10 +18,8 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -36,6 +34,7 @@ import org.springframework.stereotype.Component;
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * Class that calls redirect to CMDI Search
  */
 @Component
 public class CMDISearchNodeAction implements NodeAction {
@@ -55,13 +54,12 @@ public class CMDISearchNodeAction implements NodeAction {
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), nodes);
-       
+        logger.debug("Action [{}] invoked on {}", getName(), nodes);       
        URI targetURI;
         NavigationActionRequest request = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
         for (TypedCorpusNode node : nodes) {
-            //Buil redirect to RRS here
+            //Buil redirect to CMDI Search
             URI nodeId = node.getNodeURI();
             uriBuilder = uriBuilder.queryParam("nodeid", nodeId);
         }

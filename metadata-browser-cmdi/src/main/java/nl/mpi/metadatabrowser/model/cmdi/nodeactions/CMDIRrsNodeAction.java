@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * Class that call redirect to RRS
  */
 @Component
 public class CMDIRrsNodeAction implements NodeAction {
@@ -58,7 +59,7 @@ public class CMDIRrsNodeAction implements NodeAction {
         NavigationActionRequest request = null;
         UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL());
         for (TypedCorpusNode node : nodes) {
-            //Buil redirect to RRS here
+            //Buil redirect to RRS
             URI nodeId = node.getNodeURI();
             targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
         }
