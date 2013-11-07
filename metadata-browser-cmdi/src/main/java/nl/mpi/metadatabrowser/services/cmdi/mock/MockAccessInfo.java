@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.util.Collection;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.ArchiveUser;
 
 /**
@@ -27,8 +28,8 @@ import nl.mpi.archiving.corpusstructure.core.ArchiveUser;
 public class MockAccessInfo implements AccessInfo {
 
     @Override
-    public int getAccessLevel() {
-	return AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY;
+    public AccessLevel getAccessLevel() {
+	return AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY;
     }
 
     @Override

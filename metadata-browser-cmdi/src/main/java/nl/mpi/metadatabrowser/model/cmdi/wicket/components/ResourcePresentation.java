@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -111,32 +112,32 @@ public final class ResourcePresentation extends Panel {
 
 	    final AccessInfo nAccessInfo = node.getAuthorization();
 
-	    int nodeAccessLevel = AccessInfo.ACCESS_LEVEL_NONE;
-	    if (nAccessInfo.getAccessLevel() > AccessInfo.ACCESS_LEVEL_NONE) {
-		nodeAccessLevel = nAccessInfo.getAccessLevel();
-	    }
+//	    AccessLevel nodeAccessLevel = AccessLevel.ACCESS_LEVEL_UNKNOWN;
+//	    if (nAccessInfo.getAccessLevel() > AccessLevel.ACCESS_LEVEL_UNKNOWN) {
+	    AccessLevel nodeAccessLevel = nAccessInfo.getAccessLevel();
+//	    }
 
 	    // TODO : get rrsurl
 	    String rrsurl = null;
 	    final MarkupContainer tableContainer = new WebMarkupContainer("tableContainer");
 
-	    if (nodeAccessLevel == 1) {
+	    if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY) {
 		tableContainer.add(new Image("access_icon", openIcon));
 		tableContainer.add(new Label("accesslevel", "This resource is openly available"));
 
-	    } else if (nodeAccessLevel == 2) {
+	    } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_OPEN_REGISTERED_USERS) {
 		tableContainer.add(new Image("access_icon", licensedIcon));
 		tableContainer.add(new Label("accesslevel", "This resource is accessible to registered users of the archive"));
 
-	    } else if (nodeAccessLevel == 3) {
+	    } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_PERMISSION_NEEDED) {
 		tableContainer.add(new Image("access_icon", restrictedIcon));
 		tableContainer.add(new Label("accesslevel", "Access to this resource can be <a href='" + rrsurl + ">requested</a>"));
 
-	    } else if (nodeAccessLevel == 4) {
+	    } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_CLOSED) {
 		tableContainer.add(new Image("access_icon", closedIcon));
 		tableContainer.add(new Label("accesslevel", "Access to this resource is prohibited"));
 
-	    } else if (nodeAccessLevel == 5) {
+	    } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_EXTERNAL) {
 		tableContainer.add(new Image("access_icon", externalIcon));
 		tableContainer.add(new Label("accesslevel", "This resource is external"));
 	    } else {

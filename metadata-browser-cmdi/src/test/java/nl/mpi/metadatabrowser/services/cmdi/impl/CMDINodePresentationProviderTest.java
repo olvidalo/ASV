@@ -24,6 +24,7 @@ import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.lat.ams.service.LicenseService;
@@ -199,7 +200,7 @@ public class CMDINodePresentationProviderTest {
 		allowing(accessInfo).hasReadAccess(with(any(String.class)));
 		will(returnValue(true));
 		allowing(accessInfo).getAccessLevel();
-		will(returnValue(AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY));
+		will(returnValue(AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY));
 		
 		allowing(fileInfo).getChecksum();
 		will(returnValue(""));

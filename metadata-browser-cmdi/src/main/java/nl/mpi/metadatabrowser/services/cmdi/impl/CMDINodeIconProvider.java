@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -187,17 +188,17 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 	return nodeTypeIcon;
     }
 
-    private ImageIcon getNodeAccessIcon(int nodeAccessLevel) {
+    private ImageIcon getNodeAccessIcon(AccessLevel nodeAccessLevel) {
 	switch (nodeAccessLevel) {
-	    case AccessInfo.ACCESS_LEVEL_OPEN_EVERYBODY:
+	    case ACCESS_LEVEL_OPEN_EVERYBODY:
 		return openIcon;
-	    case AccessInfo.ACCESS_LEVEL_OPEN_REGISTERED_USERS:
+	    case ACCESS_LEVEL_OPEN_REGISTERED_USERS:
 		return licensedIcon;
-	    case AccessInfo.ACCESS_LEVEL_PERMISSION_NEEDED:
+	    case ACCESS_LEVEL_PERMISSION_NEEDED:
 		return restrictedIcon;
-	    case AccessInfo.ACCESS_LEVEL_CLOSED:
+	    case ACCESS_LEVEL_CLOSED:
 		return closedIcon;
-	    case 5: //No level 5 is specified in AccessInfo!
+	    case ACCESS_LEVEL_EXTERNAL:
 		return externalIcon;
 	    default:
 		return unknownIcon;
