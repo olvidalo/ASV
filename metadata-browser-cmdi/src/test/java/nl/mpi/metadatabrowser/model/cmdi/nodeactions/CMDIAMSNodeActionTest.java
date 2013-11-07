@@ -70,7 +70,7 @@ public class CMDIAMSNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
-        String expResult = "ams";
+        String expResult = "Manage Access Rights";
         String result = instance.getName();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -99,7 +99,7 @@ public class CMDIAMSNodeActionTest {
 
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(node);
-        assertEquals("ams", instance.getName());
+        assertEquals("Manage Access Rights", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

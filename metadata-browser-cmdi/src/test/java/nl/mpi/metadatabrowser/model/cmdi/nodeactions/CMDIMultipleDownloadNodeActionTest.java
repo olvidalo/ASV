@@ -80,7 +80,7 @@ public class CMDIMultipleDownloadNodeActionTest {
 	ZipService zipService = context.mock(ZipService.class);
 	CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
 
-	String expResult = "multidownload";
+	String expResult = "Download all subtree";
 	String result = instance.getName();
 	assertEquals(expResult, result);
     }

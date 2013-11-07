@@ -48,7 +48,7 @@ public class CMDIRrsNodeAction implements NodeAction {
     
     @Override
     public String getName() {
-        return "rrs";
+        return "Resoource Access (RRS)";
     }
 
     @Override

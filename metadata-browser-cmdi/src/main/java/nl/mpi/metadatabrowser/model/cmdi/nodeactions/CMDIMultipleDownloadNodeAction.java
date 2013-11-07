@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -57,7 +56,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     @Override
     public String getName() {
-	return "multidownload";
+	return "Download all subtree";
     }
 
     @Override

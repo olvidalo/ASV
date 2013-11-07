@@ -68,7 +68,7 @@ public class CMDITrovaNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
-        String expResult = "trova";
+        String expResult = "Annotation Content Search";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
@@ -99,7 +99,7 @@ public class CMDITrovaNodeActionTest {
 
         CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
-        assertEquals("trova", instance.getName());
+        assertEquals("Annotation Content Search", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

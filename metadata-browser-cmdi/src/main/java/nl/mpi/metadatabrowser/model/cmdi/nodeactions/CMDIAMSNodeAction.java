@@ -52,7 +52,7 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
     
     @Override
     public String getName() {
-        return "ams";
+        return "Manage Access Rights";
     }
 
     @Override

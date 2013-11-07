@@ -50,7 +50,7 @@ public class CMDITrovaNodeAction implements NodeAction {
 
     @Override
     public String getName() {
-        return "trova";
+        return "Annotation Content Search";
     }
 
     @Override

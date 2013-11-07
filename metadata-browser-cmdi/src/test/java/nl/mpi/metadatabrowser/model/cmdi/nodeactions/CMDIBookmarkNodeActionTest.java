@@ -76,7 +76,7 @@ public class CMDIBookmarkNodeActionTest {
 
 	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb, resolver);
 	NodeActionResult result = instance.execute(nodes);
-	assertEquals("bookmark", instance.getName());
+	assertEquals("File information", instance.getName());
 
 	ControllerActionRequest actionRequest = result.getControllerActionRequest();
 	assertNotNull(actionRequest);
@@ -92,7 +92,7 @@ public class CMDIBookmarkNodeActionTest {
 	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	final NodeResolver resolver = context.mock(NodeResolver.class);
 	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb, resolver);
-	String expResult = "bookmark";
+	String expResult = "File information";
 	String result = instance.getName();
 	assertEquals(expResult, result);
     }

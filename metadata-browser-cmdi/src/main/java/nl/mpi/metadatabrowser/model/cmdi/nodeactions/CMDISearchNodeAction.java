@@ -50,27 +50,13 @@ public class CMDISearchNodeAction implements NodeAction {
 
     @Override
     public String getName() {
-        return "cmdiSearch";
+        return "Metadata Search";
     }
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        //StringBuilder sb = new StringBuilder();
-//        for (TypedCorpusNode node : nodes) {
-            // Build  redirect to mdsearch here    
-            //TODO get sessionId
-//            sb.append(nodeActionsConfiguration.getMdSearchURL());
-//            sb.append("?nodeid=");
-//            sb.append(node.getNodeURI());
-//            sb.append("&jessionID=");
-//            try {
-//                sb.append(new URI("session_number"));
-//            } catch (URISyntaxException ex) {
-//                logger.error("URI syntax exception: " + ex);
-//            }
-//    }
-        
+       
        URI targetURI;
         NavigationActionRequest request = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());

@@ -67,7 +67,7 @@ public class CMDISearchNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration);
-        String expResult = "cmdiSearch";
+        String expResult = "Metadata Search";
         String result = instance.getName();
         assertEquals(expResult, result);
 
@@ -96,7 +96,7 @@ public class CMDISearchNodeActionTest {
 
         CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
-        assertEquals("cmdiSearch", instance.getName());
+        assertEquals("Metadata Search", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
