@@ -19,14 +19,11 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
-import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -69,12 +66,12 @@ public class CMDIDownloadNodeActionTest {
      */
     @Test
     public void testGetName() {
-	System.out.println("getName");
-	NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver);
-	String expResult = "download";
-	String result = instance.getName();
-	assertEquals(expResult, result);
+        System.out.println("getName");
+        NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver);
+        String expResult = "Download";
+        String result = instance.getName();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -82,41 +79,41 @@ public class CMDIDownloadNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	//final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
-	final AccessInfo ai = context.mock(AccessInfo.class);
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        //final AccessInfo ai = AccessInfo.create(AccessInfo.EVERYBODY, AccessInfo.EVERYBODY, 1);
+        final AccessInfo ai = context.mock(AccessInfo.class);
+        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 
-	context.checking(new Expectations() {
-	    {
-		oneOf(nodeResolver).getUrl(node);
-		will(returnValue(new URL("http://my/nodeUri")));
+        context.checking(new Expectations() {
+            {
+                oneOf(nodeResolver).getUrl(node);
+                will(returnValue(new URL("http://my/nodeUri")));
 
-		allowing(node).getNodeURI();
-		will(returnValue(NODE_ID));
+                allowing(node).getNodeURI();
+                will(returnValue(NODE_ID));
 
-		allowing(node).getName();
-		will(returnValue("nodeName"));
+                allowing(node).getName();
+                will(returnValue("nodeName"));
 
-		allowing(node).getAuthorization();
-		will(returnValue(ai));
+                allowing(node).getAuthorization();
+                will(returnValue(ai));
 
-		allowing(ai).hasReadAccess("everybody");
-		will(returnValue(true));
-	    }
-	});
+                allowing(ai).hasReadAccess("everybody");
+                will(returnValue(true));
+            }
+        });
 
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver);
-	NodeActionResult result = instance.execute(node);
-	ControllerActionRequest actionRequest = result.getControllerActionRequest();
-	assertNotNull(actionRequest);
-	assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver);
+        NodeActionResult result = instance.execute(node);
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
 
-	assertEquals("download", instance.getName());
+        assertEquals("Download", instance.getName());
 
-	DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
-	assertEquals("nodeUri", downloadActionRequest.getFileName());
-	IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
-	assertNotNull(downloadStream);
+        DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
+        assertEquals("nodeUri", downloadActionRequest.getFileName());
+        IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
+        assertNotNull(downloadStream);
     }
 }

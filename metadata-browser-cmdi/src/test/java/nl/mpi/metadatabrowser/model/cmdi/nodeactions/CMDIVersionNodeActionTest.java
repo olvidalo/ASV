@@ -86,7 +86,7 @@ public class CMDIVersionNodeActionTest {
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 	CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
-        String expResult = "version";
+        String expResult = "Version";
         String result = instance.getName();
         assertEquals(expResult, result);
     }

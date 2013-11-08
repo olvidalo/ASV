@@ -56,7 +56,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     @Override
     public String getName() {
-	return "Download all subtree";
+	return "Download Subtree";
     }
 
     @Override

@@ -45,7 +45,7 @@ import org.springframework.stereotype.Component;
 public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "download";
+    private final String name = "Download";
     private final NodeResolver nodeResolver;
     //TODO: decide where does userid comes from and implement accordingly
     private String userid;

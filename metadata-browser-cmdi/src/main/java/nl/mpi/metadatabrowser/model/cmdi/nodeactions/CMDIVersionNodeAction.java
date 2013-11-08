@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "version";
+    private final String name = "Version";
     private final CorpusStructureProvider csdb;
     private final NodeResolver resolver;
     //TODO : decide where does userId comes from and implement accordingly

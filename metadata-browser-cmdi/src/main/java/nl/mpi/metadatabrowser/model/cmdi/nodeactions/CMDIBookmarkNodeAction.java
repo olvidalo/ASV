@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "File information";
+    private final String name = "File Information";
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
 

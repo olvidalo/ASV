@@ -19,10 +19,8 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -48,7 +46,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "view Node";
+    private final String name = "View Node";
     private boolean navType = false;
     private final NodePresentationProvider presentationProvider;
 
@@ -60,42 +58,23 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
+        //Buil redirect to Annex here
         logger.debug("Action [{}] invoked on {}", getName(), node);
-       // StringBuilder sb = new StringBuilder();
         URI targetURI = null;
-        //NavigationActionRequest request = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-
         if (node.getNodeType() instanceof CMDIResourceTxtType) {
             //TODO get session id
-//            try {
-//                sb.append(nodeActionsConfiguration.getAnnexURL());
-//                sb.append("?nodeId=");
-//                sb.append(node.getNodeURI());
-//                sb.append("&jsessionID=");
-//                sb.append(new URI("jsessionID"));
-//            } catch (URISyntaxException ex) {
-//                logger.error("URI syntax exception in parameter session id: " + ex);
-//            }
-//        } else {
-//            //TODO: Maybe replace this with some informative message, just URL is a bit pointless
-//            // maybe return error message because no other kind of nodes should end up here
-//        }
-        
-
-            //Buil redirect to RRS here
             URI nodeId = node.getNodeURI();
             targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
-                navType = true;
+            navType = true;
         }
-
         if (navType == true) {
-        try {
-            final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
-            return new SimpleNodeActionResult(request);
-        } catch (MalformedURLException ex) {
-            logger.error("URL syntax exception:" + ex);
-        }
+            try {
+                final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
+                return new SimpleNodeActionResult(request);
+            } catch (MalformedURLException ex) {
+                logger.error("URL syntax exception:" + ex);
+            }
         } else {
             final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override

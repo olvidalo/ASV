@@ -20,10 +20,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -75,14 +71,14 @@ public class CMDIMultipleDownloadNodeActionTest {
      */
     @Test
     public void testGetName() {
-	System.out.println("getName");
+        System.out.println("getName");
 
-	ZipService zipService = context.mock(ZipService.class);
-	CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
+        ZipService zipService = context.mock(ZipService.class);
+        CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
 
-	String expResult = "Download all subtree";
-	String result = instance.getName();
-	assertEquals(expResult, result);
+        String expResult = "Download Subtree";
+        String result = instance.getName();
+        assertEquals(expResult, result);
     }
 
     /**
@@ -90,44 +86,44 @@ public class CMDIMultipleDownloadNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-	System.out.println("execute");
+        System.out.println("execute");
 
-	final ZipService zipService = context.mock(ZipService.class);
-	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final String userId = null;
+        final ZipService zipService = context.mock(ZipService.class);
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final String userId = null;
 
-	final File zipFile = File.createTempFile("test", "txt");
-	final FileWriter fileWriter = new FileWriter(zipFile);
-	fileWriter.write("Test content");
-	fileWriter.close();
+        final File zipFile = File.createTempFile("test", "txt");
+        final FileWriter fileWriter = new FileWriter(zipFile);
+        fileWriter.write("Test content");
+        fileWriter.close();
 
-	context.checking(new Expectations() {
-	    {
-		allowing(node).getName();
-		will(returnValue("nodeName"));
+        context.checking(new Expectations() {
+            {
+                allowing(node).getName();
+                will(returnValue("nodeName"));
 
-		oneOf(zipService).createZipFileForNodes(node, userId);
-		will(returnValue(zipFile));
-	    }
-	});
+                oneOf(zipService).createZipFileForNodes(node, userId);
+                will(returnValue(zipFile));
+            }
+        });
 
-	CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
-	NodeActionResult result = instance.execute(node);
-	ControllerActionRequest actionRequest = result.getControllerActionRequest();
-	assertNotNull(actionRequest);
-	assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
+        CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
+        NodeActionResult result = instance.execute(node);
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
 
-	DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
-	assertEquals("package_nodeName.zip", downloadActionRequest.getFileName());
-	IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
-	assertThat(downloadStream, instanceOf(FileResourceStream.class));
+        DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
+        assertEquals("package_nodeName.zip", downloadActionRequest.getFileName());
+        IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
+        assertThat(downloadStream, instanceOf(FileResourceStream.class));
 
-	BufferedReader reader = new BufferedReader(new InputStreamReader(downloadStream.getInputStream()));
-	String readContent = reader.readLine();
-	assertEquals("Test content", readContent);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(downloadStream.getInputStream()));
+        String readContent = reader.readLine();
+        assertEquals("Test content", readContent);
 
-	assertTrue(zipFile.exists());
-	downloadStream.close();
-	assertFalse(zipFile.exists());
+        assertTrue(zipFile.exists());
+        downloadStream.close();
+        assertFalse(zipFile.exists());
     }
 }
