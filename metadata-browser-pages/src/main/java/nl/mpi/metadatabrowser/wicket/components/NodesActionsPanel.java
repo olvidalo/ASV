@@ -26,8 +26,6 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -39,43 +37,43 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
- * Panel that shows {@link NodeActionLink}s for each of the actions in the model of type {@link NodeActionsStructure}
+ * Panel that shows {@link NodeActionLink}s for each of the actions in the model
+ * of type {@link NodeActionsStructure}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> {
-private static final JavaScriptResourceReference JQuery = new JavaScriptResourceReference(NodesActionsPanel.class, "res/jquery-1.3.2.js");
-private static final JavaScriptResourceReference ANIMATE = new JavaScriptResourceReference(NodesActionsPanel.class, "res/animateOnLoad.js");
-private final static CssResourceReference NodesActionsPanel_CSS = new CssResourceReference(NodesActionsPanel.class, "res/nodeActionsPanel.css");
+    private static final JavaScriptResourceReference JQuery = new JavaScriptResourceReference(NodesActionsPanel.class, "res/jquery-1.3.2.js");
+    private static final JavaScriptResourceReference ANIMATE = new JavaScriptResourceReference(NodesActionsPanel.class, "res/animateOnLoad.js");
+    private final static CssResourceReference NodesActionsPanel_CSS = new CssResourceReference(NodesActionsPanel.class, "res/nodeActionsPanel.css");
+
     public NodesActionsPanel(String id) {
-	this(id, new NodeActionsStructure());
+        this(id, new NodeActionsStructure());
     }
 
     public NodesActionsPanel(String id, NodeActionsStructure model) {
-	super(id, new Model<NodeActionsStructure>(model));
+        super(id, new Model<NodeActionsStructure>(model));
 
-	add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
-	add(new ListView<NodeAction>("nodeActions", new NodeActionsListModel(getModel())) {
-	    @Override
-	    protected void populateItem(ListItem<NodeAction> item) {
-		final NodeAction action = item.getModelObject();
-		final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
+        add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
+        add(new ListView<NodeAction>("nodeActions", new NodeActionsListModel(getModel())) {
+            @Override
+            protected void populateItem(ListItem<NodeAction> item) {
+                final NodeAction action = item.getModelObject();
+                final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
                 Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
-                //actionLink.add(new AttributeAppender("class", action.getName()));
-                if(action.getName().equals("cmidSearch")||action.getName().equals("rrs")||action.getName().equals("trova")||action.getName().equals("ams")){
-                actionLink.add(new AttributeModifier("target", "_blank"));
+                if (action.getName().equals("Metadata Search") || action.getName().equals("Resource Access (RRS)") || action.getName().equals("Annotation Content Search") || action.getName().equals("Manage Access Rights")) {
+                    actionLink.add(new AttributeModifier("target", "_blank"));
                 }
                 actionLink.add(new Label("linkLabel", action.getName()));
-		//item.add(new NodeActionLink("nodeActionLink", nodes, action).add(new Label("linkLabel", action.getName())));
                 item.add(actionLink);
-                item.add(new AttributeAppender("class", action.getName()));
                 String className = action.getName().replaceAll("\\s", "");
-        add(new AttributeAppender("class", className));
-	    }
-	});
+                item.add(new AttributeAppender("class", className));
+            }
+        });
     }
+
     @Override
-        public void renderHead(IHeaderResponse response){
+    public void renderHead(IHeaderResponse response) {
         response.render(JavaScriptReferenceHeaderItem.forReference(JQuery));
         response.render(JavaScriptReferenceHeaderItem.forReference(ANIMATE));
         response.render(CssHeaderItem.forReference(NodesActionsPanel_CSS));

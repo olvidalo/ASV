@@ -16,6 +16,8 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
@@ -38,7 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class NavigationRequestHandlerTest {
 
         @Autowired
-    private NodeActionsConfiguration nodeActionsConfiguration;
+    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
     private WicketTester tester;
     private RequestCycle requestCycle;
@@ -55,14 +57,14 @@ public class NavigationRequestHandlerTest {
      * Test of handleActionRequest method, of class NavigationRequestHandler.
      */
     @Test
-    public void testHandleActionRequest() throws RequestHandlerException {
+    public void testHandleActionRequest() throws RequestHandlerException, MalformedURLException {
 
 	final NavigationRequest actionRequest = context.mock(NavigationRequest.class);
+                nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/");
 	context.checking(new Expectations() {
 	    {
 		allowing(actionRequest).getTargetURL();
-                nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/");
-		will(returnValue(nodeActionsConfiguration.getRrsURL()));
+		will(returnValue(new URL(nodeActionsConfiguration.getRrsURL())));
 	    }
 	});
 	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());

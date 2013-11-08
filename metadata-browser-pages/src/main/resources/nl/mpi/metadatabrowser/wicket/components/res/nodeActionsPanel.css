@@ -4,7 +4,7 @@ ul#navigation {
     margin: 0px;
     padding: 0px;
     top: 0px;
-    right: 10px;
+    left: 337px;
     list-style: none;
     z-index:9999;
 }
@@ -51,12 +51,12 @@ ul#navigation .ManageAccessRights a{
     background-image: url(access-icon.png);
 	background-repeat:no-repeat;
 }
-ul#navigation .download a{
+ul#navigation .Download a{
     background-image: url(Download-icon.png);
 	background-repeat:no-repeat;
 
 }
-ul#navigation .Downloadallsubtree a{
+ul#navigation .Downloadsubtree a{
     background-image: url(Download-Folder-icon.png);
 	background-repeat:no-repeat;
 }
@@ -64,11 +64,11 @@ ul#navigation .ResoourceAccess a{
     background-image: url(rss.png);
 	background-repeat:no-repeat;
 }
-ul#navigation .viewNode a{
+ul#navigation .ViewNode a{
     background-image: url(picture-view-icon.png);
 	background-repeat:no-repeat;
 }
-ul#navigation .Fileinformation a{
+ul#navigation .FileInformation a{
     background-image: url(Bookmarks-icon.png);
 	background-repeat:no-repeat;
 }

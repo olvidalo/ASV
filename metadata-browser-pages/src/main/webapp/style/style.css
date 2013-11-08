@@ -9,15 +9,16 @@ div#wrap{
 }
 
 div#nodePanel{
+    margin-top:20px;
 }
 
-div#actionsPanelContainer{
+/*div#actionsPanelContainer{
     padding-left: 1em;
     padding-top: 1em;
     min-height: 2em;
     width: 100%;
     border-bottom: 1px solid;
-}
+}*/
 
 div#actionsPanel input {
     font-size: medium;
