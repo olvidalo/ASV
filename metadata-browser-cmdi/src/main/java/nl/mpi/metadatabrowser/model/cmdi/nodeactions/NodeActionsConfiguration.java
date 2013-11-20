@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class NodeActionsConfiguration {
+public class NodeActionsConfiguration implements Serializable {
     // otherwise the properties don't get automatically injected with the Value annotations
 //    @Bean
 //    public static ServletContextPropertyPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
