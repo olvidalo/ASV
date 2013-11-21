@@ -19,9 +19,7 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
@@ -98,27 +96,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<URI> getDescendants(URI nodeId, nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onsite) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<URI> getResourcesFromArchive(nl.mpi.archiving.corpusstructure.core.CorpusNodeType nodeType, Collection<String> formats, String user, boolean onlyAvailable, boolean onlyOnSite) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public String getCanonicalVPath(URI nodeId) throws UnknownNodeException {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getNamePath(URI nodeId) throws UnknownNodeException {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -129,11 +107,6 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 
     @Override
     public List<URI> getObjectsByChecksum(String checksum) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<URI> getNewArchiveObjectsSince(Date timestamp, boolean onsiteonly, boolean urlformat, boolean usefiletime) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
