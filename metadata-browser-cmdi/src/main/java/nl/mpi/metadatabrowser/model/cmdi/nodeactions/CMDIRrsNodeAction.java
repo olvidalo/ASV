@@ -49,7 +49,7 @@ public class CMDIRrsNodeAction implements NodeAction {
     
     @Override
     public String getName() {
-        return "Resoource Access (RRS)";
+        return "Resource Access (RRS)";
     }
 
     @Override

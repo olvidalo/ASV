@@ -68,7 +68,7 @@ public class CMDIRrsNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration);
-        String expResult = "Resoource Access (RRS)";
+        String expResult = "Resource Access (RRS)";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
@@ -97,7 +97,7 @@ public class CMDIRrsNodeActionTest {
 
         CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
-        assertEquals("Resoource Access (RRS)", instance.getName());
+        assertEquals("Resource Access (RRS)", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
