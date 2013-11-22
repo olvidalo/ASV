@@ -22,8 +22,8 @@
 	<jmock.version>2.6.0</jmock.version>
 	<!-- Hint for NetBeans to insert license header -->
 	<netbeans.hint.license>gpl30</netbeans.hint.license>
+        <spring.version>3.2.2.RELEASE</spring.version>
     </properties>
-
     <licenses>
 	<license>
 	    <name>GNU General Public License, version 2</name>

@@ -16,10 +16,6 @@
 
     <name>Metadata Browser Services CMDI Implementation</name>
     
-    <properties>
-        <spring.version>3.2.2.RELEASE</spring.version>
-    </properties>
-    
     <build>
         <resources>
             <resource>
@@ -50,6 +46,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.4.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
@@ -113,6 +114,26 @@
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
             <version>1.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>8.4-702.jdbc4</version>
+        </dependency>
+        <dependency>
+            <groupId>nl.mpi.corpusstructure</groupId>
+            <artifactId>corpus-structure-2-provider</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.2.4.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-spring</artifactId>
+            <version>6.11.0</version>
         </dependency>
     </dependencies>
 </project>
