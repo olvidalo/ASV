@@ -123,4 +123,9 @@ public class MockCorpusNode implements CorpusNode, LinkedTreeNode, Serializable 
     public String getFormat() {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public URI getPID() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
