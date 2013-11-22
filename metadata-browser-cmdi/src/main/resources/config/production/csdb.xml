@@ -2,13 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
-
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
-     http://www.springframework.org/schema/tx 
-     http://www.springframework.org/schema/tx/spring-tx.xsd"
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
        profile="cmdi-production,cmdi-production-csdb">
     
     <!-- 
@@ -18,20 +18,19 @@
 	or 'cmdi-production-csdb' is active.
     -->
     
-    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />
+    <!-- Annotation configuration needs to be enabled for the autowiring to work -->
+    <context:annotation-config />
     
-<!--    
     <tx:annotation-driven/>
     
-    <bean class="org.springframework.orm.jpa.JpaTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 	<property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>-->
+    </bean>
     
     <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
 	<property name="jndiName" value="java:comp/env/jdbc/CSDB"/>   
 	<property name="resourceRef" value="true" />
     </bean>
-
     
     <bean id="entityManagerFactory"
 	  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -52,9 +51,16 @@
 	</property>
     </bean>
     
+    <bean id="archiveDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveDaoImpl" />
+    <bean id="aoDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveObjectsDaoImpl" />
+    <bean id="csDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.CorpusStructureDaoImpl" />
+    
     <!-- CSDB factory -->
     <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
     
     <!-- CSDB created from factory -->
     <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
+    
+    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />    
+
 </beans>

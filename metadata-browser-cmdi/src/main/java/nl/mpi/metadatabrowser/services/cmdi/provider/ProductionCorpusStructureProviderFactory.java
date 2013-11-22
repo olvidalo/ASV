@@ -17,33 +17,40 @@
 package nl.mpi.metadatabrowser.services.cmdi.provider;
 
 import java.io.Serializable;
-import javax.persistence.EntityManagerFactory;
-import nl.mpi.archiving.corpusstructure.core.database.dao.impl.DaoFactoryImpl;
+import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveDao;
+import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveObjectsDao;
+import nl.mpi.archiving.corpusstructure.core.database.dao.CorpusStructureDao;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProviderFactory;
 import nl.mpi.archiving.corpusstructure.provider.db.CorpusStructureProviderImpl;
-import org.apache.wicket.injection.Injector;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
+@Transactional
 public class ProductionCorpusStructureProviderFactory implements CorpusStructureProviderFactory, Serializable {
 
-//    @PersistenceContext
-//    private EntityManager em;
+    private final static Logger logger = LoggerFactory.getLogger(ProductionCorpusStructureProviderFactory.class);
+    private final ArchiveObjectsDao aoDao;
+    private final ArchiveDao archiveDao;
+    private final CorpusStructureDao csDao;
+
     @Autowired
-    @SpringBean
-    private transient EntityManagerFactory emf;
+    public ProductionCorpusStructureProviderFactory(ArchiveObjectsDao aoDao, ArchiveDao archiveDao, CorpusStructureDao csDao) {
+	logger.debug("Creating cs provider factory with {}, {}, {}", aoDao, archiveDao, csDao);
+	this.aoDao = aoDao;
+	this.archiveDao = archiveDao;
+	this.csDao = csDao;
+    }
 
     @Override
     public CorpusStructureProvider createCorpusStructureDB() {
-	if (emf == null) {
-	    Injector.get().inject(this);
-	}
-	//final EntityManagerFactory emf = applicationContext.getBean(EntityManagerFactory.class);
-	return new CorpusStructureProviderImpl(new DaoFactoryImpl(emf));
+	logger.debug("Constructing new CorpusStructureProviderImpl");
+	return new CorpusStructureProviderImpl(archiveDao, aoDao, csDao);
     }
 }
