@@ -30,7 +30,7 @@ body {
   font-weight: bold; 
   float: left;
   width: 180px;
-  //width: 10%;
+/*  width: 10%;*/
   text-align: right; 
   padding-right:4px;  
   word-wrap:break-word;  
@@ -39,8 +39,8 @@ body {
 .IMDI_name_value .IMDI_value {
   font-weight: normal;
   float: left;
-  //width: 335px;
-  width: 60%
+/*  width: 335px;*/
+  width: 60%;
   text-align: left;  
 }
 
@@ -63,7 +63,7 @@ body {
 .IMDI_key_name_value .IMDI_key_value {
   font-weight: normal;
   float: left;
-  width: 60%
+  width: 60%;
   text-align: left;  
 }
 
@@ -83,7 +83,6 @@ pre {
   width: 98%;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
-  white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   overflow: auto;
@@ -155,7 +154,7 @@ a {
 
 /* static content groups */
 .IMDI_group_static {
-//  display: block;
+/*  display: block;*/
   border-collapse:collapse;
   background-color: #FFFFF2;
   border-left: solid 1px #B0B0B0;
