@@ -109,4 +109,9 @@ class MockTypedCorpusNode implements TypedCorpusNode {
     public String toString() {
 	return getName();
     }
+
+    @Override
+    public URI getPID() {
+        return URI.create("hdl:1839/12345678910111213");
+    }
 }

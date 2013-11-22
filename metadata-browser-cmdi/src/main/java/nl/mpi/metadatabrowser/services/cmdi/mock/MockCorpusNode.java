@@ -18,10 +18,13 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
@@ -32,7 +35,7 @@ import nl.mpi.archiving.tree.GenericTreeNode;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class MockCorpusNode implements CorpusNode, Serializable {
+public class MockCorpusNode implements CorpusNode, Serializable{
 
     private URI nodeId;
     private String name;
@@ -77,6 +80,16 @@ public class MockCorpusNode implements CorpusNode, Serializable {
 	return nodeId;
     }
 
+    @Override
+    public URI getPID() {
+        try {
+            return new URI("hdl:1839/12345678910111213");
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(MockCorpusNode.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     @Override
     public String getName() {
 	return name;
@@ -153,4 +166,5 @@ public class MockCorpusNode implements CorpusNode, Serializable {
     public String getFormat() {
 	return "test/test-format";
     }
+
 }
