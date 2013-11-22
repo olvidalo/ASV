@@ -2,10 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx.xsd"
        profile="cmdi-production,cmdi-production-csdb">
     
     <!-- 
@@ -15,13 +18,43 @@
 	or 'cmdi-production-csdb' is active.
     -->
     
-    <bean id="nodeResolver" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver" />
+    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />
     
-    <!-- CSDB factory -->
-    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.CmdiCorpusStructureProviderFactoryImpl">
-	<constructor-arg value="dbname" />
+<!--    
+    <tx:annotation-driven/>
+    
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager">
+	<property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>-->
+    
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	<property name="jndiName" value="java:comp/env/jdbc/CSDB"/>   
+	<property name="resourceRef" value="true" />
+    </bean>
+
+    
+    <bean id="entityManagerFactory"
+	  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	<property name="packagesToScan" value="nl.mpi.archiving.corpusstructure.core.database.pojo" />
+	<property name="dataSource" ref="dataSource" />
+	<property name="jpaVendorAdapter">
+	    <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="generateDdl" value="true" />
+	    </bean>
+	</property>
+	<property name="persistenceUnitName" value="corpusstructure2-persistency" />
+	<property name="jpaProperties">
+	    <props>
+		<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+		<prop key="hibernate.show_sql">false</prop>
+		<prop key="hibernate.hbm2ddl.auto">update</prop>
+	    </props>
+	</property>
     </bean>
     
-    <!-- CSDB created from factory (not sure if this will work because Wicket requires serializability -->
+    <!-- CSDB factory -->
+    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
+    
+    <!-- CSDB created from factory -->
     <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
 </beans>
