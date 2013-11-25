@@ -21,9 +21,7 @@
     </bean>
     
     <!-- Corpus structure provider created from factory -->
-    <bean id="corpusStructureProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDatabaseProxy">
-	<constructor-arg ref="csdbFactory" />
-    </bean>
+    <bean id="corpusStructureProvider" factory-bean="csdbFactory" factory-method="createCorpusStructureProvider" />
 
     <!-- Access info provider (also adapter) -->
     <bean id="accessInfoProvider" factory-bean="csdbFactory" factory-method="createAccessInfoProvider" /> 
