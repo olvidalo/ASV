@@ -23,10 +23,10 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamSource;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -183,8 +183,7 @@ public class CMDINodePresentationProviderTest {
     @Ignore("fix resourcepresentation implementation")
     @Test
     public void testGetNodePresentationForResource() throws Exception {
-	final AccessInfo accessInfo = context.mock(AccessInfo.class);
-	resourceNode.setAccessInfo(accessInfo);
+	final AccessInfoProvider accessInfoProvider = context.mock(AccessInfoProvider.class);
 	final FileInfo fileInfo = context.mock(FileInfo.class);
 	resourceNode.setFileInfo(fileInfo);
 
@@ -197,11 +196,11 @@ public class CMDINodePresentationProviderTest {
 		allowing(nodeResolver).getUrl(resourceNode);
 		will(returnValue(new URL("http://myresource")));
 
-		allowing(accessInfo).hasReadAccess(with(any(String.class)));
+		allowing(accessInfoProvider).hasReadAccess(with(equalTo(resourceNode.getNodeURI())), with(any(String.class)));
 		will(returnValue(true));
-		allowing(accessInfo).getAccessLevel();
+		allowing(accessInfoProvider).getAccessLevel(with(equalTo(resourceNode.getNodeURI())));
 		will(returnValue(AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY));
-		
+
 		allowing(fileInfo).getChecksum();
 		will(returnValue(""));
 		allowing(fileInfo).getSize();

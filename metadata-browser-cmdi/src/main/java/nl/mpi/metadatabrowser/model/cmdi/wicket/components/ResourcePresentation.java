@@ -22,12 +22,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.lat.ams.model.License;
 import nl.mpi.lat.ams.model.NodeLicense;
 import nl.mpi.lat.ams.service.LicenseService;
@@ -46,6 +45,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.ContextRelativeResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +55,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class ResourcePresentation extends Panel {
 
+    @SpringBean
+    private AccessInfoProvider accessInfoProvider;
     private final ResourceReference openIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_green.png");
     private final ResourceReference licensedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_yellow.png");
     private final ResourceReference restrictedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_orange.png");
@@ -68,11 +70,10 @@ public final class ResourcePresentation extends Panel {
 	final URL nodeURL = resolver.getUrl(node);
 	if (nodeURL != null) {
 	    Boolean hasaccess;
-	    final AccessInfo nodeAuthorization = node.getAuthorization();
 	    if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY));
+		hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
 	    } else {
-		hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(userid));
+		hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
 	    }
 
 	    //TODO: May not be handle, check
@@ -110,11 +111,10 @@ public final class ResourcePresentation extends Panel {
 		checksum = "unknown";
 	    }
 
-	    final AccessInfo nAccessInfo = node.getAuthorization();
 
 //	    AccessLevel nodeAccessLevel = AccessLevel.ACCESS_LEVEL_UNKNOWN;
 //	    if (nAccessInfo.getAccessLevel() > AccessLevel.ACCESS_LEVEL_UNKNOWN) {
-	    AccessLevel nodeAccessLevel = nAccessInfo.getAccessLevel();
+	    AccessLevel nodeAccessLevel = accessInfoProvider.getAccessLevel(node.getNodeURI());
 //	    }
 
 	    // TODO : get rrsurl

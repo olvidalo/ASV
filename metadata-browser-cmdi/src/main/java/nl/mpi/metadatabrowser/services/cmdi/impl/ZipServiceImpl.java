@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
@@ -52,6 +52,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private final static long MAX_LIMIT = FileUtils.ONE_GB * 2; // 200000000L ; //4000000000L  //4GB
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
+    private final AccessInfoProvider accessInfoProvider;
     private int overallSize = 0;
 
     /**
@@ -61,9 +62,10 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @param nodeResolver
      */
     @Autowired
-    public ZipServiceImpl(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
+    public ZipServiceImpl(CorpusStructureProvider csdb, NodeResolver nodeResolver, AccessInfoProvider accessInfoProvider) {
 	this.csdb = csdb;
 	this.nodeResolver = nodeResolver;
+	this.accessInfoProvider = accessInfoProvider;
     }
 
     /**
@@ -143,11 +145,10 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @throws UnknownNodeException
      */
     private boolean checkAccess(String userid, URI nodeId) throws UnknownNodeException {
-	final AccessInfo nodeAuthorization = csdb.getNode(nodeId).getAuthorization();
 	if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-	    return nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
+	    return accessInfoProvider.hasReadAccess(nodeId, AccessInfoProvider.EVERYBODY);
 	} else {
-	    return nodeAuthorization.hasReadAccess(userid);
+	    return accessInfoProvider.hasReadAccess(nodeId, userid);
 	}
     }
 

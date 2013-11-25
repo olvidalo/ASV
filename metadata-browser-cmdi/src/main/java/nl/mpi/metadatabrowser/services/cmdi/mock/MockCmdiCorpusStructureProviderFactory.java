@@ -33,7 +33,7 @@ public class MockCmdiCorpusStructureProviderFactory implements CorpusStructurePr
     }
 
     @Override
-    public CorpusStructureProvider createCorpusStructureDB() {
+    public CorpusStructureProvider createCorpusStructureProvider() {
 	return cmdiCsdb;
     }
 }

@@ -21,7 +21,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
@@ -101,11 +100,6 @@ public class MockCorpusNode implements CorpusNode, LinkedTreeNode, Serializable 
 
     @Override
     public CorpusNodeType getType() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public AccessInfo getAuthorization() {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -19,13 +19,11 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
@@ -145,11 +143,6 @@ public class MockCorpusNode implements CorpusNode, Serializable{
     @Override
     public CorpusNodeType getType() {
 	return corpusNodeType;
-    }
-
-    @Override
-    public AccessInfo getAuthorization() {
-	return new MockAccessInfo();
     }
 
     @Override

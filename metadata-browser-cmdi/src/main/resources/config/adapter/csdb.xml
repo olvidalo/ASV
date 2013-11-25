@@ -15,14 +15,19 @@
 	or 'cmdi-production-csdb' is active.
     -->
     
-    <!-- CSDB factory -->
+    <!-- CSDB factory for CorpusStructureAPI adapter -->
     <bean id="csdbFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
 	<constructor-arg value="java:comp/env/jdbc/CSDB" />
     </bean>
     
-    <!-- CSDB created from factory -->
-    <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
+    <!-- Corpus structure provider created from factory -->
+    <bean id="corpusStructureProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureDatabaseProxy">
+	<constructor-arg ref="csdbFactory" />
+    </bean>
 
+    <!-- Access info provider (also adapter) -->
+    <bean id="accessInfoProvider" factory-bean="csdbFactory" factory-method="createAccessInfoProvider" /> 
+    
     <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
     <bean id="nodeResolver" factory-bean="csdbFactory" factory-method="createNodeResolver" />
     

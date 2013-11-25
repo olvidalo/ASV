@@ -18,7 +18,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
 import java.util.Date;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -34,7 +33,6 @@ class MockTypedCorpusNode implements TypedCorpusNode {
     private final String name;
     private final NodeType nodeType;
     private String format = "application/xml";
-    private AccessInfo accessInfo;
     private FileInfo fileInfo;
 
     public MockTypedCorpusNode(NodeType nodeType, String uri, String name) {
@@ -78,15 +76,6 @@ class MockTypedCorpusNode implements TypedCorpusNode {
     }
 
     @Override
-    public AccessInfo getAuthorization() {
-	return accessInfo;
-    }
-
-    public void setAccessInfo(AccessInfo accessInfo) {
-	this.accessInfo = accessInfo;
-    }
-
-    @Override
     public Date getLastUpdate() {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -112,6 +101,6 @@ class MockTypedCorpusNode implements TypedCorpusNode {
 
     @Override
     public URI getPID() {
-        return URI.create("hdl:1839/12345678910111213");
+	return URI.create("hdl:1839/12345678910111213");
     }
 }

@@ -20,8 +20,11 @@ import java.io.Serializable;
 import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveDao;
 import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveObjectsDao;
 import nl.mpi.archiving.corpusstructure.core.database.dao.CorpusStructureDao;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProviderFactory;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProviderFactory;
+import nl.mpi.archiving.corpusstructure.provider.db.AccessInfoProviderImpl;
 import nl.mpi.archiving.corpusstructure.provider.db.CorpusStructureProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Transactional
-public class ProductionCorpusStructureProviderFactory implements CorpusStructureProviderFactory, Serializable {
+public class ProductionCorpusStructureProviderFactory implements CorpusStructureProviderFactory, AccessInfoProviderFactory, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(ProductionCorpusStructureProviderFactory.class);
     private final ArchiveObjectsDao aoDao;
@@ -49,8 +52,14 @@ public class ProductionCorpusStructureProviderFactory implements CorpusStructure
     }
 
     @Override
-    public CorpusStructureProvider createCorpusStructureDB() {
+    public CorpusStructureProvider createCorpusStructureProvider() {
 	logger.debug("Constructing new CorpusStructureProviderImpl");
 	return new CorpusStructureProviderImpl(archiveDao, aoDao, csDao);
+    }
+
+    @Override
+    public AccessInfoProvider createAccessInfoProvider() {
+	logger.debug("Constructing new CorpusStructureProviderImpl");
+	return new AccessInfoProviderImpl(aoDao);
     }
 }

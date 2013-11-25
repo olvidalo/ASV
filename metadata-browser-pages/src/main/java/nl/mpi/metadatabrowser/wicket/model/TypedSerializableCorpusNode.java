@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.wicket.model;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
@@ -74,12 +73,7 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
     public CorpusNodeType getType() {
 	return corpusNode.getType();
     }
-
-    @Override
-    public AccessInfo getAuthorization() {
-	return corpusNode.getAuthorization();
-    }
-
+    
     @Override
     public Date getLastUpdate() {
 	return corpusNode.getLastUpdate();

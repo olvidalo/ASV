@@ -52,7 +52,7 @@ public class CmdiCorpusStructureProviderFactoryImplTest {
     }
 
     /**
-     * Test of createCorpusStructureDB method, of class
+     * Test of createCorpusStructureProvider method, of class
      * CmdiCorpusStructureProviderFactoryImpl.
      */
     @Test
@@ -60,7 +60,7 @@ public class CmdiCorpusStructureProviderFactoryImplTest {
         System.out.println("createCorpusStructureDB");
         final CorpusStructureProvider cmdicsdb = context.mock(CorpusStructureProvider.class);
         CmdiCorpusStructureProviderFactoryImpl instance = new CmdiCorpusStructureProviderFactoryImpl(cmdicsdb);
-        final CorpusStructureProvider result = instance.createCorpusStructureDB();
+        final CorpusStructureProvider result = instance.createCorpusStructureProvider();
         context.checking(new Expectations() {
             {
                 oneOf(result).getStatus();

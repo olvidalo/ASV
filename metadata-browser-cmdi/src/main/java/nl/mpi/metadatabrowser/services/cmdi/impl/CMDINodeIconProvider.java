@@ -27,10 +27,10 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -73,6 +73,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final CorpusStructureProvider csProvider;
+    private final AccessInfoProvider accessInfoProvider;
 
     /**
      * Constructor
@@ -81,9 +82,10 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @param csProvider
      */
     @Autowired
-    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csProvider) {
+    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csProvider, AccessInfoProvider accessInfoProvider) {
 	this.nodeTypeIdentifier = nodeTypeIdentifier;
 	this.csProvider = csProvider;
+	this.accessInfoProvider = accessInfoProvider;
 	populateIconMap();
     }
 
@@ -118,8 +120,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ImageIcon, corresponding to access level
      */
     private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) throws UnknownNodeException {
-	final AccessInfo nAccessInfo = csProvider.getNode(contentNode.getNodeURI()).getAuthorization();
-	final ImageIcon accessIcon = getNodeAccessIcon(nAccessInfo.getAccessLevel());
+	final ImageIcon accessIcon = getNodeAccessIcon(accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
 
 	// retrieve the corresponding combined icon based on nodetype and accesslevel
 	final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);

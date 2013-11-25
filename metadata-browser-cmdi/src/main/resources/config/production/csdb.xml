@@ -55,11 +55,13 @@
     <bean id="aoDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveObjectsDaoImpl" />
     <bean id="csDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.CorpusStructureDaoImpl" />
     
-    <!-- CSDB factory -->
-    <bean id="csdbFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
+    <!-- Factory for CorpusStructure/AccessInfo. This pattern is used to allow for transactional instantiation of the providers. -->
+    <bean id="providerFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
     
     <!-- CSDB created from factory -->
-    <bean id="csdb" factory-bean="csdbFactory" factory-method="createCorpusStructureDB" />
+    <bean id="corpusStructureProvider" factory-bean="providerFactory" factory-method="createCorpusStructureProvider" />
+
+    <bean id="accessInfoProvider" factory-bean="providerFactory" factory-method="createAccessInfoProvider" />
     
     <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />    
 

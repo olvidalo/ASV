@@ -21,26 +21,33 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class PanelVersionComponent extends Panel {
+
+    private final Logger logger = LoggerFactory.getLogger(PanelVersionComponent.class);
+    @SpringBean
+    private AccessInfoProvider accessInfoProvider;
 
     public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, MockVersioningAPI versions) {
 	super(id);
@@ -60,11 +67,10 @@ public class PanelVersionComponent extends Panel {
 	    URL nodeURL = resolver.getUrl(node);
 	    if ((nodeURL != null)) {
 		Boolean hasaccess; // check accessibility node for the user
-		final AccessInfo nodeAuthorization = node.getAuthorization();
 		if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		    hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY));
+		    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
 		} else {
-		    hasaccess = Boolean.valueOf(nodeAuthorization.hasReadAccess(userid));
+		    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
 		}
 
 		// loop through the list of versions for a node to write them in the table.
@@ -117,7 +123,11 @@ public class PanelVersionComponent extends Panel {
 		}
 	    }
 	} catch (URISyntaxException ex) {
-	    Logger.getLogger(PanelVersionComponent.class.getName()).log(Level.SEVERE, null, ex);
+	    Session.get().error(ex.getMessage());
+	    logger.error("", ex);
+	} catch (UnknownNodeException ex) {
+	    Session.get().error(ex.getMessage());
+	    logger.error("", ex);
 	}
     }
 }

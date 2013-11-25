@@ -37,7 +37,7 @@ public class CmdiCorpusStructureProviderFactoryImpl implements CorpusStructurePr
     }
 
     @Override
-    public CorpusStructureProvider createCorpusStructureDB() {
+    public CorpusStructureProvider createCorpusStructureProvider() {
 	logger.debug("Returning singleton CSDB");
 	return csdb;
 	//logger.debug("Creating new CmdiCorpusStructureDB with dbname='{}'", dbname);

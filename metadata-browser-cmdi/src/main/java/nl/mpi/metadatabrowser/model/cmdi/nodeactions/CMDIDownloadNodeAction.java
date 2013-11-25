@@ -19,8 +19,9 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
-import nl.mpi.archiving.corpusstructure.core.AccessInfo;
+import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -47,12 +48,14 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final String name = "Download";
     private final NodeResolver nodeResolver;
+    private final AccessInfoProvider accessInfoProvider;
     //TODO: decide where does userid comes from and implement accordingly
     private String userid;
 
     @Autowired
-    public CMDIDownloadNodeAction(NodeResolver nodeResolver) {
+    public CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessInfoProvider accessInfoProvider) {
 	this.nodeResolver = nodeResolver;
+	this.accessInfoProvider = accessInfoProvider;
     }
 
     @Override
@@ -65,25 +68,27 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	logger.debug("Action [{}] invoked on {}", getName(), node);
 	final URL nodeUri = nodeResolver.getUrl(node);
 
-	// HANDLE download action here
-	if (userHasAccess(node, nodeUri)) {
-	    final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-	    final String fileName = new File(nodeUri.getPath()).getName();
-	    final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
-	    return new SimpleNodeActionResult(request);
-	} else {
-	    return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
+	try {
+	    // HANDLE download action here
+	    if (userHasAccess(node, nodeUri)) {
+		final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
+		final String fileName = new File(nodeUri.getPath()).getName();
+		final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
+		return new SimpleNodeActionResult(request);
+	    } else {
+		return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
+	    }
+	} catch (UnknownNodeException ex) {
+	    throw new NodeActionException(this, ex);
 	}
     }
 
-    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri) {
-	//String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-	final AccessInfo nodeAuthorization = node.getAuthorization();
+    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri) throws UnknownNodeException {
 	final boolean hasaccess;
 	if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-	    hasaccess = nodeAuthorization.hasReadAccess(AccessInfo.EVERYBODY);
+	    hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);
 	} else {
-	    hasaccess = nodeAuthorization.hasReadAccess(userid);
+	    hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), userid);
 	}
 	logger.debug("resource-download, access for {}, {}: {}", nodeUri, userid, hasaccess);
 	return hasaccess;
