@@ -43,8 +43,9 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> {
-    private static final JavaScriptResourceReference JQuery = new JavaScriptResourceReference(NodesActionsPanel.class, "res/jquery-1.3.2.js");
-    private static final JavaScriptResourceReference ANIMATE = new JavaScriptResourceReference(NodesActionsPanel.class, "res/animateOnLoad.js");
+    // overlaping javascript caused tree to reload on each request. animateLoad.js is now inline in correpsonding html. JQuery was duplicated with wicket.
+//    private static final JavaScriptResourceReference JQuery = new JavaScriptResourceReference(NodesActionsPanel.class, "res/jquery-1.3.2.js");
+//    private static final JavaScriptResourceReference ANIMATE = new JavaScriptResourceReference(NodesActionsPanel.class, "res/animateOnLoad.js");
     private final static CssResourceReference NodesActionsPanel_CSS = new CssResourceReference(NodesActionsPanel.class, "res/nodeActionsPanel.css");
 
     public NodesActionsPanel(String id) {
@@ -74,8 +75,8 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptReferenceHeaderItem.forReference(JQuery));
-        response.render(JavaScriptReferenceHeaderItem.forReference(ANIMATE));
+        //response.render(JavaScriptReferenceHeaderItem.forReference(JQuery));
+        //response.render(JavaScriptReferenceHeaderItem.forReference(ANIMATE));
         response.render(CssHeaderItem.forReference(NodesActionsPanel_CSS));
     }
 }
