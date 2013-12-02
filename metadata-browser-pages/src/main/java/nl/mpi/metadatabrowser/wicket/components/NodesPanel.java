@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -140,7 +141,10 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 	} catch (NodePresentationException ex) {
 	    logger.warn("Error while updating node presentation for {}", typedNodes, ex);
 	    error(ex.getMessage());
-	}
+	} catch (NodeTypeIdentifierException ex) {
+            logger.warn("Error in NodeTypeIdentifier while updating node presentation for {}", typedNodes, ex);
+	    error(ex.getMessage());
+        }
     }
     
         @Override
