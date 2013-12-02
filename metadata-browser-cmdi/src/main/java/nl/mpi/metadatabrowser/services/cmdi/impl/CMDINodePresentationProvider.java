@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
+import java.util.logging.Level;
 import javax.xml.transform.Templates;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -35,6 +36,8 @@ import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
@@ -57,6 +60,8 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     private final NodeResolver nodeResolver;
     private Templates imdiTemplates;
     private Templates cmdiTemplates;
+    private CorpusStructureProvider csp;
+    private NodeTypeIdentifier nodeTypeIdentifier;
 
     /**
      * 
@@ -67,7 +72,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
      * @param cmdiTemplates 
      */
     @Autowired
-    public CMDINodePresentationProvider(NodeResolver nodeResolver, AuthorizationService authoSrv, LicenseService licSrv,
+    public CMDINodePresentationProvider(NodeResolver nodeResolver, AuthorizationService authoSrv, LicenseService licSrv, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier,
 	    @Qualifier("imdiTemplates") Templates imdiTemplates,
 	    @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
 	this.nodeResolver = nodeResolver;
@@ -75,10 +80,12 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 	this.licSrv = licSrv;
 	this.imdiTemplates = imdiTemplates;
 	this.cmdiTemplates = cmdiTemplates;
+        this.csp = csp;
+        this.nodeTypeIdentifier = nodeTypeIdentifier;
     }
 
     @Override
-    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
+    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException, NodeTypeIdentifierException {
 	//TODO : decide where does userId comes from and implement accordingly
 	logger.debug("Making node presentation for nodes {}", nodes);
 	final String userId = "";
@@ -97,15 +104,18 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		}
 	    } catch (UnknownNodeException ex) {
 		throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
-	    }
+	    } 
+            catch (NodeTypeIdentifierException ex) {
+                throw new NodeTypeIdentifierException("could not find node type while building presentation for node " + node, ex);
+            }
 	} else {
 	    logger.debug("Multiple nodes, present as string representation of collection");
 	    return new Label(wicketId, nodes.toString());
 	}
     }
 
-    private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException {
-	final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node)));
+    private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException, UnknownNodeException, NodeTypeIdentifierException {
+	final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node), csp, nodeTypeIdentifier));
 	contentLabel.setEscapeModelStrings(false);
 	return contentLabel;
     }

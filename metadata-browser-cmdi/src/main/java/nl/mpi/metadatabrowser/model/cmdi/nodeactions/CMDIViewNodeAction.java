@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.logging.Level;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -32,6 +33,7 @@ import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,8 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
                     try {
                         return presentationProvider.getNodePresentation(id, Collections.singleton(node));
                     } catch (NodePresentationException ex) {
+                        throw new ControllerActionRequestException(ex);
+                    } catch (NodeTypeIdentifierException ex) {
                         throw new ControllerActionRequestException(ex);
                     }
                 }

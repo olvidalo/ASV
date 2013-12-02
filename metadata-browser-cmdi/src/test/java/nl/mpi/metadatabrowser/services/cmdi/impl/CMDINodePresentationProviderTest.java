@@ -27,6 +27,7 @@ import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.lat.ams.service.LicenseService;
 import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -34,6 +35,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
+import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -70,6 +72,8 @@ public class CMDINodePresentationProviderTest {
     private Templates cmdiTemplates;
     private Transformer transformer;
     private CMDINodePresentationProvider instance;
+    private CorpusStructureProvider csp;
+    private NodeTypeIdentifier nti;
 
     @Before
     public void setUp() {
@@ -79,7 +83,8 @@ public class CMDINodePresentationProviderTest {
 	imdiTemplates = context.mock(Templates.class, "imdiTemplates");
 	cmdiTemplates = context.mock(Templates.class, "cmdiTemplates");
 	transformer = context.mock(Transformer.class);
-	instance = new CMDINodePresentationProvider(nodeResolver, authSrv, licSrv, imdiTemplates, cmdiTemplates);
+        csp = context.mock(CorpusStructureProvider.class);
+	instance = new CMDINodePresentationProvider(nodeResolver, authSrv, licSrv, csp, nti, imdiTemplates, cmdiTemplates);
     }
 
     /**
