@@ -33,9 +33,14 @@ import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.model.TypedSerializableCorpusNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +64,8 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     // Child components
     private final NodesActionsPanel nodeActionsPanel;
     private final MarkupContainer nodePresentationContainer;
+    private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(NodesPanel.class, "res/imdi-viewer.js");
+    private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(NodesPanel.class, "res/imdi-viewer.css");
 
     public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
 	super(id, model);
@@ -134,5 +141,11 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 	    logger.warn("Error while updating node presentation for {}", typedNodes, ex);
 	    error(ex.getMessage());
 	}
+    }
+    
+        @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
+        response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
     }
 }
