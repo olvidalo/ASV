@@ -16,7 +16,7 @@ div#archiveTree18{
 
 div#nodePanel{
     margin-top:20px;
-    margin-left:20em;
+/*    margin-left:20em;*/
 }
 
 div#actionsPanelContainer{
@@ -32,9 +32,13 @@ div#actionsPanel input {
 
 div#nodePresentation {
     margin-top: 40px;
-    position: relative;
-    width: 100%;
-    padding-left: 1em;
+    bottom: 0;
+    top: 50px;
+    overflow: auto;
+/*    position: fixed;*/
+/*    float:right;*/
+/*    width: 100%;*/
+    padding-left: 20.5em;
     padding-top: 1em;
 }
 
@@ -42,7 +46,7 @@ div#treePanel{
     overflow: auto;
     top:0;
     bottom:0;
-    position:absolute;
+    position:fixed;
     float: left;
     width: 20em;
     border-right: 1px solid;
