@@ -47,11 +47,11 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
     <!--
          File used for javascript functions
     -->
-    <xsl:param name="JAVASCRIPT_INCLUDE_FILE">imdi-viewer.js</xsl:param>
+<!--    <xsl:param name="JAVASCRIPT_INCLUDE_FILE">imdi-viewer.js</xsl:param>-->
     <!-- 
         Javascript function for initialisation
     -->
-    <xsl:param name="JAVASCRIPT_INITIALISE">init_viewer</xsl:param>
+<!--    <xsl:param name="JAVASCRIPT_INITIALISE">init_viewer</xsl:param>-->
     <!-- 
         document if; e.g. imdi node id or URID  
     -->
@@ -63,7 +63,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
     <!-- 
         File used for css classes
     -->
-    <xsl:param name="CSS_FILE">imdi-viewer.css</xsl:param>
+<!--    <xsl:param name="CSS_FILE">style/imdi-viewer.css</xsl:param>-->
     <!-- 
         File used as tree-open icon
     -->
@@ -103,7 +103,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                 </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
-                <html>
+<!--                <html>
                     <head>
                         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
                         <title>
@@ -129,7 +129,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                             <xsl:text>','</xsl:text>
                             <xsl:value-of select="$IMAGE_CLOSED"/>
                             <xsl:text>');</xsl:text>
-                        </xsl:attribute>
+                        </xsl:attribute>-->
                         <div class="IMDI_header">
                             <span class="IMDI_logo"/>ISLE Metadata Initiative</div>
                         <xsl:apply-templates select="imdi:*">
@@ -141,8 +141,8 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                                     border="0" height="31" width="88"/>
                             </a>
                         </p> -->
-                    </body>
-                </html>
+<!--                    </body>
+                </html>-->
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
