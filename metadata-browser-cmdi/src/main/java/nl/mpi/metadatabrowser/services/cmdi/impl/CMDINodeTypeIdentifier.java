@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
@@ -87,6 +88,8 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 		return getMetadataType(node);
 	    case COLLECTION:
 		return getCollectionType(node);
+            case IMDICATALOGUE:
+                return new IMDICatalogueType();
 	    default:
 		return UNKNOWN_NODE_TYPE;
 	}
