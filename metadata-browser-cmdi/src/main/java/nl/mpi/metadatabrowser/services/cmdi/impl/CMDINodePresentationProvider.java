@@ -17,7 +17,6 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.util.Collection;
-import java.util.logging.Level;
 import javax.xml.transform.Templates;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -29,6 +28,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
@@ -123,7 +123,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     private Templates getTemplates(final TypedCorpusNode node) {
 	final NodeType nodeType = node.getNodeType();
 	final Templates templates;
-	if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType) {
+	if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType || nodeType instanceof IMDICatalogueType) {
 	    templates = imdiTemplates;
 	} else {
 	    templates = cmdiTemplates;
