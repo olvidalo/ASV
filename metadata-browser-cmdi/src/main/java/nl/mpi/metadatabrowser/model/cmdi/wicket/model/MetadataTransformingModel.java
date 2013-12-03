@@ -65,7 +65,7 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
                 transformer.setParameter("CORPUS_LINKING", "false");
-                transformer.setParameter("DOCUMENT_ID", node);
+                transformer.setParameter("DOCUMENT_ID", node.toString());
                 transformNodeContent(strWriter, in, transformer);
                 if (node.getNodeType() instanceof IMDICorpusType) {
                     strWriter = addCatalogueContentToCorpusView(node, transformer, strWriter, nodeResolver, csp, nodeTypeIdentifier);
