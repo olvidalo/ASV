@@ -29,7 +29,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.corpusstructure.UnknownNodeException;
@@ -45,6 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Model class that handles the logic for node transformation, In other words,
+ * handle the display of node presentation depending on type.
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
@@ -53,6 +54,21 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     private final String content;
 
+    /**
+     * model Constructor, set parameters and call for transformation
+     *
+     * @param nodeResolver NodeResolver, get inputStream for a given node
+     * @param node TypedCorusNode, node to be transformed
+     * @param templates, Templates, template to be use for transformation
+     * (either cmdi or imdi)
+     * @param csp CorpusStructureProvider, instanceof to be passed on for usage
+     * in getCatalogueNodesUnderCorpus
+     * @param nodeTypeIdentifier NodeTypeIdenfier, instanceof to be passed on
+     * for usage in getCatalogueNodesUnderCorpus
+     * @throws NodePresentationException
+     * @throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException
+     * @throws NodeTypeIdentifierException
+     */
     public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodePresentationException, nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
         try {
             logger.debug("Transforming node {} using templates {}", node, templates);
@@ -70,9 +86,6 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
                 if (node.getNodeType() instanceof IMDICorpusType) {
                     strWriter = addCatalogueContentToCorpusView(node, transformer, strWriter, nodeResolver, csp, nodeTypeIdentifier);
                 }
-                // Transform, outputting to string
-//                final Source source = new StreamSource(in);
-//                transformer.transform(source, new StreamResult(strWriter));
             } finally {
                 in.close();
             }
@@ -80,12 +93,12 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
             // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
             content = strWriter.toString();
         } catch (IOException ex) {
-            throw new NodePresentationException("Could not read metadata for transformation", ex);       
-	} catch (TransformerException ex) {
-	    throw new NodePresentationException("Could not transform metadata", ex);
-    }catch(NodeTypeIdentifierException ex){
-        throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
-    }
+            throw new NodePresentationException("Could not read metadata for transformation", ex);
+        } catch (TransformerException ex) {
+            throw new NodePresentationException("Could not transform metadata", ex);
+        } catch (NodeTypeIdentifierException ex) {
+            throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
+        }
     }
 
     @Override
@@ -93,7 +106,57 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
         return content;
     }
 
-    private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode, CorpusStructureProvider csp, NodeResolver nodeResolver, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
+    /**
+     * Method that set specific parameter to transformer and if call for
+     * catalogue node return a list with at least one element. Makes call to
+     * transformation for catalogue nodes to be added to corpus view
+     *
+     * @param node TypedCorpusNode, node under which existing catalogue nodes
+     * will be added to view
+     * @param transformer Transformer, transformer will set specific parameter
+     * if at least one catalogue node exist
+     * @param strWriter StringWriter, StringWriter use for transformation
+     * @param nodeResolver NodeResolver, retrieve the input stram for catalogue
+     * node
+     * @param csp CorpusStructureProvider, passes on provider to retrieve
+     * children in getCatalogueNodesUnderCorpus
+     * @param nodeTypeIdentifier NodeTypeIdentifier, passes on identifier types
+     * to check for catalogue typein getCatalogueNodesUnderCorpus
+     * @return StringWriter to be tranformed
+     * @throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException
+     * @throws IOException
+     * @throws NodePresentationException
+     * @throws NodeTypeIdentifierException
+     */
+    private StringWriter addCatalogueContentToCorpusView(TypedCorpusNode node, Transformer transformer, StringWriter strWriter, NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, IOException, NodePresentationException, NodeTypeIdentifierException {
+        StringWriter result = strWriter;
+
+        List<CorpusNode> catalogueNodeURLs = getCatalogueNodesUnderCorpus(node, csp, nodeTypeIdentifier);
+        if (!catalogueNodeURLs.isEmpty()) {
+            transformer.setParameter("DISPLAY_ONLY_BODY", "true");
+        }
+        for (CorpusNode catalogueNodeUrl : catalogueNodeURLs) {
+            InputStream in = nodeResolver.getInputStream(catalogueNodeUrl);
+            transformNodeContent(strWriter, in, transformer);
+            in.close();
+        }
+        return result;
+    }
+
+    /**
+     * Method that make a list of existing catalogue nodes to be added to a
+     * given node's presentation
+     *
+     * @param corpusNode TypedCorpusNode, node that needs to add catalogue
+     * information if available
+     * @param csp CorpusStructureProvider, get children for specific node
+     * @param nodeTypeIdentifier NodeTypeIdentifer, check if selected node is of
+     * type catalogue
+     * @return List of Catalogue Node as CorpusNode
+     * @throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException
+     * @throws NodeTypeIdentifierException
+     */
+    private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
         List<CorpusNode> result = new ArrayList<CorpusNode>();
         List<CorpusNode> children = csp.getChildNodes(corpusNode.getNodeURI());
         for (CorpusNode childNode : children) {
@@ -108,32 +171,19 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
         return result;
     }
 
-    private StringWriter addCatalogueContentToCorpusView(TypedCorpusNode node, Transformer transformer, StringWriter strWriter, NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, IOException, NodePresentationException, NodeTypeIdentifierException {
-        StringWriter result = strWriter;
-
-        List<CorpusNode> catalogueNodeURLs = getCatalogueNodesUnderCorpus(node, csp, nodeResolver, nodeTypeIdentifier);
-        // int indexOfBodyClose = -1;
-        if (!catalogueNodeURLs.isEmpty()) {
-            transformer.setParameter("DISPLAY_ONLY_BODY", "true");
-            //String currentContent = content.toString();
-            //indexOfBodyClose = currentContent.lastIndexOf("</body>");//Strip body close and add it later so we have pretty HTML again.
-            //if (indexOfBodyClose != -1) {
-            //    result= new StringWriter();
-            //    result.append(currentContent.substring(0, indexOfBodyClose));
-            // }
-        }
-        for (CorpusNode catalogueNodeUrl : catalogueNodeURLs) {
-            InputStream in = nodeResolver.getInputStream(catalogueNodeUrl);
-            transformNodeContent(strWriter, in, transformer);
-            in.close();
-        }
-        return result;
-    }
-
+    /**
+     * Method that will transform the node content for page presentation display
+     *
+     * @param strWriter StringWriter, to be transformed
+     * @param in InputStream, contains the node input
+     * @param transformer Transformer
+     * @throws NodePresentationException
+     */
     private void transformNodeContent(StringWriter strWriter, InputStream in, Transformer transformer) throws NodePresentationException {
+        // Transform, outputting to string
         final Source source = new StreamSource(in);
-        try{
-        transformer.transform(source, new StreamResult(strWriter));
+        try {
+            transformer.transform(source, new StreamResult(strWriter));
         } catch (TransformerException ex) {
             throw new NodePresentationException("Could not transform metadata", ex);
         }
