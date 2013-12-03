@@ -16,6 +16,7 @@ import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
+import nl.mpi.metadatabrowser.wicket.components.UserPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.LinkType;
 import org.apache.wicket.markup.html.WebPage;
@@ -48,6 +49,10 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
      */
     public HomePage(final PageParameters parameters) {
         super(parameters);
+        
+        //Add a panel hosting the user information.
+//        final UserPanel userPanel = new UserPanel("userPanel");
+//        add(userPanel);
 
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
         final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
@@ -88,7 +93,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         if (node != null) {
             try {
                 parentNodes.add(new URI(node));
-                getParentNode(new URI(node), treePanel, parentNodes, rootObj);
+                getParentNode(new URI(node), treePanel, parentNodes, rootObj);               
             } catch (URISyntaxException ex) {
                 logger.error("the URI for node {} gives an error {}", node, ex);
             } catch (UnknownNodeException ex) {
@@ -134,6 +139,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
                 // No match, throw exception or something
             } else {
                 treePanel.getTree().getTreeState().expandNode(currentTreeNode);
+                treePanel.getTree().getTreeState().selectNode(currentTreeNode, true);
             }
         }
     }
