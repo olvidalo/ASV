@@ -85,7 +85,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     }
 
     @Override
-    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException, NodeTypeIdentifierException {
+    public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
 	//TODO : decide where does userId comes from and implement accordingly
 	logger.debug("Making node presentation for nodes {}", nodes);
 	final String userId = "";
@@ -106,7 +106,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
 	    } 
             catch (NodeTypeIdentifierException ex) {
-                throw new NodeTypeIdentifierException("could not find node type while building presentation for node " + node, ex);
+                throw new NodePresentationException("could not find node type while building presentation for node " + node, ex);
             }
 	} else {
 	    logger.debug("Multiple nodes, present as string representation of collection");

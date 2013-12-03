@@ -85,8 +85,6 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
                         return presentationProvider.getNodePresentation(id, Collections.singleton(node));
                     } catch (NodePresentationException ex) {
                         throw new ControllerActionRequestException(ex);
-                    } catch (NodeTypeIdentifierException ex) {
-                        throw new ControllerActionRequestException(ex);
                     }
                 }
             };
