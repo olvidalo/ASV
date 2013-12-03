@@ -141,10 +141,7 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 	} catch (NodePresentationException ex) {
 	    logger.warn("Error while updating node presentation for {}", typedNodes, ex);
 	    error(ex.getMessage());
-	} catch (NodeTypeIdentifierException ex) {
-            logger.warn("Error in NodeTypeIdentifier while updating node presentation for {}", typedNodes, ex);
-	    error(ex.getMessage());
-        }
+	}
     }
     
         @Override
