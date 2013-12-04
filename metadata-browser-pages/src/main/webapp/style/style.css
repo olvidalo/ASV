@@ -69,12 +69,11 @@ div#treePanel div.archiveTree{
 }
 
 ul.feedbackPanel{
-    padding-left: 20em;
+    padding-left: 20.5em;
     position:fixed;
     width: 100%;
-    margin-top:50px;
+    margin-top:0;
     border: 1px #ccc;
-    padding: 0px;
 }
 
 ul.feedbackPanel li{
