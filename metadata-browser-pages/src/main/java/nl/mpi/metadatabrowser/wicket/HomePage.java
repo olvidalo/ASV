@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -16,8 +15,6 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
-import nl.mpi.metadatabrowser.services.NodePresentationException;
-import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import nl.mpi.metadatabrowser.wicket.components.UserPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -55,8 +52,8 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         super(parameters);
 
         //Add a panel hosting the user information.
-//        final UserPanel userPanel = new UserPanel("userPanel");
-//        add(userPanel);
+        final UserPanel userPanel = new UserPanel("userPanel");
+        add(userPanel);
 
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
         final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);

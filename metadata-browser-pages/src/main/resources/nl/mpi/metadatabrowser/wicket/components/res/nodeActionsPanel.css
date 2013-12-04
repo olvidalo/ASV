@@ -3,7 +3,8 @@ ul#navigation {
     position: fixed;
     margin: 0px;
     padding: 0px;
-    top: 0px;
+    top: 20px;
+    overflow: hidden;
     left: 337px;
     list-style: none;
     z-index:9999;
