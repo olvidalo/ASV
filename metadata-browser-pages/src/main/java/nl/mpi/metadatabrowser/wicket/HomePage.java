@@ -70,10 +70,12 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         treePanel.addArchiveTreePanelListener(new ArchiveTreePanelListener<SerializableCorpusNode>() {
             @Override
             public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {
+                if(!treePanel.getSelectedNodes().isEmpty()){
                 nodesPanel.setModelObject(treePanel.getSelectedNodes());
                 if (target != null) {
                     target.add(nodesPanel);
                 }
+            }
             }
         });
 
