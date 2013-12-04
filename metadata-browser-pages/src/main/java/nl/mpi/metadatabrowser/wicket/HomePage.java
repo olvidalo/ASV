@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -15,6 +16,8 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
+import nl.mpi.metadatabrowser.services.NodePresentationException;
+import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import nl.mpi.metadatabrowser.wicket.components.UserPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -45,11 +48,12 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 
     /**
      * Constructor
+     *
      * @param parameters that will be needed for openpath
      */
     public HomePage(final PageParameters parameters) {
         super(parameters);
-        
+
         //Add a panel hosting the user information.
 //        final UserPanel userPanel = new UserPanel("userPanel");
 //        add(userPanel);
@@ -77,39 +81,53 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         });
 
         List<URI> parentNodes = new ArrayList<URI>();
-        checkForOpenpathParameter(parameters, treePanel, parentNodes, rootObj);
+        boolean isOpenPath = checkForOpenpathParameter(parameters, treePanel, parentNodes, rootObj);
+        if (!isOpenPath) {
+            treePanel.getTree().getTreeState().selectNode(rootObj, true);
+        }
+        nodesPanel.setModelObject(treePanel.getSelectedNodes());// display presentation for selected node (root node if openpath doesn' exist)
         add(nodesPanel);
     }
 
     /**
-     *  Method that will check for openpath parameter 
+     * Method that will check for openpath parameter
+     *
      * @param parameters PageParameters, looks for openpath to continue
-     * @param treePanel ArchivetreePanel, the treePanel for which node will be expanded
-     * @param parentNodes List<URI>, list of URI that gather the uri of all the parents (hierarchically) for a specific node
+     * @param treePanel ArchivetreePanel, the treePanel for which node will be
+     * expanded
+     * @param parentNodes List<URI>, list of URI that gather the uri of all the
+     * parents (hierarchically) for a specific node
      * @param rootObj Object, the root node
+     * @return boolean for openpath exist or not
      */
-    private void checkForOpenpathParameter(PageParameters parameters, ArchiveTreePanel treePanel, List<URI> parentNodes, Object rootObj) {
+    private Boolean checkForOpenpathParameter(PageParameters parameters, ArchiveTreePanel treePanel, List<URI> parentNodes, Object rootObj) {
         String node = parameters.get("openpath").toString();
         if (node != null) {
             try {
                 parentNodes.add(new URI(node));
-                getParentNode(new URI(node), treePanel, parentNodes, rootObj);               
+                getParentNode(new URI(node), treePanel, parentNodes, rootObj);
             } catch (URISyntaxException ex) {
                 logger.error("the URI for node {} gives an error {}", node, ex);
             } catch (UnknownNodeException ex) {
-                logger.error("node {} is unknow {}",node, ex);
+                logger.error("node {} is unknow {}", node, ex);
             }
+            return true;
         }
+        return false;
+
     }
 
     /**
-     * Recursive method that collects all the parents of a given node up to the root node.
+     * Recursive method that collects all the parents of a given node up to the
+     * root node.
+     *
      * @param node URI, the uri of the child node for which we lookup the parent
-     * @param treePanel ArchiveTreePanel, treePanel from which the parentNode will be expanded
+     * @param treePanel ArchiveTreePanel, treePanel from which the parentNode
+     * will be expanded
      * @param parentNodes List<URI>, stored list of parents URI
      * @param rootObj Object, the root node
      * @throws URISyntaxException
-     * @throws UnknownNodeException 
+     * @throws UnknownNodeException
      */
     private void getParentNode(URI node, ArchiveTreePanel treePanel, List<URI> parentNodes, Object rootObj) throws URISyntaxException, UnknownNodeException {
         URI parentNodeURI = csprovider.getCanonicalParent(node);// get parent URI
@@ -123,6 +141,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 
     /**
      * Method that expand the nodes
+     *
      * @param parentNodes List<URI>, list of node URI that need to be expanded
      * @param treePanel ArchivePanel, treePanel in which node will be expanded
      * @param rootObj Object, the root node which is already expanded
@@ -145,10 +164,14 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     }
 
     /**
-     * Method that will find the object of a given node. Goes through all the children of a node to find the perfect match
-     * @param currentTreeNode GenericTreeSwingTreeNodeWrapper, object to be matched with nopdeURI
+     * Method that will find the object of a given node. Goes through all the
+     * children of a node to find the perfect match
+     *
+     * @param currentTreeNode GenericTreeSwingTreeNodeWrapper, object to be
+     * matched with nopdeURI
      * @param nodeUri URI, uri of the node that has to be expanded
-     * @return treeNodeObject GenericTreeSwingTreeNodeWrapper, object of a node to be expanded
+     * @return treeNodeObject GenericTreeSwingTreeNodeWrapper, object of a node
+     * to be expanded
      */
     private Object findTreeNodeObject(GenericTreeSwingTreeNodeWrapper currentTreeNode, URI nodeUri) {
         for (int i = 0; i < currentTreeNode.getChildCount(); i++) {
