@@ -39,6 +39,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
@@ -65,6 +66,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("session_color.gif"));
     private final static ImageIcon catalogueIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("catalogue.png"));
     private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("corpusnode_color.gif"));
+    private final static ImageIcon infoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("infofile.gif"));
     private final static ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("mediafile.gif"));
     private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("file.gif"));
     private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("clarin.png"));
@@ -132,7 +134,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     private void populateIconMap() {
-        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, fileIcon, cmdiIcon, unknownIcon);
+        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIcon, cmdiIcon, unknownIcon);
         final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
 
         int i = 0;
@@ -189,7 +191,9 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             nodeTypeIcon = catalogueIcon;
         } else if (nodeType instanceof CMDIMetadataType) {
             nodeTypeIcon = cmdiIcon;
-        } else {
+        } else if (nodeType instanceof IMDIInfoType){
+            nodeTypeIcon = infoIcon;
+        }else {
             nodeTypeIcon = unknownIcon;
         }
         return nodeTypeIcon;
