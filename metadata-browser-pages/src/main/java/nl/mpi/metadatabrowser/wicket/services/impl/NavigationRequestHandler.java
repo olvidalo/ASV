@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 public class NavigationRequestHandler implements ControllerActionRequestHandler<NavigationRequest> {
 
     private final static Logger logger = LoggerFactory.getLogger(NavigationRequestHandler.class);
+    public final int HTTP_MOVED_TEMPORARILY = 302;
 
     @Override
     public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
@@ -44,8 +45,7 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
     }
 
     private void redirectToUrl(RequestCycle requestCycle, String url) {
-	// TODO: Parameters?
-	requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(url));
+	requestCycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(url, HTTP_MOVED_TEMPORARILY));
     }
 
     
