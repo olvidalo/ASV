@@ -12,7 +12,8 @@
        profile="cmdi-production,cmdi-production-csdb">
     
     <!-- 
-	Spring configuration of the corpus structure database beans for usage in a production environment.
+	Persistence configuration to be used with the native CMDI Corpus Structure 2 provider. Provider services are configured
+	in corpusstructure.xml in the same profile.
 	
 	These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
 	or 'cmdi-production-csdb' is active.
@@ -67,18 +68,4 @@
 	</property>
     </bean>
     
-    <bean id="archiveDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveDaoImpl" />
-    <bean id="aoDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveObjectsDaoImpl" />
-    <bean id="csDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.CorpusStructureDaoImpl" />
-    
-    <!-- Factory for CorpusStructure/AccessInfo. This pattern is used to allow for transactional instantiation of the providers. -->
-    <bean id="providerFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
-    
-    <!-- CSDB created from factory -->
-    <bean id="corpusStructureProvider" factory-bean="providerFactory" factory-method="createCorpusStructureProvider" />
-
-    <bean id="accessInfoProvider" factory-bean="providerFactory" factory-method="createAccessInfoProvider" />
-    
-    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />    
-
 </beans>
