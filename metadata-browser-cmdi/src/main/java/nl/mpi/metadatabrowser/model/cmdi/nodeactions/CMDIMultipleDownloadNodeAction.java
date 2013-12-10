@@ -68,7 +68,10 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 		@Override
 		public void close() throws IOException {
 		    super.close();
-		    zipFile.delete();
+		    logger.debug("Zip file download completed. Removing {} from file system.", zipFile);
+		    if (!zipFile.delete()) {
+			logger.warn("Could not remove zip file: {}", zipFile);
+		    }
 		}
 	    };
 	    final String filename = String.format("package_%s.zip", FilenameUtils.getBaseName(node.getName()));
