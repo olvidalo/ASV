@@ -39,6 +39,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * All logic to download multiples files happens here. Parent node is passed on
@@ -79,6 +80,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @throws FileNotFoundException
      */
     @Override
+    @Transactional
     public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, UnknownNodeException, FileNotFoundException {
 	//create object of FileOutputStream
 	final File tmpFile = File.createTempFile("mdtbrowser", ".zip");
