@@ -22,6 +22,7 @@ import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
+import nl.mpi.archiving.corpusstructure.core.service.CorpusNodeWrapper;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
@@ -30,7 +31,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, Serializable {
+public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, CorpusNodeWrapper, Serializable {
 
     private final SerializableCorpusNode corpusNode;
     private final NodeType nodeType;
@@ -73,7 +74,7 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
     public CorpusNodeType getType() {
 	return corpusNode.getType();
     }
-    
+
     @Override
     public Date getLastUpdate() {
 	return corpusNode.getLastUpdate();
@@ -96,6 +97,11 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
 
     @Override
     public URI getPID() {
-        return corpusNode.getNodeURI();
+	return corpusNode.getNodeURI();
+    }
+
+    @Override
+    public CorpusNode getInnerCorpusNode() {
+	return corpusNode;
     }
 }
