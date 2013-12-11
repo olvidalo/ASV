@@ -31,12 +31,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class NodeActionsConfiguration implements Serializable {
     // otherwise the properties don't get automatically injected with the Value annotations
-//    @Bean
-//    public static ServletContextPropertyPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-//        return new ServletContextPropertyPlaceholderConfigurer();
-//    }
-
-    // otherwise the properties don't get automatically injected with the Value annotations
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
@@ -44,9 +38,12 @@ public class NodeActionsConfiguration implements Serializable {
 
     private String amsURL;
     private String rrsURL;
+    private String rrsIndexUrl;
     private String annexURL;
     private String mdSearchURL;
     private String trovaURL;
+    private String manualURL;
+    private String rrsRegister;
 
     public String getTrovaURL() {
         return trovaURL;
@@ -56,12 +53,24 @@ public class NodeActionsConfiguration implements Serializable {
         return amsURL;
     }
 
+    public String getRrsRegister(){
+        return rrsRegister;
+    }
+    
+    public String getRrsIndexURL(){
+        return rrsIndexUrl;
+    }
+    
     public String getRrsURL() {
         return rrsURL;
     }
 
     public String getAnnexURL() {
         return annexURL;
+    }
+    
+    public String getManualURL(){
+        return manualURL;
     }
 
     /**
@@ -71,28 +80,44 @@ public class NodeActionsConfiguration implements Serializable {
     public String getMdSearchURL() {
         return mdSearchURL;
     }
-    @Value("${amsURL}")
+    @Value("${nl.mpi.amsUrl}")
     public void setAmsURL(String amsURL) {
         this.amsURL = amsURL;
     }
 
-    @Value("${rrsURL}")
+    @Value("${nl.mpi.rrsRegister}")
+    public void setRrsRegister(String rrsRegister){
+       this.rrsRegister = rrsRegister; 
+    }
+
+    
+    @Value("${nl.mpi.rrsIndex}")
+    public void setRrsIndexURL(String rrsIndexURL){
+       this.rrsIndexUrl = rrsIndexURL; 
+    }
+    
+    @Value("${nl.mpi.rrsUrl}")
     public void setRrsURL(String rrsURL) {
         this.rrsURL = rrsURL;
     }
 
-    @Value("${annexURL}")
+    @Value("${nl.mpi.annexUrl}")
     public void setAnnexURL(String annexURL) {
         this.annexURL = annexURL;
     }
 
-    @Value("${mdSearchURL}")
+    @Value("${nl.mpi.imdiSearchUrl}")
     public void setMdSearchURL(String mdSearchURL) {
         this.mdSearchURL = mdSearchURL;
     }
 
-    @Value("${trova_url}")
+    @Value("${nl.mpi.trovaUrl}")
     public void setTrovaURL(String trovaURL) {
         this.trovaURL = trovaURL;
+    }
+
+    @Value("${nl.mpi.imdiBrowser.imdiBrowserManualUrl}")
+    public void setManualURL(String manualURL) {
+        this.manualURL = manualURL;
     }
 }
