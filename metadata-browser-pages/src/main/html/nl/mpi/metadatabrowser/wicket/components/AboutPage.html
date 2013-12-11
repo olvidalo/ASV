@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" href="style/aboutStyle.css" type="text/css" media="screen" title="Stylesheet" />
+        <title>AboutPage</title>
+    </head>
+    <body>
+        <h1 class="bar"><span wicket:id="title"></span></h1>                 
+        <table summary="About" align="left"  border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td align="left" valign="top" >
+                    <table align="center" class="design1" summary="version"  border="0">
+                        <tr>
+                            <td class='headcell' colspan='2'><span wicket:id="appname"></span> version info</td>
+                        </tr>
+                        <tr>
+                            <td>Version:</td>
+                            <td><span wicket:id="version"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Build:</td>
+                            <td><span wicket:id="build"></span></td>
+                        </tr>
+                        <tr>
+                            <td>Date:</td>
+                            <td><span wicket:id="date"></span></td>
+                        </tr>
+                        <tr><td>&nbsp;  </td></tr>
+                        <tr>
+                            <td colspan='2'>
+                                <span wicket:id="year"></span> Max Planck Institute for Psycholinguistics, Nijmegen
+                            </td>
+                        </tr>
+                        <tr><td>&nbsp;  </td></tr>
+                    </table>                        
+                </td>
+
+            </tr>        
+        </table>
+        <br>
+    </body>
+</html>

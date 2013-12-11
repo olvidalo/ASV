@@ -6,13 +6,14 @@
     <head>
 	<title>Metadata Browser</title>
 	<link rel="stylesheet" href="style/style.css" type="text/css" media="screen" title="Stylesheet" />
+	<link rel="stylesheet" href="style/aboutStyle.css" type="text/css" media="screen" title="Stylesheet" />
         <link rel="shortcut icon" href="favicon.ico" type="image/ico" />
     </head>
     <body onload="init_viewer('imdi-viewer-open.gif','imdi-viewer-closed.gif');">
-        <div wicket:id="userPanel" id="userPanel">[USER PANEL]</div>
+        <div wicket:id="headerPanel" id="headerPanel">[HEADER PANEL]</div>
 	<div id="wrap">
+	    <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>>
 	    <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
-	    <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>
 	</div>
     </body>
 </html>

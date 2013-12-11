@@ -1,13 +1,14 @@
 /* CSS Document */
 ul#navigation {
-    position: fixed;
+/*    position: fixed;*/
     margin: 0px;
     padding: 0px;
-    top: 20px;
+    float:left;
+/*    top: 20px;
     overflow: hidden;
     left: 337px;
     list-style: none;
-    z-index:9999;
+    z-index:9999;*/
 }
 ul#navigation li {
     width: 100px;

@@ -84,10 +84,21 @@
         </dependency>
     </dependencies>
     <build>
+        <filters>
+            <filter>src/main/resources/filters/filter.${deployTo}.properties</filter>
+        </filters>
         <resources>
             <resource>
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF</targetPath>
+                <filtering>true</filtering>
+                <includes>              
+                    <include>shhaa.xml</include>
+                </includes>                  
             </resource>
             <resource>
                 <filtering>false</filtering>
@@ -161,7 +172,7 @@
                     <downloadSources>true</downloadSources>
                 </configuration>
             </plugin>
-        </plugins>
+</plugins>
     </build>
-
+    
 </project>
