@@ -7,32 +7,34 @@
     </head>
     <body>
         <wicket:panel>
-            <ul id="headerInformationContainer">
-                <li>
-                    <a href="" wicket:id="aboutLink">about</a>
-                    <!--                    <a href="" wicket:id="aboutLink"><span wicket:id="aboutLabel">default wicket link</span></a>-->
-                </li>
-                <li>
-                    <a href="" wicket:id="manualLink">manual</a>
-                    <!--                        <span wicket:id="manualLabel">default wicket link</span></a>-->
-                </li>
-                <li>
-                    <a href="" wicket:id="registerLink">register</a>
-                </li>
+            <img id="header" src="lana.gif" alt="" width="49" height="22" border="0" >
+                <span id="header" name="appname">Metadata-Browser</span>
+                <ul id="headerInformationContainer">
+                    <li>
+                        <a href="" wicket:id="aboutLink">about</a>
+                        <!--                    <a href="" wicket:id="aboutLink"><span wicket:id="aboutLabel">default wicket link</span></a>-->
+                    </li>
+                    <li>
+                        <a href="" wicket:id="manualLink">manual</a>
+                        <!--                        <span wicket:id="manualLabel">default wicket link</span></a>-->
+                    </li>
+                    <li>
+                        <a href="" wicket:id="registerLink">register</a>
+                    </li>
+                    <li><a wicket:id="userName" id="header"><span wicket:id="user"></span></a></li>
+                    <li>
+                        <a href="" wicket:id="userLoginLink">login</a>
+                        <!--
+                        <a href="" wicket:id="userLogoutLink">logout</a>-->
+                        <!--                    <a target="body" href="<%= loginlink %>">login</a>
+                                            <a target="body" href="<%= logoutlink %>">logout</a>-->
+                    </li>
+                </ul>
 
-                <li>
-                    <a href="" wicket:id="userLoginLink">login</a>
-                    <!--
-                    <a href="" wicket:id="userLogoutLink">logout</a>-->
-                    <!--                    <a target="body" href="<%= loginlink %>">login</a>
-                                        <a target="body" href="<%= logoutlink %>">logout</a>-->
-                </li>
-            </ul>
 
-
-            <!--            <span wicket:id="title">title here</span>
-                        
-            -->
+                <!--            <span wicket:id="title">title here</span>
+                            
+                -->
         </wicket:panel>
     </body>
 </html>

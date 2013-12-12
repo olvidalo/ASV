@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import javax.servlet.http.HttpServletRequest;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -15,13 +16,13 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
-import nl.mpi.metadatabrowser.wicket.components.AboutPage;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.LinkType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -51,11 +52,11 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
      */
     public HomePage(final PageParameters parameters) {
         super(parameters);
-
+        HttpServletRequest request = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
         //Add a panel hosting the user information.
-        final HeaderPanel headerPanel = new HeaderPanel("headerPanel");
+        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", request);
         add(headerPanel);
-        
+
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
         final ArchiveTreePanel treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
         treePanel.setLinkType(LinkType.AJAX_FALLBACK);
@@ -71,12 +72,12 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         treePanel.addArchiveTreePanelListener(new ArchiveTreePanelListener<SerializableCorpusNode>() {
             @Override
             public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {
-                if(!treePanel.getSelectedNodes().isEmpty()){
-                nodesPanel.setModelObject(treePanel.getSelectedNodes());
-                if (target != null) {
-                    target.add(nodesPanel);
+                if (!treePanel.getSelectedNodes().isEmpty()) {
+                    nodesPanel.setModelObject(treePanel.getSelectedNodes());
+                    if (target != null) {
+                        target.add(nodesPanel);
+                    }
                 }
-            }
             }
         });
 

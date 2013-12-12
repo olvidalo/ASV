@@ -16,11 +16,15 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import javax.servlet.http.HttpServletRequest;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.protocol.http.servlet.XForwardedRequestWrapper;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -32,9 +36,12 @@ public final class HeaderPanel extends Panel {
     @SpringBean
     private NodeActionsConfiguration nodeActionsConf;
 
-    public HeaderPanel(String id) {
+    public HeaderPanel(String id, HttpServletRequest request) {
         super(id);
-        add(new BookmarkablePageLink("aboutLink", AboutPage.class){
+        XForwardedRequestWrapper xf = new XForwardedRequestWrapper(request);
+        String user = xf.getRemoteUser();
+
+        add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
@@ -42,20 +49,36 @@ public final class HeaderPanel extends Panel {
             }
         });
 
-        ExternalLink manualLink = new ExternalLink("manualLink", nodeActionsConf.getManualURL()){
+        ExternalLink manualLink = new ExternalLink("manualLink", nodeActionsConf.getManualURL()) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
                 tag.put("target", "_blank");
             }
-        }; 
+        };
 
-        ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL()+nodeActionsConf.getRrsRegister());
+        ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
-        
-        ExternalLink userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
-//        ExternalLink userLogoutLink = new ExternalLink("userLogoutLink", "/protected/logout.jsp" );
+        ExternalLink userLoginLink;
+        if (user == null || user.trim().equals("")) {
+            userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
+        } else {
+            userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
+        }
 
+        Link<Void> userName = new Link<Void>("userName") {
+            @Override
+            public void onClick() {
+                getBeforeDisabledLink();
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return super.isEnabled() && false;
+            }
+        };
+        userName.add(new Label("user", "user : " + user));
+        add(userName);
         add(manualLink);
         add(registerLink);
         add(userLoginLink);
