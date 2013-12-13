@@ -18,7 +18,6 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -26,16 +25,13 @@ import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.core.service.ams.AmsAuthorizationService;
+import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicense;
+import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicenseService;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
-import nl.mpi.lat.ams.model.License;
-import nl.mpi.lat.ams.model.NodeLicense;
-import nl.mpi.lat.ams.service.LicenseService;
-import nl.mpi.lat.auth.authorization.AuthorizationService;
-import nl.mpi.lat.dao.DataSourceException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -57,6 +53,13 @@ public final class ResourcePresentation extends Panel {
 
     @SpringBean
     private AccessInfoProvider accessInfoProvider;
+    @SpringBean
+    private NodeResolver resolver;
+    @SpringBean
+    private AmsAuthorizationService authService;
+    @SpringBean
+    private AmsLicenseService licenseService;
+    
     private final ResourceReference openIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_green.png");
     private final ResourceReference licensedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_yellow.png");
     private final ResourceReference restrictedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_orange.png");
@@ -64,7 +67,7 @@ public final class ResourcePresentation extends Panel {
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
-    public ResourcePresentation(String id, TypedCorpusNode node, NodeResolver resolver, String userid, LicenseService licenseService, AuthorizationService aSrv) throws UnknownNodeException {
+    public ResourcePresentation(String id, TypedCorpusNode node, String userid) throws UnknownNodeException {
 	super(id);
 	//String nodeId = Integer.toString(node.getNodeURI());
 	final URL nodeURL = resolver.getUrl(node);
@@ -147,12 +150,10 @@ public final class ResourcePresentation extends Panel {
 
 
 	    // get the licenses for a nodeId
-	    List<NodeLicense> licenses = getLicenses(node, aSrv);
+	    List<AmsLicense> licenses = authService.getLicenseAcceptance(node.getNodeURI(), null); //TODO: UID?
 	    List<String[]> licenseViews = new ArrayList<String[]>();
-	    for (int i = 0; i < licenses.size(); i++) {
-		License license = licenses.get(i).getLicense();
-		String url = "";
-		//TODO replace URL by String url=licenseService.getLicenseLink(license);
+	    for (AmsLicense license:licenses) {
+		String url = licenseService.getLicenseLink(license);
 		String[] licenseData = new String[2];
 		licenseData[0] = license.getName();
 		licenseData[1] = url;
@@ -204,18 +205,5 @@ public final class ResourcePresentation extends Panel {
 	    add(tableContainer);
 
 	}
-    }
-
-    private List<NodeLicense> getLicenses(TypedCorpusNode node, AuthorizationService aSrv) {
-	List<NodeLicense> result = Collections.EMPTY_LIST;
-
-	MockAuthorizationService asrv = (MockAuthorizationService) aSrv;// TODO : remove mock once next TODO is done
-	try {
-	    //result = aSrv.getLicenseAcceptance(new NodeIDImpl(node.getNodeURI().toString()), null); //TODO: Accept URI nodeId's in AMS libraries
-	    result = asrv.getLicenseAcceptance(node.getNodeURI(), null); //TODO: remove line and uncomment previous line when previous TODO is fixed
-	} catch (DataSourceException e) {
-	    logger.error("Cannot get licenses from AMS for node: " + node + " (This can happen when AMS is not deployed or not running).");
-	}
-	return result;
     }
 }

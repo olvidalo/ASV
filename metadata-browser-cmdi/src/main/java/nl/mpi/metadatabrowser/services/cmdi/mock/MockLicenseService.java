@@ -16,121 +16,19 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
-import java.util.List;
-import nl.mpi.lat.ams.model.License;
-import nl.mpi.lat.ams.model.NodeLicense;
-import nl.mpi.lat.ams.service.LicenseService;
-import nl.mpi.lat.auth.principal.LatUser;
-import nl.mpi.lat.fabric.Node;
-import nl.mpi.lat.fabric.NodeID;
+import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicense;
+import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicenseService;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class MockLicenseService implements LicenseService {
+public class MockLicenseService implements AmsLicenseService {
 
-    public MockLicenseService() {
-    }
 
     @Override
-    public License newLicense() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public NodeLicense newNodeLicense() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public NodeLicense newNodeLicense(Node node, License lics) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<License> getLicenses() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<License> getEnabledLicenses() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void save(License lics) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveLicenses(List<License> licenses) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void delete(License lics) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<NodeLicense> getNodeLicenses() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<NodeLicense> getNodeLicenses(NodeID nodeID) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<License> getLicenses(NodeID nodeID) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void saveNodeLicenses(List<NodeLicense> nolicss) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void delete(List<NodeLicense> nolicss) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public License getLicense(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void staleNode(NodeID nodeID) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getLicenseRootDir() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getLicenseLink(License license) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void resetLicenseListByCreatorOrModifier(LatUser user, LatUser resetUser) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void resetNodeLicenseListByCreatorOrModifier(LatUser user, LatUser resetUser) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void resetNodePcplLicenseListByCreatorOrModifier(LatUser user, LatUser resetUser) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getLicenseLink(AmsLicense lcns) {
+	return "http://tla.mpi.nl/";
     }
     
 }

@@ -21,8 +21,6 @@ import javax.xml.transform.Templates;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.lat.ams.service.LicenseService;
-import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -57,8 +55,6 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     public static final String IMDI_XSL = "/imdi-viewer.xsl";
     public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
-    private final AuthorizationService authoSrv;
-    private final LicenseService licSrv;
     private final NodeResolver nodeResolver;
     private Templates imdiTemplates;
     private Templates cmdiTemplates;
@@ -68,18 +64,14 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     /**
      * 
      * @param nodeResolver
-     * @param authoSrv
-     * @param licSrv
      * @param imdiTemplates
      * @param cmdiTemplates 
      */
     @Autowired
-    public CMDINodePresentationProvider(NodeResolver nodeResolver, AuthorizationService authoSrv, LicenseService licSrv, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier,
+    public CMDINodePresentationProvider(NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier,
 	    @Qualifier("imdiTemplates") Templates imdiTemplates,
 	    @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
 	this.nodeResolver = nodeResolver;
-	this.authoSrv = authoSrv;
-	this.licSrv = licSrv;
 	this.imdiTemplates = imdiTemplates;
 	this.cmdiTemplates = cmdiTemplates;
         this.csp = csp;
@@ -99,7 +91,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		    return createMetadataTransformation(node, wicketId);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    logger.debug("Resource: presentation of resource info");
-                    return new ResourcePresentation(wicketId, node, nodeResolver, userId, licSrv, authoSrv);
+                    return new ResourcePresentation(wicketId, node, userId);
 		} else if(node.getNodeType() instanceof IMDIInfoType){
 		    logger.debug("Resource presentation for info file");
 		    return new ViewInfoFile(wicketId, nodeResolver, node);

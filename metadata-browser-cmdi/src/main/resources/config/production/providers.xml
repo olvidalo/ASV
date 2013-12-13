@@ -27,10 +27,6 @@
     <bean id="profileIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.ProfileIdentifierImpl" />
     <!-- Zip creation service -->
     <bean id="zipService" class="nl.mpi.metadatabrowser.services.cmdi.impl.ZipServiceImpl" />
-    <!-- AMS2 license service. Todo: replace with non-mock -->
-    <bean id="licSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService"/>
-    <!-- AMS2 authorisation service. Todo: replace with non-mock -->
-    <bean id="authoSrv" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService" />
     
     <!-- Tree model provider based on corpus structure -->    
     <bean id="treeModelProvider" class="nl.mpi.archiving.tree.corpusstructure.CorpusStructureTreeModelProvider">

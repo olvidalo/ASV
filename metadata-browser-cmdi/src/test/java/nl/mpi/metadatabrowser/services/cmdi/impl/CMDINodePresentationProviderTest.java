@@ -67,7 +67,6 @@ public class CMDINodePresentationProviderTest {
     private final MockTypedCorpusNode resourceNode = new MockTypedCorpusNode(new CMDIResourceTxtType(), "node:2", "IMDI MockNode");
     private NodeResolver nodeResolver;
     private AuthorizationService authSrv;
-    private LicenseService licSrv;
     private Templates imdiTemplates;
     private Templates cmdiTemplates;
     private Transformer transformer;
@@ -78,13 +77,11 @@ public class CMDINodePresentationProviderTest {
     @Before
     public void setUp() {
 	nodeResolver = context.mock(NodeResolver.class);
-	authSrv = context.mock(AuthorizationService.class);
-	licSrv = context.mock(LicenseService.class);
 	imdiTemplates = context.mock(Templates.class, "imdiTemplates");
 	cmdiTemplates = context.mock(Templates.class, "cmdiTemplates");
 	transformer = context.mock(Transformer.class);
         csp = context.mock(CorpusStructureProvider.class);
-	instance = new CMDINodePresentationProvider(nodeResolver, authSrv, licSrv, csp, nti, imdiTemplates, cmdiTemplates);
+	instance = new CMDINodePresentationProvider(nodeResolver, csp, nti, imdiTemplates, cmdiTemplates);
     }
 
     /**
