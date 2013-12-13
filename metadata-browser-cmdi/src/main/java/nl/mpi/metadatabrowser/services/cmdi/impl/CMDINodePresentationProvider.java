@@ -30,9 +30,11 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
@@ -97,8 +99,11 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		    return createMetadataTransformation(node, wicketId);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    logger.debug("Resource: presentation of resource info");
-		    return new ResourcePresentation(wicketId, node, nodeResolver, userId, licSrv, authoSrv);
-		} else {
+                    return new ResourcePresentation(wicketId, node, nodeResolver, userId, licSrv, authoSrv);
+		} else if(node.getNodeType() instanceof IMDIInfoType){
+		    logger.debug("Resource presentation for info file");
+		    return new ViewInfoFile(wicketId, nodeResolver, node);
+                } else {
 		    logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
 		    return new Label(wicketId, node.toString());
 		}
