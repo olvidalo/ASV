@@ -9,8 +9,12 @@
 	     * cmdi-production-providers: only the metadata browser providers/services beans
 	     * cmdi-production-csdb: only the corpus structure database beans
 	    
+	    * cmdi-adapter: combines all adapter profiles
+	     * cmdi-adapter-csdb: adapter implementation of corpus structure provider that connects to the 'old' (IMDI) corpus structure API
+	     * cmdi-adapter-ams: adapter implementation of License and Authorization services that wrap 'old' AMS services
+	    
 	    * cmdi-mock-csdb: mock implementation of CMDI CSDB
-	    * cmdi-adapter-csdb: adapter implementation of corpus structure provider that connects to the 'old' (IMDI) corpus structure API
+	    * cmdi-mock-ams: mock implementation of AMS License and Authorization services
     -->
   <Parameter name="spring.profiles.active" value="cmdi-production-providers, cmdi-adapter-csdb, cmdi-mock-ams"/>
 </Context>

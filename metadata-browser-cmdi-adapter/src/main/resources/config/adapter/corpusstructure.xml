@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
+       profile="cmdi-adapter,cmdi-adapter-csdb">
+    
+    <!-- 
+	Spring configuration of the corpus structure database beans for usage in a production environment.
+	
+	These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
+	or 'cmdi-production-csdb' is active.
+    -->
+    
+    <!-- CSDB factory for CorpusStructureAPI adapter -->
+    <bean id="csdbFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
+	<constructor-arg value="java:comp/env/jdbc/CSDB" />
+    </bean>
+    
+    <!-- Corpus structure provider created from factory -->
+    <bean id="corpusStructureProvider" factory-bean="csdbFactory" factory-method="createCorpusStructureProvider" />
+
+    <!-- Access info provider (also adapter) -->
+    <bean id="accessInfoProvider" factory-bean="csdbFactory" factory-method="createAccessInfoProvider" /> 
+    
+    <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
+    <bean id="nodeResolver" factory-bean="csdbFactory" factory-method="createNodeResolver" />
+    
+    <!--     Wrapper node resolver that wraps metadata URL's in the translation service to always get the CMDI version     
+    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.adapter.TranslatingNodeResolver">
+	<constructor-arg name="baseNodeResolver">
+	     Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider 
+	    <bean factory-bean="csdbFactory" factory-method="createNodeResolver" />
+	</constructor-arg>
+	<constructor-arg name="translationServiceBaseUri" value="http://tlatest01.mpi.nl/ds/TranslationService/" />
+    </bean>-->
+</beans>

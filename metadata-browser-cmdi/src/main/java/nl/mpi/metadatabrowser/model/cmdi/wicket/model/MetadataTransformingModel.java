@@ -31,7 +31,6 @@ import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
@@ -70,40 +69,40 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @throws NodeTypeIdentifierException
      */
     public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodePresentationException, nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
-        try {
-            logger.debug("Transforming node {} using templates {}", node, templates);
-            final InputStream in = nodeResolver.getInputStream(node);	// get the file
-            StringWriter strWriter = new StringWriter();
-            try {
-                final Transformer transformer = templates.newTransformer();
-                // set transformer options
-                transformer.setOutputProperty(OutputKeys.METHOD, "html");
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                transformer.setParameter("CORPUS_LINKING", "false");
-                transformer.setParameter("DOCUMENT_ID", node.toString());
-                transformNodeContent(strWriter, in, transformer);
-                if (node.getNodeType() instanceof IMDICorpusType) {
-                    strWriter = addCatalogueContentToCorpusView(node, transformer, strWriter, nodeResolver, csp, nodeTypeIdentifier);
-                }
-            } finally {
-                in.close();
-            }
+	try {
+	    logger.debug("Transforming node {} using templates {}", node, templates);
+	    final InputStream in = nodeResolver.getInputStream(node);	// get the file
+	    StringWriter strWriter = new StringWriter();
+	    try {
+		final Transformer transformer = templates.newTransformer();
+		// set transformer options
+		transformer.setOutputProperty(OutputKeys.METHOD, "html");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		transformer.setParameter("CORPUS_LINKING", "false");
+		transformer.setParameter("DOCUMENT_ID", node.toString());
+		transformNodeContent(strWriter, in, transformer);
+		if (node.getNodeType() instanceof IMDICorpusType) {
+		    strWriter = addCatalogueContentToCorpusView(node, transformer, strWriter, nodeResolver, csp, nodeTypeIdentifier);
+		}
+	    } finally {
+		in.close();
+	    }
 
-            // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-            content = strWriter.toString();
-        } catch (IOException ex) {
-            throw new NodePresentationException("Could not read metadata for transformation", ex);
-        } catch (TransformerException ex) {
-            throw new NodePresentationException("Could not transform metadata", ex);
-        } catch (NodeTypeIdentifierException ex) {
-            throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
-        }
+	    // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
+	    content = strWriter.toString();
+	} catch (IOException ex) {
+	    throw new NodePresentationException("Could not read metadata for transformation", ex);
+	} catch (TransformerException ex) {
+	    throw new NodePresentationException("Could not transform metadata", ex);
+	} catch (NodeTypeIdentifierException ex) {
+	    throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
+	}
     }
 
     @Override
     public String getObject() {
-        return content;
+	return content;
     }
 
     /**
@@ -129,18 +128,18 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @throws NodeTypeIdentifierException
      */
     private StringWriter addCatalogueContentToCorpusView(TypedCorpusNode node, Transformer transformer, StringWriter strWriter, NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, IOException, NodePresentationException, NodeTypeIdentifierException {
-        StringWriter result = strWriter;
+	StringWriter result = strWriter;
 
-        List<CorpusNode> catalogueNodeURLs = getCatalogueNodesUnderCorpus(node, csp, nodeTypeIdentifier);
-        if (!catalogueNodeURLs.isEmpty()) {
-            transformer.setParameter("DISPLAY_ONLY_BODY", "true");
-        }
-        for (CorpusNode catalogueNodeUrl : catalogueNodeURLs) {
-            InputStream in = nodeResolver.getInputStream(catalogueNodeUrl);
-            transformNodeContent(strWriter, in, transformer);
-            in.close();
-        }
-        return result;
+	List<CorpusNode> catalogueNodeURLs = getCatalogueNodesUnderCorpus(node, csp, nodeTypeIdentifier);
+	if (!catalogueNodeURLs.isEmpty()) {
+	    transformer.setParameter("DISPLAY_ONLY_BODY", "true");
+	}
+	for (CorpusNode catalogueNodeUrl : catalogueNodeURLs) {
+	    InputStream in = nodeResolver.getInputStream(catalogueNodeUrl);
+	    transformNodeContent(strWriter, in, transformer);
+	    in.close();
+	}
+	return result;
     }
 
     /**
@@ -157,18 +156,14 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @throws NodeTypeIdentifierException
      */
     private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
-        List<CorpusNode> result = new ArrayList<CorpusNode>();
-        List<CorpusNode> children = csp.getChildNodes(corpusNode.getNodeURI());
-        for (CorpusNode childNode : children) {
-            try {
-                if (nodeTypeIdentifier.getNodeType(childNode) instanceof IMDICatalogueType) {
-                    result.add(childNode);
-                }
-            } catch (UnknownNodeException e) {
-                logger.error("Node not found: " + e);
-            }
-        }
-        return result;
+	List<CorpusNode> result = new ArrayList<CorpusNode>();
+	List<CorpusNode> children = csp.getChildNodes(corpusNode.getNodeURI());
+	for (CorpusNode childNode : children) {
+	    if (nodeTypeIdentifier.getNodeType(childNode) instanceof IMDICatalogueType) {
+		result.add(childNode);
+	    }
+	}
+	return result;
     }
 
     /**
@@ -180,12 +175,12 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @throws NodePresentationException
      */
     private void transformNodeContent(StringWriter strWriter, InputStream in, Transformer transformer) throws NodePresentationException {
-        // Transform, outputting to string
-        final Source source = new StreamSource(in);
-        try {
-            transformer.transform(source, new StreamResult(strWriter));
-        } catch (TransformerException ex) {
-            throw new NodePresentationException("Could not transform metadata", ex);
-        }
+	// Transform, outputting to string
+	final Source source = new StreamSource(in);
+	try {
+	    transformer.transform(source, new StreamResult(strWriter));
+	} catch (TransformerException ex) {
+	    throw new NodePresentationException("Could not transform metadata", ex);
+	}
     }
 }

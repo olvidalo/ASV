@@ -58,6 +58,8 @@
     <modules>
 	<module>metadata-browser-api</module>
 	<module>metadata-browser-cmdi</module>
+	<module>metadata-browser-cmdi-adapter</module>
+	<module>metadata-browser-cmdi-cs2</module>
 	<module>metadata-browser-pages</module>
     </modules>
     
