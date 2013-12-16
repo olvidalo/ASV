@@ -44,55 +44,55 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
-    private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "View Node";
-    private boolean navType = false;
+    private final static String name = "View Node";
+    private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodePresentationProvider presentationProvider;
 
     @Autowired
     public CMDIViewNodeAction(NodePresentationProvider presentationProvider, NodeActionsConfiguration nodeActionsConfiguration) {
-        this.presentationProvider = presentationProvider;
-        this.nodeActionsConfiguration = nodeActionsConfiguration;
+	this.presentationProvider = presentationProvider;
+	this.nodeActionsConfiguration = nodeActionsConfiguration;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-        //Buil redirect to Annex here
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        URI targetURI = null;
-        UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-        if (node.getNodeType() instanceof CMDIResourceTxtType) {
-            //TODO get session id
-            URI nodeId = node.getNodeURI();
-            targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
-            navType = true;
-        }
-        if (navType == true) {
-            try {
-                final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
-                return new SimpleNodeActionResult(request);
-            } catch (MalformedURLException ex) {
-                logger.error("URL syntax exception:" + ex);
-            }
-        } else {
-            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    try {
-                        return presentationProvider.getNodePresentation(id, Collections.singleton(node));
-                    } catch (NodePresentationException ex) {
-                        throw new ControllerActionRequestException(ex);
-                    }
-                }
-            };
-            return new SimpleNodeActionResult(componentRequest);
-        }
-        return null;
+	//Buil redirect to Annex here
+	logger.debug("Action [{}] invoked on {}", getName(), node);
+	URI targetURI = null;
+	UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
+	boolean navType = false;
+	if (node.getNodeType() instanceof CMDIResourceTxtType) {
+	    //TODO get session id
+	    URI nodeId = node.getNodeURI();
+	    targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+	    navType = true;
+	}
+	if (navType == true) {
+	    try {
+		final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
+		return new SimpleNodeActionResult(request);
+	    } catch (MalformedURLException ex) {
+		logger.error("URL syntax exception:" + ex);
+	    }
+	} else {
+	    final ShowComponentRequest componentRequest = new ShowComponentRequest() {
+		@Override
+		public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+		    try {
+			return presentationProvider.getNodePresentation(id, Collections.singleton(node));
+		    } catch (NodePresentationException ex) {
+			throw new ControllerActionRequestException(ex);
+		    }
+		}
+	    };
+	    return new SimpleNodeActionResult(componentRequest);
+	}
+	return null;
     }
 
     @Override
     public String getName() {
-        return name;
+	return name;
     }
 }
