@@ -73,25 +73,6 @@
             <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>nl.mpi</groupId>
-            <artifactId>ams2</artifactId>
-            <version>1.4.9.1</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xalan</artifactId>
-                    <groupId>xalan</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>hibernate</artifactId>
-                    <groupId>org.hibernate</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <!-- Saxon for transformation for presentation -->
             <groupId>net.sf.saxon</groupId>
             <artifactId>saxon-xpath</artifactId>

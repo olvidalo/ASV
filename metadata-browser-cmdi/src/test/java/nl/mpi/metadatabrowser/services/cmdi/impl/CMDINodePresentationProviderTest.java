@@ -28,8 +28,6 @@ import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.lat.ams.service.LicenseService;
-import nl.mpi.lat.auth.authorization.AuthorizationService;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -66,7 +64,6 @@ public class CMDINodePresentationProviderTest {
     private final TypedCorpusNode imdiNode = new MockTypedCorpusNode(new IMDISessionType(), "node:2", "IMDI MockNode");
     private final MockTypedCorpusNode resourceNode = new MockTypedCorpusNode(new CMDIResourceTxtType(), "node:2", "IMDI MockNode");
     private NodeResolver nodeResolver;
-    private AuthorizationService authSrv;
     private Templates imdiTemplates;
     private Templates cmdiTemplates;
     private Transformer transformer;
