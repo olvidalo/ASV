@@ -6,7 +6,7 @@
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
-       profile="cmdi-adapter,cmdi-adapter-csdb">
+       profile="cmdi-production,cmdi-production-csdb,cmdi-adapter-csdb">
     
     <!-- 
 	Spring configuration of the corpus structure database beans for usage in a production environment.

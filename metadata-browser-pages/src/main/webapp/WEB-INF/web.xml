@@ -28,57 +28,7 @@
     <listener>
         <listener-class>de.mpg.aai.shhaa.config.ConfigContextListener</listener-class>
     </listener> 
-
     
-    <!-- Lana filter mapping -->
-    <!-- Comment the following filterMappings when using shibbolet   
-    <filter-mapping>
-        <filter-name>SsoFilter</filter-name>
-        <url-pattern>/protected/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>SsoFilter</filter-name>
-        <url-pattern>/corpman/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>SsoFilter</filter-name>
-        <url-pattern>/imdiToMets</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>SsoFilter</filter-name>
-        <url-pattern>/imdi_browser_header.jsp</url-pattern>
-    </filter-mapping>
-    -->
-    <!-- Lana filter mapping END -->
-
-    <!-- Login / Logout redirection filter -->
-    <filter>
-        <filter-name>LloFilter</filter-name>
-        <filter-class>nl.mpi.lat.auth.LoginLogoutRedirectFilter</filter-class>
-        <!--
-        <init-param>
-            <param-name>SHIB_LOGIN</param-name>
-            <param-value>/?shhaaDo=lI</param-value>
-        </init-param>
-        <init-param>
-            <param-name>SHIB_LOGOUT</param-name>
-            <param-value>/?shhaaDo=lO</param-value>
-        </init-param>
-        <init-param>
-            <param-name>LANA_LOGIN</param-name>
-            <param-value>/protected/login.jsp?login=1</param-value>
-        </init-param>
-        <init-param>
-            <param-name>LANA_LOGOUT</param-name>
-            <param-value>/protected/login.jsp?logout=1</param-value>
-        </init-param>
-        -->
-    </filter>
-    <filter-mapping>
-        <filter-name>LloFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    <!-- Login / Logout redirection filter END -->    
     <listener>
 	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>

@@ -34,54 +34,54 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 public final class HeaderPanel extends Panel {
 
     @SpringBean
-    private NodeActionsConfiguration nodeActionsConf;
+    private NodeActionsConfiguration nodeActionsConf; //TODO: Make separate headerConf and inject that to prevent dependency on CMDI impl
 
     public HeaderPanel(String id, HttpServletRequest request) {
-        super(id);
-        XForwardedRequestWrapper xf = new XForwardedRequestWrapper(request);
-        String user = xf.getRemoteUser();
+	super(id);
+	XForwardedRequestWrapper xf = new XForwardedRequestWrapper(request);
+	String user = xf.getRemoteUser();
 
-        add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
-            @Override
-            protected void onComponentTag(ComponentTag tag) {
-                super.onComponentTag(tag);
-                tag.put("target", "_blank");
-            }
-        });
+	add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
+	    @Override
+	    protected void onComponentTag(ComponentTag tag) {
+		super.onComponentTag(tag);
+		tag.put("target", "_blank");
+	    }
+	});
 
-        ExternalLink manualLink = new ExternalLink("manualLink", nodeActionsConf.getManualURL()) {
-            @Override
-            protected void onComponentTag(ComponentTag tag) {
-                super.onComponentTag(tag);
-                tag.put("target", "_blank");
-            }
-        };
+	ExternalLink manualLink = new ExternalLink("manualLink", nodeActionsConf.getManualURL()) {
+	    @Override
+	    protected void onComponentTag(ComponentTag tag) {
+		super.onComponentTag(tag);
+		tag.put("target", "_blank");
+	    }
+	};
 
-        ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
+	ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
-        ExternalLink userLoginLink;
-        if (user == null || user.trim().equals("")) {
-            userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
-        } else {
-            userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
-        }
+	ExternalLink userLoginLink;
+	if (user == null || user.trim().equals("")) {
+	    userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
+	} else {
+	    userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
+	}
 
-        Link<Void> userName = new Link<Void>("userName") {
-            @Override
-            public void onClick() {
-                getBeforeDisabledLink();
-            }
+	Link<Void> userName = new Link<Void>("userName") {
+	    @Override
+	    public void onClick() {
+		getBeforeDisabledLink();
+	    }
 
-            @Override
-            public boolean isEnabled() {
-                return super.isEnabled() && false;
-            }
-        };
-        userName.add(new Label("user", "user : " + user));
-        add(userName);
-        add(manualLink);
-        add(registerLink);
-        add(userLoginLink);
+	    @Override
+	    public boolean isEnabled() {
+		return super.isEnabled() && false;
+	    }
+	};
+	userName.add(new Label("user", "user : " + user));
+	add(userName);
+	add(manualLink);
+	add(registerLink);
+	add(userLoginLink);
 //        add(userLogoutLink);
     }
 }
