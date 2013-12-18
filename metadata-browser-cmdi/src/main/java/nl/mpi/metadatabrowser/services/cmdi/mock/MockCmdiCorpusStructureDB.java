@@ -64,7 +64,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     public boolean getStatus() {
 	return true;
     }
-    
+
     @Override
     public URI getHandleResolverURI() {
 	return URI.create("http://hdl.handle.net/");
@@ -108,5 +108,10 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     @Override
     public List<URI> getObjectsByChecksum(String checksum) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getChildNodeCount(URI nodeUri) throws UnknownNodeException {
+	return getChildNodeURIs(nodeUri).size();
     }
 }
