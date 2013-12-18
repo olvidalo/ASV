@@ -42,10 +42,10 @@
             </ignore>
 		
 		<!-- configures the view-control targets -->
-<!--            <pages>
+            <pages>
             <info action="dI">HomePage.html</info>
                 <denied action="dD">pages/noaccess.jsp</denied> 
-            </pages>-->
+            </pages>
 		
         </handler>
 	
