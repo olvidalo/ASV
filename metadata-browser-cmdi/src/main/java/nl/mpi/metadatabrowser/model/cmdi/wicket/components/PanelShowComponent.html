@@ -6,24 +6,25 @@
         <title>PanelShowContent</title>
     </head>
     <body>
-        <h1>Bookmark an archive node or resource</h1>
         <wicket:panel>            
-            <div wicket:id="formContainer">
+        <h1>Cite this resource</h1>
+            <div wicket:id="formInfoContainer">
                 You selected a node from the archive: <br/>
                 <form wicket:id="nodeInfoForm">
+                    <p><span wicket:id="name">Name</span> from The Language Archive: <a href="" wicket:id="handleLink"></a></p>
+                    <p><em>The link above comes with a persistent guarantee. It will remain stable and can thus be safely used for citation in publications and on websites.</em></p>                 
+                </form></div><br />
+            <div wicket:id="formDetailsContainer">               
+                <input type="button" value="show details..." wicket:id="showDetails" />          
+                <form wicket:id="nodeInfoDetails">
+
+                   
                     Internal node id: <span wicket:id="nodeId">Node id</span><br/>
-                    Name: <span wicket:id="name">Name</span><br/>
                     Title: <span wicket:id="title">title</span><br/>
-
-                    Handle: <span wicket:id="handle">Handle</span><br/>
-                    URL: <span wicket:id="url">URL</span><br/>
-
+                    Link to the node: <a href="" wicket:id="nodeLink"></a><br/>
                     <br/>
                     To save a reference to the CMDI Browser with the tree opened to this node, bookmark the following link:<br/>
-                    <a href="<%=webapp%>?openpath=<%=encnodeid%>" target="parent"> name</a><br/>
-                    <span wicket:id="bookmark">bookmark</span><br/>
-
-
+                    <a href="" wicket:id="openpath" target="parent">name</a><br/>
                     <br/>
                     <br/>
                     <h1>Cite an archive node or resource</h1>

@@ -19,16 +19,18 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,93 +44,77 @@ public final class PanelShowComponent extends Panel {
     private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
 
     public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnknownNodeException, UnsupportedEncodingException {
-	super(id);
-        String encnodeid =  null;
-	final Form form = new Form("nodeInfoForm");
-	String nodeName = node.getName();
-	URI nodeId = node.getNodeURI();
-	String title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getParentNodeURIs(nodeId));
-       // String webapp = response.encodeRedirectURL(request.getContextPath( ));
-
-        if(nodeId !=null){
-            encnodeid=URLEncoder.encode(nodeId.toString(), "UTF-8");
+        super(id);
+        final Form form = new Form("nodeInfoForm");
+        final Form formDetails = new Form("nodeInfoDetails") {
+            @Override
+            public void onEvent(IEvent<?> event) {
+                super.onEvent(event);
+            }
+        };
+        String nodeName = node.getName();
+        URI nodeId = node.getNodeURI();
+        String title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getParentNodeURIs(nodeId));
+        Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
+        String lastModified = "";
+        if (objectFileTime != null) {
+            lastModified = new Date(objectFileTime.getTime()).toString();
         }
-        
-	Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
-	String lastModified = "";
-	if (objectFileTime != null) {
-	    lastModified = new Date(objectFileTime.getTime()).toString();
-	}
 
-	String resolver = csdb.getHandleResolverURI().toString();
-	String archive_name = "archive"; //TODO enable csdb.getArchiveRoots().getArchiveName();
-	if (archive_name == null) {
-	    archive_name = "unknown";
-	}
+        String resolver = csdb.getHandleResolverURI().toString();
+        String archive_name = "archive"; //TODO enable csdb.getArchiveRoots().getArchiveName();
+        if (archive_name == null) {
+            archive_name = "unknown";
+        }
 
-	//TODO: Check if nodeURI is handle or skip
-	String handle = node.getNodeURI().toString();
+        String handle = node.getPID().toString();
+        String wrapHandle = handle;
+        if (handle.contains(":")) {
+            wrapHandle = handle.split(":")[1];
+        }
 
-	final String archiveName = archive_name;
-	final String resolvedHandle = resolver.concat(handle);
+        final String archiveName = archive_name;
+        final String resolvedHandle = resolver.concat(wrapHandle);
 
-	URL url = nodeResolver.getUrl(node);
+        URL url = nodeResolver.getUrl(node);
 
-	// create citations to be displayed
-	StringBuilder sb = new StringBuilder();
-	if (handle == null || handle.equals("")) {
-	    sb.append("<br/>Some browsers support direct use of \"handle URIs\", if that is the case you can bookmark the following link:<br/>");
-	    sb.append("Handle link to resource: <a href=\"");
-	    sb.append("hdl:");
-	    sb.append(handle);
-	    sb.append("\">");
-	    sb.append(nodeName).append("</a><br/>");
-	    sb.append("<br/>To save a link to the resource using the central handle resolver, bookmark the following link:<br/>");
-	    sb.append("Handle link via central resolver to resource: <a href=\"");
-	    sb.append(resolvedHandle);
-	    sb.append("\">");
-	    sb.append(nodeName);
-	    sb.append("</a><br/>");
-	    sb.append("<br/>To save the URL for this resource which is NOT guaranteed to be persistent, bookmark the following link:<br/>");
-	    sb.append("URL link to resource: <a href=\"");
-	    sb.append(url);
-	    sb.append("\">");
-	    sb.append(nodeName);
-	    sb.append("</a><br/>");
-	} else {
-	    sb.append("<br/>To save the URL for this resource which is NOT guaranteed to be persistent, bookmark the following link:<br/>");
-	    sb.append("URL link to resource: <a href='");
-	    sb.append(url);
-	    sb.append("'>");
-	    sb.append(nodeName);
-	    sb.append("</a><br/>");
-	}
+        form.add(new Label("name", nodeName));
+        ExternalLink handleLink = new ExternalLink("handleLink", wrapHandle.concat("@view"), wrapHandle.concat("@view"));
+        form.add(handleLink);
 
 
-	// HANDLE bookmark action here
-	form.add(new Label("nodeId", nodeId.toString()));
-	form.add(new Label("name", nodeName));
-	form.add(new Label("handle", handle));
-	form.add(new Label("url", url == null ? "-" : url.toString()));
-	form.add(new Label("title", title));
-       // form.add(new Label("openTreeReference", ));
-	Label bookmarkLabel = new Label("bookmark", sb.toString());
-	bookmarkLabel.setEscapeModelStrings(false);
-	form.add(bookmarkLabel);
+        //embeded citation down the page
+        ExternalLink openpath = new ExternalLink("openpath", "?openpath" + node.getNodeURI(), nodeName);
+        formDetails.add(openpath);
+        formDetails.add(new Label("nodeId", nodeId.toString()));
+        formDetails.add(new Label("title", title));
 
-	//embeded citation down the page
-	form.add(new Label("cite_title", title));
-	form.add(new Label("author", "unknwon"));
-	form.add(new Label("archive_name", archiveName));
-	form.add(new Label("format", node.getNodeType().getName()));
-	form.add(new Label("last_modified", lastModified));
-	form.add(new Label("cite_handle", handle));
-	form.add(new Label("resolvedHandle", resolvedHandle));
+        formDetails.add(new Label("cite_title", title));
+        formDetails.add(new Label("author", "unknwon"));
+        formDetails.add(new Label("archive_name", archiveName));
+        formDetails.add(new Label("format", node.getNodeType().getName()));
+        formDetails.add(new Label("last_modified", lastModified));
+        formDetails.add(new Label("cite_handle", wrapHandle));
+        formDetails.add(new Label("resolvedHandle", resolvedHandle));
+        formDetails.add(new ExternalLink("nodeLink", url.toString(), url.toString()));
+        formDetails.setVisible(false);
 
-	// Put details/submit form in container for refresh through AJAX
-	final MarkupContainer formContainer = new WebMarkupContainer("formContainer");
-	formContainer.add(form);
-	// Add container to page
-	add(formContainer);
+        Link showDetails = new Link("showDetails") {
+            @Override
+            public void onClick() {
+                formDetails.setVisible(true);
+            }
+        };
+
+        // Put details/submit form in container for refresh through AJAX
+        final MarkupContainer formInfoContainer = new WebMarkupContainer("formInfoContainer");
+        formInfoContainer.add(form);
+        // Add container to page
+        add(formInfoContainer);
+
+        final MarkupContainer formDetailsContainer = new WebMarkupContainer("formDetailsContainer");
+        formDetailsContainer.add(showDetails);
+        formDetailsContainer.add(formDetails);
+        add(formDetailsContainer);
     }
 }
