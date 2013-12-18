@@ -97,7 +97,7 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
 
     @Override
     public URI getPID() {
-	return corpusNode.getNodeURI();
+	return corpusNode.getPID();
     }
 
     @Override

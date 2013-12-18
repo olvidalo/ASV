@@ -70,7 +70,7 @@ ul#navigation .ViewNode a{
     background-image: url(picture-view-icon.png);
 	background-repeat:no-repeat;
 }
-ul#navigation .FileInformation a{
+ul#navigation .Citation a{
     background-image: url(Bookmarks-icon.png);
 	background-repeat:no-repeat;
 }
