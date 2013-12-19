@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -57,11 +58,12 @@ public class CMDIRrsNodeAction implements NodeAction {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
         URI targetURI = null;
         NavigationActionRequest request = null;
-        UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL());
+        UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
         for (TypedCorpusNode node : nodes) {
             //Buil redirect to RRS
             URI nodeId = node.getNodeURI();
-            targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+            String nodeid = AdapterUtils.toNodeIdString(nodeId);
+            targetURI = uriBuilder.queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         }
         try {
             request = new NavigationActionRequest(targetURI.toURL());

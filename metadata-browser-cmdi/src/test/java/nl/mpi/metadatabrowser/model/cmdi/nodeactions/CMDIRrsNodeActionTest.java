@@ -19,8 +19,9 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
@@ -82,9 +83,12 @@ public class CMDIRrsNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-        nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/");
+        String id =AdapterUtils.toNodeIdString(NODE_ID);
+        nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/RrsIndex");
 
-        StringBuilder url = new StringBuilder(nodeActionsConfiguration.getRrsURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + "session_id");
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
+               URI targetURI =  url.queryParam("nodeid", id).queryParam("jsessionID", "session_id").build();
+                
 
         context.checking(new Expectations() {
             {
@@ -105,6 +109,6 @@ public class CMDIRrsNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(url.toString(), navigationActionRequest.getTargetURL().toString());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }
