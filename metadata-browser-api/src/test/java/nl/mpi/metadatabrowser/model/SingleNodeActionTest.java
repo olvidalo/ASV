@@ -32,6 +32,7 @@ import static org.junit.Assert.fail;
  */
 public class SingleNodeActionTest {
 
+    
     private Mockery context = new JUnit4Mockery();
 
     /**

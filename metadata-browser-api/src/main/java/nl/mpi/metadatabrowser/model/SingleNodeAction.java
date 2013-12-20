@@ -18,6 +18,8 @@ package nl.mpi.metadatabrowser.model;
 
 import java.net.URI;
 import java.util.Collection;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Convenience base class for node actions that only act on single nodes
@@ -25,6 +27,8 @@ import java.util.Collection;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public abstract class SingleNodeAction implements NodeAction {
+    @Autowired
+    protected AuthenticationHolder auth;
 
     /**
      * Executes {@link #execute(java.net.URI) } for the single node contained by the node URIs list
@@ -51,4 +55,9 @@ public abstract class SingleNodeAction implements NodeAction {
      * @throws NodeActionException if any error occurs during node exception
      */
     protected abstract NodeActionResult execute(TypedCorpusNode node) throws NodeActionException;
+    
+    
+    public void setAuthenticationHolder(AuthenticationHolder auth){
+        this.auth = auth;
+    }
 }
