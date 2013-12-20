@@ -29,7 +29,9 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthenticationHolderImpl;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +52,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     private final NodeResolver nodeResolver;
     private final AccessInfoProvider accessInfoProvider;
     //TODO: decide where does userid comes from and implement accordingly
-    private String userid;
+
 
     @Autowired
     public CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessInfoProvider accessInfoProvider) {
@@ -66,11 +68,12 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
+        String userid= auth.getPrincipalName();
 	final URL nodeUri = nodeResolver.getUrl(node);
 
 	try {
 	    // HANDLE download action here
-	    if (userHasAccess(node, nodeUri)) {
+	    if (userHasAccess(node, nodeUri, userid)) {
 		final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
 		final String fileName = new File(nodeUri.getPath()).getName();
 		final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
@@ -83,7 +86,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 	}
     }
 
-    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri) throws UnknownNodeException {
+    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri, String userid) throws UnknownNodeException {
 	final boolean hasaccess;
 	if (userid == null || userid.equals("") || userid.equals("anonymous")) {
 	    hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);

@@ -24,6 +24,9 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
+import nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthenticationHolderImpl;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -41,6 +44,7 @@ public class CMDIDownloadNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
     private final static URI NODE_ID = URI.create("node:1");
+    private final AuthenticationHolder auth = context.mock(AuthenticationHolder.class);
 
     public CMDIDownloadNodeActionTest() {
     }
@@ -69,10 +73,12 @@ public class CMDIDownloadNodeActionTest {
 	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
 	final AccessInfoProvider aiProvider = context.mock(AccessInfoProvider.class);
+        final MockAuthenticationHolderImpl auth = new MockAuthenticationHolderImpl();
+        auth.setPrincipalName(null);// this is a test for no authenticated user
 
 	context.checking(new Expectations() {
-	    {
-		oneOf(nodeResolver).getUrl(node);
+	    {               
+                oneOf(nodeResolver).getUrl(node);
 		will(returnValue(new URL("http://my/nodeUri")));
 
 		allowing(node).getNodeURI();
@@ -87,6 +93,7 @@ public class CMDIDownloadNodeActionTest {
 	});
 
 	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver, aiProvider);
+        instance.setAuthenticationHolder(auth);
 	NodeActionResult result = instance.execute(node);
 	ControllerActionRequest actionRequest = result.getControllerActionRequest();
 	assertNotNull(actionRequest);
