@@ -38,6 +38,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -71,6 +72,9 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
 	super(id, model);
 
+        // add a panel to show feedback information (updated on model change, i.e. node selection)
+        add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
+        
 	// Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
 	nodeActionsPanel = new NodesActionsPanel("nodeActions");
 	nodeActionsPanel.setOutputMarkupId(true);

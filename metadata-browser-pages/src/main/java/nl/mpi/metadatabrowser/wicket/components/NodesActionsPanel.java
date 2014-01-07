@@ -55,7 +55,6 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
     public NodesActionsPanel(String id, NodeActionsStructure model) {
         super(id, new Model<NodeActionsStructure>(model));
 
-        add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
         add(new ListView<NodeAction>("nodeActions", new NodeActionsListModel(getModel())) {
             @Override
             protected void populateItem(ListItem<NodeAction> item) {

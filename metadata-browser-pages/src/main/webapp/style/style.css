@@ -8,61 +8,6 @@ body{
     height:100%;
 }
 
-div#nodePanel{
-    height: 100%;
-}
-
-div#actionsPanelContainer{
-    overflow:hidden;
-    height: 37px;
-}
-
-div#actionsPanel input {
-    font-size: medium;
-}
-
-div#nodePresentation {
-    overflow: auto;
-    height: 100%;
-}
-
-div#treePanel{
-    overflow: auto;
-    bottom:0;
-    float: left;
-    width: 20em;
-    border: 1px solid;
-}
-
-
-div#treePanel div.archiveTree{
-    margin-right: 0px;
-}
-
-.feedbackPanelERROR{
-    background: lightcoral;
-}
-
-.feedbackPanelINFO{
-    background: lightblue;
-}
-
-ul.feedbackPanel{
-    /*    padding-left: 20.5em;*/
-    /*    float:left;*/
-    padding:0;
-    /*    position:fixed;*/
-    width: 100%;
-    /*    margin-top:50px;*/
-    border: 1px #ccc;
-}
-
-ul.feedbackPanel li{
-    list-style: none;
-    font-weight: bold;
-    padding: 2px;
-}
-
 div#headerPanel {
     background: none repeat scroll 0 0 #00688B;
     height: 20px;
@@ -94,4 +39,57 @@ ul#headerInformationContainer li a{
     float:left;
     color:white;
     text-decoration: none;
+}
+
+div#treePanel{
+    overflow: auto;
+    bottom:0;
+    float: left;
+    width: 20em;
+    border: 1px solid;
+}
+
+div#treePanel div.archiveTree{
+    margin-right: 0px;
+}
+
+div#nodePanel{
+    height: 100%;
+}
+
+div#feedbackPanel{
+    overflow: hidden;
+}
+
+.feedbackPanelERROR{
+    background: lightcoral;
+}
+
+.feedbackPanelINFO{
+    background: lightblue;
+}
+
+ul.feedbackPanel{
+    padding:0;
+    border: 1px #ccc;
+}
+
+ul.feedbackPanel li{
+    list-style: none;
+    font-weight: bold;
+    padding: 2px;
+}
+
+div#actionsPanelContainer{
+    overflow:hidden;
+    height: 37px;
+}
+
+div#actionsPanel input {
+    font-size: medium;
+}
+
+div#nodePresentation {
+    overflow: auto;
+    height: 100%;
 }
