@@ -1,19 +1,13 @@
 /* CSS Document */
 ul#navigation {
-/*    position: fixed;*/
-    margin: 0px;
-    padding: 0px;
-    float:left;
-/*    top: 20px;
+    position: absolute;
     overflow: hidden;
-    left: 337px;
-    list-style: none;
-    z-index:9999;*/
+    margin:0; 
+    padding:0;
 }
 ul#navigation li {
     width: 100px;
     display:inline;
-    float:right;
 }
 ul#navigation li a {
     display: block;
@@ -28,16 +22,16 @@ ul#navigation li a {
     text-decoration: none;
     text-align: center;
     padding-top: 80px;
-	-moz-border-radius:0px 0px 10px 10px;
+    -moz-border-radius:0px 0px 10px 10px;
     -webkit-border-bottom-right-radius: 10px;
     -webkit-border-bottom-left-radius: 10px;
     -khtml-border-bottom-right-radius: 10px;
     -khtml-border-bottom-left-radius: 10px;
-/*    opacity: 0.7;*/
+    /*    opacity: 0.7;*/
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
 }
 ul#navigation span:hover{
-     background-color:#CAE3F2;
+    background-color:#CAE3F2;
 }
 ul#navigation span{
     letter-spacing:2px;
@@ -47,32 +41,32 @@ ul#navigation span{
 }
 ul#navigation .MetadataSearch a{
     background-image: url(search-icon.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 }
 ul#navigation .ManageAccessRights a{
     background-image: url(access-icon.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 }
 ul#navigation .Download a{
     background-image: url(Download-icon.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 
 }
 ul#navigation .Downloadsubtree a{
     background-image: url(Download-Folder-icon.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 }
 ul#navigation .ResoourceAccess a{
     background-image: url(rss.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 }
 ul#navigation .ViewNode a{
     background-image: url(picture-view-icon.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 }
 ul#navigation .Citation a{
     background-image: url(Bookmarks-icon.png);
-	background-repeat:no-repeat;
+    background-repeat:no-repeat;
 }
 
 

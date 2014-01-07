@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/metadata-browser-pages">
-  <Parameter description="Default Spring profile, may be overridden using spring.profiles.active"
-	     name="spring.profiles.default" 
-	     value="cmdi-production"/>
+  <Parameter description="Default Spring profile, may be overridden using spring.profiles.active" name="spring.profiles.default" value="cmdi-production"/>
   <!-- 
 	Spring profile for runtime. Actual beans may come from dependency, also see contextConfigLocation parameter in web.xml. 
 	
@@ -23,7 +21,6 @@
 	    * cmdi-mock-csdb: mock implementation of CMDI CSDB
 	    * cmdi-mock-ams: mock implementation of AMS License and Authorization services
     -->
-    
-    <!-- as long as there are no non-adapter ams services, use the following for cs2: -->
-    <!--<Parameter name="spring.profiles.active" value="cmdi-production-providers, cmdi-mock-ams"/>-->
+  <!-- as long as there are no non-adapter ams services, use the following for cs2: -->
+  <!--<Parameter name="spring.profiles.active" value="cmdi-production-providers, cmdi-mock-ams"/>-->
 </Context>

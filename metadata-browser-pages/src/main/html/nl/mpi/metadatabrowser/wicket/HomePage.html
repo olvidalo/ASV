@@ -4,16 +4,37 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:wicket="http://wicket.apache.org">
     <head>
-	<title>Metadata Browser</title>
-	<link rel="stylesheet" href="style/style.css" type="text/css" media="screen" title="Stylesheet" />
-	<link rel="stylesheet" href="style/aboutStyle.css" type="text/css" media="screen" title="Stylesheet" />
+        <title>Metadata Browser</title>
+        <link rel="stylesheet" href="style/style.css" type="text/css" media="screen" title="Stylesheet" />
+        <link rel="stylesheet" href="style/aboutStyle.css" type="text/css" media="screen" title="Stylesheet" />
         <link rel="shortcut icon" href="favicon.ico" type="image/ico" />
     </head>
-    <body onload="init_viewer('imdi-viewer-open.gif','imdi-viewer-closed.gif');">
+    <body onload="init_viewer('imdi-viewer-open.gif', 'imdi-viewer-closed.gif');">   
         <div wicket:id="headerPanel" id="headerPanel">[HEADER PANEL]</div>
-	<div id="wrap">
-	    <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>>
-	    <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
-	</div>
-    </body>
+
+            <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
+            <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>
+
+        <script>
+        function doLayout() {
+            var variousDecorationsHeight = 2;
+            var extraDecorationsForMainPanel =37;
+            var treepanel = $("#treePanel");
+            var actionWrapper = $("#actionsPanelContainer");
+            var nodePanel = $("#nodePanel");
+            var nodePresentationContainer = $("#nodePresentation");
+            var header = $("#headerPanel");
+            var heightForTreeMenu = $(window).height() - header.height() - variousDecorationsHeight;
+            var heightForMainPanel = $(window).height() - header.height() - extraDecorationsForMainPanel;
+
+            treepanel.height(heightForTreeMenu);
+            nodePresentationContainer.height(heightForMainPanel);
+        }
+
+        $(function() {
+            $(window).resize(doLayout);
+            doLayout();
+        });
+        </script>
+    </body>    
 </html>

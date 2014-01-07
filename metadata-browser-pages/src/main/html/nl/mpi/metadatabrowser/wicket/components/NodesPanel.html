@@ -7,13 +7,19 @@
     </head>
     <body>
         <wicket:panel>
-	    <div id="actionsPanelContainer">
-		<div id="actionsPanel" wicket:id="nodeActions">
-		</div>
-	    </div>
-	    <div id="nodePresentation" wicket:id="nodePresentationContainer">
-		<div wicket:id="nodePresentation">[NODE PRESENTATION]</div>
-	    </div>
+            <div id="actionsPanelContainer">
+                <div id="actionsPanel" wicket:id="nodeActions">
+                </div>
+            </div>
+            <div id="nodePresentation" wicket:id="nodePresentationContainer">
+                <div wicket:id="nodePresentation">[NODE PRESENTATION]</div>
+            </div>
+            <script>
+                $(function() {
+            $(window).resize(doLayout);
+            doLayout();
+        });
+            </script>
         </wicket:panel>
     </body>
 </html>

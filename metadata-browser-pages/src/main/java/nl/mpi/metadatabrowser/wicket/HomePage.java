@@ -21,6 +21,7 @@ import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.LinkType;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
