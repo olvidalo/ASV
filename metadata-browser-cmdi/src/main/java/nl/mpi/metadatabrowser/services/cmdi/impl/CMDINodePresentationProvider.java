@@ -80,9 +80,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
-	//TODO : decide where does userId comes from and implement accordingly
 	logger.debug("Making node presentation for nodes {}", nodes);
-	final String userId = "";
 	if (nodes.size() == 1) {
 	    final TypedCorpusNode node = nodes.iterator().next();
 	    try {
@@ -91,7 +89,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		    return createMetadataTransformation(node, wicketId);
 		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
 		    logger.debug("Resource: presentation of resource info");
-                    return new ResourcePresentation(wicketId, node, userId);
+                    return new ResourcePresentation(wicketId, node);
 		} else if(node.getNodeType() instanceof IMDIInfoType){
 		    logger.debug("Resource presentation for info file");
 		    return new ViewInfoFile(wicketId, nodeResolver, node);

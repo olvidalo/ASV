@@ -49,44 +49,44 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     @Autowired
     public CMDIMultipleDownloadNodeAction(ZipService zipService) {
-	this.zipService = zipService;
+        this.zipService = zipService;
 
     }
 
     @Override
     public String getName() {
-	return "Download Subtree";
+        return "Download Subtree";
     }
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), node);
-	try {
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+        try {
             String userid = auth.getPrincipalName();
-	    final File zipFile = zipService.createZipFileForNodes(node, userid);
-            if(zipFile == null){
+            final File zipFile = zipService.createZipFileForNodes(node, userid);
+            if (zipFile == null) {
                 logger.error("none of the files are accessible to user : " + userid);
                 return new SimpleNodeActionResult(String.format("User %s has no access to any of the nodes. No zip could be created.", userid));
             }
-	    IResourceStream resStream = new FileResourceStream(zipFile) {
-		@Override
-		public void close() throws IOException {
-		    super.close();
-		    logger.debug("Zip file download completed. Removing {} from file system.", zipFile);
-		    if (!zipFile.delete()) {
-			logger.warn("Could not remove zip file: {}", zipFile);
-		    }
-		}
-	    };
-	    final String filename = String.format("package_%s.zip", FilenameUtils.getBaseName(node.getName()));
-	    final DownloadActionRequest request = new DownloadActionRequest(filename, resStream);
+            IResourceStream resStream = new FileResourceStream(zipFile) {
+                @Override
+                public void close() throws IOException {
+                    super.close();
+                    logger.debug("Zip file download completed. Removing {} from file system.", zipFile);
+                    if (!zipFile.delete()) {
+                        logger.warn("Could not remove zip file: {}", zipFile);
+                    }
+                }
+            };
+            final String filename = String.format("package_%s.zip", FilenameUtils.getBaseName(node.getName()));
+            final DownloadActionRequest request = new DownloadActionRequest(filename, resStream);
 
-	    return new SimpleNodeActionResult(request);
-	} catch (IOException ex) {
-	    logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
-	    throw new NodeActionException(this, ex);
-	} catch (UnknownNodeException ex) {
-	    throw new NodeActionException(this, ex);
-	}
+            return new SimpleNodeActionResult(request);
+        } catch (IOException ex) {
+            logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
+            throw new NodeActionException(this, ex);
+        } catch (UnknownNodeException ex) {
+            throw new NodeActionException(this, ex);
+        }
     }
 }

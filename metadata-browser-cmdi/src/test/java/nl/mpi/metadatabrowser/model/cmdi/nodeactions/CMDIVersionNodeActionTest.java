@@ -22,6 +22,7 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthenticationHolderImpl;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -68,8 +69,11 @@ public class CMDIVersionNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        final MockAuthenticationHolderImpl auth = new MockAuthenticationHolderImpl();
+        auth.setPrincipalName(null);
 
         CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
+        instance.setAuthenticationHolder(auth);
         NodeActionResult result = instance.execute(node);
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();

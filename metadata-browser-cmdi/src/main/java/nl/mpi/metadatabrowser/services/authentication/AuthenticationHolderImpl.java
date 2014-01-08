@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.authentication;
 
+import java.io.Serializable;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -23,11 +24,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class AuthenticationHolderImpl implements AuthenticationHolder {
+public class AuthenticationHolderImpl implements AuthenticationHolder, Serializable {
 
     @Override
     public String getPrincipalName() {        
-      return SecurityContextHolder.getContext().getAuthentication().getName();
+      String userid = SecurityContextHolder.getContext().getAuthentication().getName();
+      String user[] = userid.split(";");
+        for (int i = 0; i<user.length; i++) {
+            if (user[i].contains("Username")) {
+                int index = user[i].indexOf("Username");
+                userid = user[i].substring(index + 9);
+                break;
+            }      
     }
-
+        return userid;
+    }
 }

@@ -32,6 +32,7 @@ import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,6 +45,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -59,6 +61,8 @@ public final class ResourcePresentation extends Panel {
     private AmsAuthorizationService authService;
     @SpringBean
     private AmsLicenseService licenseService;
+    @SpringBean
+    protected AuthenticationHolder auth;
     
     private final ResourceReference openIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_green.png");
     private final ResourceReference licensedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_yellow.png");
@@ -67,9 +71,10 @@ public final class ResourcePresentation extends Panel {
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
-    public ResourcePresentation(String id, TypedCorpusNode node, String userid) throws UnknownNodeException {
+    public ResourcePresentation(String id, TypedCorpusNode node) throws UnknownNodeException {
 	super(id);
 	//String nodeId = Integer.toString(node.getNodeURI());
+        final String userid = auth.getPrincipalName();
 	final URL nodeURL = resolver.getUrl(node);
 	if (nodeURL != null) {
 	    Boolean hasaccess;

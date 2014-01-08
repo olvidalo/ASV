@@ -43,34 +43,32 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
     private final String name = "Version";
     private final CorpusStructureProvider csdb;
     private final NodeResolver resolver;
-    //TODO : decide where does userId comes from and implement accordingly
-    private String userId;
 
     @Autowired
     public CMDIVersionNodeAction(CorpusStructureProvider csdb, NodeResolver resolver) {
-	this.csdb = csdb;
-	this.resolver = resolver;
+        this.csdb = csdb;
+        this.resolver = resolver;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), node);
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+        final String userid = auth.getPrincipalName();      
+        //TO DO connect to versionAPI DB
+        final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
 
-	//TO DO connect to versionAPI DB
-	final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
-
-	final ShowComponentRequest request = new ShowComponentRequest() {
-	    @Override
-	    public org.apache.wicket.Component getComponent(String id) {
-		// create panel form for version action
-		return new PanelVersionComponent(id, node, csdb, resolver, userId, versions);
-	    }
-	};
-	return new SimpleNodeActionResult(request);
+        final ShowComponentRequest request = new ShowComponentRequest() {
+            @Override
+            public org.apache.wicket.Component getComponent(String id) {
+                // create panel form for version action
+                return new PanelVersionComponent(id, node, csdb, resolver, userid, versions);
+            }
+        };
+        return new SimpleNodeActionResult(request);
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 }
