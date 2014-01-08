@@ -24,7 +24,9 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthenticationHolderImpl;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.jmock.Expectations;
@@ -72,7 +74,6 @@ public class CMDIMultipleDownloadNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-
         ZipService zipService = context.mock(ZipService.class);
         CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
 
@@ -90,12 +91,15 @@ public class CMDIMultipleDownloadNodeActionTest {
 
         final ZipService zipService = context.mock(ZipService.class);
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final MockAuthenticationHolderImpl auth = new MockAuthenticationHolderImpl();
         final String userId = null;
 
         final File zipFile = File.createTempFile("test", "txt");
         final FileWriter fileWriter = new FileWriter(zipFile);
         fileWriter.write("Test content");
         fileWriter.close();
+
+        auth.setPrincipalName(null);
 
         context.checking(new Expectations() {
             {
@@ -108,6 +112,7 @@ public class CMDIMultipleDownloadNodeActionTest {
         });
 
         CMDIMultipleDownloadNodeAction instance = new CMDIMultipleDownloadNodeAction(zipService);
+        instance.setAuthenticationHolder(auth);
         NodeActionResult result = instance.execute(node);
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

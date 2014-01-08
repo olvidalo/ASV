@@ -46,7 +46,6 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final ZipService zipService;
-    private String userid;
 
     @Autowired
     public CMDIMultipleDownloadNodeAction(ZipService zipService) {
@@ -63,7 +62,12 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
 	logger.debug("Action [{}] invoked on {}", getName(), node);
 	try {
+            String userid = auth.getPrincipalName();
 	    final File zipFile = zipService.createZipFileForNodes(node, userid);
+            if(zipFile == null){
+                logger.error("none of the files are accessible to user : " + userid);
+                return new SimpleNodeActionResult(String.format("User %s has no access to any of the nodes. No zip could be created.", userid));
+            }
 	    IResourceStream resStream = new FileResourceStream(zipFile) {
 		@Override
 		public void close() throws IOException {

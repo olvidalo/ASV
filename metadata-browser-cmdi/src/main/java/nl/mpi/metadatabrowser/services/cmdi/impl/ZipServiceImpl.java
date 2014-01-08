@@ -88,10 +88,14 @@ public class ZipServiceImpl implements ZipService, Serializable {
 	//create object of ZipOutputStream from FileOutputStream
 	final ZipOutputStream zout = new ZipOutputStream(fout);
 
-	addChildren(zout, node.getNodeURI(), userid, 0);
+	int filesAdded = addChildren(zout, node.getNodeURI(), userid, 0);
+        if(filesAdded == 0){
+            return null;
+        }else {
 	//close the ZipOutputStream
 	zout.close();
 	return tmpFile;
+        }
     }
 
     /**
@@ -104,9 +108,10 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @param overallSize long: check the limit of the zip file size.
      * @throws UnknownNodeException
      */
-    private void addChildren(ZipOutputStream zout, URI nodeUri, String userid, int itemsAdded) throws UnknownNodeException {
+    private int addChildren(ZipOutputStream zout, URI nodeUri, String userid, int itemsAdded) throws UnknownNodeException {
 	final List<CorpusNode> childrenNodes = new CopyOnWriteArrayList<CorpusNode>(csdb.getChildNodes(nodeUri));
 	boolean hasaccess;
+        int filesAdded =0;
 	if (childrenNodes.size() > 0) {
 	    for (CorpusNode childNode : childrenNodes) {
 		URI childUri = childNode.getNodeURI();
@@ -125,17 +130,18 @@ public class ZipServiceImpl implements ZipService, Serializable {
 		    break;
 		}
 		if (!csdb.getChildNodes(childUri).isEmpty()) {
-		    zipFile(zout, childNode, userid, itemsAdded); // here zip parent file
+		    filesAdded = zipFile(zout, childNode, userid, itemsAdded, filesAdded); // here zip parent file
 		    addChildren(zout, childUri, userid, itemsAdded);// getChildren for parent file
 		    continue;
 		} else {
-		    zipFile(zout, childNode, userid, itemsAdded);
-		}
+		   filesAdded = zipFile(zout, childNode, userid, itemsAdded, filesAdded);
+		}               
 	    }
 	} else { // might as well be a node without children. But parent node might have children
 	    logger.error("Error: called resources-download for  node without children");
 
 	}
+        return filesAdded;
     }
 
     /**
@@ -164,7 +170,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @param itemsAdded int : number of items to be added. should be 1 to process
      * @throws UnknownNodeException
      */
-    private void zipFile(ZipOutputStream zout, CorpusNode childNode, String userid, int itemsAdded) throws UnknownNodeException {
+    private int zipFile(ZipOutputStream zout, CorpusNode childNode, String userid, int itemsAdded, int filesAdded) throws UnknownNodeException {
 	boolean hasaccess;
 	try {
 	    if (itemsAdded > 0) { // must be minimum 1 to proceed = 1 accessible resource for user
@@ -190,6 +196,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
 				zout.write(buffer, 0, length);
 			    }
 			    zout.closeEntry();
+                            filesAdded++;
 			    overallSize += ze.getCompressedSize(); // increment zip size for latter limit size check
 			    logger.info("Copied resource: " + childNodeUrl + "  to zipFile");
 			} catch (NullPointerException e) {
@@ -208,5 +215,6 @@ public class ZipServiceImpl implements ZipService, Serializable {
 	} catch (IOException ioe) {
 	    logger.error("IOException :" + ioe);
 	}
+        return filesAdded;
     }
 }
