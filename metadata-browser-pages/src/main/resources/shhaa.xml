@@ -31,7 +31,6 @@
 	
         <authorization>
             <location  target="/loginPage.html" />
-<!--            <location  target="/corpman/*" />-->
         </authorization>
 	
 	

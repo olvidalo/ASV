@@ -63,7 +63,7 @@ public final class HeaderPanel extends Panel {
 	if (user == null || user.trim().equals("")) {
 	    userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
 	} else {
-	    userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
+	    userLoginLink = new ExternalLink("userLoginLink", request.getContextPath()+"/logout", "logout");
 	}
 
 	Link<Void> userName = new Link<Void>("userName") {
