@@ -60,8 +60,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     @Autowired(required = true)
     private CMDISearchNodeAction searchNodeAction;
     @Autowired(required = true)
-    private CMDIStatsNodeAction statsNodeAction;
-    @Autowired(required = true)
     private CMDITrovaNodeAction trovaNodeAction;
     @Autowired(required = true)
     private CMDIVersionNodeAction versionNodeAction;
@@ -89,7 +87,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		trovaNodeAction,
 		amsNodeAction,
 		rrsNodeAction,
-		statsNodeAction,
 		bookmarkNodeAction,
 		downloadNodeAction,
 		multipleDownloadNodeAction,
@@ -100,7 +97,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		trovaNodeAction,
 		amsNodeAction,
 		rrsNodeAction,
-		statsNodeAction,
 		bookmarkNodeAction,
 		downloadNodeAction,
 		versionNodeAction);
@@ -116,7 +112,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 	resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
 		amsNodeAction,
 		rrsNodeAction,
-		statsNodeAction,
 		viewNodeAction,
 		bookmarkNodeAction,
 		downloadNodeAction,
@@ -126,7 +121,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 		trovaNodeAction,
 		amsNodeAction,
 		rrsNodeAction,
-		statsNodeAction,
 		viewNodeAction,
 		bookmarkNodeAction,
 		downloadNodeAction,

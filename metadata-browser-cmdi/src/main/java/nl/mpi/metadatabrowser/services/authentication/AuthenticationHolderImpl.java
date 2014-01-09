@@ -24,7 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class AuthenticationHolderImpl implements AuthenticationHolder, Serializable {
+public class AuthenticationHolderImpl implements AuthenticationHolder {
 
     @Override
     public String getPrincipalName() {        
