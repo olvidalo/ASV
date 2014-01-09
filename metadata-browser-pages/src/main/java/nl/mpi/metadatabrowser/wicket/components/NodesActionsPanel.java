@@ -67,6 +67,9 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 actionLink.add(new Label("linkLabel", action.getName()));
                 item.add(actionLink);
                 String className = action.getName().replaceAll("\\s", "");
+                if(className.equals("ResourceAccess(RRS)")){
+                    className = "ResourceAccess";
+                }
                 item.add(new AttributeAppender("class", className));
             }
         });

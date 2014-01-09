@@ -39,12 +39,19 @@ ul#navigation span{
     color:#60ACD8;
     text-shadow: 0 -1px 1px #fff;
 }
+
 ul#navigation .MetadataSearch a{
-    background-image: url(search-icon.png);
+    background-image: url(Metadata-Search-icon.png);
     background-repeat:no-repeat;
 }
+
+ul#navigation .AnnotationContentSearch a{
+    background-image: url(Annotation-Search-icon.png);
+    background-repeat:no-repeat;  
+}
+
 ul#navigation .ManageAccessRights a{
-    background-image: url(access-icon.png);
+    background-image: url(User-Access-icon.png);
     background-repeat:no-repeat;
 }
 ul#navigation .Download a{
@@ -52,21 +59,26 @@ ul#navigation .Download a{
     background-repeat:no-repeat;
 
 }
-ul#navigation .Downloadsubtree a{
+ul#navigation .DownloadSubtree a{
     background-image: url(Download-Folder-icon.png);
     background-repeat:no-repeat;
 }
-ul#navigation .ResoourceAccess a{
-    background-image: url(rss.png);
+ul#navigation .ResourceAccess a{
+    background-image: url(Resource-Access-icon.png);
     background-repeat:no-repeat;
 }
 ul#navigation .ViewNode a{
-    background-image: url(picture-view-icon.png);
+    background-image: url(Picture-View-icon.png);
     background-repeat:no-repeat;
 }
 ul#navigation .Citation a{
     background-image: url(Bookmarks-icon.png);
     background-repeat:no-repeat;
+}
+
+ul#navigation .Version a {
+    background-image: url(Feature-Versioning-icon.png);
+    background-repeat:no-repeat; 
 }
 
 
