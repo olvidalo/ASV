@@ -89,7 +89,17 @@ div#actionsPanel input {
     font-size: medium;
 }
 
-div#nodePresentation {
+div#nodePresentationContainer {
     overflow: auto;
+    height: 100%;
+}
+
+div#nodePresentation{
+    height:100%;
+    overflow:hidden;
+}
+
+#iframe {
+    width: 100%;
     height: 100%;
 }
