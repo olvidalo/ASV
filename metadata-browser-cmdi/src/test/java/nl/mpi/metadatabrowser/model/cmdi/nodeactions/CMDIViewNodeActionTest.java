@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -71,6 +72,7 @@ public class CMDIViewNodeActionTest {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final NodePresentationProvider presentationProvider = context.mock(NodePresentationProvider.class);
+        final NodeResolver resolver = context.mock(NodeResolver.class);
         nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
         StringBuilder url = new StringBuilder(nodeActionsConfiguration.getAnnexURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + new URI("session_number"));
         context.checking(new Expectations() {
@@ -80,7 +82,7 @@ public class CMDIViewNodeActionTest {
             }
         });
 
-        CMDIViewNodeAction instance = new CMDIViewNodeAction(presentationProvider, nodeActionsConfiguration);
+        CMDIViewNodeAction instance = new CMDIViewNodeAction(presentationProvider, nodeActionsConfiguration, resolver);
         NodeActionResult result = instance.execute(node);
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

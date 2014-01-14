@@ -18,8 +18,14 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.annot.search.lib.SearchClient;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -30,8 +36,10 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,55 +52,73 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
+    private NodeResolver resolver;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final static String name = "View Node";
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodePresentationProvider presentationProvider;
 
     @Autowired
-    public CMDIViewNodeAction(NodePresentationProvider presentationProvider, NodeActionsConfiguration nodeActionsConfiguration) {
-	this.presentationProvider = presentationProvider;
-	this.nodeActionsConfiguration = nodeActionsConfiguration;
+    public CMDIViewNodeAction(NodePresentationProvider presentationProvider, NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver) {
+        this.presentationProvider = presentationProvider;
+        this.nodeActionsConfiguration = nodeActionsConfiguration;
+        this.resolver = nodeResolver;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-	//Buil redirect to Annex here
-	logger.debug("Action [{}] invoked on {}", getName(), node);
-	URI targetURI = null;
-	UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-	boolean navType = false;
-	if (node.getNodeType() instanceof CMDIResourceTxtType) {
-	    //TODO get session id
-	    URI nodeId = node.getNodeURI();
-	    targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
-	    navType = true;
-	}
-	if (navType == true) {
-	    try {
-		final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
-		return new SimpleNodeActionResult(request);
-	    } catch (MalformedURLException ex) {
-		logger.error("URL syntax exception:" + ex);
-	    }
-	} else {
-	    final ShowComponentRequest componentRequest = new ShowComponentRequest() {
-		@Override
-		public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-		    try {
-			return presentationProvider.getNodePresentation(id, Collections.singleton(node));
-		    } catch (NodePresentationException ex) {
-			throw new ControllerActionRequestException(ex);
-		    }
-		}
-	    };
-	    return new SimpleNodeActionResult(componentRequest);
-	}
-	return null;
+        //Buil redirect to Annex here
+        logger.debug("Action [{}] invoked on {}", getName(), node);
+        URI targetURI = null;
+        UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
+        String[] formats = SearchClient.getSearchableFormats();
+        List<String> formatslist = new ArrayList<String>(formats.length);
+        formatslist.addAll(Arrays.asList(formats));
+        boolean navType = false;
+        if (node.getNodeType() instanceof CMDIResourceTxtType && formatslist.contains(node.getFormat())) {
+            //TODO get session id
+            URI nodeId = node.getNodeURI();// should be handle
+            navType = true;
+            if(("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")){
+            targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+            }else{
+               targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build(); 
+            }
+        }
+//        } else{
+//            URL nodeURL = resolver.getUrl(node);
+//            if(nodeURL.getProtocol().equals("file")){
+//
+//            }
+//        }
+            
+        
+        if (navType == true) {
+            try {
+                final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
+                return new SimpleNodeActionResult(request);
+            } catch (MalformedURLException ex) {
+                logger.error("URL syntax exception:" + ex);
+            }
+        } else {
+            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+//                    try {
+                       // return presentationProvider.getNodePresentation(id, Collections.singleton(node));
+                        return new ViewInfoFile(id, resolver, node);
+//                    } catch (NodePresentationException ex) {
+//                        throw new ControllerActionRequestException(ex);
+//                    }
+                }
+            };
+            return new SimpleNodeActionResult(componentRequest);
+        }
+        return null;
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 }

@@ -22,6 +22,7 @@ import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
@@ -29,7 +30,6 @@ import org.apache.wicket.util.resource.IResourceStream;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public final class ViewInfoFile extends Panel {
-
     public ViewInfoFile(String id, NodeResolver nodeResolver, CorpusNode node) {
         super(id);
         final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
