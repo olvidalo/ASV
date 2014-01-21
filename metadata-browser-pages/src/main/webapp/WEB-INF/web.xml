@@ -28,15 +28,19 @@
     <listener>
         <listener-class>de.mpg.aai.shhaa.config.ConfigContextListener</listener-class>
     </listener> 
-    <listener>
+<!--    <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
+    </listener>-->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <context-param>  
         <param-name>contextConfigLocation</param-name>  
-        <param-value>classpath*:config/**/*.xml</param-value>  
+        <param-value>classpath*:config/**/*.xml, classpath:spring-config/core.xml,classpath:spring-config/persistence.xml,classpath:spring-config/datasource-jndi.xml</param-value>  
+    </context-param>
+        <context-param> <!-- used when shibboleth is enabled ignored otherwise -->
+        <param-name>ShhaaConfigLocation</param-name>
+        <param-value>/WEB-INF/shhaa.xml</param-value>
     </context-param>
 
     <filter>
@@ -59,7 +63,7 @@
         <filter-name>wicket.metadata-browser-pages</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping> 
-    <security-constraint>
+<!--    <security-constraint>
         <display-name>
             prevents direct access to raw jsp pages.
         </display-name>
@@ -79,5 +83,17 @@
         <description> The role that is required to log in to the Application
         </description>
         <role-name>tomcat</role-name>
-    </security-role> 
+    </security-role> -->
+    <resource-ref>
+        <description>CS Datasource</description>
+        <res-ref-name>jdbc/CSDB</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <resource-ref>
+        <description>versioning Datasource</description>
+        <res-ref-name>jdbc/VERSDB</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 </web-app>
