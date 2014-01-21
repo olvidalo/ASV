@@ -19,6 +19,8 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -82,8 +84,10 @@ public class CMDISearchNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
+        String id =AdapterUtils.toNodeIdString(NODE_ID);
         nodeActionsConfiguration.setMdSearchURL("http://lux16.mpi.nl/ds/imdi_search/strucsearch.jsp");
-        StringBuilder url = new StringBuilder(nodeActionsConfiguration.getMdSearchURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + new URI("session_number"));
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getMdSearchURL());
+                URI targetURI =  url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_number")).build();
 
         context.checking(new Expectations() {
             {
@@ -104,6 +108,6 @@ public class CMDISearchNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(url.toString(), navigationActionRequest.getTargetURL().toString());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }

@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -61,7 +62,8 @@ public class CMDISearchNodeAction implements NodeAction {
         for (TypedCorpusNode node : nodes) {
             //Buil redirect to CMDI Search
             URI nodeId = node.getNodeURI();
-            uriBuilder = uriBuilder.queryParam("nodeid", nodeId);
+            String nodeid = AdapterUtils.toNodeIdString(nodeId);
+            uriBuilder = uriBuilder.queryParam("nodeid", nodeid);
         }
         try {
             targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();

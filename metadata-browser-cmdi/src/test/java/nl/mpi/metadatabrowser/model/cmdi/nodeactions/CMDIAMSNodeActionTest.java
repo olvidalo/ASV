@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -85,8 +86,10 @@ public class CMDIAMSNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
+        String id =AdapterUtils.toNodeIdString(NODE_ID);
         nodeActionsConfiguration.setAmsURL("http://lux16.mpi.nl/am/ams2/index.face");
-        URL url = new URL(nodeActionsConfiguration.getAmsURL() + "?nodeid=" + NODE_ID + "&jsessionID=" + new URI("session_id"));
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
+        URI targetURI =  url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
 
         context.checking(new Expectations() {
             {
@@ -107,6 +110,6 @@ public class CMDIAMSNodeActionTest {
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(url.toString(), navigationActionRequest.getTargetURL().toString());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }

@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.MalformedURLException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -57,7 +58,8 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         logger.debug("Action [{}] invoked on {}", getName(), node);
                 // Build redirect to AMS
                         URI nodeId = node.getNodeURI();
-        URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+                        String nodeid = AdapterUtils.toNodeIdString(nodeId);
+        URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         NavigationActionRequest request = null;
         try {
             request = new NavigationActionRequest(targetURI.toURL());
