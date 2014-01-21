@@ -90,8 +90,11 @@ public final class ResourcePresentation extends Panel {
                 hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
             }
 
-            //TODO: May not be handle, check
-            String handle = node.getNodeURI().toString();
+            String handle = node.getPID().toString();
+            String wrapHandle = handle;
+            if (handle.contains(":")) {
+                wrapHandle = handle.split(":")[1];
+            }
             String nodetype = "unknown";
             String format = node.getFormat();
 
@@ -207,8 +210,8 @@ public final class ResourcePresentation extends Panel {
             // Add all labels to table container to be displayed in html
             tableContainer.add(licensesLabel);
             tableContainer.add(new Label("hasaccess", hasaccess.toString()));
-            tableContainer.add(new Label("nodeId", node.getNodeURI().toString()));
-            tableContainer.add(new Label("handle", handle));
+            tableContainer.add(new Label("nodeId", nodeid));
+            tableContainer.add(new Label("handle", wrapHandle));
             tableContainer.add(new Label("url", nodeURL.toString()));
             tableContainer.add(new Label("nodetype", nodetype));
             tableContainer.add(new Label("format", format));

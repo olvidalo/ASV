@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -45,6 +46,7 @@ public final class PanelShowComponent extends Panel {
 
     public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnknownNodeException, UnsupportedEncodingException {
         super(id);
+        String title;
         final Form form = new Form("nodeInfoForm");
         final Form formDetails = new Form("nodeInfoDetails") {
             @Override
@@ -54,7 +56,12 @@ public final class PanelShowComponent extends Panel {
         };
         String nodeName = node.getName();
         URI nodeId = node.getNodeURI();
-        String title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getParentNodeURIs(nodeId));
+        URI parent = csdb.getCanonicalParent(nodeId);
+        if (parent == null){
+            title = String.format("Resource \"%s\" is root node", node.getName());
+        }else {
+        title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getNode(parent).getName());
+        }
         Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
         String lastModified = "";
         if (objectFileTime != null) {
@@ -86,7 +93,7 @@ public final class PanelShowComponent extends Panel {
         //embeded citation down the page
         ExternalLink openpath = new ExternalLink("openpath", "?openpath" + node.getNodeURI(), nodeName);
         formDetails.add(openpath);
-        formDetails.add(new Label("nodeId", nodeId.toString()));
+        formDetails.add(new Label("nodeId", AdapterUtils.toNodeIdString(nodeId)));
         formDetails.add(new Label("title", title));
 
         formDetails.add(new Label("cite_title", title));
