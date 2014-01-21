@@ -30,7 +30,7 @@
 
 	
         <authorization>
-            <location  target="/loginPage.html" />
+            <location  target="/login.jsp" />
         </authorization>
 	
 	
@@ -42,7 +42,7 @@
 		
 		<!-- configures the view-control targets -->
             <pages>
-            <info action="dI">HomePage.html</info>
+<!--            <info action="dI">/WEB-INF/classes/nl/mpi/metadatabrowser/wicket/HomePage.html</info>-->
                 <denied action="dD">pages/noaccess.jsp</denied> 
             </pages>
 		

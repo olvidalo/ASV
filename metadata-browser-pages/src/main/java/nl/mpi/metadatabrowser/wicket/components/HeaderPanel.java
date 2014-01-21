@@ -17,7 +17,9 @@
 package nl.mpi.metadatabrowser.wicket.components;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.SecurityContext;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import nl.mpi.metadatabrowser.wicket.HomePage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -60,12 +62,13 @@ public final class HeaderPanel extends Panel {
 	ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
 	ExternalLink userLoginLink;
-	if (user == null || user.trim().equals("")) {
-	    userLoginLink = new ExternalLink("userLoginLink", "loginPage.html");
-	} else {
-	    userLoginLink = new ExternalLink("userLoginLink", request.getContextPath()+"/logout", "logout");
-	}
-
+        if (user == null || user.trim().equals("")) {
+            user="anonymous";
+	    userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
+        } else {
+	    userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");
+        }
+        
 	Link<Void> userName = new Link<Void>("userName") {
 	    @Override
 	    public void onClick() {
