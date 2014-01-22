@@ -47,7 +47,7 @@ public class CMDIRrsNodeAction implements NodeAction {
     public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
     }
-    
+
     @Override
     public String getName() {
         return "Resource Access (RRS)";

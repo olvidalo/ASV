@@ -45,11 +45,11 @@ public class NodeActionsConfiguration implements Serializable {
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
-    public String forceHttpOrHttps;
-    public String forceHttpsPrefix;
-    
+    private String forceHttpOrHttps;
+    private String forceHttpsPrefix;
+
     private static Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
-    
+
     // what to assume as default for "same" protocol if it is not known whether https is used
     final boolean ssl = false;
 
@@ -81,13 +81,21 @@ public class NodeActionsConfiguration implements Serializable {
         return manualURL;
     }
 
+    public String getMdSearchURL() {
+        return mdSearchURL;
+    }
+
+    public String getForceHttpOrHttps(){
+        return forceHttpOrHttps;
+    }
+
+    public String getForceHttpsPrefix (){
+        return forceHttpsPrefix;
+    }
     /**
      *
      * @return
      */
-    public String getMdSearchURL() {
-        return mdSearchURL;
-    }
 
     @Value("${nl.mpi.amsUrl}")
     public void setAmsURL(String amsURL) {
@@ -134,7 +142,7 @@ public class NodeActionsConfiguration implements Serializable {
     public void setForceHttpOrHttps(String forceHttpOrHttps){
         this.forceHttpOrHttps = forceHttpOrHttps;
     }
-    
+
         @Value("${nl.mpi.imdiBrowser.forceHttpsPrefix}")
     public void setForceHttpsPrefix(String forceHttpsPrefix){
         this.forceHttpsPrefix = forceHttpsPrefix;
@@ -166,7 +174,7 @@ public class NodeActionsConfiguration implements Serializable {
         }
         return url;
     }
-    
+
     /** If 'parameter' is null, log an error about 'name' not being set. */
     private void checkWarning(String parameter, String name) {
         if (parameter != null) {
