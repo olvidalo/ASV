@@ -81,7 +81,7 @@ public final class ResourcePresentation extends Panel {
         //String nodeId = Integer.toString(node.getNodeURI());
         final String userid = auth.getPrincipalName();
         String nodeid = AdapterUtils.toNodeIdString(node.getNodeURI());
-        final URL nodeURL = resolver.getUrl(node);
+        final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         if (nodeURL != null) {
             Boolean hasaccess;
             if (userid == null || userid.equals("") || userid.equals("anonymous")) {
@@ -209,10 +209,14 @@ public final class ResourcePresentation extends Panel {
 
             // Add all labels to table container to be displayed in html
             tableContainer.add(licensesLabel);
-            tableContainer.add(new Label("hasaccess", hasaccess.toString()));
+            if (hasaccess) {
+                tableContainer.add(new Label("hasaccess", "yes"));
+            } else {
+                tableContainer.add(new Label("hasaccess", "no"));
+            }
             tableContainer.add(new Label("nodeId", nodeid));
             tableContainer.add(new Label("handle", wrapHandle));
-            tableContainer.add(new Label("url", nodeURL.toString()));
+            tableContainer.add(new Label("url", nodeURL));
             tableContainer.add(new Label("nodetype", nodetype));
             tableContainer.add(new Label("format", format));
             tableContainer.add(new Label("checksum", checksum));
@@ -221,7 +225,7 @@ public final class ResourcePresentation extends Panel {
 
             tableContainer.add(new Label("userid", userid));
 
-            tableContainer.add(new ExternalLink("link", nodeURL.toString(), "link"));
+            tableContainer.add(new ExternalLink("link", nodeURL, "link"));
             tableContainer.add(requestLink);
             // Add container to page
             add(tableContainer);
