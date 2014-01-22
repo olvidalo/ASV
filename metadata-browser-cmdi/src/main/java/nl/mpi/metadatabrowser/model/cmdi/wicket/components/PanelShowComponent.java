@@ -99,7 +99,7 @@ public final class PanelShowComponent extends Panel {
         formDetails.add(new Label("cite_title", title));
         formDetails.add(new Label("author", "unknwon"));
         formDetails.add(new Label("archive_name", archiveName));
-        formDetails.add(new Label("format", node.getNodeType().getName()));
+        formDetails.add(new Label("format", node.getFormat()));
         formDetails.add(new Label("last_modified", lastModified));
         formDetails.add(new Label("cite_handle", wrapHandle));
         formDetails.add(new Label("resolvedHandle", resolvedHandle));

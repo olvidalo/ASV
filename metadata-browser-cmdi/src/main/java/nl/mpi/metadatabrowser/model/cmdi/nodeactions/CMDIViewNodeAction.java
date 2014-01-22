@@ -82,7 +82,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             if(("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")){
             targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
             }else{
-               targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build(); 
+               targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
             }
         }
 //        } else{
@@ -91,8 +91,8 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 //
 //            }
 //        }
-            
-        
+
+
         if (navType == true) {
             try {
                 final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
@@ -104,12 +104,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-//                    try {
-                       // return presentationProvider.getNodePresentation(id, Collections.singleton(node));
                         return new ViewInfoFile(id, resolver, node);
-//                    } catch (NodePresentationException ex) {
-//                        throw new ControllerActionRequestException(ex);
-//                    }
                 }
             };
             return new SimpleNodeActionResult(componentRequest);
