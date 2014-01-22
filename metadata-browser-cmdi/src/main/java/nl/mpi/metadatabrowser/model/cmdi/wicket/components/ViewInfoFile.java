@@ -19,10 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
