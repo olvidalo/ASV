@@ -21,11 +21,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Session;
@@ -48,86 +51,76 @@ public class PanelVersionComponent extends Panel {
     private final Logger logger = LoggerFactory.getLogger(PanelVersionComponent.class);
     @SpringBean
     private AccessInfoProvider accessInfoProvider;
+    @SpringBean
+    private NodeActionsConfiguration nodeActionsConfiguration;
 
     public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, MockVersioningAPI versions) {
-	super(id);
-	try {
-	    List versionsNodeIds = null;
+        super(id);
+        try {
+            List versionsNodeIds = null;
 
-	    // create marker for html wicket table
-	    RepeatingView repeating = new RepeatingView("rowItems");
-	    add(repeating);
+            // create marker for html wicket table
+            RepeatingView repeating = new RepeatingView("rowItems");
+            add(repeating);
 
-	    boolean showRetired = true;
+            boolean showRetired = true;
 
-	    //versions = new VersioningAPI(Configuration.getInstance().versDBConnectionURL);
-	    if (versions.getStatus("versioningTableInfo")) {
-		versionsNodeIds = versions.getAllVersions(node.getNodeURI(), showRetired);
-	    }
-	    URL nodeURL = resolver.getUrl(node);
-	    if ((nodeURL != null)) {
-		Boolean hasaccess; // check accessibility node for the user
-		if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-		    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
-		} else {
-		    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
-		}
+            //versions = new VersioningAPI(Configuration.getInstance().versDBConnectionURL);
+            if (versions.getStatus("versioningTableInfo")) {
+                versionsNodeIds = versions.getAllVersions(node.getNodeURI(), showRetired);
+            }
+            URL nodeURL = resolver.getUrl(node);
+            String handleResolver = csdb.getHandleResolverURI().toString();
+            if ((nodeURL != null)) {
+                Boolean hasaccess; // check accessibility node for the user
+                if (userid == null || userid.equals("") || userid.equals("anonymous")) {
+                    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
+                } else {
+                    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
+                }
 
-		// loop through the list of versions for a node to write them in the table.
-		if (versionsNodeIds != null && versionsNodeIds.size() > 0) {
-		    for (int v = 0; v < versionsNodeIds.size(); v++) {
-			// for each loop add a row
-			AbstractItem item = new AbstractItem(repeating.newChildId());
-			repeating.add(item);
+                // loop through the list of versions for a node to write them in the table.
+                if (versionsNodeIds != null && versionsNodeIds.size() > 0) {
+                    for (int v = 0; v < versionsNodeIds.size(); v++) {
+                        // for each loop add a row
+                        AbstractItem item = new AbstractItem(repeating.newChildId());
+                        repeating.add(item);
+                        URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
+                        URL currentNodeUrlStr = resolver.getUrl(node);
+                        String secureCurrentNodeUrlStr = nodeActionsConfiguration.processLinkProtocol(currentNodeUrlStr.toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));// request.isSecure() unless override active
+                        // add fields for each row
+                        Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
+                        item.add(new Label("hasaccess", hasaccess.toString()));
+                        item.add(new Label("currentNodeDate", currentNodeDate.toString()));
+                        item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, AdapterUtils.toNodeIdString(node.getNodeURI())));
+                        item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + node.getPID().toString()).build().toString(), node.getPID().toString()));
 
-			URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
-//                        URI currentNodePid = csdb.getObjectPID(currentNodeId);
-//                        URI currentNodeUrlStr = null;
-//                        if (currentNodePid != null) {
-//                            currentNodeUrlStr = csdb.getObjectPID(nodeId);
-//                        } else {
-//                            URI currentNodeUrl = csdb.getObjectURI(currentNodeId);
-//                            if (currentNodeUrl != null) {
-//                                currentNodeUrlStr = currentNodeUrl;
-//                            }
-//                        }
+                        final int idx = v;
+                        item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {
+                            private static final long serialVersionUID = 1L;
 
-			URL currentNodeUrlStr = resolver.getUrl(node);
+                            @Override
+                            public String getObject() {
+                                return (idx % 2 == 1) ? "even" : "odd";
+                            }
+                        }));
+                    }
 
-			// add fields for each row
-			// TODO check wicket links when real node URI is available
-			Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
-			item.add(new Label("hasaccess", hasaccess.toString()));
-			item.add(new Label("currentNodeDate", currentNodeDate.toString()));
-			item.add(new ExternalLink("linktoNode", currentNodeUrlStr.toString(), "link to the node"));
-			item.add(new ExternalLink("linktoPID", currentNodeUrlStr.toString(), "link to the PID of the node"));
-
-			final int idx = v;
-			item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {
-			    private static final long serialVersionUID = 1L;
-
-			    @Override
-			    public String getObject() {
-				return (idx % 2 == 1) ? "even" : "odd";
-			    }
-			}));
-		    }
-
-		} else { // list is empty
-		    //TODO decide if it is revelant to display table with no value or simply return a message.
-		    repeating.add(new Label("hasaccess", hasaccess.toString()));
-		    repeating.add(new Label("currentNodeDate", "unknown"));
-		    repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
-		    repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
-		    add(repeating);
-		}
-	    }
-	} catch (URISyntaxException ex) {
-	    Session.get().error(ex.getMessage());
-	    logger.error("", ex);
-	} catch (UnknownNodeException ex) {
-	    Session.get().error(ex.getMessage());
-	    logger.error("", ex);
-	}
+                } else { // list is empty
+                    //TODO decide if it is revelant to display table with no value or simply return a message.
+                    repeating.add(new Label("hasaccess", hasaccess.toString()));
+                    repeating.add(new Label("currentNodeDate", "unknown"));
+                    repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
+                    repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
+                    add(repeating);
+                }
+            }
+        } catch (URISyntaxException ex) {
+            Session.get().error(ex.getMessage());
+            logger.error("", ex);
+        } catch (UnknownNodeException ex) {
+            Session.get().error(ex.getMessage());
+            logger.error("", ex);
+        }
     }
 }
