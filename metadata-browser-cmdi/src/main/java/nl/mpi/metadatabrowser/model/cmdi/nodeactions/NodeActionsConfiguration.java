@@ -20,23 +20,19 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 
 //@PropertySource(value = "classpath:config/production/defaultServiceLocations.properties")
 /**
+ * Configuration class that holds all the getters and setters for each parameter
+ * needed. Parameters are defined in the context.xml from tomcat
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
 public class NodeActionsConfiguration implements Serializable {
-    // otherwise the properties don't get automatically injected with the Value annotations
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
     private String amsURL;
     private String rrsURL;
     private String rrsIndexUrl;
@@ -47,76 +43,155 @@ public class NodeActionsConfiguration implements Serializable {
     private String rrsRegister;
     private String forceHttpOrHttps;
     private String forceHttpsPrefix;
-
     private static Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
-
     // what to assume as default for "same" protocol if it is not known whether https is used
     final boolean ssl = false;
 
-    public String getTrovaURL() {
-        return trovaURL;
-    }
-
-    public String getAmsURL() {
-        return amsURL;
-    }
-
-    public String getRrsRegister() {
-        return rrsRegister;
-    }
-
-    public String getRrsIndexURL() {
-        return rrsIndexUrl;
-    }
-
-    public String getRrsURL() {
-        return rrsURL;
-    }
-
-    public String getAnnexURL() {
-        return annexURL;
-    }
-
-    public String getManualURL() {
-        return manualURL;
-    }
-
-    public String getMdSearchURL() {
-        return mdSearchURL;
-    }
-
-    public String getForceHttpOrHttps(){
-        return forceHttpOrHttps;
-    }
-
-    public String getForceHttpsPrefix (){
-        return forceHttpsPrefix;
-    }
+    /**
+     * @getters
+     */
+    // otherwise the properties don't get automatically injected with the Value annotations
     /**
      *
      * @return
      */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
+    /**
+     *
+     * @return
+     */
+    public String getTrovaURL() {
+        return trovaURL;
+    }
+
+    /**
+     *
+     * @return url for AMS
+     */
+    public String getAmsURL() {
+        return amsURL;
+    }
+
+    /**
+     *
+     * @return value for registration
+     */
+    public String getRrsRegister() {
+        return rrsRegister;
+    }
+
+    /**
+     *
+     * @return value for RRSindex
+     */
+    public String getRrsIndexURL() {
+        return rrsIndexUrl;
+    }
+
+    /**
+     *
+     * @return URL for RRS
+     */
+    public String getRrsURL() {
+        return rrsURL;
+    }
+
+    /**
+     *
+     * @return URL for ANNEX
+     */
+    public String getAnnexURL() {
+        return annexURL;
+    }
+
+    /**
+     *
+     * @return URL for the manual
+     */
+    public String getManualURL() {
+        return manualURL;
+    }
+
+    /**
+     *
+     * @return URL for metadata seach
+     */
+    public String getMdSearchURL() {
+        return mdSearchURL;
+    }
+
+    /**
+     *
+     * @return value for secure connection
+     */
+    public String getForceHttpOrHttps() {
+        return forceHttpOrHttps;
+    }
+
+    /**
+     *
+     * @return prefix URL for nodes
+     */
+    public String getForceHttpsPrefix() {
+        return forceHttpsPrefix;
+    }
+
+    /**
+     * Setters
+     */
+    /**
+     *
+     * @param amsURL
+     *
+     */
     @Value("${nl.mpi.amsUrl}")
     public void setAmsURL(String amsURL) {
+        amsURL = processLinkProtocol(amsURL, ssl);
+        checkWarning(amsURL, "nl.mpi.amsUrl");
         this.amsURL = amsURL;
     }
 
+    /**
+     *
+     * @param rrsRegister
+     */
     @Value("${nl.mpi.rrsRegister}")
     public void setRrsRegister(String rrsRegister) {
+        rrsRegister = processLinkProtocol(rrsRegister, ssl);
+        checkWarning(rrsRegister, "nl.mpi.rrsRegister");
         this.rrsRegister = rrsRegister;
     }
 
+    /**
+     *
+     * @param rrsIndexURL
+     */
     @Value("${nl.mpi.rrsIndex}")
     public void setRrsIndexURL(String rrsIndexURL) {
+        rrsIndexURL = processLinkProtocol(rrsIndexURL, ssl);
+        checkWarning(rrsIndexURL, "nl.mpi.rrsIndex");
         this.rrsIndexUrl = rrsIndexURL;
     }
 
+    /**
+     *
+     * @param rrsURL
+     */
     @Value("${nl.mpi.rrsUrl}")
     public void setRrsURL(String rrsURL) {
+        rrsURL = processLinkProtocol(rrsURL, ssl);
+        checkWarning(rrsURL, "nl.mpi.rrsUrl");
         this.rrsURL = rrsURL;
     }
 
+    /**
+     *
+     * @param annexURL
+     */
     @Value("${nl.mpi.annexUrl}")
     public void setAnnexURL(String annexURL) {
         annexURL = processLinkProtocol(annexURL, ssl);
@@ -124,31 +199,70 @@ public class NodeActionsConfiguration implements Serializable {
         this.annexURL = annexURL;
     }
 
+    /**
+     *
+     * @param mdSearchURL
+     */
     @Value("${nl.mpi.imdiSearchUrl}")
     public void setMdSearchURL(String mdSearchURL) {
+        mdSearchURL = processLinkProtocol(mdSearchURL, ssl);
+        checkWarning(mdSearchURL, "nl.mpi.imdiSearchUrl");
         this.mdSearchURL = mdSearchURL;
     }
 
+    /**
+     *
+     * @param trovaURL
+     */
     @Value("${nl.mpi.trovaUrl}")
     public void setTrovaURL(String trovaURL) {
+        trovaURL = processLinkProtocol(trovaURL, ssl);
+        checkWarning(trovaURL, "nl.mpi.trovaUrl");
         this.trovaURL = trovaURL;
     }
 
+    /**
+     *
+     * @param manualURL
+     */
     @Value("${nl.mpi.imdiBrowser.imdiBrowserManualUrl}")
     public void setManualURL(String manualURL) {
+        manualURL = processLinkProtocol(manualURL, ssl);
+        checkWarning(manualURL, "nl.mpi.manualUrl");
         this.manualURL = manualURL;
     }
+
+    /**
+     *
+     * @param forceHttpOrHttps can be "Http" or "Https"
+     */
     @Value("${nl.mpi.imdiBrowser.forceHttpOrHttps}")
-    public void setForceHttpOrHttps(String forceHttpOrHttps){
+    public void setForceHttpOrHttps(String forceHttpOrHttps) {
+        forceHttpOrHttps = processLinkProtocol(forceHttpOrHttps, ssl);
+        checkWarning(forceHttpOrHttps, "nl.mpi.forceHttpsOrHttps");
         this.forceHttpOrHttps = forceHttpOrHttps;
     }
 
-        @Value("${nl.mpi.imdiBrowser.forceHttpsPrefix}")
-    public void setForceHttpsPrefix(String forceHttpsPrefix){
+    /**
+     *
+     * @param forceHttpsPrefix
+     */
+    @Value("${nl.mpi.imdiBrowser.forceHttpsPrefix}")
+    public void setForceHttpsPrefix(String forceHttpsPrefix) {
+        forceHttpsPrefix = processLinkProtocol(forceHttpsPrefix, ssl);
+        checkWarning(forceHttpsPrefix, "nl.mpi.forHttpsPrefix");
         this.forceHttpsPrefix = forceHttpsPrefix;
     }
 
-
+    /**
+     * Method that will convert url from http to Https or otherwise depending
+     * on current url and wished secure connection level setup in context.xml.
+     *
+     * @param url, url as string to be check for secure connection
+     * @param isHttps, boolean that give information whether url is already
+     * secure or not
+     * @return String url transformed depending on forceHttporHttps value
+     */
     public String processLinkProtocol(final String url, final boolean isHttps) {
         if (url == null) {
             logger.warn("Null URL encountered in Configuration.processLinkProtocol");
@@ -175,7 +289,11 @@ public class NodeActionsConfiguration implements Serializable {
         return url;
     }
 
-    /** If 'parameter' is null, log an error about 'name' not being set. */
+    /**
+     * If 'parameter' is null, log an error about 'name' not being set.
+     * @param parameter, String of the parameter value that needs to be checked (e.g value of amsURL)
+     * @param name, String of the parameter name (e.g amsURL)
+     */
     private void checkWarning(String parameter, String name) {
         if (parameter != null) {
             logger.info(name + " was initialized with value: " + parameter);
