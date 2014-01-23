@@ -56,11 +56,9 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final static String name = "View Node";
     private final NodeActionsConfiguration nodeActionsConfiguration;
-    private final NodePresentationProvider presentationProvider;
 
     @Autowired
-    public CMDIViewNodeAction(NodePresentationProvider presentationProvider, NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver) {
-        this.presentationProvider = presentationProvider;
+    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.resolver = nodeResolver;
     }
@@ -79,10 +77,10 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             //TODO get session id
             URI nodeId = node.getNodeURI();// should be handle
             navType = true;
-            if(("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")){
-            targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
-            }else{
-               targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
+            if (("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")) {
+                targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+            } else {
+                targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
             }
         }
 //        } else{
@@ -104,7 +102,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                        return new ViewInfoFile(id, resolver, node);
+                    return new ViewInfoFile(id, resolver, node);
                 }
             };
             return new SimpleNodeActionResult(componentRequest);

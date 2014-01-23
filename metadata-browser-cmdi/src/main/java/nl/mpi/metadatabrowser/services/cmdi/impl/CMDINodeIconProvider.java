@@ -134,7 +134,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     private void populateIconMap() {
-        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIcon, cmdiIcon, unknownIcon);
+        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIconTxt, fileIcon, cmdiIcon, unknownIcon);
         final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
 
         int i = 0;

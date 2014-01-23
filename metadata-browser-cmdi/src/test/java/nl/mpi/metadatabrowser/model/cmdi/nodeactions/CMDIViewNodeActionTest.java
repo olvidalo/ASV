@@ -82,7 +82,7 @@ public class CMDIViewNodeActionTest {
             }
         });
 
-        CMDIViewNodeAction instance = new CMDIViewNodeAction(presentationProvider, nodeActionsConfiguration, resolver);
+        CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeActionsConfiguration, resolver);
         NodeActionResult result = instance.execute(node);
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
