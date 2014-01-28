@@ -16,18 +16,11 @@
  */
 package nl.mpi.metadatabrowser.services.authentication;
 
-import java.util.Enumeration;
-import javax.servlet.http.HttpServletRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
-import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- *
+ * Class that holds the user id of the current logged in user.
+ *  value is Anonymous if null
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 
@@ -37,23 +30,11 @@ private static String userid;
 
     @Override
     public String getPrincipalName() {
-
-        return userid;        // String userid = SecurityContextHolder.getContext().getAuthentication().getName();
-        //String userid =securityContext.getUserPrincipal().getName();
-//      String user[] = userid.split(";");
-//        for (int i = 0; i<user.length; i++) {
-//            if (user[i].contains("Username")) {
-//                int index = user[i].indexOf("Username");
-//                userid = user[i].substring(index + 9);
-//                break;
-//            }
-//    }
-//        HttpServletRequest request = ((ServletRequestAttributes)
-//             RequestContextHolder.getRequestAttributes()).getRequest();
-//        return request.getRemoteUser();
+        return userid;
     }
 
-    public void setPrincipal(String user){
-        this.userid = user;
+    @Override
+    public void setPrincipalName(String user){
+        AuthenticationHolderImpl.userid = user;
     }
 }

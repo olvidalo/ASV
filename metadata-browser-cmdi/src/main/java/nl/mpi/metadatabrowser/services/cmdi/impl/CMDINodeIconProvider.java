@@ -96,7 +96,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     /**
-     * Method that manage the type of resourceReference returned dpeending on
+     * Method that manage the type of resourceReference returned depending on
      * type of node and accesslevel
      *
      * @param contentNode, node for which type and accesslevel have to be grabed
