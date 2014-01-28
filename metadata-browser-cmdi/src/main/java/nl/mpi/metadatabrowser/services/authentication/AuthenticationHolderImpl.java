@@ -16,25 +16,33 @@
  */
 package nl.mpi.metadatabrowser.services.authentication;
 
+import javax.servlet.http.HttpServletRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.springframework.stereotype.Component;
 
 /**
- * Class that holds the user id of the current logged in user.
- *  value is Anonymous if null
+ * Class that holds the user id of the current logged in user. value is
+ * Anonymous if null
+ *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-
+@Component
 public class AuthenticationHolderImpl implements AuthenticationHolder {
-private static String userid;
-
+//private static String userid;
 
     @Override
     public String getPrincipalName() {
+        HttpServletRequest request = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
+        String userid = request.getRemoteUser();
+        if (userid == null || userid.equals("")) {
+            userid = "anonymous";
+        }
         return userid;
     }
 
     @Override
-    public void setPrincipalName(String user){
-        AuthenticationHolderImpl.userid = user;
+    public void setPrincipalName(String user) {
+        //      AuthenticationHolderImpl.userid = user;
     }
 }
