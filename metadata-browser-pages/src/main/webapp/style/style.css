@@ -90,13 +90,13 @@ div#actionsPanel input {
 }
 
 div#nodePresentationContainer {
-    overflow: auto;
+/*    overflow: auto;*/
     height: 100%;
 }
 
 div#nodePresentation{
     height:100%;
-    overflow:hidden;
+    overflow:auto;
 }
 
 #iframe {

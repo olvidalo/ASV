@@ -2,7 +2,7 @@
 ul#navigation {
     position: absolute;
     overflow: hidden;
-    margin:0; 
+    margin:0;
     padding:0;
 }
 ul#navigation li {
@@ -27,7 +27,7 @@ ul#navigation li a {
     -webkit-border-bottom-left-radius: 10px;
     -khtml-border-bottom-right-radius: 10px;
     -khtml-border-bottom-left-radius: 10px;
-    /*    opacity: 0.7;*/
+    opacity: 1; /** use for internet explorer **/
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
 }
 ul#navigation span:hover{
@@ -47,7 +47,7 @@ ul#navigation .MetadataSearch a{
 
 ul#navigation .AnnotationContentSearch a{
     background-image: url(Annotation-Search-icon.png);
-    background-repeat:no-repeat;  
+    background-repeat:no-repeat;
 }
 
 ul#navigation .ManageAccessRights a{
@@ -78,7 +78,7 @@ ul#navigation .Citation a{
 
 ul#navigation .Version a {
     background-image: url(Feature-Versioning-icon.png);
-    background-repeat:no-repeat; 
+    background-repeat:no-repeat;
 }
 
 
