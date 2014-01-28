@@ -1,0 +1,139 @@
+		METADATA Browser INSTALLATION
+
+== Note on using SSL ==
+	METADATABrowser fully supports secure https browsing and connections
+
+
+	SOURCES
+
+The METADATA Browser source code contains 5 parts: the main war, the cmdi api, the cmdi-implementation,and two differents profile : using csdb adapter or using the coming csdb2.  It can be built using maven.
+
+To create all the artifacts for METADATA Browser
+(api, war file, cmdi-impl and both csdb profile):
+
+  mvn package -DdeployTo=<name of the server where it will be deployed to>
+
+In order to, besides creating the artifacts,
+also install them into the local repository:
+
+  mvn install -DdeployTo=<name of the server where it will be deployed to>
+
+The "deployTo" property should contain the name of the server where the war
+file is supposed to be deployed.  The shibboleth configuration file
+(shhaa.xml) will be filtered accordingly (using a filter file with the
+corresponding name: "filter.<server>.properties", under the directory
+"./src/main/resources").  If a filter with the intended name doesn't exist, it
+must be created and the necessary properties added (based on the existing
+filters).
+
+To create eclipse configuration files:
+
+  mvn eclipse:eclipse
+
+Then in Eclipse from the package explorer select Import -> existing project
+into workspace.
+
+	COMPILED PACKAGE
+
+The war file should be unpacked into the folder where the current version is
+usually located (i.e.  in lux17, it would be "/lat/webapps/metadata_browser").
+
+First, unpack the tgz containing the war into
+
+/lat/webapps/metadata_browser/VERSION-SPECIFIC-STRING/
+
+then, unpack the war in there to a new directory, say
+
+/lat/webapps/metadata_browser/VERSION-SPECIFIC-STRING/war/metadatabrowser/
+
+and finally, make
+
+/lat/webapps/metadata_browser/current/ a symlink to that latter directory,
+so the tomcat/conf/Catalina/localhost/*.xml can point to, in the example
+/lat/webapps/metadata_browser/current/ as location of the webapp.
+
+If the code was compiled for the server in question, no files need to be
+changed.  If not, the configuration files (e.g.  shhaa.xml) should be
+adapted.
+
+The files extracted from the war file need to be readable for the UID in
+which the tomcat is running. No files need to be written by the Tomcat.
+
+	CONFIGURATION
+
+The METADATA Browser uses the following configuration options (which so far are the same as the IMDI Browser):
+
+nl.mpi.imdiBrowser.imdiBrowserManualUrl // will be replaced when switch to cmdi
+(a website about usage of the IMDI browser: This is no webapp and this
+URL is not affected by forceHttpOrHttps nor forceHttpsPrefix settings!)
+
+nl.mpi.annexUrl
+(location of Annex webapp, gets ?jsessionid=...&handle=... suffix or, if no
+handle/pid/urid known, ?jsessionid=...&nodeid=... suffix from the browser)
+
+nl.mpi.trovaUrl
+(location of Trova webapp, can be referenced as $trova_url$ in config file
+popup-menu-items.xml Browser uses nodeid= but Trova also supports handle=)
+
+nl.mpi.rrsIndex
+(location of "request access" page within RRS, see below)
+
+nl.mpi.rrsRegister
+(location of "register as new user" page within RRS...)
+
+nl.mpi.imdiBrowser.forceHttpOrHttps
+(optional setting: http, https or same to force all URLs within the IMDI
+browser to use the selected protocol, e.g. links to resources or other
+LAT webapps such as Annex. If set to 'same', force same protocol as the
+current session, e.g. https iff the IMDI Browser is visited via https)
+
+nl.mpi.imdiBrowser.forceHttpsPrefix
+(optional setting: force all URLs starting with this prefix to use https,
+for example http://yourhostname/ or http://yourhostname/yourarchive/...)
+
+nl.mpi.imdiBrowserUrl
+(location where the browser is installed, https://HOSTNAME/ds/imdi_browser/
+Also used by other webapps, was once set in "ViewControllerContainer" env)
+
+nl.mpi.amsUrl
+(location of the Access Management System webapp, referenced as $AmsURL$)
+
+nl.mpi.amsRecalculateUrl
+(URL to contact after running the ArchiveCrawler to let AMS know that
+the access rights for the affected corpus have to be recalculated)
+
+nl.mpi.imexUrl
+(location of the Imex image viewer webapp, can be referenced as $ImexURL$)
+
+nl.mpi.imdiSearchUrl
+(location of the IMDI Metadata Search webapp, referenced as $IMDISearchURL$)
+
+nl.mpi.rrsUrl
+(location of Resource Request System webapp, used together with nl.mpi.rrs*
+and can be referenced as $RRSURL$ when used in popup-menu-items.xml)
+
+CSDBConnectionResource
+(typically java:comp/env/jdbc/CSDB pointing to read-only corpusstructure DB)
+
+VersDBConnectionResource
+(typically java:comp/env/jdbc/VERSDB pointing to the same CSDB as above)
+
+The first options can be set for example in context.xml as:
+
+    <Parameter name="nl.mpi.imdiBrowser.imdiBrowserManualUrl"
+        value="http://www.mpi.nl/corpus/html/imdi_browser/index.html"
+        description="weblink to the imdibrowserManual"/>
+
+etc. The second group of op options can, for backwards compatibility, use:
+
+    <Environment name="AmsURL" value="https://HOSTNAME/am/ams2/index.face"
+	type="java.lang.String" override="false"/>
+
+However, the recommended syntax is now, with a nl.mpi.imdiBrowser prefix:
+
+    <Parameter name="nl.mpi.imdiBrowser.AmsURL"
+        value="https://HOSTNAME/am/ams2/index.face"
+        description="URL pointing to LAT Access Management System webapp"/>
+
+Example configuration text can be found in WEB-INF/context-xml-snippets.txt
+
