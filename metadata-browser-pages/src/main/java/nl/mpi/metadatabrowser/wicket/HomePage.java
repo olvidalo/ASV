@@ -16,6 +16,7 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
+import nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl;
 import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -44,6 +45,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private ArchiveTreeNodeIconProvider<CorpusNode> treeIconProvider;
     private NodesPanel nodesPanel;
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
+    private AuthenticationHolderImpl auth = new AuthenticationHolderImpl();
 
     /**
      * Constructor
@@ -53,8 +55,15 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     public HomePage(final PageParameters parameters) {
         super(parameters);
         HttpServletRequest request = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
+        String userid = request.getRemoteUser();
+        if (userid == null || userid.equals("")) {
+            userid= "anonymous";
+            auth.setPrincipal("anonymous");
+        } else {
+            auth.setPrincipal(userid);
+        }
         //Add a panel hosting the user information.
-        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", request);
+        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", userid);
         add(headerPanel);
 
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider

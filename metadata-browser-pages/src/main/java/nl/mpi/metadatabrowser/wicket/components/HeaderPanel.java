@@ -38,10 +38,8 @@ public final class HeaderPanel extends Panel {
     @SpringBean
     private NodeActionsConfiguration nodeActionsConf; //TODO: Make separate headerConf and inject that to prevent dependency on CMDI impl
 
-    public HeaderPanel(String id, HttpServletRequest request) {
+    public HeaderPanel(String id, String user) {
 	super(id);
-	XForwardedRequestWrapper xf = new XForwardedRequestWrapper(request);
-	String user = xf.getRemoteUser();
 
 	add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
 	    @Override
@@ -62,13 +60,13 @@ public final class HeaderPanel extends Panel {
 	ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
 	ExternalLink userLoginLink;
-        if (user == null || user.trim().equals("")) {
+        if (user == null || user.trim().equals("") || user.equals("anonymous")) {
             user="anonymous";
 	    userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
         } else {
 	    userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");
         }
-        
+
 	Link<Void> userName = new Link<Void>("userName") {
 	    @Override
 	    public void onClick() {
