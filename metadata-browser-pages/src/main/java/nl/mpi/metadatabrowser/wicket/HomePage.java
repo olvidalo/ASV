@@ -58,9 +58,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         String userid = request.getRemoteUser();
         if (userid == null || userid.equals("")) {
             userid= "anonymous";
-            auth.setPrincipal("anonymous");
+            auth.setPrincipalName("anonymous");
         } else {
-            auth.setPrincipal(userid);
+            auth.setPrincipalName(userid);
         }
         //Add a panel hosting the user information.
         final HeaderPanel headerPanel = new HeaderPanel("headerPanel", userid);
