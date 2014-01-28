@@ -1,0 +1,64 @@
+<Parameter name="nl.mpi.imdiBrowser.imdiBrowserManualUrl"
+ value="http://www.mpi.nl/corpus/html/imdi_browser/index.html"
+ description="location of the imdiBrowser Manual"/>
+
+<Parameter name="nl.mpi.annexUrl"
+ value="https://lux16.mpi.nl/ds/annex/runLoader"
+ description="location of Annex webapp"/>
+
+<Parameter name="nl.mpi.trovaUrl"
+ value="https://lux16.mpi.nl/ds/trova/search.jsp"
+ description="location of Trova webapp"/>
+
+<Parameter name="nl.mpi.rrsIndex"
+ value="RrsIndex"
+ description="name of request access page in RRS" />
+
+<Parameter name="nl.mpi.rrsRegister"
+ value="RrsRegistration"
+ description="name of registration page in RRS" />
+
+<Parameter name="nl.mpi.imdiBrowser.forceHttpOrHttps"
+ value="https"
+ description="protocol enforcement: can be http, https, same or ignore" />
+
+<Parameter name="nl.mpi.imdiBrowser.forceHttpsPrefix"
+ value="http://lux16.mpi.nl/corpora/"
+ description="URLs starting with this prefix will be rewritten to https" />
+
+<Parameter name="nl.mpi.imdiBrowserUrl"
+ value="https://lux16.mpi.nl/ds/imdi_browser/"
+ description="location of where the IMDI Browser is installed" />
+<!-- formerly ViewControllerContainer -->
+
+<Parameter name="nl.mpi.amsUrl"
+ value="https://lux16.mpi.nl/am/ams2/index.face"
+ description="location of Access Management System (AMS) webapp" />
+
+<Parameter name="nl.mpi.amsRecalculateUrl"
+ value="https://lux16.mpi.nl/am/ams2/pages/recalc.face?nodeid="
+ description="URL to contact AMS and send it ACL recalculation requests" />
+
+<Parameter name="nl.mpi.imexUrl"
+ value="https://lux16.mpi.nl/ds/imex/open.jsp"
+ description="location of the Imex image viewer webapp" />
+
+<Parameter name="nl.mpi.imdiSearchUrl"
+ value="https://lux16.mpi.nl/ds/imdi_search/strucsearch.jsp"
+ description="location of the IMDI Search webapp" />
+
+<Parameter name="nl.mpi.rrsUrl"
+ value="https://lux16.mpi.nl/ds/RRS_V1/"
+ description="location of the Resource Request System (RRS) webapp" />
+
+<!-- Note: CSDB_readonly is safer if archivecrawler is not required -->
+<Parameter name="nl.mpi.imdiBrowser.CSDBConnectionResource"
+ value="java:comp/env/jdbc/CSDB"
+ description="comp env resource for corpusstructure DB" />
+
+<Parameter name="nl.mpi.imdiBrowser.VersDBConnectionResource"
+ value="java:comp/env/jdbc/VERSDB"
+ description="comp enf of versioning DB, typically the same as CSDB" />
+
+<!-- no longer used: AccessStatsDBConnectionResource, LoggedServerName -->
+<!-- no longer used: AnnexURL, AnnexFlexURL, annex_url, trova_url, ... -->
