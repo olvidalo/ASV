@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.io.Serializable;
 import java.util.Collection;
 import javax.xml.transform.Templates;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
@@ -50,7 +51,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class CMDINodePresentationProvider implements NodePresentationProvider {
+public class CMDINodePresentationProvider implements NodePresentationProvider, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     public static final String IMDI_XSL = "/imdi-viewer.xsl";
@@ -62,10 +63,10 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
     private NodeTypeIdentifier nodeTypeIdentifier;
 
     /**
-     * 
+     *
      * @param nodeResolver
      * @param imdiTemplates
-     * @param cmdiTemplates 
+     * @param cmdiTemplates
      */
     @Autowired
     public CMDINodePresentationProvider(NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier,
@@ -99,7 +100,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider {
 		}
 	    } catch (UnknownNodeException ex) {
 		throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
-	    } 
+	    }
             catch (NodeTypeIdentifierException ex) {
                 throw new NodePresentationException("could not find node type while building presentation for node " + node, ex);
             }

@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
+import javax.servlet.http.HttpServletRequest;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
@@ -29,6 +30,7 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
@@ -49,7 +51,6 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     private final String name = "Download";
     private final NodeResolver nodeResolver;
     private final AccessInfoProvider accessInfoProvider;
-    //TODO: decide where does userid comes from and implement accordingly
 
     @Autowired
     public CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessInfoProvider accessInfoProvider) {
