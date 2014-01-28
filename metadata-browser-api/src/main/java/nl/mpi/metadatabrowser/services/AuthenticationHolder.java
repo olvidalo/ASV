@@ -17,15 +17,16 @@
 package nl.mpi.metadatabrowser.services;
 
 import java.io.Serializable;
-import java.security.Principal;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface AuthenticationHolder {
-    
-    
+public interface AuthenticationHolder extends Serializable{
+
+
 String getPrincipalName();
-    
+
+void setPrincipalName();
+
 }

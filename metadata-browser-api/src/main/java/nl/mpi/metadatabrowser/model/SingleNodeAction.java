@@ -55,8 +55,8 @@ public abstract class SingleNodeAction implements NodeAction {
      * @throws NodeActionException if any error occurs during node exception
      */
     protected abstract NodeActionResult execute(TypedCorpusNode node) throws NodeActionException;
-    
-    
+
+
     public void setAuthenticationHolder(AuthenticationHolder auth){
         this.auth = auth;
     }
