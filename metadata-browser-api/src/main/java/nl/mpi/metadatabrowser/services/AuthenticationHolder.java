@@ -25,8 +25,16 @@ import java.io.Serializable;
 public interface AuthenticationHolder extends Serializable{
 
 
-String getPrincipalName();
+    /**
+     * get current user id that was set with the request.
+     * @return user id
+     */
+    String getPrincipalName();
 
-void setPrincipalName();
+    /**
+     * Set the user id for further use in application
+     * @param user
+     */
+    void setPrincipalName( String user);
 
 }
