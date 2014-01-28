@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import javax.servlet.http.HttpServletRequest;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -16,14 +15,13 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
-import nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.markup.html.tree.LinkType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.util.CollectionModel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
@@ -45,8 +43,8 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private ArchiveTreeNodeIconProvider<CorpusNode> treeIconProvider;
     private NodesPanel nodesPanel;
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
-    private AuthenticationHolderImpl auth = new AuthenticationHolderImpl();
-
+@SpringBean
+private AuthenticationHolder auth;
     /**
      * Constructor
      *
@@ -54,16 +52,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
      */
     public HomePage(final PageParameters parameters) {
         super(parameters);
-        HttpServletRequest request = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
-        String userid = request.getRemoteUser();
-        if (userid == null || userid.equals("")) {
-            userid= "anonymous";
-            auth.setPrincipalName("anonymous");
-        } else {
-            auth.setPrincipalName(userid);
-        }
+
         //Add a panel hosting the user information.
-        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", userid);
+        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", auth.getPrincipalName());
         add(headerPanel);
 
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
