@@ -1,19 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+
 
     <parent>
         <groupId>nl.mpi.metadata-browser</groupId>
         <artifactId>metadata-browser-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <modelVersion>4.0.0</modelVersion>
     <groupId>nl.mpi.metadata-browser</groupId>
     <artifactId>metadata-browser-pages</artifactId>
+    <name>metadata-browser-pages</name>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${war_project.version}</version>
+    <description>Metadata Browser Wicket Pages</description>
 
-    <name>Metadata Browser Wicket Pages</name>
 
     <properties>
         <!-- Jetty version for test server -->
@@ -30,7 +33,7 @@
                 <dependency>
                     <groupId>${project.groupId}</groupId>
                     <artifactId>metadata-browser-cmdi-adapter</artifactId>
-                    <version>${project.version}</version>
+                    <version>${adapter_project_version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -40,7 +43,7 @@
                 <dependency>
                     <groupId>${project.groupId}</groupId>
                     <artifactId>metadata-browser-cmdi-cs2</artifactId>
-                    <version>${project.version}</version>
+                    <version>${cs2_project_version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -118,16 +121,16 @@
             <filter>src/main/resources/filters/filter.${deployTo}.properties</filter>
         </filters>
         <resources>
-                        <resource>
-		<directory>src/main/resources</directory>
-<!--                <targetPath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes</targetPath>-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--                <targetPath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/classes</targetPath>-->
                 <filtering>true</filtering>
                 <includes>
                     <include>metadata_browser.properties</include>
                     <include>log4j.properties</include>
                 </includes>
             </resource>
-                        <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <targetPath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF</targetPath>
                 <filtering>true</filtering>
@@ -136,13 +139,13 @@
                 </includes>
             </resource>
             <resource>
-		<filtering>false</filtering>
-		<directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>applicationContext.xml</exclude>
-<!--                    <exclude>**/.properties</exclude>-->
+                    <!--                    <exclude>**/.properties</exclude>-->
                 </excludes>
-	    </resource>
+            </resource>
             <resource>
                 <filtering>false</filtering>
                 <directory>src/main/html</directory>
