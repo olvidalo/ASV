@@ -8,14 +8,14 @@
 	<artifactId>metadata-browser-parent</artifactId>
 	<version>1.0-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>nl.mpi.metadata-browser</groupId>
     <artifactId>metadata-browser-cmdi</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${cmdi_project_version}</version>
     <packaging>jar</packaging>
 
     <name>Metadata Browser Services CMDI Implementation</name>
-    
+
     <build>
 	<resources>
 	    <resource>
@@ -34,7 +34,7 @@
 	    </resource>
 	</resources>
     </build>
-    
+
     <dependencies>
 	<dependency>
 	    <groupId>org.slf4j</groupId>
