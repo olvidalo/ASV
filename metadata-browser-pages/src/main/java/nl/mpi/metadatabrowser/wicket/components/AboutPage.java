@@ -16,51 +16,33 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 
-@PropertySource(value = "classpath:config/production/metadata_browser.properties")
-
 public final class AboutPage extends WebPage {
-    
-    // otherwise the properties don't get automatically injected with the Value annotations
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-    
-    /**
-     *
-     * @param parameters
-     */
-    @Value("${version}")
-    private String version;
-    
-    @Value("${build}")
-    private String build;
-    
-    @Value("${date}")
-    private String date;
-    
-    @Value("${year}")
-    private String year;
-            
     public AboutPage(PageParameters parameters) {
-        add(new Label("version", version));
-        add(new Label("build", build));
-        add(new Label("date", date));
-        add(new Label("year", year));
-        add(new Label("appname", "Metadata-Browser"));
-        add(new Label("title", "About Metadata Browser"));
+        try {
+            Properties versionProps = new Properties();
+            versionProps.load(this.getClass().getResource("/metadata_browser.properties").openStream());
+
+            add(new Label("version", versionProps.getProperty("metadata_browser.version")));
+                add(new Label("build", versionProps.getProperty("metadata_browser.build")));
+                add(new Label("date", versionProps.getProperty("metadata_browser.date")));
+                add(new Label("year", versionProps.getProperty("metadata_browser.year")));
+                add(new Label("appname", "Metadata-Browser"));
+                add(new Label("title", "About Metadata Browser"));
+        } catch (IOException ex) {
+            Logger.getLogger(AboutPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
     }
-}
