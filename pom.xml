@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
@@ -53,6 +53,7 @@
         <module>metadata-browser-cmdi-adapter</module>
         <module>metadata-browser-cmdi-cs2</module>
         <module>metadata-browser-pages</module>
+        <module>metadata-browser-targz</module>
     </modules>
 
     <dependencies>
@@ -87,6 +88,9 @@
         <!-- Maven Version -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <war_project.version>1.0</war_project.version>
+        <cmdi_project_version>1.0</cmdi_project_version>
+        <adapter_project_version>1.0</adapter_project_version>
+        <cs2_project_version>1.0</cs2_project_version>
         <maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
         <year>${maven.build.timestamp}</year>
     </properties>
