@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.annot.search.lib.SearchClient;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -75,7 +76,8 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         boolean navType = false;
         if (node.getNodeType() instanceof CMDIResourceTxtType && formatslist.contains(node.getFormat())) {
             //TODO get session id
-            URI nodeId = node.getNodeURI();// should be handle
+            URI nodeid = node.getNodeURI();// should be handle
+            String nodeId = AdapterUtils.toNodeIdString(nodeid);
             navType = true;
             if (("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")) {
                 targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
