@@ -47,6 +47,7 @@ div#treePanel{
     float: left;
     width: 20em;
     border: 1px solid;
+    resize: horizontal;
 }
 
 div#treePanel div.archiveTree{
@@ -83,6 +84,7 @@ ul.feedbackPanel li{
 div#actionsPanelContainer{
     overflow:hidden;
     height: 37px;
+    background-color: #E7F2F9;
 }
 
 div#actionsPanel input {
@@ -90,7 +92,7 @@ div#actionsPanel input {
 }
 
 div#nodePresentationContainer {
-/*    overflow: auto;*/
+    /*    overflow: auto;*/
     height: 100%;
 }
 
