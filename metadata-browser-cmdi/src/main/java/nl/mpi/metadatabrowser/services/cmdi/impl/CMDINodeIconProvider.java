@@ -40,6 +40,10 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
@@ -63,12 +67,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
 
-    private final static ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("session_color.gif"));
-    private final static ImageIcon catalogueIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("catalogue.png"));
-    private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("corpusnode_color.gif"));
-    private final static ImageIcon infoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("infofile.gif"));
-    private final static ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("mediafile.gif"));
-    private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("file.gif"));
+    private final static ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/session_color.gif"));
+    private final static ImageIcon catalogueIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/catalogue.png"));
+    private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/corpusnode_color.gif"));
+    private final static ImageIcon audioIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/audio.gif"));
+    private final static ImageIcon videoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/video.gif"));
+    private final static ImageIcon annotationIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/annotation.gif"));
+    private final static ImageIcon pictureIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/pictures.gif"));
+    private final static ImageIcon writtenIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/writtenresource.gif"));
+    private final static ImageIcon infoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/infofile.gif"));
+    private final static ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/mediafile.gif"));
+    private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/file.gif"));
     private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("clarin.png"));
     private final static ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("unknown.png"));
     private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
@@ -134,7 +143,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     private void populateIconMap() {
-        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIconTxt, fileIcon, cmdiIcon, unknownIcon);
+        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIconTxt, fileIcon, cmdiIcon, unknownIcon, videoIcon, pictureIcon, annotationIcon, audioIcon, writtenIcon);
         final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
 
         int i = 0;
@@ -191,9 +200,17 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             nodeTypeIcon = catalogueIcon;
         } else if (nodeType instanceof CMDIMetadataType) {
             nodeTypeIcon = cmdiIcon;
-        } else if (nodeType instanceof IMDIInfoType){
+        } else if (nodeType instanceof IMDIInfoType) {
             nodeTypeIcon = infoIcon;
-        }else {
+        } else if (nodeType instanceof IMDIResourceVideoType) {
+            nodeTypeIcon = videoIcon;
+        } else if (nodeType instanceof IMDIResourceAudioType) {
+            nodeTypeIcon = audioIcon;
+        } else if (nodeType instanceof IMDIResourcePictureType) {
+            nodeTypeIcon = pictureIcon;
+        } else if (nodeType instanceof IMDIResourceWrittenType) {
+            nodeTypeIcon = writtenIcon;
+        } else {
             nodeTypeIcon = unknownIcon;
         }
         return nodeTypeIcon;

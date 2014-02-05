@@ -28,6 +28,10 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
@@ -52,12 +56,13 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      */
     @Autowired
     public CMDINodeTypeIdentifier(CorpusStructureProvider csProvider) {
-	this.profileIdentifier = new ProfileIdentifierImpl(csProvider);
+        this.profileIdentifier = new ProfileIdentifierImpl(csProvider);
     }
 
     /**
-     * Determines the type of the specified corpus node, primarily on basis of the value of {@link CorpusNode#getType() }.
-     * Futher disambiguation may happen on basis of other properties.
+     * Determines the type of the specified corpus node, primarily on basis of
+     * the value of {@link CorpusNode#getType() }. Futher disambiguation may
+     * happen on basis of other properties.
      *
      * @param node node to determine type for
      * @return metadata browser internal node type
@@ -66,73 +71,88 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      */
     @Override
     public NodeType getNodeType(CorpusNode node) throws NodeTypeIdentifierException {
-	final CorpusNodeType corpusNodeType = node.getType();
+        final CorpusNodeType corpusNodeType = node.getType();
 
-	// Explicit null check, the switch won't cope
-	if (corpusNodeType == null) {
-	    return UNKNOWN_NODE_TYPE;
-	}
+        // Explicit null check, the switch won't cope
+        if (corpusNodeType == null) {
+            return UNKNOWN_NODE_TYPE;
+        }
 
-	// We have a type in the corpus node, determine CorpusNodeType
-	switch (corpusNodeType) {
-	    case RESOURCE_VIDEO:
-		return new CMDIResourceType();
-	    case RESOURCE_AUDIO:
-		return new CMDIResourceType();
-	    case RESOURCE_OTHER:
-		return new CMDIResourceType();
-	    case RESOURCE_ANNOTATION:
-		return new CMDIResourceTxtType();
-	    case RESOURCE_LEXICAL:
-		return new CMDIResourceTxtType();
-	    case METADATA:
-		return getMetadataType(node);
-	    case COLLECTION:
-		return getCollectionType(node);
+        String name = node.getName();
+        // We have a type in the corpus node, determine CorpusNodeType
+        switch (corpusNodeType) {
+            case RESOURCE_VIDEO:
+                if (name.endsWith(".jpg") || name.endsWith(".html") || name.endsWith(".gif") || name.endsWith(".tif") || name.endsWith(".tiff") || name.endsWith(".png")) {
+                    return new IMDIResourcePictureType();
+                } else if (name.endsWith(".wav") || name.endsWith(".mp3") || name.endsWith(".m4a") || name.endsWith(".aif")) {
+                    return new IMDIResourceAudioType();
+                } else if (name.endsWith(".mpeg") || name.endsWith(".mpg") || name.endsWith(".mov") || name.endsWith(".mpv") || name.endsWith(".mp4") || name.endsWith(".smil")) {
+                    return new IMDIResourceVideoType();
+                } else {
+                    return new CMDIResourceType();
+                }
+            case RESOURCE_AUDIO:
+                return new CMDIResourceType();
+            case RESOURCE_OTHER:
+                return new CMDIResourceType();
+            case RESOURCE_ANNOTATION:
+                if (name.endsWith(".txt") || name.endsWith(".pdf") || name.endsWith(".eaf") || name.endsWith(".html") || name.endsWith(".csv") || name.endsWith(".lmf") || name.endsWith(".xml") || name.endsWith(".xsd") || name.endsWith("tbt") || name.endsWith(".cha")) {
+                    return new IMDIResourceWrittenType();
+                } else {
+                    return new CMDIResourceTxtType();
+                }
+            case RESOURCE_LEXICAL:
+                return new CMDIResourceTxtType();
+            case METADATA:
+                return getMetadataType(node);
+            case COLLECTION:
+                return getCollectionType(node);
             case IMDICATALOGUE:
                 return new IMDICatalogueType();
             case IMDIINFO:
                 return new IMDIInfoType();
-	    default:
-		return UNKNOWN_NODE_TYPE;
-	}
+            default:
+                return UNKNOWN_NODE_TYPE;
+        }
     }
 
     /**
-     * Determines type for non-collection (according to {@link CorpusNode#getType() }) metadata node
+     * Determines type for non-collection (according to {@link CorpusNode#getType()
+     * }) metadata node
      *
      * @param node node to determine type for
      * @return either IMDI session or CMDI type
      * @see CorpusNodeType#METADATA
      */
     private NodeType getMetadataType(CorpusNode node) {
-	if (node.getFormat().equals(IMDI_MIME_TYPE)) {
-	    return new IMDISessionType();
-	} else {
-	    return getCMDIType(node);
-	}
+        if (node.getFormat().equals(IMDI_MIME_TYPE)) {
+            return new IMDISessionType();
+        } else {
+            return getCMDIType(node);
+        }
     }
 
     private NodeType getCMDIType(CorpusNode node) {
-	if (COLLECTION_PROFILE_ID.equals(profileIdentifier.getProfile(node.getNodeURI()))) {
-	    return new CMDICollectionType();
-	} else {
-	    return new CMDIMetadataType();
-	}
+        if (COLLECTION_PROFILE_ID.equals(profileIdentifier.getProfile(node.getNodeURI()))) {
+            return new CMDICollectionType();
+        } else {
+            return new CMDIMetadataType();
+        }
     }
 
     /**
-     * Determines type for collection (according to {@link CorpusNode#getType() }) metadata node
+     * Determines type for collection (according to {@link CorpusNode#getType()
+     * }) metadata node
      *
      * @param node
      * @return
      * @see CorpusNodeType#COLLECTION
      */
     private NodeType getCollectionType(CorpusNode node) {
-	if (node.getFormat().equals(IMDI_MIME_TYPE)) {
-	    return new IMDICorpusType();
-	} else {
-	    return new CMDICollectionType();
-	}
+        if (node.getFormat().equals(IMDI_MIME_TYPE)) {
+            return new IMDICorpusType();
+        } else {
+            return new CMDICollectionType();
+        }
     }
 }

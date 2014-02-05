@@ -21,7 +21,7 @@ import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -64,26 +64,23 @@ public class CMDINodeTypeIdentifierTest {
      */
     @Test
     public void testGetNodeType() throws Exception {
-	System.out.println("getNodeType");
-	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+        System.out.println("getNodeType");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 
-	context.checking(new Expectations() {
-	    {
-		oneOf(node).getNodeURI();
-		will(returnValue(NODE_1_ID));
+        context.checking(new Expectations() {
+            {
+                oneOf(node).getName();
+                will(returnValue("parent"));
 
-		allowing(csdb).getNode(NODE_1_ID);
-		will(returnValue(node));
-
-		allowing(node).getType();
-		will(returnValue(CorpusNodeType.RESOURCE_ANNOTATION));
-	    }
-	});
-	CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
-	NodeType expResult = new CMDIResourceTxtType();
-	NodeType result = instance.getNodeType(node);
-	assertThat(result, instanceOf(CMDIResourceTxtType.class));
-	assertEquals(expResult.getName(), result.getName());
+                allowing(node).getType();
+                will(returnValue(CorpusNodeType.RESOURCE_AUDIO));
+            }
+        });
+        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
+        NodeType expResult = new CMDIResourceType();
+        NodeType result = instance.getNodeType(node);
+        assertThat(result, instanceOf(CMDIResourceType.class));
+        assertEquals(expResult.getName(), result.getName());
     }
 }
