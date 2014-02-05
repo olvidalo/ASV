@@ -82,25 +82,13 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
         // We have a type in the corpus node, determine CorpusNodeType
         switch (corpusNodeType) {
             case RESOURCE_VIDEO:
-                if (name.endsWith(".jpg") || name.endsWith(".html") || name.endsWith(".gif") || name.endsWith(".tif") || name.endsWith(".tiff") || name.endsWith(".png")) {
-                    return new IMDIResourcePictureType();
-                } else if (name.endsWith(".wav") || name.endsWith(".mp3") || name.endsWith(".m4a") || name.endsWith(".aif")) {
-                    return new IMDIResourceAudioType();
-                } else if (name.endsWith(".mpeg") || name.endsWith(".mpg") || name.endsWith(".mov") || name.endsWith(".mpv") || name.endsWith(".mp4") || name.endsWith(".smil")) {
-                    return new IMDIResourceVideoType();
-                } else {
-                    return new CMDIResourceType();
-                }
+                return getResourceVideoType(name);
             case RESOURCE_AUDIO:
                 return new CMDIResourceType();
             case RESOURCE_OTHER:
                 return new CMDIResourceType();
             case RESOURCE_ANNOTATION:
-                if (name.endsWith(".txt") || name.endsWith(".pdf") || name.endsWith(".eaf") || name.endsWith(".html") || name.endsWith(".csv") || name.endsWith(".lmf") || name.endsWith(".xml") || name.endsWith(".xsd") || name.endsWith("tbt") || name.endsWith(".cha")) {
-                    return new IMDIResourceWrittenType();
-                } else {
-                    return new CMDIResourceTxtType();
-                }
+                return getResourceAnnotationType(name);
             case RESOURCE_LEXICAL:
                 return new CMDIResourceTxtType();
             case METADATA:
@@ -153,6 +141,42 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
             return new IMDICorpusType();
         } else {
             return new CMDICollectionType();
+        }
+    }
+
+    /**
+     * Determines type for annotation resources (according to {@link CorpusNode#getType()
+     * })
+     *
+     * @param name, String as the name of a node
+     * @return
+     * @see CorpusNodeType#RESOURCE_ANNOTATION
+     */
+    private NodeType getResourceAnnotationType(String name) {
+        if (name.endsWith(".txt") || name.endsWith(".pdf") || name.endsWith(".eaf") || name.endsWith(".html") || name.endsWith(".csv") || name.endsWith(".lmf") || name.endsWith(".xml") || name.endsWith(".xsd") || name.endsWith("tbt") || name.endsWith(".cha")) {
+            return new IMDIResourceWrittenType();
+        } else {
+            return new CMDIResourceTxtType();
+        }
+    }
+
+    /**
+     * Determines type for video resources (according to {@link CorpusNode#getType()
+     * })
+     *
+     * @param name, String as the name of a node
+     * @return
+     * @see CorpusNodeType#RESOURCE_VIDEO
+     */
+    private NodeType getResourceVideoType(String name) {
+        if (name.endsWith(".jpg") || name.endsWith(".html") || name.endsWith(".gif") || name.endsWith(".tif") || name.endsWith(".tiff") || name.endsWith(".png")) {
+            return new IMDIResourcePictureType();
+        } else if (name.endsWith(".wav") || name.endsWith(".mp3") || name.endsWith(".m4a") || name.endsWith(".aif")) {
+            return new IMDIResourceAudioType();
+        } else if (name.endsWith(".mpeg") || name.endsWith(".mpg") || name.endsWith(".mov") || name.endsWith(".mpv") || name.endsWith(".mp4") || name.endsWith(".smil")) {
+            return new IMDIResourceVideoType();
+        } else {
+            return new CMDIResourceType();
         }
     }
 }
