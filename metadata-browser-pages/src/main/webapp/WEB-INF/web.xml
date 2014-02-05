@@ -51,6 +51,10 @@
         <param-name>ShhaaConfigLocation</param-name>
         <param-value>/WEB-INF/shhaa.xml</param-value>
     </context-param>
+    <context-param>
+		<param-name>configuration</param-name>
+		<param-value>deployment</param-value>
+	</context-param>
 
     <filter>
         <filter-name>wicket.metadata-browser-pages</filter-name>

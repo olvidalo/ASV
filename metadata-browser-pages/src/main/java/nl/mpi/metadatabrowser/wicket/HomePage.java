@@ -43,8 +43,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private ArchiveTreeNodeIconProvider<CorpusNode> treeIconProvider;
     private NodesPanel nodesPanel;
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
-@SpringBean
-private AuthenticationHolder auth;
+    @SpringBean
+    private AuthenticationHolder auth;
+
     /**
      * Constructor
      *
