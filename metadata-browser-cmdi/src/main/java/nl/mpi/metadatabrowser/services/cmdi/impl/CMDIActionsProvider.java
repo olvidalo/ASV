@@ -37,6 +37,10 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,92 +81,92 @@ public class CMDIActionsProvider implements NodeActionsProvider {
 
     @Autowired
     public CMDIActionsProvider(CorpusStructureProvider csdb) {
-	this.csdb = csdb;
+        this.csdb = csdb;
     }
 
     @PostConstruct
     public void init() {
-	metadataNodeActionList = Arrays.<NodeAction>asList(
-		searchNodeAction,
-		trovaNodeAction,
-		amsNodeAction,
-		rrsNodeAction,
-		bookmarkNodeAction,
-		downloadNodeAction,
-		multipleDownloadNodeAction,
-		versionNodeAction);
+        metadataNodeActionList = Arrays.<NodeAction>asList(
+                searchNodeAction,
+                trovaNodeAction,
+                amsNodeAction,
+                rrsNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction,
+                multipleDownloadNodeAction,
+                versionNodeAction);
 
-	childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
-		searchNodeAction,
-		trovaNodeAction,
-		amsNodeAction,
-		rrsNodeAction,
-		bookmarkNodeAction,
-		downloadNodeAction,
-		versionNodeAction);
+        childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
+                searchNodeAction,
+                trovaNodeAction,
+                amsNodeAction,
+                rrsNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction,
+                versionNodeAction);
 
-	collectionNodeActionList = Arrays.<NodeAction>asList(
-		searchNodeAction,
-		trovaNodeAction,
-		amsNodeAction,
-		rrsNodeAction,
-		bookmarkNodeAction,
-		downloadNodeAction);
+        collectionNodeActionList = Arrays.<NodeAction>asList(
+                searchNodeAction,
+                trovaNodeAction,
+                amsNodeAction,
+                rrsNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction);
 
-	resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
-		amsNodeAction,
-		rrsNodeAction,
-		viewNodeAction,
-		bookmarkNodeAction,
-		downloadNodeAction,
-		versionNodeAction);
+        resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
+                amsNodeAction,
+                rrsNodeAction,
+                viewNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction,
+                versionNodeAction);
 
-	resourcetxtNodeActionList = Arrays.<NodeAction>asList(
-		trovaNodeAction,
-		amsNodeAction,
-		rrsNodeAction,
-		viewNodeAction,
-		bookmarkNodeAction,
-		downloadNodeAction,
-		versionNodeAction);
+        resourcetxtNodeActionList = Arrays.<NodeAction>asList(
+                trovaNodeAction,
+                amsNodeAction,
+                rrsNodeAction,
+                viewNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction,
+                versionNodeAction);
 
-	multipleNodeActionList = Arrays.<NodeAction>asList(
-		searchNodeAction,
-		trovaNodeAction,
-		amsNodeAction,
-		rrsNodeAction);
+        multipleNodeActionList = Arrays.<NodeAction>asList(
+                searchNodeAction,
+                trovaNodeAction,
+                amsNodeAction,
+                rrsNodeAction);
 
 
     }
 
     @Override
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
-	if (nodes.size() > 0 && nodes.size() == 1) {
-	    for (TypedCorpusNode node : nodes) {
-		if (node.getNodeType() instanceof CollectionType) {
-		    return collectionNodeActionList;
-		}
-		if (node.getNodeType() instanceof MetadataType) {
-		    try {
-			if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
-			    return childLessMetadataNodeActionList;
-			} else {
-			    return metadataNodeActionList;
-			}
-		    } catch (UnknownNodeException ex) {
-			return null;
-		    }
-		}
-		if (node.getNodeType() instanceof CMDIResourceType) {
-		    return resourceAudioVideoNodeActionList;
-		}
-		if (node.getNodeType() instanceof CMDIResourceTxtType) {
-		    return resourcetxtNodeActionList;
-		}
-	    }
-	} else if (nodes.size() > 1) {
-	    return multipleNodeActionList;
-	}
-	return null;
+        if (nodes.size() > 0 && nodes.size() == 1) {
+            for (TypedCorpusNode node : nodes) {
+                if (node.getNodeType() instanceof CollectionType) {
+                    return collectionNodeActionList;
+                }
+                if (node.getNodeType() instanceof MetadataType) {
+                    try {
+                        if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
+                            return childLessMetadataNodeActionList;
+                        } else {
+                            return metadataNodeActionList;
+                        }
+                    } catch (UnknownNodeException ex) {
+                        return null;
+                    }
+                }
+                if (node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof IMDIResourceVideoType || node.getNodeType() instanceof IMDIResourcePictureType || node.getNodeType() instanceof IMDIResourceAudioType) {
+                    return resourceAudioVideoNodeActionList;
+                }
+                if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof IMDIResourceWrittenType) {
+                    return resourcetxtNodeActionList;
+                }
+            }
+        } else if (nodes.size() > 1) {
+            return multipleNodeActionList;
+        }
+        return null;
     }
 }
