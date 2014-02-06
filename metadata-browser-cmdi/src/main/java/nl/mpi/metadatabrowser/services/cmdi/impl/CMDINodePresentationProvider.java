@@ -30,6 +30,10 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
@@ -70,60 +74,59 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
      */
     @Autowired
     public CMDINodePresentationProvider(NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier,
-	    @Qualifier("imdiTemplates") Templates imdiTemplates,
-	    @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
-	this.nodeResolver = nodeResolver;
-	this.imdiTemplates = imdiTemplates;
-	this.cmdiTemplates = cmdiTemplates;
+            @Qualifier("imdiTemplates") Templates imdiTemplates,
+            @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
+        this.nodeResolver = nodeResolver;
+        this.imdiTemplates = imdiTemplates;
+        this.cmdiTemplates = cmdiTemplates;
         this.csp = csp;
         this.nodeTypeIdentifier = nodeTypeIdentifier;
     }
 
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
-	logger.debug("Making node presentation for nodes {}", nodes);
-	if (nodes.size() == 1) {
-	    final TypedCorpusNode node = nodes.iterator().next();
-	    try {
-		if (node.getNodeType() instanceof MetadataType || node.getNodeType() instanceof CollectionType) {
-		    logger.debug("Metadata: presentation through transformation");
-		    return createMetadataTransformation(node, wicketId);
-		} else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType) {
-		    logger.debug("Resource: presentation of resource info");
+        logger.debug("Making node presentation for nodes {}", nodes);
+        if (nodes.size() == 1) {
+            final TypedCorpusNode node = nodes.iterator().next();
+            try {
+                if (node.getNodeType() instanceof MetadataType || node.getNodeType() instanceof CollectionType) {
+                    logger.debug("Metadata: presentation through transformation");
+                    return createMetadataTransformation(node, wicketId);
+                } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof IMDIResourceVideoType || node.getNodeType() instanceof IMDIResourcePictureType || node.getNodeType() instanceof IMDIResourceAudioType || node.getNodeType() instanceof IMDIResourceWrittenType) {
+                    logger.debug("Resource: presentation of resource info");
                     return new ResourcePresentation(wicketId, node);
-		} else if(node.getNodeType() instanceof IMDIInfoType){
-		    logger.debug("Resource presentation for info file");
-		    return new ViewInfoFile(wicketId, nodeResolver, node);
+                } else if (node.getNodeType() instanceof IMDIInfoType) {
+                    logger.debug("Resource presentation for info file");
+                    return new ViewInfoFile(wicketId, nodeResolver, node);
                 } else {
-		    logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
-		    return new Label(wicketId, node.toString());
-		}
-	    } catch (UnknownNodeException ex) {
-		throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
-	    }
-            catch (NodeTypeIdentifierException ex) {
+                    logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
+                    return new Label(wicketId, node.toString());
+                }
+            } catch (UnknownNodeException ex) {
+                throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
+            } catch (NodeTypeIdentifierException ex) {
                 throw new NodePresentationException("could not find node type while building presentation for node " + node, ex);
             }
-	} else {
-	    logger.debug("Multiple nodes, present as string representation of collection");
-	    return new Label(wicketId, nodes.toString());
-	}
+        } else {
+            logger.debug("Multiple nodes, present as string representation of collection");
+            return new Label(wicketId, nodes.toString());
+        }
     }
 
     private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException, UnknownNodeException, NodeTypeIdentifierException {
-	final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node), csp, nodeTypeIdentifier));
-	contentLabel.setEscapeModelStrings(false);
-	return contentLabel;
+        final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node), csp, nodeTypeIdentifier));
+        contentLabel.setEscapeModelStrings(false);
+        return contentLabel;
     }
 
     private Templates getTemplates(final TypedCorpusNode node) {
-	final NodeType nodeType = node.getNodeType();
-	final Templates templates;
-	if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType || nodeType instanceof IMDICatalogueType) {
-	    templates = imdiTemplates;
-	} else {
-	    templates = cmdiTemplates;
-	}
-	return templates;
+        final NodeType nodeType = node.getNodeType();
+        final Templates templates;
+        if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType || nodeType instanceof IMDICatalogueType) {
+            templates = imdiTemplates;
+        } else {
+            templates = cmdiTemplates;
+        }
+        return templates;
     }
 }
