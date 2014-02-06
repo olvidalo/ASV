@@ -194,10 +194,10 @@ public final class ResourcePresentation extends Panel {
                 Iterator<String[]> it = licenseViews.iterator();
                 while (it.hasNext()) {
                     String lic[] = it.next();
-                    sb.append(lic[0]);
                     sb.append("<a href=\"");
                     sb.append(lic[1]);
                     sb.append("\">");
+                    sb.append(lic[0]);
                     sb.append("</a><br/> ");
                 }
                 licensesLabel = new Label("licenses", sb.toString());
