@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 
 /**
@@ -42,7 +41,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 	return rootNode.getChildRecursive(nodeId);
     }
 
-    private List<CorpusNode> getChildrenCMDIs(URI nodeId) throws UnknownNodeException {
+    private List<CorpusNode> getChildrenCMDIs(URI nodeId) {
 	final MockCorpusNode node = getNode(nodeId);
 	if (node != null) {
 	    return Collections.<CorpusNode>unmodifiableList(node.getChildren());
@@ -76,7 +75,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<URI> getChildNodeURIs(URI nodeId) throws UnknownNodeException {
+    public List<URI> getChildNodeURIs(URI nodeId) {
 	List<CorpusNode> childrenNodes = getChildNodes(nodeId);
 	List<URI> subUris = new ArrayList<URI>(childrenNodes.size());
 	for (CorpusNode node : childrenNodes) {
@@ -86,22 +85,22 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public List<CorpusNode> getChildNodes(URI nodeId) throws UnknownNodeException {
+    public List<CorpusNode> getChildNodes(URI nodeId) {
 	return getChildrenCMDIs(nodeId);
     }
 
     @Override
-    public List<URI> getParentNodeURIs(URI nodeId) throws UnknownNodeException {
+    public List<URI> getParentNodeURIs(URI nodeId) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String getCanonicalVPath(URI nodeId) throws UnknownNodeException {
+    public String getCanonicalVPath(URI nodeId) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public URI getCanonicalParent(URI nodeId) throws UnknownNodeException {
+    public URI getCanonicalParent(URI nodeId) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -111,7 +110,7 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
-    public int getChildNodeCount(URI nodeUri) throws UnknownNodeException {
+    public int getChildNodeCount(URI nodeUri) {
 	return getChildNodeURIs(nodeUri).size();
     }
 }

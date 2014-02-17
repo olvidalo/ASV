@@ -65,10 +65,9 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @param nodeTypeIdentifier NodeTypeIdenfier, instanceof to be passed on
      * for usage in getCatalogueNodesUnderCorpus
      * @throws NodePresentationException
-     * @throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException
      * @throws NodeTypeIdentifierException
      */
-    public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodePresentationException, nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
+    public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodePresentationException, NodeTypeIdentifierException {
 	try {
 	    logger.debug("Transforming node {} using templates {}", node, templates);
 	    final InputStream in = nodeResolver.getInputStream(node);	// get the file
@@ -122,12 +121,11 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @param nodeTypeIdentifier NodeTypeIdentifier, passes on identifier types
      * to check for catalogue typein getCatalogueNodesUnderCorpus
      * @return StringWriter to be tranformed
-     * @throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException
      * @throws IOException
      * @throws NodePresentationException
      * @throws NodeTypeIdentifierException
      */
-    private StringWriter addCatalogueContentToCorpusView(TypedCorpusNode node, Transformer transformer, StringWriter strWriter, NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, IOException, NodePresentationException, NodeTypeIdentifierException {
+    private StringWriter addCatalogueContentToCorpusView(TypedCorpusNode node, Transformer transformer, StringWriter strWriter, NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws IOException, NodePresentationException, NodeTypeIdentifierException {
 	StringWriter result = strWriter;
 
 	List<CorpusNode> catalogueNodeURLs = getCatalogueNodesUnderCorpus(node, csp, nodeTypeIdentifier);
@@ -152,10 +150,9 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @param nodeTypeIdentifier NodeTypeIdentifer, check if selected node is of
      * type catalogue
      * @return List of Catalogue Node as CorpusNode
-     * @throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException
      * @throws NodeTypeIdentifierException
      */
-    private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws nl.mpi.archiving.corpusstructure.core.UnknownNodeException, NodeTypeIdentifierException {
+    private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodeTypeIdentifierException {
 	List<CorpusNode> result = new ArrayList<CorpusNode>();
 	List<CorpusNode> children = csp.getChildNodes(corpusNode.getNodeURI());
 	for (CorpusNode childNode : children) {

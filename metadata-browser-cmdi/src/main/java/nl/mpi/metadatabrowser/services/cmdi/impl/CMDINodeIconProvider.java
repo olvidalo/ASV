@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
@@ -118,8 +117,8 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
             final ImageIcon nodeTypeIcon = getNodeTypeIcon(nodeType);
             combinedIcon = checkNodeAccess(contentNode, nodeTypeIcon);
-        } catch (UnknownNodeException ex) {
-            Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
+        //} catch (UnknownNodeException ex) {
+          //  Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NodeTypeIdentifierException ex) {
             Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -134,7 +133,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @param csdb , instance of corpusStructureDb
      * @return ImageIcon, corresponding to access level
      */
-    private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) throws UnknownNodeException {
+    private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) {
         final ImageIcon accessIcon = getNodeAccessIcon(accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
 
         // retrieve the corresponding combined icon based on nodetype and accesslevel
@@ -217,6 +216,9 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     private ImageIcon getNodeAccessIcon(AccessLevel nodeAccessLevel) {
+        if(nodeAccessLevel == null) {
+            return unknownIcon;
+        }
         switch (nodeAccessLevel) {
             case ACCESS_LEVEL_OPEN_EVERYBODY:
                 return openIcon;

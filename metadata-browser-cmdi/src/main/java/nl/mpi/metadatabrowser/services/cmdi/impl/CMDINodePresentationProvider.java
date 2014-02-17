@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.xml.transform.Templates;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -102,8 +101,8 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
                     logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
                     return new Label(wicketId, node.toString());
                 }
-            } catch (UnknownNodeException ex) {
-                throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
+            //} catch (UnknownNodeException ex) {
+             //   throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
             } catch (NodeTypeIdentifierException ex) {
                 throw new NodePresentationException("could not find node type while building presentation for node " + node, ex);
             }
@@ -113,7 +112,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
         }
     }
 
-    private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException, UnknownNodeException, NodeTypeIdentifierException {
+    private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException, NodeTypeIdentifierException {
         final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node), csp, nodeTypeIdentifier));
         contentLabel.setEscapeModelStrings(false);
         return contentLabel;

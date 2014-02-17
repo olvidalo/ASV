@@ -17,7 +17,6 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import javax.ws.rs.core.UriBuilder;
 import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.core.service.ams.AmsAuthorizationService;
 import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicense;
@@ -76,7 +74,7 @@ public final class ResourcePresentation extends Panel {
     private final ResourceReference externalIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_black.png");
     private final static Logger logger = LoggerFactory.getLogger(ResourcePresentation.class);
 
-    public ResourcePresentation(String id, TypedCorpusNode node) throws UnknownNodeException {
+    public ResourcePresentation(String id, TypedCorpusNode node) {
         super(id);
         //String nodeId = Integer.toString(node.getNodeURI());
         final String userid = auth.getPrincipalName();

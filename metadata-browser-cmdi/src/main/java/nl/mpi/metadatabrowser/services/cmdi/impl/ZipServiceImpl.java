@@ -29,7 +29,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -81,7 +80,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      */
     @Override
     @Transactional
-    public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, UnknownNodeException, FileNotFoundException {
+    public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException {
 	//create object of FileOutputStream
 	final File tmpFile = File.createTempFile("mdtbrowser", ".zip");
 	final FileOutputStream fout = new FileOutputStream(tmpFile);
@@ -106,9 +105,8 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @param userid String: the user that request the download
      * @param itemsadded int: number to check that at least one item will be added to the zip
      * @param overallSize long: check the limit of the zip file size.
-     * @throws UnknownNodeException
      */
-    private int addChildren(ZipOutputStream zout, URI nodeUri, String userid, int itemsAdded) throws UnknownNodeException {
+    private int addChildren(ZipOutputStream zout, URI nodeUri, String userid, int itemsAdded) {
 	final List<CorpusNode> childrenNodes = new CopyOnWriteArrayList<CorpusNode>(csdb.getChildNodes(nodeUri));
 	boolean hasaccess;
         int filesAdded =0;
@@ -152,7 +150,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @return boolean. true if user has access to the specificed node
      * @throws UnknownNodeException
      */
-    private boolean checkAccess(String userid, URI nodeId) throws UnknownNodeException {
+    private boolean checkAccess(String userid, URI nodeId) {
 	if (userid == null || userid.equals("") || userid.equals("anonymous")) {
 	    return accessInfoProvider.hasReadAccess(nodeId, AccessInfoProvider.EVERYBODY);
 	} else {
@@ -170,7 +168,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @param itemsAdded int : number of items to be added. should be 1 to process
      * @throws UnknownNodeException
      */
-    private int zipFile(ZipOutputStream zout, CorpusNode childNode, String userid, int itemsAdded, int filesAdded) throws UnknownNodeException {
+    private int zipFile(ZipOutputStream zout, CorpusNode childNode, String userid, int itemsAdded, int filesAdded) {
 	boolean hasaccess;
 	try {
 	    if (itemsAdded > 0) { // must be minimum 1 to proceed = 1 accessible resource for user

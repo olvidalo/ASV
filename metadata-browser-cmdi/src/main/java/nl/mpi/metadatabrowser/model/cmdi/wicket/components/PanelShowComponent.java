@@ -21,7 +21,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -44,7 +43,7 @@ public final class PanelShowComponent extends Panel {
 
     private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
 
-    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnknownNodeException, UnsupportedEncodingException {
+    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnsupportedEncodingException {
         super(id);
         String title;
         final Form form = new Form("nodeInfoForm");

@@ -19,9 +19,6 @@ package nl.mpi.metadatabrowser.services.cmdi;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
@@ -30,6 +27,6 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
  */
 public interface ZipService {
 
-    File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, UnknownNodeException, FileNotFoundException;
+    File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException;
     
 }

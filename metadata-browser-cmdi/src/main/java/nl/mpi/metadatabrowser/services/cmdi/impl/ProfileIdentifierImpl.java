@@ -17,7 +17,6 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
 import org.slf4j.Logger;
@@ -44,11 +43,10 @@ public class ProfileIdentifierImpl implements ProfileIdentifier {
 
     @Override
     public URI getProfile(URI uri) {
-	try {
-	    return csdb.getNode(uri).getProfile();
-	} catch (UnknownNodeException ex) {
-	    logger.warn("Failed to get profile, unknown node at {}", uri, ex);
-	    return null;
-	}
+        URI profileUri = csdb.getNode(uri).getProfile();
+        if(profileUri == null) {
+            logger.warn("Failed to get profile, unknown node at {}", uri);
+        }
+        return profileUri;
     }
 }

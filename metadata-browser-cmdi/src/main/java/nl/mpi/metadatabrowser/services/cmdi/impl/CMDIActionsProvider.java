@@ -16,11 +16,11 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -136,7 +136,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction);
 
-
     }
 
     @Override
@@ -147,14 +146,15 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                     return collectionNodeActionList;
                 }
                 if (node.getNodeType() instanceof MetadataType) {
-                    try {
-                        if (csdb.getChildNodes(node.getNodeURI()).isEmpty()) {
+                    URI childNodeUri = node.getNodeURI();
+                    if (childNodeUri == null) {
+                        return null;
+                    } else {
+                        if (csdb.getChildNodes(childNodeUri).isEmpty()) {
                             return childLessMetadataNodeActionList;
                         } else {
                             return metadataNodeActionList;
                         }
-                    } catch (UnknownNodeException ex) {
-                        return null;
                     }
                 }
                 if (node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof IMDIResourceVideoType || node.getNodeType() instanceof IMDIResourcePictureType || node.getNodeType() instanceof IMDIResourceAudioType) {

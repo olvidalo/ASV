@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -85,8 +84,8 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
         } catch (IOException ex) {
             logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
             throw new NodeActionException(this, ex);
-        } catch (UnknownNodeException ex) {
-            throw new NodeActionException(this, ex);
-        }
+        }// catch (UnknownNodeException ex) {
+         //   throw new NodeActionException(this, ex);
+        //}
     }
 }

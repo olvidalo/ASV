@@ -20,7 +20,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
@@ -65,7 +64,7 @@ public class CMDINodeIconProviderTest {
      * Test of getNodeIcon method, of class CMDINodeIconProvider.
      */
     @Test
-    public void testGetNodeIcon() throws NodeTypeIdentifierException, URISyntaxException, UnknownNodeException {
+    public void testGetNodeIcon() throws NodeTypeIdentifierException, URISyntaxException {
 	System.out.println("getNodeIcon");
 	final URI nodeid = new URI("nodeid1");
 	final CorpusNode contentNode = context.mock(CorpusNode.class);

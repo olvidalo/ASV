@@ -19,8 +19,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
@@ -69,7 +67,7 @@ public class CMDIActionsProviderTest {
      * Test of getNodeActions method, of class CMDIActionsProvider.
      */
     @Test
-    public void testGetNodeActions() throws UnknownNodeException {
+    public void testGetNodeActions() {
         System.out.println("getNodeActions");
         final Collection<TypedCorpusNode> collectionCorpus = Arrays.<TypedCorpusNode>asList(corpType);
         final CorpusStructureProvider cs = context.mock(CorpusStructureProvider.class);

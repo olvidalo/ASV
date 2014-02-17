@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -118,9 +117,9 @@ public class PanelVersionComponent extends Panel {
         } catch (URISyntaxException ex) {
             Session.get().error(ex.getMessage());
             logger.error("", ex);
-        } catch (UnknownNodeException ex) {
-            Session.get().error(ex.getMessage());
-            logger.error("", ex);
-        }
+        }// catch (UnknownNodeException ex) {
+        //    Session.get().error(ex.getMessage());
+        //    logger.error("", ex);
+        //}
     }
 }
