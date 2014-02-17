@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.UnknownNodeException;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
 import nl.mpi.archiving.tree.GenericTreeNode;
@@ -110,9 +109,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
                 getParentNode(new URI(node), treePanel, parentNodes, rootObj);
             } catch (URISyntaxException ex) {
                 logger.error("the URI for node {} gives an error {}", node, ex);
-            } catch (UnknownNodeException ex) {
-                logger.error("node {} is unknow {}", node, ex);
-            }
+            } //catch (UnknownNodeException ex) {
+            //    logger.error("node {} is unknow {}", node, ex);
+            //}
             return true;
         }
         return false;
@@ -131,7 +130,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
      * @throws URISyntaxException
      * @throws UnknownNodeException
      */
-    private void getParentNode(URI node, ArchiveTreePanel treePanel, List<URI> parentNodes, Object rootObj) throws URISyntaxException, UnknownNodeException {
+    private void getParentNode(URI node, ArchiveTreePanel treePanel, List<URI> parentNodes, Object rootObj) throws URISyntaxException {
         URI parentNodeURI = csprovider.getCanonicalParent(node);// get parent URI
         if (parentNodeURI != null) {
             parentNodes.add(parentNodeURI); //add parent to the list
