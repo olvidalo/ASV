@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
+import java.io.Serializable;
 import org.apache.wicket.IResourceListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -35,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class DocumentInlineFrame extends WebMarkupContainer implements IResourceListener {
+public class DocumentInlineFrame extends WebMarkupContainer implements IResourceListener, Serializable {
 
     private static final long serialVersionUID = 1L;
     private IResource documentResource;
@@ -95,6 +96,7 @@ public class DocumentInlineFrame extends WebMarkupContainer implements IResource
         return false;
     }
 
+    @Override
     public void onResourceRequested() {
         RequestCycle requestCycle = RequestCycle.get();
         Attributes attributes = new Attributes(requestCycle.getRequest(),

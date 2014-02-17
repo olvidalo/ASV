@@ -36,8 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO: Merge with CMDIDownloadNodeAction?
- * TODO: Add support for multiple node selection?
+ * TODO: Merge with CMDIDownloadNodeAction? TODO: Add support for multiple node
+ * selection?
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
