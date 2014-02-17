@@ -79,6 +79,8 @@ public class CMDIViewNodeActionTest {
             {
                 allowing(node).getNodeType();
                 will(returnValue(context.mock(NodeType.class)));
+                allowing(node).getName();
+                will(returnValue("parent.jpg"));
             }
         });
 

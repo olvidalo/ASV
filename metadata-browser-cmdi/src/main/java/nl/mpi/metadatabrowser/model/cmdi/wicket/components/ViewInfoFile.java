@@ -16,20 +16,45 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
-import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public final class ViewInfoFile extends Panel {
-    public ViewInfoFile(String id, NodeResolver nodeResolver, CorpusNode node) {
+
+    @SpringBean
+    NodeActionsConfiguration nodeActionsConfiguration;
+
+    public ViewInfoFile(String id, NodeResolver nodeResolver, TypedCorpusNode node) {
         super(id);
-        final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-        add(new DocumentInlineFrame("infoView", resStream));
+        //final MarkupContainer viewContainer = new WebMarkupContainer("viewContainer");
+        final String nodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
+
+//        if (node.getNodeType() instanceof IMDIResourcePictureType) {
+
+        StringBuilder sb = new StringBuilder();
+        Label resourcelabel;
+        // create label for resource
+        sb.append("<iframe id=\"viewFrame\" src=\"");
+        sb.append(nodeURL.toString());
+        sb.append("\">");
+        sb.append("</iframe>");
+        resourcelabel = new Label("infoView", sb.toString());
+        resourcelabel.setEscapeModelStrings(false);
+        add(resourcelabel);
+//        add(viewContainer);
+
+//        } else {
+//        final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
+//            add(new DocumentInlineFrame("infoView", resStream));
+//        }
+
     }
 }

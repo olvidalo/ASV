@@ -18,10 +18,8 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.annot.search.lib.SearchClient;
@@ -37,10 +35,8 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
-import nl.mpi.metadatabrowser.services.NodePresentationException;
-import nl.mpi.metadatabrowser.services.NodePresentationProvider;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,19 +66,19 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         URI targetURI = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-        String[] formats = SearchClient.getSearchableFormats();
-        List<String> formatslist = new ArrayList<String>(formats.length);
-        formatslist.addAll(Arrays.asList(formats));
+//        String[] formats = SearchClient.getSearchableFormats();
+//        List<String> formatslist = new ArrayList<String>(formats.length);
+//        formatslist.addAll(Arrays.asList(formats));
         boolean navType = false;
-        if (node.getNodeType() instanceof CMDIResourceTxtType && formatslist.contains(node.getFormat())) {
+        if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof IMDIResourceWrittenType && node.getName().endsWith(".srt") || node.getName().endsWith(".eaf") || node.getName().endsWith("tbt") || node.getName().endsWith(".cha")) {
             //TODO get session id
             URI nodeid = node.getNodeURI();// should be handle
             String nodeId = AdapterUtils.toNodeIdString(nodeid);
             navType = true;
             if (("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")) {
-                targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
-            } else {
                 targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
+            } else {
+                targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
             }
         }
 //        } else{
