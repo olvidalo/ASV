@@ -4,27 +4,27 @@
  File  : imdi_viewer.xsl
  Author: fredof
  Date  : August 1, 2006
-  
+
  Copyright (C) 2006  Freddy Offenga <freddy.offenga@mpi.nl>
  Max Planck Institute for Psycholinguistics
  Wundtlaan 1, 6525 XD Nijmegen, The Netherlands
- 
+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- 
+
 This is a modified version which is under construction by Evelyn Richter, July 2009
-Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLanguages, SubjectLanguages, Quality, Format   
+Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLanguages, SubjectLanguages, Quality, Format
 -->
 <xsl:stylesheet version="2.0" xmlns:imdi="http://www.mpi.nl/IMDI/Schema/IMDI" xmlns:saxon="http://saxon.sf.net/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="saxon imdi">
     <xsl:output indent="yes" method="html" encoding="UTF-8" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"/>
@@ -47,36 +47,36 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
     <!--
          File used for javascript functions
     -->
-<!--    <xsl:param name="JAVASCRIPT_INCLUDE_FILE">imdi-viewer.js</xsl:param>-->
-    <!-- 
+    <!--    <xsl:param name="JAVASCRIPT_INCLUDE_FILE">imdi-viewer.js</xsl:param>-->
+    <!--
         Javascript function for initialisation
     -->
-<!--    <xsl:param name="JAVASCRIPT_INITIALISE">init_viewer</xsl:param>-->
-    <!-- 
-        document if; e.g. imdi node id or URID  
+    <!--    <xsl:param name="JAVASCRIPT_INITIALISE">init_viewer</xsl:param>-->
+    <!--
+        document if; e.g. imdi node id or URID
     -->
     <xsl:param name="DOCUMENT_ID"></xsl:param>
-    <!-- 
-        Javascript function to change status of open/close group 
+    <!--
+        Javascript function to change status of open/close group
     -->
     <xsl:param name="JAVASCRIPT_CHANGE_STATUS">change_status</xsl:param>
-    <!-- 
+    <!--
         File used for css classes
     -->
-<!--    <xsl:param name="CSS_FILE">style/imdi-viewer.css</xsl:param>-->
-    <!-- 
+    <!--    <xsl:param name="CSS_FILE">style/imdi-viewer.css</xsl:param>-->
+    <!--
         File used as tree-open icon
     -->
-    <xsl:param name="IMAGE_OPEN">imdi-viewer-open.gif</xsl:param>
-    <!-- 
+    <xsl:param name="IMAGE_OPEN">imdi-viewer-open.png</xsl:param>
+    <!--
         File used as tree-closed icon
     -->
-    <xsl:param name="IMAGE_CLOSED">imdi-viewer-closed.gif</xsl:param>
-    <!-- 
-        Number of chars limit for small text blocks 
+    <xsl:param name="IMAGE_CLOSED">imdi-viewer-closed.png</xsl:param>
+    <!--
+        Number of chars limit for small text blocks
     -->
     <xsl:param name="SMALL_BLOCK_LIMIT">300</xsl:param>
-    <!-- 
+    <!--
          Separator for tokens in the SEARCH_STRING parameter
          this character should not appear in the content!
     -->
@@ -90,7 +90,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
     <xsl:variable name="searchRegex" ><!-- aap,noot becomes aap|noot, NOTE tokens matching partial words will be matched which is bad, but not trivial to solve. You cannot just put whitespace around it because that won't match words at the end or beginning etc... -->
         <xsl:value-of select='replace($SEARCH_STRING, ",", "|")'/>
     </xsl:variable>
-    
+
 
     <!--
         Root match
@@ -103,56 +103,56 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                 </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
-<!--                <html>
-                    <head>
-                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-                        <title>
-                            <xsl:value-of select="name(imdi:Session|imdi:Catalogue|imdi:Corpus)"/> : <xsl:value-of select="imdi:*/imdi:Name/text()|*/Name/text()"/> - <xsl:value-of select="imdi:Session/imdi:Title/text()"/> [IMDI 3.0] </title>
-                        <script language="javascript">
-                            <xsl:attribute name="src">
-                                <xsl:value-of select="$JAVASCRIPT_INCLUDE_FILE"/>
-                            </xsl:attribute>
-                        </script>
-                        <xsl:element name="link">
-                            <xsl:attribute name="type">text/css</xsl:attribute>
-                            <xsl:attribute name="rel">stylesheet</xsl:attribute>
-                            <xsl:attribute name="href">
-                                <xsl:value-of select="$CSS_FILE"/>
-                            </xsl:attribute>
-                        </xsl:element>
-                    </head>
-                    <body>
-                        <xsl:attribute name="onload">
-                            <xsl:value-of select="$JAVASCRIPT_INITIALISE"/>
-                            <xsl:text>('</xsl:text>
-                            <xsl:value-of select="$IMAGE_OPEN"/>
-                            <xsl:text>','</xsl:text>
-                            <xsl:value-of select="$IMAGE_CLOSED"/>
-                            <xsl:text>');</xsl:text>
-                        </xsl:attribute>-->
-                        <div class="IMDI_header">
-                            <span class="IMDI_logo"/>ISLE Metadata Initiative</div>
-                        <xsl:apply-templates select="imdi:*">
-                            <xsl:with-param name="level" select="0"/>
-                        </xsl:apply-templates>
-                        <!--                <p>
-                            <a href="http://validator.w3.org/check/referer">
-                                <img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!"
-                                    border="0" height="31" width="88"/>
-                            </a>
-                        </p> -->
-<!--                    </body>
+                <!--                <html>
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+                <title>
+                    <xsl:value-of select="name(imdi:Session|imdi:Catalogue|imdi:Corpus)"/> : <xsl:value-of select="imdi:*/imdi:Name/text()|*/Name/text()"/> - <xsl:value-of select="imdi:Session/imdi:Title/text()"/> [IMDI 3.0] </title>
+                <script language="javascript">
+                    <xsl:attribute name="src">
+                        <xsl:value-of select="$JAVASCRIPT_INCLUDE_FILE"/>
+                    </xsl:attribute>
+                </script>
+                <xsl:element name="link">
+                    <xsl:attribute name="type">text/css</xsl:attribute>
+                    <xsl:attribute name="rel">stylesheet</xsl:attribute>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="$CSS_FILE"/>
+                    </xsl:attribute>
+                </xsl:element>
+            </head>
+            <body>
+                <xsl:attribute name="onload">
+                    <xsl:value-of select="$JAVASCRIPT_INITIALISE"/>
+                    <xsl:text>('</xsl:text>
+                    <xsl:value-of select="$IMAGE_OPEN"/>
+                    <xsl:text>','</xsl:text>
+                    <xsl:value-of select="$IMAGE_CLOSED"/>
+                    <xsl:text>');</xsl:text>
+                </xsl:attribute>-->
+                <!--                <div class="IMDI_header">
+                <span class="IMDI_logo"/>ISLE Metadata Initiative</div>-->
+                <xsl:apply-templates select="imdi:*">
+                    <xsl:with-param name="level" select="0"/>
+                </xsl:apply-templates>
+                <!--                <p>
+                    <a href="http://validator.w3.org/check/referer">
+                        <img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!"
+                            border="0" height="31" width="88"/>
+                    </a>
+                </p> -->
+                <!--                    </body>
                 </html>-->
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- 
+    <!--
         Skip elements
     -->
     <xsl:template match="imdi:History">
         <!-- skip -->
     </xsl:template>
-    <!-- 
+    <!--
         Forward elements
     -->
     <xsl:template match="imdi:MDGroup|imdi:Resources|imdi:CommunicationContext">
@@ -165,7 +165,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             <xsl:with-param name="parent_content_matched" select="$parent_content_matched"/>
         </xsl:apply-templates>
     </xsl:template>
-    <!-- 
+    <!--
         content matches with tokens in SEARCH STRING
     -->
     <xsl:template match="imdi:*|*" mode="content_matches">
@@ -274,7 +274,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                         <!--<xsl:text>%CUR:</xsl:text>
                         <xsl:value-of select="$current_group_type"/>
                         <xsl:text>%THIS:</xsl:text>
-                        <xsl:value-of select="$this_content_matched"/>                        
+                        <xsl:value-of select="$this_content_matched"/>
                         <xsl:text>%PAR:</xsl:text>
                         <xsl:value-of select="$parent_content_matched"/>
                         <xsl:text>%NPAR:</xsl:text>
@@ -366,7 +366,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
         </xsl:call-template>
     </xsl:template>
     <!--
-        TimePosition, CounterPosition  
+        TimePosition, CounterPosition
     -->
     <xsl:template match="imdi:TimePosition|imdi:CounterPosition">
         <xsl:param name="level"/>
@@ -431,7 +431,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                             <xsl:choose>
                                 <!-- no scrolling window for description with matches -->
                                 <xsl:when test="$this_content_matched = 'true'">
-                                    <xsl:text>IMDI_small_text_block</xsl:text>                                    
+                                    <xsl:text>IMDI_small_text_block</xsl:text>
                                 </xsl:when>
                                 <!-- no scrolling window for small descriptions -->
                                 <xsl:when test="string-length($text) &lt; $SMALL_BLOCK_LIMIT">
@@ -485,7 +485,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                                     <xsl:choose>
                                         <!-- no scrolling window for description with matches -->
                                         <xsl:when test="$this_content_matched = 'true'">
-                                            <xsl:text>IMDI_small_text_block</xsl:text>                                    
+                                            <xsl:text>IMDI_small_text_block</xsl:text>
                                         </xsl:when>
                                         <!-- no scrolling window for small descriptions -->
                                         <xsl:when test="string-length($text) &lt; $SMALL_BLOCK_LIMIT">
@@ -521,7 +521,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- 
+    <!--
        Catalogue: Format, Quality
         Format and Quality are dynamic in Catalogue, but labels in Sessions
     -->
@@ -568,8 +568,8 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
-    <!-- 
+
+    <!--
         Content highlighting, using regex code.
     -->
     <xsl:template match="text()" mode="highlight">
@@ -592,8 +592,8 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- 
-        Count token matches 
+    <!--
+        Count token matches
     -->
     <xsl:template name="count_matches">
         <xsl:param name="string" select="''"/>
@@ -610,9 +610,9 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <!--
-        Count matches using the regexp        
+        Count matches using the regexp
     -->
     <xsl:template name="_count_token_matches">
         <xsl:param name="string"/>
@@ -623,11 +623,11 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:matching-substring>
             <xsl:non-matching-substring>
             </xsl:non-matching-substring>
-        </xsl:analyze-string>        
+        </xsl:analyze-string>
     </xsl:template>
-    
+
     <!--
-        Keys    
+        Keys
     -->
     <xsl:template match="imdi:Keys">
         <xsl:param name="level"/>
@@ -644,7 +644,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
-    <!-- 
+    <!--
         Key
     -->
     <xsl:template match="imdi:Key">
@@ -664,7 +664,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    
+
     <!--
         Create a grouping of content
         css classname gets the same name as the imdi element name
@@ -769,7 +769,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             <span class="IMDI_group_header_link">
                 <xsl:attribute name="id">
                     <xsl:value-of select="$xpath-id"/>
-                </xsl:attribute>        
+                </xsl:attribute>
                 <xsl:element name="a">
                     <xsl:attribute name="href">
                         <xsl:text>javascript:</xsl:text>
@@ -830,7 +830,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
     </xsl:template>
     <!--
         Output name,value content for keys, need to have separate class, because they need slightly different layout then the other key value pairs
-    -->    
+    -->
     <xsl:template name="print_keys_name_value">
         <xsl:param name="level"/>
         <xsl:param name="name"/>
