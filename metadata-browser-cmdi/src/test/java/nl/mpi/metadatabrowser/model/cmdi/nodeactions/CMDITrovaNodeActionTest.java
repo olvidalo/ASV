@@ -69,7 +69,7 @@ public class CMDITrovaNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
-        String expResult = "Annotation Content Search";
+        String expResult = "Content Search";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
@@ -85,8 +85,8 @@ public class CMDITrovaNodeActionTest {
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
         nodes.add(node2);
-        String id =AdapterUtils.toNodeIdString(NODE_ID);
-        String id2 =AdapterUtils.toNodeIdString(NODE_ID2);
+        String id = AdapterUtils.toNodeIdString(NODE_ID);
+        String id2 = AdapterUtils.toNodeIdString(NODE_ID2);
         nodeActionsConfiguration.setTrovaURL("http://lux16.mpi.nl/ds/trova/search.jsp");
         UriBuilder targetURL = UriBuilder.fromUri(nodeActionsConfiguration.getTrovaURL());
         URI targetURI = targetURL.queryParam("nodeid", id).queryParam("nodeid", id2).queryParam("jsessionID", new URI("session_number")).build();
@@ -103,7 +103,7 @@ public class CMDITrovaNodeActionTest {
 
         CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
-        assertEquals("Annotation Content Search", instance.getName());
+        assertEquals("Content Search", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

@@ -68,7 +68,7 @@ public class CMDIVersionNodeActionTest {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
         final MockAuthenticationHolderImpl auth = new MockAuthenticationHolderImpl();
         auth.setPrincipalName(null);
 
@@ -88,9 +88,9 @@ public class CMDIVersionNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
-        String expResult = "Version";
+        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
+        String expResult = "Version Info";
         String result = instance.getName();
         assertEquals(expResult, result);
     }

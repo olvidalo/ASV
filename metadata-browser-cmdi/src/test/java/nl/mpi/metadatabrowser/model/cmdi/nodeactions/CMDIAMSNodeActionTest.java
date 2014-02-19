@@ -71,7 +71,7 @@ public class CMDIAMSNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
-        String expResult = "Manage Access Rights";
+        String expResult = "Manage Access";
         String result = instance.getName();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -86,10 +86,10 @@ public class CMDIAMSNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-        String id =AdapterUtils.toNodeIdString(NODE_ID);
+        String id = AdapterUtils.toNodeIdString(NODE_ID);
         nodeActionsConfiguration.setAmsURL("http://lux16.mpi.nl/am/ams2/index.face");
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
-        URI targetURI =  url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
+        URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
 
         context.checking(new Expectations() {
             {
@@ -102,7 +102,7 @@ public class CMDIAMSNodeActionTest {
 
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(node);
-        assertEquals("Manage Access Rights", instance.getName());
+        assertEquals("Manage Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

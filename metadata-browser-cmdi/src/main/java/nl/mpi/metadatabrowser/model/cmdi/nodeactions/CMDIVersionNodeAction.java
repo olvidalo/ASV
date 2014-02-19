@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "Version";
+    private final String name = "Version Info";
     private final CorpusStructureProvider csdb;
     private final NodeResolver resolver;
 
@@ -53,7 +53,7 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
-        final String userid = auth.getPrincipalName();      
+        final String userid = auth.getPrincipalName();
         //TO DO connect to versionAPI DB
         final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
 

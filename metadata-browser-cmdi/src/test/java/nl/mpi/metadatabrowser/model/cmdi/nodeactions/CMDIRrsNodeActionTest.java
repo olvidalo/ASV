@@ -69,7 +69,7 @@ public class CMDIRrsNodeActionTest {
     public void testGetName() {
         System.out.println("getName");
         CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration);
-        String expResult = "Resource Access (RRS)";
+        String expResult = "Request Access";
         String result = instance.getName();
         assertEquals(expResult, result);
     }
@@ -83,12 +83,12 @@ public class CMDIRrsNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-        String id =AdapterUtils.toNodeIdString(NODE_ID);
+        String id = AdapterUtils.toNodeIdString(NODE_ID);
         nodeActionsConfiguration.setRrsURL("http://lux16.mpi.nl/ds/RRS_V1/RrsIndex");
 
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
-               URI targetURI =  url.queryParam("nodeid", id).queryParam("jsessionID", "session_id").build();
-                
+        URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", "session_id").build();
+
 
         context.checking(new Expectations() {
             {
@@ -101,7 +101,7 @@ public class CMDIRrsNodeActionTest {
 
         CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration);
         NodeActionResult result = instance.execute(nodes);
-        assertEquals("Resource Access (RRS)", instance.getName());
+        assertEquals("Request Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

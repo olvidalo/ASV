@@ -44,21 +44,21 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Autowired
-    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration){
+    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration) {
         this.nodeActionsConfiguration = nodeActionsCongiguration;
     }
-    
+
     @Override
     public String getName() {
-        return "Manage Access Rights";
+        return "Manage Access";
     }
 
     @Override
     public NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
-                // Build redirect to AMS
-                        URI nodeId = node.getNodeURI();
-                        String nodeid = AdapterUtils.toNodeIdString(nodeId);
+        // Build redirect to AMS
+        URI nodeId = node.getNodeURI();
+        String nodeid = AdapterUtils.toNodeIdString(nodeId);
         URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         NavigationActionRequest request = null;
         try {

@@ -68,7 +68,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
 
     private final static ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/session_color.gif"));
     private final static ImageIcon catalogueIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/catalogue.png"));
-    private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/corpusnode_color.gif"));
+    private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/corpusnode_color.png"));
     private final static ImageIcon audioIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/audio.gif"));
     private final static ImageIcon videoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/video.gif"));
     private final static ImageIcon annotationIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/annotation.gif"));
@@ -77,13 +77,13 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon infoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/infofile.gif"));
     private final static ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/mediafile.gif"));
     private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/file.gif"));
-    private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("clarin.png"));
-    private final static ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("unknown.png"));
-    private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
-    private final static ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_yellow.png"));
-    private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
-    private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
-    private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
+    private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/clarin.png"));
+    private final static ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/unknown.png"));
+    private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_green.png"));
+    private final static ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_yellow.png"));
+    private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_orange.png"));
+    private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_red.png"));
+    private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_black.png"));
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final CorpusStructureProvider csProvider;
@@ -117,8 +117,8 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
             final ImageIcon nodeTypeIcon = getNodeTypeIcon(nodeType);
             combinedIcon = checkNodeAccess(contentNode, nodeTypeIcon);
-        //} catch (UnknownNodeException ex) {
-          //  Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
+            //} catch (UnknownNodeException ex) {
+            //  Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NodeTypeIdentifierException ex) {
             Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -216,7 +216,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     private ImageIcon getNodeAccessIcon(AccessLevel nodeAccessLevel) {
-        if(nodeAccessLevel == null) {
+        if (nodeAccessLevel == null) {
             return unknownIcon;
         }
         switch (nodeAccessLevel) {

@@ -54,7 +54,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     @Override
     public String getName() {
-        return "Download Subtree";
+        return "Download All";
     }
 
     @Override
@@ -85,7 +85,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
             logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
             throw new NodeActionException(this, ex);
         }// catch (UnknownNodeException ex) {
-         //   throw new NodeActionException(this, ex);
+        //   throw new NodeActionException(this, ex);
         //}
     }
 }

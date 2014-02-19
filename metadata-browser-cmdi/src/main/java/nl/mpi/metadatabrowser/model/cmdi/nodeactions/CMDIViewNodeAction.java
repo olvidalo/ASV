@@ -51,7 +51,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private NodeResolver resolver;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final static String name = "View Node";
+    private final static String name = "View";
     private final NodeActionsConfiguration nodeActionsConfiguration;
 
     @Autowired

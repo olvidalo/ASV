@@ -50,7 +50,7 @@ public class CMDITrovaNodeAction implements NodeAction {
 
     @Override
     public String getName() {
-        return "Annotation Content Search";
+        return "Content Search";
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CMDITrovaNodeAction implements NodeAction {
             uriBuilder = uriBuilder.queryParam("nodeid", nodeid);
         }
         try {
-            // TODO think of jsessionID. Maybe needs to be added here            
+            // TODO think of jsessionID. Maybe needs to be added here
             targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
             request = new NavigationActionRequest(targetURI.toURL());
         } catch (MalformedURLException ex) {
