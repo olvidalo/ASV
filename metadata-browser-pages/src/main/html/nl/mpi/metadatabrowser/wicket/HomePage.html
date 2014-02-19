@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html 
+<!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:wicket="http://wicket.apache.org">
@@ -9,16 +9,16 @@
         <link rel="stylesheet" href="style/aboutStyle.css" type="text/css" media="screen" title="Stylesheet" />
         <link rel="shortcut icon" href="favicon.ico" type="image/ico" />
     </head>
-    <body onload="init_viewer('imdi-viewer-open.gif', 'imdi-viewer-closed.gif');">   
+    <body onload="init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png');">
         <div wicket:id="headerPanel" id="headerPanel">[HEADER PANEL]</div>
 
-            <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
-            <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>
+        <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
+        <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>
 
         <script>
         function doLayout() {
             var variousDecorationsHeight = 2;
-            var extraDecorationsForMainPanel =37;
+            var extraDecorationsForMainPanel = 37;
             var treepanel = $("#treePanel");
             var actionWrapper = $("#actionsPanelContainer");
             var nodePanel = $("#nodePanel");
@@ -36,5 +36,5 @@
             doLayout();
         });
         </script>
-    </body>    
+    </body>
 </html>

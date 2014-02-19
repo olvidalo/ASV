@@ -16,17 +16,15 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.SecurityContext;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
-import nl.mpi.metadatabrowser.wicket.HomePage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.protocol.http.servlet.XForwardedRequestWrapper;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -39,50 +37,57 @@ public final class HeaderPanel extends Panel {
     private NodeActionsConfiguration nodeActionsConf; //TODO: Make separate headerConf and inject that to prevent dependency on CMDI impl
 
     public HeaderPanel(String id, String user) {
-	super(id);
+        super(id);
 
-	add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
-	    @Override
-	    protected void onComponentTag(ComponentTag tag) {
-		super.onComponentTag(tag);
-		tag.put("target", "_blank");
-	    }
-	});
 
-	ExternalLink manualLink = new ExternalLink("manualLink", nodeActionsConf.getManualURL()) {
-	    @Override
-	    protected void onComponentTag(ComponentTag tag) {
-		super.onComponentTag(tag);
-		tag.put("target", "_blank");
-	    }
-	};
 
-	ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
+        add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("target", "_blank");
+            }
+        });
 
-	ExternalLink userLoginLink;
+        ExternalLink homeLink = new ExternalLink("homeLink", "");
+//        Image image = new Image("homeImg", "home.png");
+//        homeLink.add(image);
+
+        ExternalLink manualLink = new ExternalLink("manualLink", nodeActionsConf.getManualURL()) {
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("target", "_blank");
+            }
+        };
+
+        ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
+
+        ExternalLink userLoginLink;
         if (user == null || user.trim().equals("") || user.equals("anonymous")) {
-            user="anonymous";
-	    userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
+            user = "anonymous";
+            userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
         } else {
-	    userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");
+            userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");
         }
 
-	Link<Void> userName = new Link<Void>("userName") {
-	    @Override
-	    public void onClick() {
-		getBeforeDisabledLink();
-	    }
+        Link<Void> userName = new Link<Void>("userName") {
+            @Override
+            public void onClick() {
+                getBeforeDisabledLink();
+            }
 
-	    @Override
-	    public boolean isEnabled() {
-		return super.isEnabled() && false;
-	    }
-	};
-	userName.add(new Label("user", "user : " + user));
-	add(userName);
-	add(manualLink);
-	add(registerLink);
-	add(userLoginLink);
+            @Override
+            public boolean isEnabled() {
+                return super.isEnabled() && false;
+            }
+        };
+        userName.add(new Label("user", "user : " + user));
+        add(userName);
+        add(manualLink);
+        add(registerLink);
+        add(userLoginLink);
+        add(homeLink);
 //        add(userLogoutLink);
     }
 }

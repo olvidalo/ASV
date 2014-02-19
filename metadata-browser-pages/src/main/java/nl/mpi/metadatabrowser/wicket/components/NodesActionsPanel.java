@@ -25,16 +25,14 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 /**
  * Panel that shows {@link NodeActionLink}s for each of the actions in the model
@@ -46,6 +44,7 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
     // overlaping javascript caused tree to reload on each request. animateLoad.js is now inline in correpsonding html. JQuery was duplicated with wicket.
 //    private static final JavaScriptResourceReference JQuery = new JavaScriptResourceReference(NodesActionsPanel.class, "res/jquery-1.3.2.js");
 //    private static final JavaScriptResourceReference ANIMATE = new JavaScriptResourceReference(NodesActionsPanel.class, "res/animateOnLoad.js");
+
     private final static CssResourceReference NodesActionsPanel_CSS = new CssResourceReference(NodesActionsPanel.class, "res/nodeActionsPanel.css");
 
     public NodesActionsPanel(String id) {
@@ -67,10 +66,11 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 actionLink.add(new Label("linkLabel", action.getName()));
                 item.add(actionLink);
                 String className = action.getName().replaceAll("\\s", "");
-                if(className.equals("ResourceAccess(RRS)")){
+                if (className.equals("ResourceAccess(RRS)")) {
                     className = "ResourceAccess";
                 }
-                item.add(new AttributeAppender("class", className));
+                item.add(new AttributeAppender("class", "btn btn-3 btn-3b " + className));
+                item.add(new AttributeAppender("title", ""));
             }
         });
     }
