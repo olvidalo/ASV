@@ -92,6 +92,7 @@ public final class ResourcePresentation extends Panel {
             String wrapHandle = handle;
             if (handle.contains(":")) {
                 wrapHandle = handle.split(":")[1];
+                wrapHandle = "http://hdl.handle.net/" + wrapHandle;
             }
             String nodetype = "unknown";
             String format = node.getFormat();
@@ -213,8 +214,8 @@ public final class ResourcePresentation extends Panel {
                 tableContainer.add(new Label("hasaccess", "no"));
             }
             tableContainer.add(new Label("nodeId", nodeid));
-            tableContainer.add(new Label("handle", wrapHandle));
-            tableContainer.add(new Label("url", nodeURL));
+            tableContainer.add(new ExternalLink("handle", wrapHandle, wrapHandle));
+            tableContainer.add(new ExternalLink("url", nodeURL, nodeURL));
             tableContainer.add(new Label("nodetype", nodetype));
             tableContainer.add(new Label("format", format));
             tableContainer.add(new Label("checksum", checksum));

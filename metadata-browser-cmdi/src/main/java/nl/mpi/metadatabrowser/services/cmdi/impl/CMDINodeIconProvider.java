@@ -79,11 +79,11 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/file.gif"));
     private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/clarin.png"));
     private final static ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/unknown.png"));
-    private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_green.png"));
-    private final static ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_yellow.png"));
-    private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_orange.png"));
-    private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_red.png"));
-    private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("/AccessIcons/al_circle_black.png"));
+    private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
+    private final static ImageIcon licensedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_yellow.png"));
+    private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
+    private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
+    private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final CorpusStructureProvider csProvider;

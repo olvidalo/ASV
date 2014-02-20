@@ -6,19 +6,18 @@
         <title>PanelShowContent</title>
     </head>
     <body>
-        <wicket:panel>            
-        <h1>Cite this resource</h1>
+        <wicket:panel>
+            <h1>Cite this resource</h1>
             <div wicket:id="formInfoContainer">
-                You selected a node from the archive: <br/>
                 <form wicket:id="nodeInfoForm">
-                    <p><span wicket:id="name">Name</span> from The Language Archive: <a href="" wicket:id="handleLink"></a></p>
-                    <p><em>The link above comes with a persistent guarantee. It will remain stable and can thus be safely used for citation in publications and on websites.</em></p>                 
+                    <p>"<span wicket:id="name">Name</span>" from The Language Archive: <a href="" wicket:id="handleLink"></a></p>
+                    <p><em>Use the link above for citing this resource or (sub)corpus in a persistent way in your publications or for linking to it on web sites. Please have a look at the metadata description to find out which person(s) or project(s) should be mentioned as author.</em></p>
                 </form></div><br />
-            <div wicket:id="formDetailsContainer">               
-                <input type="button" value="show details..." wicket:id="showDetails" />          
+            <div wicket:id="formDetailsContainer">
+                <input type="button" value="show details..." wicket:id="showDetails" />
                 <form wicket:id="nodeInfoDetails">
 
-                   
+
                     Internal node id: <span wicket:id="nodeId">Node id</span><br/>
                     Title: <span wicket:id="title">title</span><br/>
                     Link to the node: <a href="" wicket:id="nodeLink"></a><br/>
@@ -38,7 +37,7 @@
                     Resource format: <span wicket:id="format">format</span><br/>
                     Published: <span wicket:id="last_modified">last modified</span><br/>
                     Handle: <span wicket:id="cite_handle">Handle</span><br/>
-                    Link: <span wicket:id="resolvedHandle">Resolved Handle</span><br/>               
+                    Link: <span wicket:id="resolvedHandle">Resolved Handle</span><br/>
                 </form>
             </div>
         </wicket:panel>
