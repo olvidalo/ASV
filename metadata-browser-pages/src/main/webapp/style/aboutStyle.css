@@ -163,11 +163,11 @@ a.aMenu:hover {
     background-color: #9E001C;
 }
 
-a {
+*/a {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 14px;
-    color: #9E001C;
+    color: #FFF;
     line-height: 16px;
     font-style: normal;
     text-decoration: underline;
@@ -177,11 +177,12 @@ a:hover {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 14px;
-    color: #000;
+    color: #FFF;
+    opacity: 1;
     line-height: 16px;
     font-style: normal;
     text-decoration: none;
-}*/
+}
 
 /*body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
