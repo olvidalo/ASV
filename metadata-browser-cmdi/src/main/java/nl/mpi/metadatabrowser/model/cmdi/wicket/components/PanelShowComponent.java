@@ -56,10 +56,10 @@ public final class PanelShowComponent extends Panel {
         String nodeName = node.getName();
         URI nodeId = node.getNodeURI();
         URI parent = csdb.getCanonicalParent(nodeId);
-        if (parent == null){
+        if (parent == null) {
             title = String.format("Resource \"%s\" is root node", node.getName());
-        }else {
-        title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getNode(parent).getName());
+        } else {
+            title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getNode(parent).getName());
         }
         Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
         String lastModified = "";
@@ -75,13 +75,16 @@ public final class PanelShowComponent extends Panel {
 
         String handle = node.getPID().toString();
         String wrapHandle = handle;
+        String resolvedHandle;
         if (handle.contains(":")) {
             wrapHandle = handle.split(":")[1];
+            resolvedHandle = resolver.concat(wrapHandle);
+            wrapHandle = "http://hdl.handle.net/" + wrapHandle;
+        } else {
+            resolvedHandle = resolver.concat(wrapHandle);
         }
 
         final String archiveName = archive_name;
-        final String resolvedHandle = resolver.concat(wrapHandle);
-
         URL url = nodeResolver.getUrl(node);
 
         form.add(new Label("name", nodeName));
@@ -90,7 +93,7 @@ public final class PanelShowComponent extends Panel {
 
 
         //embeded citation down the page
-        ExternalLink openpath = new ExternalLink("openpath", "?openpath" + node.getNodeURI(), nodeName);
+        ExternalLink openpath = new ExternalLink("openpath", "?openpath=" + node.getNodeURI(), nodeName);
         formDetails.add(openpath);
         formDetails.add(new Label("nodeId", AdapterUtils.toNodeIdString(nodeId)));
         formDetails.add(new Label("title", title));
