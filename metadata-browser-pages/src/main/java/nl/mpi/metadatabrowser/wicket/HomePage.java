@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
@@ -81,7 +82,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
             }
         });
 
-        List<URI> parentNodes = new ArrayList<URI>();
+        List<URI> parentNodes = new ArrayList<>();
         boolean isOpenPath = checkForOpenpathParameter(parameters, treePanel, parentNodes, rootObj);
         if (!isOpenPath) {
             treePanel.getTree().getTreeState().selectNode(rootObj, true);
@@ -105,7 +106,11 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         String node = parameters.get("openpath").toString();
         if (node != null) {
             try {
-                parentNodes.add(new URI(node));
+                URI openNode = new URI(node);
+                if (!openNode.getScheme().equals("node")) {
+                    openNode = new URI("node:" + AdapterUtils.toNodeId(openNode));
+                }
+                parentNodes.add(openNode);
                 getParentNode(new URI(node), treePanel, parentNodes, rootObj);
             } catch (URISyntaxException ex) {
                 logger.error("the URI for node {} gives an error {}", node, ex);
