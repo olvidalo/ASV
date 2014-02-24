@@ -34,60 +34,70 @@ public class MockNodeAction implements NodeAction, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(MockNodeAction.class);
     private String name;
+    private String title;
     private String feedbackMessage;
     private String exceptionMessage;
     private ControllerActionRequest resultActionRequest;
 
     @Override
     public String getName() {
-	return name;
+        return name;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
+    }
+
+    public void settitle(String title) {
+        this.title = title;
     }
 
     public void setFeedbackMessage(String feedbackMessage) {
-	this.feedbackMessage = feedbackMessage;
+        this.feedbackMessage = feedbackMessage;
     }
 
     public void setExceptionMessage(String exceptionMessage) {
-	this.exceptionMessage = exceptionMessage;
+        this.exceptionMessage = exceptionMessage;
     }
 
     public void setResultActionRequest(ControllerActionRequest resultActionRequest) {
-	this.resultActionRequest = resultActionRequest;
+        this.resultActionRequest = resultActionRequest;
     }
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-	logger.info("Action [{}] invoked on {}", getName(), nodes);
+        logger.info("Action [{}] invoked on {}", getName(), nodes);
 
-	if (exceptionMessage == null) {
-	    return new NodeActionResult() {
-		@Override
-		public String getFeedbackMessage() {
-		    if (feedbackMessage == null) {
-			return null;
-		    } else {
-			logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
-			return feedbackMessage;
-		    }
-		}
+        if (exceptionMessage == null) {
+            return new NodeActionResult() {
+                @Override
+                public String getFeedbackMessage() {
+                    if (feedbackMessage == null) {
+                        return null;
+                    } else {
+                        logger.info("Returning feedback message \"{}\" for {}", feedbackMessage, this);
+                        return feedbackMessage;
+                    }
+                }
 
-		@Override
-		public ControllerActionRequest getControllerActionRequest() {
-		    return resultActionRequest;
-		}
-	    };
-	} else {
-	    logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
-	    throw new NodeActionException(this, exceptionMessage);
-	}
+                @Override
+                public ControllerActionRequest getControllerActionRequest() {
+                    return resultActionRequest;
+                }
+            };
+        } else {
+            logger.info("Throwing NodeActionException \"{}\" for {}", exceptionMessage, this);
+            throw new NodeActionException(this, exceptionMessage);
+        }
     }
 
     @Override
     public String toString() {
-	return getName();
+        return getName();
     }
 }

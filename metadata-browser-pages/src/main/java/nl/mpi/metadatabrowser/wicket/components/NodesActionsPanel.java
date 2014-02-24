@@ -26,7 +26,6 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -64,13 +63,14 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                     actionLink.add(new AttributeModifier("target", "_blank"));
                 }
                 actionLink.add(new Label("linkLabel", action.getName()));
+                //actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b "));
                 item.add(actionLink);
                 String className = action.getName().replaceAll("\\s", "");
                 if (className.equals("ResourceAccess(RRS)")) {
                     className = "ResourceAccess";
                 }
                 item.add(new AttributeAppender("class", "btn btn-3 btn-3b " + className));
-                item.add(new AttributeAppender("title", ""));
+                item.add(new AttributeAppender("title", action.getTitle()));
             }
         });
     }
