@@ -32,7 +32,6 @@ import static org.junit.Assert.fail;
  */
 public class SingleNodeActionTest {
 
-    
     private Mockery context = new JUnit4Mockery();
 
     /**
@@ -40,67 +39,74 @@ public class SingleNodeActionTest {
      */
     @Test
     public void testExecuteOne() throws Exception {
-	final TypedCorpusNode inputNode = context.mock(TypedCorpusNode.class);
-	final NodeActionResult expectedResult = context.mock(NodeActionResult.class);
+        final TypedCorpusNode inputNode = context.mock(TypedCorpusNode.class);
+        final NodeActionResult expectedResult = context.mock(NodeActionResult.class);
 
-	final NodeAction instance = new SingleNodeActionTestImpl() {
-	    @Override
-	    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-		assertEquals(inputNode, node);
-		return expectedResult;
-	    }
-	};
+        final NodeAction instance = new SingleNodeActionTestImpl() {
+            @Override
+            protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+                assertEquals(inputNode, node);
+                return expectedResult;
+            }
+        };
 
-	// execute action with singleton collection and check whether the node matches
-	final Set<TypedCorpusNode> nodeCollection = Collections.singleton(inputNode);
-	final NodeActionResult result = instance.execute(nodeCollection);
-	assertEquals(expectedResult, result);
+        // execute action with singleton collection and check whether the node matches
+        final Set<TypedCorpusNode> nodeCollection = Collections.singleton(inputNode);
+        final NodeActionResult result = instance.execute(nodeCollection);
+        assertEquals(expectedResult, result);
     }
 
     /**
-     * Test execute with no nodes. This violates pre-condition, should throw exception.
+     * Test execute with no nodes. This violates pre-condition, should throw
+     * exception.
      */
     @Test(expected = NodeActionException.class)
     public void testExecuteZeroInputNodes() throws NodeActionException {
-	// implementation with execute(node) method that should not get called because we are going to call it with an empty list
-	final NodeAction instance = new SingleNodeActionTestImpl() {
-	    @Override
-	    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-		fail("execute(node) should not get called");
-		throw new RuntimeException();
-	    }
-	};
-	// Execute with empty list
-	instance.execute(Collections.<TypedCorpusNode>emptyList());
-	// exception should have been thrown at this point
+        // implementation with execute(node) method that should not get called because we are going to call it with an empty list
+        final NodeAction instance = new SingleNodeActionTestImpl() {
+            @Override
+            protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+                fail("execute(node) should not get called");
+                throw new RuntimeException();
+            }
+        };
+        // Execute with empty list
+        instance.execute(Collections.<TypedCorpusNode>emptyList());
+        // exception should have been thrown at this point
     }
 
     /**
-     * Test execute with multiple nodes. This violates pre-condition, should throw exception.
+     * Test execute with multiple nodes. This violates pre-condition, should
+     * throw exception.
      */
     @Test(expected = NodeActionException.class)
     public void testExecuteMultipleInputNodes() throws NodeActionException {
-	// implementation with execute(node) method that should not get called because we are going to call it with an empty list
-	final NodeAction instance = new SingleNodeActionTestImpl() {
-	    @Override
-	    protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-		fail("execute(node) should not get called");
-		throw new RuntimeException();
-	    }
-	};
+        // implementation with execute(node) method that should not get called because we are going to call it with an empty list
+        final NodeAction instance = new SingleNodeActionTestImpl() {
+            @Override
+            protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
+                fail("execute(node) should not get called");
+                throw new RuntimeException();
+            }
+        };
 
-	// execute with two nodes
-	final TypedCorpusNode inputNode1 = context.mock(TypedCorpusNode.class, "node1");
-	final TypedCorpusNode inputNode2 = context.mock(TypedCorpusNode.class, "node2");
-	instance.execute(Arrays.asList(inputNode1, inputNode2));
-	// exception should have been thrown at this point
+        // execute with two nodes
+        final TypedCorpusNode inputNode1 = context.mock(TypedCorpusNode.class, "node1");
+        final TypedCorpusNode inputNode2 = context.mock(TypedCorpusNode.class, "node2");
+        instance.execute(Arrays.asList(inputNode1, inputNode2));
+        // exception should have been thrown at this point
     }
 
     private static abstract class SingleNodeActionTestImpl extends SingleNodeAction {
 
-	@Override
-	public final String getName() {
-	    return "name";
-	}
+        @Override
+        public final String getName() {
+            return "name";
+        }
+
+        @Override
+        public final String getTitle() {
+            return "";
+        }
     }
 }

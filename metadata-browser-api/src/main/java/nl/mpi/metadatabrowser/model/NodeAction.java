@@ -24,11 +24,14 @@ import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 /**
  * Interface for node actions.
  *
- * Implementers are responsible for executing their action on the specified node in the {@link #execute(java.net.URI) } method and return
- * an appropriate result object. This result object may request further action from the controller by providing a controller action request
- * through {@link NodeActionResult#getControllerActionRequest() }.
+ * Implementers are responsible for executing their action on the specified node
+ * in the {@link #execute(java.net.URI) } method and return an appropriate
+ * result object. This result object may request further action from the
+ * controller by providing a controller action request through {@link NodeActionResult#getControllerActionRequest()
+ * }.
  *
- * Generally it should be assumed that NodeActions may be reused, so it is not advised to keep state in the action itself.
+ * Generally it should be assumed that NodeActions may be reused, so it is not
+ * advised to keep state in the action itself.
  *
  * Serializability of all implementations must be assured!
  *
@@ -43,6 +46,13 @@ public interface NodeAction extends Serializable {
      * @return the name of this node action
      */
     String getName();
+
+    /**
+     * Provides the title of this action for use on buttons etc.
+     *
+     * @return the title of this node action
+     */
+    String getTitle();
 
     /**
      * Executes the action on a list of nodes specified by their URIs
