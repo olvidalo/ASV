@@ -43,6 +43,11 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction 
     }
 
     @Override
+    public String getTitle() {
+        return "";
+    }
+
+    @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         // DEPRECATED : HANDLE access statistics action here

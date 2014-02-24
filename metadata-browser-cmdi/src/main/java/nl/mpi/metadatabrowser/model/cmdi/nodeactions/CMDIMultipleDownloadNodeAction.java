@@ -58,6 +58,11 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     }
 
     @Override
+    public String getTitle() {
+        return "Download all resources of this bundle (to which you have access)";
+    }
+
+    @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         try {

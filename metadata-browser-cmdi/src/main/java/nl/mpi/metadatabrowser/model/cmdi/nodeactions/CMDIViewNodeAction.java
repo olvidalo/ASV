@@ -51,7 +51,6 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private NodeResolver resolver;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final static String name = "View";
     private final NodeActionsConfiguration nodeActionsConfiguration;
 
     @Autowired
@@ -110,6 +109,11 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     @Override
     public String getName() {
-        return name;
+        return "View";
+    }
+
+    @Override
+    public String getTitle() {
+        return "View this resource";
     }
 }

@@ -54,6 +54,11 @@ public class CMDITrovaNodeAction implements NodeAction {
     }
 
     @Override
+    public String getTitle() {
+        return "Search the content of the textual materials below the selected branch";
+    }
+
+    @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
         URI targetURI;

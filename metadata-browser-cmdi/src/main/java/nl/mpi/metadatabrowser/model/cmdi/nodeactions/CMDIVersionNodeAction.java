@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "Version Info";
     private final CorpusStructureProvider csdb;
     private final NodeResolver resolver;
 
@@ -69,6 +68,11 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
 
     @Override
     public String getName() {
-        return name;
+        return "Version Info";
+    }
+
+    @Override
+    public String getTitle() {
+        return "Shoe version information for the selected node";
     }
 }

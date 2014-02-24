@@ -54,6 +54,11 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
     }
 
     @Override
+    public String getTitle() {
+        return "Manage access permissions for the selected branch (requires management permissions)";
+    }
+
+    @Override
     public NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         // Build redirect to AMS

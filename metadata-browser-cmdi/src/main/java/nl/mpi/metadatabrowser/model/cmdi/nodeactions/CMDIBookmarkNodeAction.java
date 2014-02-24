@@ -41,38 +41,42 @@ import org.springframework.stereotype.Component;
 public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "Citation";
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
 
     @Autowired
     public CMDIBookmarkNodeAction(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
-	this.csdb = csdb;
-	this.nodeResolver = nodeResolver;
+        this.csdb = csdb;
+        this.nodeResolver = nodeResolver;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-	logger.debug("Action [{}] invoked on {}", getName(), node);
+        logger.debug("Action [{}] invoked on {}", getName(), node);
 
-	final ShowComponentRequest request = new ShowComponentRequest() {
-	    @Override
-	    public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-		try {
-		    // create panel form for bookmark action
-		    return new PanelShowComponent(id, node, csdb, nodeResolver);
-		//} catch (UnknownNodeException ex) {
-		  //  throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeURI(), ex);
-		} catch (UnsupportedEncodingException ex) {
-		    throw new ControllerActionRequestException("Error due to encoding problem for creating display panel for node " + node.getNodeURI(), ex);
-		}
-	    }
-	};
-	return new SimpleNodeActionResult(request);
+        final ShowComponentRequest request = new ShowComponentRequest() {
+            @Override
+            public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                try {
+                    // create panel form for bookmark action
+                    return new PanelShowComponent(id, node, csdb, nodeResolver);
+                    //} catch (UnknownNodeException ex) {
+                    //  throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeURI(), ex);
+                } catch (UnsupportedEncodingException ex) {
+                    throw new ControllerActionRequestException("Error due to encoding problem for creating display panel for node " + node.getNodeURI(), ex);
+                }
+            }
+        };
+        return new SimpleNodeActionResult(request);
     }
 
     @Override
     public String getName() {
-	return name;
+        return "Citation";
+    }
+
+    @Override
+    public String getTitle() {
+        return "Get a persistent link to this branch or resource in order to cite it in a publication or link to it on a web site";
     }
 }

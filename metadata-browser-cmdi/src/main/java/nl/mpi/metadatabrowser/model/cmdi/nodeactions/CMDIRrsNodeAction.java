@@ -54,6 +54,11 @@ public class CMDIRrsNodeAction implements NodeAction {
     }
 
     @Override
+    public String getTitle() {
+        return "Request access to the selected branch or resource";
+    }
+
+    @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
         URI targetURI = null;

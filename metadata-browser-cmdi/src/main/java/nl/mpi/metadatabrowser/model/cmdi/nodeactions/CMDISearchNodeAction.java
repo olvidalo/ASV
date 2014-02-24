@@ -54,9 +54,14 @@ public class CMDISearchNodeAction implements NodeAction {
     }
 
     @Override
+    public String getTitle() {
+        return "Search the metadata descriptions of the archived material below the selected branch";
+    }
+
+    @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), nodes);       
-       URI targetURI;
+        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+        URI targetURI;
         NavigationActionRequest request = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
         for (TypedCorpusNode node : nodes) {

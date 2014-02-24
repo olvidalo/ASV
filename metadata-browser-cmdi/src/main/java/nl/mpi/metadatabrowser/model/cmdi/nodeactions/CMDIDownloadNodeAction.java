@@ -45,7 +45,6 @@ import org.springframework.stereotype.Component;
 public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final String name = "Download";
     private final NodeResolver nodeResolver;
     private final AccessInfoProvider accessInfoProvider;
 
@@ -57,7 +56,12 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
     @Override
     public String getName() {
-        return name;
+        return "Download";
+    }
+
+    @Override
+    public String getTitle() {
+        return "Download the selected node";
     }
 
     @Override
@@ -67,15 +71,15 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
         final URL nodeUri = nodeResolver.getUrl(node);
 
         //try {
-            // HANDLE download action here
-            if (userHasAccess(node, nodeUri, userid)) {
-                final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-                final String fileName = new File(nodeUri.getPath()).getName();
-                final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
-                return new SimpleNodeActionResult(request);
-            } else {
-                return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
-            }
+        // HANDLE download action here
+        if (userHasAccess(node, nodeUri, userid)) {
+            final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
+            final String fileName = new File(nodeUri.getPath()).getName();
+            final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
+            return new SimpleNodeActionResult(request);
+        } else {
+            return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
+        }
         //} catch (UnknownNodeException ex) {
         //    throw new NodeActionException(this, ex);
         //}
