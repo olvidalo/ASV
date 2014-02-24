@@ -23,6 +23,7 @@ import java.util.Date;
 import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.corpusstructure.NodeIdUtils;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.event.IEvent;
@@ -75,20 +76,15 @@ public final class PanelShowComponent extends Panel {
 
         String handle = node.getPID().toString();
         String wrapHandle = handle;
-        String resolvedHandle;
         if (handle.contains(":")) {
             wrapHandle = handle.split(":")[1];
-            resolvedHandle = resolver.concat(wrapHandle);
-            wrapHandle = "http://hdl.handle.net/" + wrapHandle;
-        } else {
-            resolvedHandle = resolver.concat(wrapHandle);
         }
-
+        final String resolvedHandle = resolver.concat(wrapHandle);
         final String archiveName = archive_name;
         URL url = nodeResolver.getUrl(node);
 
         form.add(new Label("name", nodeName));
-        ExternalLink handleLink = new ExternalLink("handleLink", wrapHandle.concat("@view"), wrapHandle.concat("@view"));
+        ExternalLink handleLink = new ExternalLink("handleLink", resolvedHandle.concat("@view"), resolvedHandle.concat("@view"));
         form.add(handleLink);
 
 
