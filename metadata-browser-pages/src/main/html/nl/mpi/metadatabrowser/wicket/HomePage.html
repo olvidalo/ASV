@@ -14,11 +14,10 @@
 
         <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
         <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>
-
         <script>
         function doLayout() {
             var variousDecorationsHeight = 2;
-            var extraDecorationsForMainPanel = 37;
+            var extraDecorationsForMainPanel = 130;
             var treepanel = $("#treePanel");
             var actionWrapper = $("#actionsPanelContainer");
             var nodePanel = $("#nodePanel");
@@ -26,7 +25,6 @@
             var header = $("#headerPanel");
             var heightForTreeMenu = $(window).height() - header.height() - variousDecorationsHeight;
             var heightForMainPanel = $(window).height() - header.height() - extraDecorationsForMainPanel;
-
             treepanel.height(heightForTreeMenu);
             nodePresentationContainer.height(heightForMainPanel);
         }

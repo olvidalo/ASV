@@ -83,7 +83,6 @@ div#nodePanel{
     padding: 0px 10px;
 }
 
-
 div#feedbackPanel{
     overflow: hidden;
 }
@@ -122,6 +121,10 @@ div#nodePresentationContainer {
 
 div#nodePresentationContainer h1 {
     font-size: 1.2em;
+}
+
+div#nodePresentationContainer a {
+    color: #25466F;
 }
 
 div#nodePresentation{

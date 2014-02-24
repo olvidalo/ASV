@@ -113,12 +113,12 @@ a.qbutton:hover {
 
 /* style conventions */
 table.design1 {
-    background-color: #1C3655;
+    /*    background-color: #1C3655;*/
     border: thin solid #B0B0B0;
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 12px;
-    color: #fff;
+    color: #1C3655;
     line-height: 13px;
     font-style: normal;
 }
@@ -163,7 +163,7 @@ a.aMenu:hover {
     background-color: #9E001C;
 }
 
-*/a {
+*/ table.design1 a {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 14px;
@@ -173,7 +173,7 @@ a.aMenu:hover {
     text-decoration: underline;
 }
 
-a:hover {
+table.design1 a:hover {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: 14px;
