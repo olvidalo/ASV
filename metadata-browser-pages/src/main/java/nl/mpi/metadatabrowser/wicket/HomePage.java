@@ -82,7 +82,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
             }
         });
 
-        List<URI> parentNodes = new ArrayList<>();
+        List<URI> parentNodes = new ArrayList<URI>();
         boolean isOpenPath = checkForOpenpathParameter(parameters, treePanel, parentNodes, rootObj);
         if (!isOpenPath) {
             treePanel.getTree().getTreeState().selectNode(rootObj, true);
