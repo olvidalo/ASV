@@ -17,18 +17,14 @@
     "deployment". If no configuration is found, "development" is the default. -->
     <!-- Shibboleth filter definitions  -->
     <!-- Enable for shibboleth -->
-<!--        <filter>
-        <filter-name>Character encoding Filter</filter-name>
-        <filter-class>nl.mpi.metadatabrowser.services.authentication.CharacterEncodingFilter</filter-class>
-        <init-param>
-             <param-name>encoding</param-name>
-             <param-value>UTF-8</param-value>
-        </init-param>
-        <init-param>
-             <param-name>forceEncoding</param-name>
-             <param-value>true</param-value>
-        </init-param>
-    </filter>-->
+        <filter>
+            <filter-name>InterceptorFilter</filter-name>
+        <filter-class>nl.mpi.metadatabrowser.filter.RequestInterceptorFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>InterceptorFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>AAIFilter</filter-name>
         <filter-class>de.mpg.aai.shhaa.AuthFilter</filter-class>
