@@ -99,7 +99,7 @@ public class PanelVersionComponent extends Panel {
                         if (nodePID != null) {
                             item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + nodePID.toString()).build().toString(), nodePID.toString()));
                         } else {
-                            item.add(new ExternalLink("linktoPID", "no link to the specified node were found"));
+                            item.add(new ExternalLink("linktoPID", "", "no link to the specified node were found"));
                         }
 
                         final int idx = v;
