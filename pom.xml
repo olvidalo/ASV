@@ -46,7 +46,19 @@
         <developerConnection>scm:svn:https://svn.mpi.nl/LAT/metadata-browser</developerConnection>
         <url>https://trac.mpi.nl/wiki/MetadataBrowser</url>
     </scm>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <modules>
         <module>metadata-browser-api</module>
         <module>metadata-browser-cmdi</module>
@@ -83,7 +95,7 @@
         <jmock.version>2.6.0</jmock.version>
         <!-- Hint for NetBeans to insert license header -->
         <netbeans.hint.license>gpl30</netbeans.hint.license>
-        <spring.version>3.1.4.RELEASE</spring.version>
+        <spring.version>3.2.7.RELEASE</spring.version>
         <!-- Maven Version -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <war_project.version>1.0</war_project.version>
@@ -118,9 +130,9 @@
                                         <descriptorRef>mpi-deploy</descriptorRef>
                                     </descriptorRefs>
                                 </configuration>
-          			</execution>
-       			</executions>
-			</plugin>
+                                </execution>
+                        </executions>
+                        </plugin>
         </plugins>
     </build>-->
     <reporting>
