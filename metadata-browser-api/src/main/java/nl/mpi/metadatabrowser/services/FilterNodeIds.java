@@ -16,13 +16,14 @@
  */
 package nl.mpi.metadatabrowser.services;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface FilterNodeIds {
+public interface FilterNodeIds extends Serializable {
 
     String getURIParam(URI nodeid);
 }
