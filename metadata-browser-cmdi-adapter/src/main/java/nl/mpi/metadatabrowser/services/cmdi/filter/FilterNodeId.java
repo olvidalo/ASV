@@ -3,7 +3,6 @@ package nl.mpi.metadatabrowser.services.cmdi.filter;
 import java.net.URI;
 import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /*
  * Copyright (C) 2014 Max Planck Institute for Psycholinguistics
