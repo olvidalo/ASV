@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.MalformedURLException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -27,6 +26,7 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
+    @Autowired
+    private FilterNodeIds filterNodeId;
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
@@ -63,7 +65,7 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         // Build redirect to AMS
         URI nodeId = node.getNodeURI();
-        String nodeid = AdapterUtils.toNodeIdString(nodeId);
+        String nodeid = filterNodeId.getURIParam(nodeId);
         URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         NavigationActionRequest request = null;
         try {

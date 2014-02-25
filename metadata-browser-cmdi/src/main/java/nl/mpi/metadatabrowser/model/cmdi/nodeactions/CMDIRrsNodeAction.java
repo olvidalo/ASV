@@ -20,13 +20,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +42,8 @@ public class CMDIRrsNodeAction implements NodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
+    @Autowired
+    private FilterNodeIds filterNodeId;
 
     @Autowired
     public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
@@ -67,7 +69,7 @@ public class CMDIRrsNodeAction implements NodeAction {
         for (TypedCorpusNode node : nodes) {
             //Buil redirect to RRS
             URI nodeId = node.getNodeURI();
-            String nodeid = AdapterUtils.toNodeIdString(nodeId);
+            String nodeid = filterNodeId.getURIParam(nodeId);
             targetURI = uriBuilder.queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         }
         try {

@@ -18,12 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.annot.search.lib.SearchClient;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -37,6 +32,7 @@ import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +48,8 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private NodeResolver resolver;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeActionsConfiguration nodeActionsConfiguration;
+    @Autowired
+    private FilterNodeIds filterNodeId;
 
     @Autowired
     public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver) {
@@ -72,7 +70,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof IMDIResourceWrittenType && node.getName().endsWith(".srt") || node.getName().endsWith(".eaf") || node.getName().endsWith("tbt") || node.getName().endsWith(".cha")) {
             //TODO get session id
             URI nodeid = node.getNodeURI();// should be handle
-            String nodeId = AdapterUtils.toNodeIdString(nodeid);
+            String nodeId = filterNodeId.getURIParam(nodeid);
             navType = true;
             if (("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")) {
                 targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();

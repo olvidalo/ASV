@@ -22,12 +22,12 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Session;
@@ -48,6 +48,8 @@ import org.slf4j.LoggerFactory;
 public class PanelVersionComponent extends Panel {
 
     private final Logger logger = LoggerFactory.getLogger(PanelVersionComponent.class);
+    @SpringBean
+    private FilterNodeIds filterNodeId;
     @SpringBean
     private AccessInfoProvider accessInfoProvider;
     @SpringBean
@@ -91,7 +93,7 @@ public class PanelVersionComponent extends Panel {
                         Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
                         item.add(new Label("hasaccess", hasaccess.toString()));
                         item.add(new Label("currentNodeDate", currentNodeDate.toString()));
-                        item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, AdapterUtils.toNodeIdString(node.getNodeURI())));
+                        item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, filterNodeId.getURIParam(node.getNodeURI())));
                         item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + node.getPID().toString()).build().toString(), node.getPID().toString()));
 
                         final int idx = v;

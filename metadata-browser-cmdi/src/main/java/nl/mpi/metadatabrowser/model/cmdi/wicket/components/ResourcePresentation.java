@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -35,6 +34,7 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -55,6 +55,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class ResourcePresentation extends Panel {
 
+    @SpringBean
+    private FilterNodeIds filterNodeId;
     @SpringBean
     private AccessInfoProvider accessInfoProvider;
     @SpringBean
@@ -78,7 +80,7 @@ public final class ResourcePresentation extends Panel {
         super(id);
         //String nodeId = Integer.toString(node.getNodeURI());
         final String userid = auth.getPrincipalName();
-        String nodeid = AdapterUtils.toNodeIdString(node.getNodeURI());
+        String nodeid = filterNodeId.getURIParam(node.getNodeURI());
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         if (nodeURL != null) {
             Boolean hasaccess;
