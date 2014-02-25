@@ -104,6 +104,7 @@ ul#navigation a {
     font-style: normal;
     color: white;
     text-decoration: none;
+    padding: 10px 15px 10px 55px;
     /*    display: inline-block;*/
     /*    margin-right: 20px;
         margin-bottom: 9px;*/
@@ -219,7 +220,7 @@ ul#navigation a {
 
 /* Button 3b */
 .btn-3b {
-    padding: 10px 15px 10px 55px;
+    padding: 0px;
     border-radius: 10px;
 }
 

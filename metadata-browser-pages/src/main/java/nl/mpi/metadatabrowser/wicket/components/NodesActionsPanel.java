@@ -62,14 +62,13 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 if (action.getName().equals("Metadata Search") || action.getName().equals("Resource Access (RRS)") || action.getName().equals("Annotation Content Search") || action.getName().equals("Manage Access Rights")) {
                     actionLink.add(new AttributeModifier("target", "_blank"));
                 }
-                actionLink.add(new Label("linkLabel", action.getName()));
-                //actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b "));
-                item.add(actionLink);
                 String className = action.getName().replaceAll("\\s", "");
                 if (className.equals("ResourceAccess(RRS)")) {
                     className = "ResourceAccess";
                 }
-                item.add(new AttributeAppender("class", "btn btn-3 btn-3b " + className));
+                actionLink.add(new Label("linkLabel", action.getName()));
+                actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b " + className));
+                item.add(actionLink);
                 item.add(new AttributeAppender("title", action.getTitle()));
             }
         });
