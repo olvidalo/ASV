@@ -113,7 +113,7 @@ public final class PanelShowComponent extends Panel {
             formDetails.add(new Label("resolvedHandle", resolvedHandle));
         } else {
             formDetails.add(new Label("cite_handle", "no handle for this resource"));
-            formDetails.add(new Label("resolvedHandle", "no handle were found for this resource"));
+            formDetails.add(new Label("resolvedHandle", "no handle was found for this resource"));
         }
         formDetails.add(new ExternalLink("nodeLink", url.toString(), url.toString()));
         formDetails.setVisible(false);
