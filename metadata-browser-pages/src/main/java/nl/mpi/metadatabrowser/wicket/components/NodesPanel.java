@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -48,8 +47,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Panel combining an actions panel and a node presentation component based on a collection of corpus nodes (typically a selection from the
- * tree)
+ * Panel combining an actions panel and a node presentation component based on a
+ * collection of corpus nodes (typically a selection from the tree)
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
@@ -70,53 +69,54 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(NodesPanel.class, "res/imdi-viewer.css");
 
     public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
-	super(id, model);
+        super(id, model);
 
         // add a panel to show feedback information (updated on model change, i.e. node selection)
         add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
-        
-	// Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
-	nodeActionsPanel = new NodesActionsPanel("nodeActions");
-	nodeActionsPanel.setOutputMarkupId(true);
-	add(nodeActionsPanel);
 
-	// Add a panel for node visualisation and/or output of node actions (updated on model change, i.e. node selection)
-	nodePresentationContainer = new WebMarkupContainer("nodePresentationContainer");
-	nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
-	nodePresentationContainer.setOutputMarkupId(true);
-	add(nodePresentationContainer);
+        // Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
+        nodeActionsPanel = new NodesActionsPanel("nodeActions");
+        nodeActionsPanel.setOutputMarkupId(true);
+        add(nodeActionsPanel);
+
+        // Add a panel for node visualisation and/or output of node actions (updated on model change, i.e. node selection)
+        nodePresentationContainer = new WebMarkupContainer("nodePresentationContainer");
+        nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
+        nodePresentationContainer.setOutputMarkupId(true);
+        add(nodePresentationContainer);
     }
 
     @Override
     protected void onModelChanged() {
-	// This gets called when the node selection changes, e.g. one or more new nodes get selected or unselected
-	super.onModelChanged();
+        // This gets called when the node selection changes, e.g. one or more new nodes get selected or unselected
+        super.onModelChanged();
 
-	final Collection<TypedCorpusNode> typedNodes = getTypedCorpusNodes(getModelObject());
-	updateNodeActions(typedNodes);
-	updateNodePresentation(typedNodes);
+        final Collection<TypedCorpusNode> typedNodes = getTypedCorpusNodes(getModelObject());
+        updateNodeActions(typedNodes);
+        updateNodePresentation(typedNodes);
     }
 
     /**
-     * Wraps the selected nodes into typed corpus nodes (using the {@link NodeTypeIdentifier} to get the node type for each node)
+     * Wraps the selected nodes into typed corpus nodes (using the
+     * {@link NodeTypeIdentifier} to get the node type for each node)
      *
      * @param selectedNodes nodes to get typed versions for
      * @return
      */
     private Collection<TypedCorpusNode> getTypedCorpusNodes(final Collection<SerializableCorpusNode> selectedNodes) {
-	final Collection<TypedCorpusNode> typedNodes = new ArrayList<TypedCorpusNode>(selectedNodes.size());
-	for (SerializableCorpusNode node : selectedNodes) {
-	    // Get the node type from the node type identifier
-	    try {
-		final NodeType nodeType = nodeTypeIdentifier.getNodeType(node);
-		typedNodes.add(new TypedSerializableCorpusNode(node, nodeType));
-	    } catch (NodeTypeIdentifierException ex) {
-		logger.warn("Could not determine node type for node {}. Adding as unknown type.", node, ex);
-		warn("Error identifying node type: " + ex.getMessage());
-		typedNodes.add(new TypedSerializableCorpusNode(node, NodeType.UNKNOWN));
-	    }
-	}
-	return typedNodes;
+        final Collection<TypedCorpusNode> typedNodes = new ArrayList<TypedCorpusNode>(selectedNodes.size());
+        for (SerializableCorpusNode node : selectedNodes) {
+            // Get the node type from the node type identifier
+            try {
+                final NodeType nodeType = nodeTypeIdentifier.getNodeType(node);
+                typedNodes.add(new TypedSerializableCorpusNode(node, nodeType));
+            } catch (NodeTypeIdentifierException ex) {
+                logger.warn("Could not determine node type for node {}. Adding as unknown type.", node, ex);
+                warn("Error identifying node type: " + ex.getMessage());
+                typedNodes.add(new TypedSerializableCorpusNode(node, NodeType.UNKNOWN));
+            }
+        }
+        return typedNodes;
     }
 
     /**
@@ -125,30 +125,31 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
      * @param typedNodes selected nodes with type information
      */
     private void updateNodeActions(final Collection<TypedCorpusNode> typedNodes) {
-	final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(typedNodes);
-	nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, selectedNodeActions));
+        final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(typedNodes);
+        nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, selectedNodeActions));
     }
 
     /**
-     * Adds the node presentation component to the presentation container (or remove if none is available)
+     * Adds the node presentation component to the presentation container (or
+     * remove if none is available)
      *
      * @param typedNodes selected nodes with type information
      */
     private void updateNodePresentation(final Collection<TypedCorpusNode> typedNodes) {
-	try {
-	    final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
-	    if (nodePresentation == null) {
-		nodePresentationContainer.addOrReplace(new WebMarkupContainer("nodePresentation"));
-	    } else {
-		nodePresentationContainer.addOrReplace(nodePresentation);
-	    }
-	} catch (NodePresentationException ex) {
-	    logger.warn("Error while updating node presentation for {}", typedNodes, ex);
-	    error(ex.getMessage());
-	}
+        try {
+            final Component nodePresentation = nodePresentationProvider.getNodePresentation("nodePresentation", typedNodes);
+            if (nodePresentation == null) {
+                nodePresentationContainer.addOrReplace(new WebMarkupContainer("nodePresentation"));
+            } else {
+                nodePresentationContainer.addOrReplace(nodePresentation);
+            }
+        } catch (NodePresentationException ex) {
+            logger.warn("Error while updating node presentation for {}", typedNodes, ex);
+            error(ex.getMessage());
+        }
     }
-    
-        @Override
+
+    @Override
     public void renderHead(IHeaderResponse response) {
         response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
         response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));

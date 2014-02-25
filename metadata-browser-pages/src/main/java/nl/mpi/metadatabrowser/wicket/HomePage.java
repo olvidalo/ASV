@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
@@ -15,7 +14,9 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
+import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -35,6 +36,8 @@ import org.slf4j.LoggerFactory;
 public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> extends WebPage {
 
     private static final long serialVersionUID = 1L;
+    @SpringBean
+    private FilterNodeIds filterNodeId;
     @SpringBean
     private CorpusStructureProvider csprovider;
     @SpringBean
@@ -84,10 +87,10 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 
         List<URI> parentNodes = new ArrayList<URI>();
         boolean isOpenPath = checkForOpenpathParameter(parameters, treePanel, parentNodes, rootObj);
-        if (!isOpenPath) {
-            treePanel.getTree().getTreeState().selectNode(rootObj, true);
-        }
-        nodesPanel.setModelObject(treePanel.getSelectedNodes());// display presentation for selected node (root node if openpath doesn' exist)
+//        if (!isOpenPath) {
+//            treePanel.getTree().getTreeState().selectNode(rootObj, true);
+//        }
+        nodesPanel.setModelObject(treePanel.getSelectedNodes());// display presentation for selected node (Welocome Page if openpath doesn' exist)
         add(nodesPanel);
     }
 
@@ -108,7 +111,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
             try {
                 URI openNode = new URI(node);
                 if (!openNode.getScheme().equals("node")) {
-                    openNode = new URI("node:" + AdapterUtils.toNodeId(openNode));
+                    openNode = new URI("node:" + filterNodeId.getURIParam(openNode));
                 }
                 parentNodes.add(openNode);
                 getParentNode(new URI(node), treePanel, parentNodes, rootObj);
