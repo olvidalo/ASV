@@ -10,28 +10,31 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
        profile="cmdi-production,cmdi-production-csdb,cmdi-cs2-csdb">
-    
-    <!-- 
+
+    <!--
 	Configuration of the database/JPA driven 'native' CMDI Corpus Structure 2 Provider, to be used in a CMDI production environment.
-	
+
 	These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
 	or 'cmdi-production-csdb' is active.
-	
-	Persistence aspects are configured in persistence.xml.
+
+        Persistence aspects are configured in persistence.xml.
     -->
-    
+
     <bean id="archiveDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveDaoImpl" />
     <bean id="aoDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.ArchiveObjectsDaoImpl" />
     <bean id="csDao" class="nl.mpi.archiving.corpusstructure.core.database.dao.impl.CorpusStructureDaoImpl" />
-    
+
     <!-- Factory for CorpusStructure/AccessInfo. This pattern is used to allow for transactional instantiation of the providers. -->
     <bean id="providerFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
-    
+
+    <!-- Provider for correct id format. This used to get the appropriate ID as string and prevent a dependency to the Adapter in the cmdi implementation. -->
+    <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.FilterNodeId"/>
+
     <!-- CSDB created from factory -->
     <bean id="corpusStructureProvider" factory-bean="providerFactory" factory-method="createCorpusStructureProvider" />
 
     <bean id="accessInfoProvider" factory-bean="providerFactory" factory-method="createAccessInfoProvider" />
-    
-    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />    
+
+    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.provider.db.service.impl.CorpusStructureProviderNodeResolver" />
 
 </beans>
