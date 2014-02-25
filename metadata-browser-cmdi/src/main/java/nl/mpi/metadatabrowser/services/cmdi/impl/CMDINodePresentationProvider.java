@@ -37,6 +37,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.WelcomePagePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
@@ -85,6 +86,9 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
     @Override
     public Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException {
         logger.debug("Making node presentation for nodes {}", nodes);
+        if (nodes.isEmpty()) {
+            return new WelcomePagePanel(wicketId);
+        }
         if (nodes.size() == 1) {
             final TypedCorpusNode node = nodes.iterator().next();
             try {
@@ -101,8 +105,8 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
                     logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
                     return new Label(wicketId, node.toString());
                 }
-            //} catch (UnknownNodeException ex) {
-             //   throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
+                //} catch (UnknownNodeException ex) {
+                //   throw new NodePresentationException("Could not find node while building presentation for node " + node, ex);
             } catch (NodeTypeIdentifierException ex) {
                 throw new NodePresentationException("could not find node type while building presentation for node " + node, ex);
             }
