@@ -90,11 +90,14 @@ public final class ResourcePresentation extends Panel {
                 hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
             }
 
-            String handle = node.getPID().toString();
-            String wrapHandle = handle;
-            if (handle.contains(":")) {
-                wrapHandle = handle.split(":")[1];
-                wrapHandle = "http://hdl.handle.net/" + wrapHandle;
+            String wrapHandle = "";
+            URI handle = node.getPID();
+            if (handle != null) {
+                wrapHandle = handle.toString();
+                if (wrapHandle.contains(":")) {
+                    wrapHandle = wrapHandle.split(":")[1];
+                    wrapHandle = "http://hdl.handle.net/" + wrapHandle;
+                }
             }
             String nodetype = "unknown";
             String format = node.getFormat();
@@ -216,7 +219,11 @@ public final class ResourcePresentation extends Panel {
                 tableContainer.add(new Label("hasaccess", "no"));
             }
             tableContainer.add(new Label("nodeId", nodeid));
-            tableContainer.add(new ExternalLink("handle", wrapHandle, wrapHandle));
+            if (handle != null) {
+                tableContainer.add(new ExternalLink("handle", wrapHandle, wrapHandle));
+            } else {
+                tableContainer.add(new ExternalLink("handle", "", "no handle was found for this resource"));
+            }
             tableContainer.add(new ExternalLink("url", nodeURL, nodeURL));
             tableContainer.add(new Label("nodetype", nodetype));
             tableContainer.add(new Label("format", format));

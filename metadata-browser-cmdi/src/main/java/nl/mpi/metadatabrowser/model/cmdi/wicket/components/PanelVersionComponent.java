@@ -94,7 +94,13 @@ public class PanelVersionComponent extends Panel {
                         item.add(new Label("hasaccess", hasaccess.toString()));
                         item.add(new Label("currentNodeDate", currentNodeDate.toString()));
                         item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, filterNodeId.getURIParam(node.getNodeURI())));
-                        item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + node.getPID().toString()).build().toString(), node.getPID().toString()));
+
+                        URI nodePID = node.getPID();
+                        if (nodePID != null) {
+                            item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + nodePID.toString()).build().toString(), nodePID.toString()));
+                        } else {
+                            item.add(new ExternalLink("linktoPID", "no link to the specified node were found"));
+                        }
 
                         final int idx = v;
                         item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {

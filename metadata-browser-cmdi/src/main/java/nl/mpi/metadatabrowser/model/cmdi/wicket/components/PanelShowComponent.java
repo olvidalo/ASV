@@ -76,10 +76,13 @@ public final class PanelShowComponent extends Panel {
             archive_name = "unknown";
         }
 
-        String handle = node.getPID().toString();
-        String wrapHandle = handle;
-        if (handle.contains(":")) {
-            wrapHandle = handle.split(":")[1];
+        String wrapHandle = "";
+        URI handle = node.getPID(); // can be null
+        if (handle != null) {
+            wrapHandle = handle.toString();
+            if (wrapHandle.contains(":")) {
+                wrapHandle = wrapHandle.split(":")[1];
+            }
         }
         final String resolvedHandle = resolver.concat(wrapHandle);
         final String archiveName = archive_name;
@@ -87,6 +90,9 @@ public final class PanelShowComponent extends Panel {
 
         form.add(new Label("name", nodeName));
         ExternalLink handleLink = new ExternalLink("handleLink", resolvedHandle.concat("@view"), resolvedHandle.concat("@view"));
+        if (handle == null) {
+            handleLink.setVisible(false);
+        }
         form.add(handleLink);
 
 
@@ -101,8 +107,14 @@ public final class PanelShowComponent extends Panel {
         formDetails.add(new Label("archive_name", archiveName));
         formDetails.add(new Label("format", node.getFormat()));
         formDetails.add(new Label("last_modified", lastModified));
-        formDetails.add(new Label("cite_handle", wrapHandle));
-        formDetails.add(new Label("resolvedHandle", resolvedHandle));
+
+        if (handle != null) {
+            formDetails.add(new Label("cite_handle", wrapHandle));
+            formDetails.add(new Label("resolvedHandle", resolvedHandle));
+        } else {
+            formDetails.add(new Label("cite_handle", "no handle for this resource"));
+            formDetails.add(new Label("resolvedHandle", "no handle were found for this resource"));
+        }
         formDetails.add(new ExternalLink("nodeLink", url.toString(), url.toString()));
         formDetails.setVisible(false);
 

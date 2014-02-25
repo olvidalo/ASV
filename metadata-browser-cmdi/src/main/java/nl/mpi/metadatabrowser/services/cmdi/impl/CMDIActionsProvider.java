@@ -37,6 +37,7 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
@@ -78,6 +79,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     private List<NodeAction> childLessMetadataNodeActionList;
     private List<NodeAction> collectionNodeActionList;
     private List<NodeAction> multipleNodeActionList;
+    private List<NodeAction> catalogueMetadataNodeActionList;
 
     @Autowired
     public CMDIActionsProvider(CorpusStructureProvider csdb) {
@@ -95,6 +97,14 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 downloadNodeAction,
                 multipleDownloadNodeAction,
                 versionNodeAction);
+
+        catalogueMetadataNodeActionList = Arrays.<NodeAction>asList(
+                searchNodeAction,
+                trovaNodeAction,
+                amsNodeAction,
+                rrsNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction);
 
         childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
                 searchNodeAction,
@@ -146,6 +156,9 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                     return collectionNodeActionList;
                 }
                 if (node.getNodeType() instanceof MetadataType) {
+                    if (node.getNodeType() instanceof IMDICatalogueType) {
+                        return catalogueMetadataNodeActionList;
+                    }
                     URI childNodeUri = node.getNodeURI();
                     if (childNodeUri == null) {
                         return null;
