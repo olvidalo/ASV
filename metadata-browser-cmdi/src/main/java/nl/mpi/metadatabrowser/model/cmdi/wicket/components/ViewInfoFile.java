@@ -42,6 +42,8 @@ public final class ViewInfoFile extends Panel {
         StringBuilder sb = new StringBuilder();
         Label resourcelabel;
         // create label for resource
+        sb.append("Viewing file ").append(node.getName());
+        sb.append("\n");
         sb.append("<iframe id=\"viewFrame\" src=\"");
         sb.append(nodeURL.toString());
         sb.append("\">");
