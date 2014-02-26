@@ -25,8 +25,6 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
-import nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthenticationHolderImpl;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -42,23 +40,18 @@ import static org.junit.Assert.*;
  */
 public class CMDIDownloadNodeActionTest {
 
-    private final Mockery context = new JUnit4Mockery();
-    private final static URI NODE_ID = URI.create("node:1");
-    private final AuthenticationHolder auth = context.mock(AuthenticationHolder.class);
+    private Mockery context;
+    private static URI NODE_ID;
+    private AuthenticationHolder auth;
 
     public CMDIDownloadNodeActionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
+        context = new JUnit4Mockery();
+        NODE_ID = URI.create("node:1");
+        auth = context.mock(AuthenticationHolder.class);
     }
 
     @After
@@ -70,40 +63,43 @@ public class CMDIDownloadNodeActionTest {
      */
     @Test
     public void testExecute() throws Exception {
-	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-	final AccessInfoProvider aiProvider = context.mock(AccessInfoProvider.class);
-        final MockAuthenticationHolderImpl auth = new MockAuthenticationHolderImpl();
-        auth.setPrincipalName(null);// this is a test for no authenticated user
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
+        final AccessInfoProvider aiProvider = context.mock(AccessInfoProvider.class);
 
-	context.checking(new Expectations() {
-	    {               
+        context.checking(new Expectations() {
+            {
                 oneOf(nodeResolver).getUrl(node);
-		will(returnValue(new URL("http://my/nodeUri")));
+                will(returnValue(new URL("http://my/nodeUri")));
 
-		allowing(node).getNodeURI();
-		will(returnValue(NODE_ID));
+                allowing(node).getNodeURI();
+                will(returnValue(NODE_ID));
 
-		allowing(node).getName();
-		will(returnValue("nodeName"));
+                allowing(node).getName();
+                will(returnValue("nodeName"));
 
-		allowing(aiProvider).hasReadAccess(NODE_ID, "everybody");
-		will(returnValue(true));
-	    }
-	});
+                allowing(aiProvider).hasReadAccess(NODE_ID, "everybody");
+                will(returnValue(true));
 
-	CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver, aiProvider);
+                allowing(auth).getPrincipalName();
+                will(returnValue("anonymous"));
+                allowing(auth).setPrincipalName(null);
+            }
+        });
+
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver, aiProvider);
+        auth.setPrincipalName(null);// this is a test for no authenticated user
         instance.setAuthenticationHolder(auth);
-	NodeActionResult result = instance.execute(node);
-	ControllerActionRequest actionRequest = result.getControllerActionRequest();
-	assertNotNull(actionRequest);
-	assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
+        NodeActionResult result = instance.execute(node);
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(DownloadActionRequest.class));
 
-	assertEquals("Download", instance.getName());
+        assertEquals("Download", instance.getName());
 
-	DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
-	assertEquals("nodeUri", downloadActionRequest.getFileName());
-	IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
-	assertNotNull(downloadStream);
+        DownloadActionRequest downloadActionRequest = (DownloadActionRequest) actionRequest;
+        assertEquals("nodeUri", downloadActionRequest.getFileName());
+        IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
+        assertNotNull(downloadStream);
     }
 }

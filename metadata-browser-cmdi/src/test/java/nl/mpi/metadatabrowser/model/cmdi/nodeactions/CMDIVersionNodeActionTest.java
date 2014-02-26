@@ -27,9 +27,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -39,21 +37,14 @@ import static org.junit.Assert.*;
  */
 public class CMDIVersionNodeActionTest {
 
-    private final Mockery context = new JUnit4Mockery();
+    private Mockery context;
 
     public CMDIVersionNodeActionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
+        context = new JUnit4Mockery();
     }
 
     @After

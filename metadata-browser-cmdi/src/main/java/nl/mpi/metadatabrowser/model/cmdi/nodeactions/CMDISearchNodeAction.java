@@ -42,12 +42,12 @@ public class CMDISearchNodeAction implements NodeAction {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    @Autowired
     private FilterNodeIds filterNodeId;
 
     @Autowired
-    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
+    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
+        this.filterNodeId = filterNodeIds;
     }
 
     @Override

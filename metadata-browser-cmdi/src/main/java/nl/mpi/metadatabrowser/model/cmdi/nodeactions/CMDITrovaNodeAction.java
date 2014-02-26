@@ -42,12 +42,12 @@ public class CMDITrovaNodeAction implements NodeAction {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    @Autowired
     private FilterNodeIds filterNodeId;
 
     @Autowired
-    public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
+    public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeId) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
+        this.filterNodeId = filterNodeId;
     }
 
     @Override

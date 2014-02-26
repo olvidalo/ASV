@@ -42,12 +42,12 @@ public class CMDIRrsNodeAction implements NodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
-    @Autowired
     private FilterNodeIds filterNodeId;
 
     @Autowired
-    public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration) {
+    public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
+        this.filterNodeId = filterNodeIds;
     }
 
     @Override

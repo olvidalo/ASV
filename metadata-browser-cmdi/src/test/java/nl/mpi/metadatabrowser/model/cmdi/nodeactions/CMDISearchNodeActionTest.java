@@ -20,12 +20,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
-import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -39,23 +39,20 @@ import org.junit.*;
  */
 public class CMDISearchNodeActionTest {
 
-    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
-    private final Mockery context = new JUnit4Mockery();
-    private final static URI NODE_ID = URI.create("node:1");
+    private NodeActionsConfiguration nodeActionsConfiguration;
+    private FilterNodeIds filterIdProvider;
+    private Mockery context;
+    private static URI NODE_ID;
 
     public CMDISearchNodeActionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
+        filterIdProvider = new MockFilterNodeId();
+        nodeActionsConfiguration = new NodeActionsConfiguration();
+        context = new JUnit4Mockery();
+        NODE_ID = URI.create("node:1");
     }
 
     @After
@@ -68,7 +65,7 @@ public class CMDISearchNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration);
+        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider);
         String expResult = "Metadata Search";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -84,10 +81,10 @@ public class CMDISearchNodeActionTest {
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
-        String id =AdapterUtils.toNodeIdString(NODE_ID);
+        String id = filterIdProvider.getURIParam(NODE_ID);
         nodeActionsConfiguration.setMdSearchURL("http://lux16.mpi.nl/ds/imdi_search/strucsearch.jsp");
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getMdSearchURL());
-                URI targetURI =  url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_number")).build();
+        URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_number")).build();
 
         context.checking(new Expectations() {
             {
@@ -98,7 +95,7 @@ public class CMDISearchNodeActionTest {
 
 
 
-        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration);
+        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("Metadata Search", instance.getName());
 

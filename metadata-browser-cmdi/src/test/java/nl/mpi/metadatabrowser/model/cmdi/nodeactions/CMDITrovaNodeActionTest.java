@@ -20,11 +20,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -38,24 +39,22 @@ import org.junit.*;
  */
 public class CMDITrovaNodeActionTest {
 
-    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
-    private final Mockery context = new JUnit4Mockery();
-    private final static URI NODE_ID = URI.create("node:1");
-    private final static URI NODE_ID2 = URI.create("node:2");
+    private NodeActionsConfiguration nodeActionsConfiguration;
+    private FilterNodeIds filterIdProvider;
+    private Mockery context;
+    private static URI NODE_ID;
+    private static URI NODE_ID2;
 
     public CMDITrovaNodeActionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
+        nodeActionsConfiguration = new NodeActionsConfiguration();
+        context = new JUnit4Mockery();
+        URI NODE_ID = URI.create("node:1");
+        URI NODE_ID2 = URI.create("node:2");
+        filterIdProvider = new MockFilterNodeId();
     }
 
     @After
@@ -68,7 +67,7 @@ public class CMDITrovaNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration, filterIdProvider);
         String expResult = "Content Search";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -85,8 +84,8 @@ public class CMDITrovaNodeActionTest {
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
         nodes.add(node);
         nodes.add(node2);
-        String id = AdapterUtils.toNodeIdString(NODE_ID);
-        String id2 = AdapterUtils.toNodeIdString(NODE_ID2);
+        String id = filterIdProvider.getURIParam(NODE_ID);
+        String id2 = filterIdProvider.getURIParam(NODE_ID2);
         nodeActionsConfiguration.setTrovaURL("http://lux16.mpi.nl/ds/trova/search.jsp");
         UriBuilder targetURL = UriBuilder.fromUri(nodeActionsConfiguration.getTrovaURL());
         URI targetURI = targetURL.queryParam("nodeid", id).queryParam("nodeid", id2).queryParam("jsessionID", new URI("session_number")).build();
@@ -101,7 +100,7 @@ public class CMDITrovaNodeActionTest {
         });
 
 
-        CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration);
+        CMDITrovaNodeAction instance = new CMDITrovaNodeAction(nodeActionsConfiguration, filterIdProvider);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("Content Search", instance.getName());
 

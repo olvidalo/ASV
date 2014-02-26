@@ -17,22 +17,21 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -40,24 +39,20 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDIAMSNodeActionTest {
 
-    @Autowired
-    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
-    private final Mockery context = new JUnit4Mockery();
-    private final static URI NODE_ID = URI.create("node:1");
+    private NodeActionsConfiguration nodeActionsConfiguration;
+    private FilterNodeIds filterIdProvider;
+    private Mockery context;
+    private static URI NODE_ID;
 
     public CMDIAMSNodeActionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     public void setUp() {
+        context = new JUnit4Mockery();
+        NODE_ID = URI.create("node:1");
+        nodeActionsConfiguration = new NodeActionsConfiguration();
+        filterIdProvider = new MockFilterNodeId();
     }
 
     @After
@@ -70,11 +65,10 @@ public class CMDIAMSNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
         String expResult = "Manage Access";
         String result = instance.getName();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
     }
 
     /**
@@ -84,31 +78,42 @@ public class CMDIAMSNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+//        MockFilterNodeId filterIdProvider = new MockFilterNodeId();
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
-        nodes.add(node);
-        String id = AdapterUtils.toNodeIdString(NODE_ID);
-        nodeActionsConfiguration.setAmsURL("http://lux16.mpi.nl/am/ams2/index.face");
-        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
-        URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
 
-        context.checking(new Expectations() {
+        nodes.add(node);
+
+        context.checking(
+                new Expectations() {
             {
                 allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));
+
+                oneOf(node).getPID();
+                will(returnValue(NODE_ID.toString()));
             }
         });
 
+        String id = filterIdProvider.getURIParam(NODE_ID);
 
-
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration);
+        nodeActionsConfiguration.setAmsURL(
+                "http://lux16.mpi.nl/am/ams2/index.face");
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
+        URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
         NodeActionResult result = instance.execute(node);
-        assertEquals("Manage Access", instance.getName());
+
+        assertEquals(
+                "Manage Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
+
         assertNotNull(actionRequest);
+
         assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+
         assertNotNull(navigationActionRequest.getTargetURL());
         assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }

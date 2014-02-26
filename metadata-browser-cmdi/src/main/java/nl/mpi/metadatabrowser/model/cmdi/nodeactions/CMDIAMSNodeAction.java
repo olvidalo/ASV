@@ -40,14 +40,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
-    @Autowired
-    private FilterNodeIds filterNodeId;
     private NodeActionsConfiguration nodeActionsConfiguration;
+    private FilterNodeIds filterIdProvider;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Autowired
-    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration) {
+    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration, FilterNodeIds filterIdProvider) {
         this.nodeActionsConfiguration = nodeActionsCongiguration;
+        this.filterIdProvider = filterIdProvider;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         // Build redirect to AMS
         URI nodeId = node.getNodeURI();
-        String nodeid = filterNodeId.getURIParam(nodeId);
+        String nodeid = filterIdProvider.getURIParam(nodeId);
         URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         NavigationActionRequest request = null;
         try {
