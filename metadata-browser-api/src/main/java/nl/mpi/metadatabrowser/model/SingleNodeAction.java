@@ -27,24 +27,27 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public abstract class SingleNodeAction implements NodeAction {
+
     @Autowired
     protected AuthenticationHolder auth;
 
     /**
-     * Executes {@link #execute(java.net.URI) } for the single node contained by the node URIs list
+     * Executes {@link #execute(java.net.URI) } for the single node contained by
+     * the node URIs list
      *
      * @param nodeUris singleton list of node URIs to execute the action on
      * @return the result of {@link #execute(java.net.URI) }
-     * @throws NodeActionException if the provided list of node URIs does not contain exactly one item or whatever gets thrown by
+     * @throws NodeActionException if the provided list of node URIs does not
+     * contain exactly one item or whatever gets thrown by
      * {@link #execute(nl.mpi.metadatabrowser.model.TypedCorpusNode) }
      */
     @Override
     public final NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-	if (nodes.size() == 1) {
-	    return execute(nodes.iterator().next());
-	} else {
-	    throw new NodeActionException(this, "This action can only be executed on single nodes");
-	}
+        if (nodes.size() == 1) {
+            return execute(nodes.iterator().next());
+        } else {
+            throw new NodeActionException(this, "This action can only be executed on single nodes");
+        }
     }
 
     /**
@@ -56,8 +59,7 @@ public abstract class SingleNodeAction implements NodeAction {
      */
     protected abstract NodeActionResult execute(TypedCorpusNode node) throws NodeActionException;
 
-
-    public void setAuthenticationHolder(AuthenticationHolder auth){
+    public void setAuthenticationHolder(AuthenticationHolder auth) {
         this.auth = auth;
     }
 }
