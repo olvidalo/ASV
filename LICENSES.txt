@@ -1,4 +1,4 @@
-Copyright (C) 200x-2011, The Max Planck Institute for Psycholinguistics.
+Copyright (C) 2013-2014, The Max Planck Institute for Psycholinguistics.
 
 This file is part of METADATA Browser.
 
