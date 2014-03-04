@@ -72,19 +72,12 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             URI nodeid = node.getNodeURI();// should be handle
             String nodeId = filterNodeId.getURIParam(nodeid);
             navType = true;
-            if (("".equals(nodeId.toString()) || !nodeId.toString().startsWith("hdl")) || !nodeId.toString().startsWith("1839")) {
+            if ((!"".equals(nodeId.toString()) || nodeId.toString().startsWith("hdl")) || nodeId.toString().startsWith("1839")) {
                 targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
             } else {
                 targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
             }
         }
-//        } else{
-//            URL nodeURL = resolver.getUrl(node);
-//            if(nodeURL.getProtocol().equals("file")){
-//
-//            }
-//        }
-
 
         if (navType == true) {
             try {
