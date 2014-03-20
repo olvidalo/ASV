@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>MediaFilePanel</title>
+        <script src="mediaelementjs/mediaelement-and-player.min.js"></script>
+    </head>
+    <body>
+        <wicket:panel>
+            <video id="video" width="640" height="360" wicket:id="displayVideo">
+                Your browser doesn't support the HTML5 video tag. Try downloading the file instead.
+                Fallback flash player for no-HTML5 browsers with JavaScript turned off
+                <object width="640" height="360" type="application/x-shockwave-flash" data="../build/flashmediaelement.swf">
+                    <param name="movie" value="../build/flashmediaelement.swf" />
+                    <param name="flashvars" value="controls=true&amp;file=../media/echo-hereweare.mp4" />
+                </object>
+            </video>
+            <span wicket:id="altView"></span>
+            <p> If you cannot see the video click <a href="" wicket:id="viewVideo">here </a> or consider downloading it.</p>
+        </wicket:panel>
+        <script>
+            $('audio,video').mediaelementplayer({
+                success: function(player, node) {
+                    $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+                }
+            });
+        </script>
+    </body>
+</html>

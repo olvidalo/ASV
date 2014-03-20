@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -30,7 +31,11 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
@@ -46,15 +51,17 @@ import org.springframework.stereotype.Component;
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private NodeResolver resolver;
+    private final CorpusStructureProvider csdb;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeActionsConfiguration nodeActionsConfiguration;
     @Autowired
     private FilterNodeIds filterNodeId;
 
     @Autowired
-    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver) {
+    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, CorpusStructureProvider csdb) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.resolver = nodeResolver;
+        this.csdb = csdb;
     }
 
     @Override
@@ -72,7 +79,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             URI nodeid = node.getNodeURI();// should be handle
             String nodeId = filterNodeId.getURIParam(nodeid);
             navType = true;
-            if ((!"".equals(nodeId.toString()) || nodeId.toString().startsWith("hdl")) || nodeId.toString().startsWith("1839")) {
+            if ((nodeId.toString().startsWith("hdl")) || nodeId.toString().startsWith("1839")) {
                 targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
             } else {
                 targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
@@ -86,6 +93,24 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             } catch (MalformedURLException ex) {
                 logger.error("URL syntax exception:" + ex);
             }
+        } else if (node.getNodeType() instanceof IMDIResourceVideoType) {
+            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                    return new MediaFilePanel(id, resolver, node, nodeActionsConfiguration, csdb);
+                }
+            };
+            return new SimpleNodeActionResult(componentRequest);
+
+        } else if (node.getNodeType() instanceof IMDIResourceAudioType) {
+            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                    return new AudioFilePanel(id, resolver, node, nodeActionsConfiguration, csdb);
+                }
+            };
+            return new SimpleNodeActionResult(componentRequest);
+
         } else {
             final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override
