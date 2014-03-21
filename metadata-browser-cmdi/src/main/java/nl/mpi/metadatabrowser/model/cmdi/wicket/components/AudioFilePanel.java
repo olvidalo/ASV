@@ -58,6 +58,8 @@ public final class AudioFilePanel extends Panel {
         final List<MediaSource> mm = new ArrayList<MediaSource>();
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         Label resourcelabel;
+        boolean haswav = true;
+        add(new Label("viewTitle", node.getName()));
         if (node.getName().endsWith(".wav")) {
             mm.add(new MediaSource(nodeURL.toString()));
 //                  mm.add(new MediaSource(url in ogg format)); // ideally supported but not for now
@@ -67,8 +69,6 @@ public final class AudioFilePanel extends Panel {
         } else { // backup to display audio in iframe. No html5
             StringBuilder sb = new StringBuilder();
             // create label for resource
-            sb.append("Viewing file ").append(node.getName());
-            sb.append("\n");
             sb.append("<iframe id=\"viewFrame\" src=\"");
             sb.append(nodeURL.toString());
             sb.append("\">");
@@ -76,6 +76,7 @@ public final class AudioFilePanel extends Panel {
             resourcelabel = new Label("altView", sb.toString());
             resourcelabel.setEscapeModelStrings(false);
             add(resourcelabel);
+            haswav = false;
         }
 
         IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {
@@ -87,7 +88,7 @@ public final class AudioFilePanel extends Panel {
             }
         };
 
-        add(new Html5Audio("displayAudio", mediaSourceList) {
+        Html5Audio audio = (new Html5Audio("displayAudio", mediaSourceList) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -100,8 +101,10 @@ public final class AudioFilePanel extends Panel {
                 return true;
             }
         });
-
-
+        if (!haswav) {
+            audio.setVisible(false);
+        }
+        add(audio);
 
         add(new ExternalLink("viewAudio", nodeURL.toString())); // let the browser handle the display if html5 is not supported.
     }

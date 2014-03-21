@@ -62,6 +62,7 @@ public final class MediaFilePanel extends Panel {
         final List<MediaSource> mm = new ArrayList<MediaSource>();
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         Label resourcelabel;
+        add(new Label("viewTitle", node.getName()));
         boolean hasmp4 = false; // use to display video without mp4 double. Alternative display to html5
         URI nodeParent = csdb.getCanonicalParent(node.getNodeURI());
         List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeParent);
@@ -85,8 +86,6 @@ public final class MediaFilePanel extends Panel {
         if (!hasmp4) { // backup to display video in iframe. No html5
             StringBuilder sb = new StringBuilder();
             // create label for resource
-            sb.append("Viewing file ").append(node.getName());
-            sb.append("\n");
             sb.append("<iframe id=\"viewFrame\" src=\"");
             sb.append(nodeURL.toString());
             sb.append("\">");
@@ -105,7 +104,7 @@ public final class MediaFilePanel extends Panel {
             }
         };
 
-        add(new Html5Video("displayVideo", mediaSourceList) {
+        Html5Video video = (new Html5Video("displayVideo", mediaSourceList) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -119,7 +118,11 @@ public final class MediaFilePanel extends Panel {
             }
         });
 
+        if (!hasmp4) {
+            video.setVisible(false);
+        }
 
+        add(video);
 
         add(new ExternalLink("viewVideo", nodeURL.toString()));
     }
