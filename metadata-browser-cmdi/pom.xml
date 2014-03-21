@@ -130,6 +130,11 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-html5</artifactId>
+            <version>6.14.0</version>
+        </dependency>
     </dependencies>
 </project>
 
