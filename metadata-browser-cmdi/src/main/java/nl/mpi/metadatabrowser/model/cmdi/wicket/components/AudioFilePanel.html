@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:wicket>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>AudioFilePanel</title>
+    </head>
+    <body>
+        <wicket:panel>
+            <audio id="audio" width="640" height="360" wicket:id="displayAudio">
+                Your browser doesn't support the HTML5 audio tag. Try downloading the file instead.
+                Fallback flash player for no-HTML5 browsers with JavaScript turned off
+            </audio>
+            <span wicket:id="altView"></span>
+            <p> If you cannot here anything or nothing is displayed <a href="" wicket:id="viewAudio" target="_blank"> click here </a> or consider downloading it.</p>
+        </wicket:panel>
+        <script>
+            $('audio,video').mediaelementplayer({
+                success: function(player, node) {
+                    $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+                }
+            });
+        </script>
+    </body>
+</html>
