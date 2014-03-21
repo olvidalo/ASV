@@ -17,14 +17,14 @@
                 </object>
             </video>
             <span wicket:id="altView"></span>
-            <p> If you cannot see the video click <a href="" wicket:id="viewVideo">here </a> or consider downloading it.</p>
+            <p> If you cannot see the video click <a href="" wicket:id="viewVideo" target="_blank">here </a> or consider downloading it.</p>
+            <script>
+                $('audio,video').mediaelementplayer({
+                    success: function(player, node) {
+                        $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+                    }
+                });
+            </script>
         </wicket:panel>
-        <script>
-            $('audio,video').mediaelementplayer({
-                success: function(player, node) {
-                    $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
-                }
-            });
-        </script>
     </body>
 </html>
