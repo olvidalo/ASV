@@ -17,8 +17,8 @@
 package nl.mpi.metadatabrowser.services.cmdi.provider;
 
 import java.io.Serializable;
-import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveDao;
-import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveObjectsDao;
+import nl.mpi.archiving.corpusstructure.core.database.dao.ArchivePropertyDao;
+import nl.mpi.archiving.corpusstructure.core.database.dao.ArchiveObjectDao;
 import nl.mpi.archiving.corpusstructure.core.database.dao.CorpusStructureDao;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProviderFactory;
@@ -39,27 +39,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductionCorpusStructureProviderFactory implements CorpusStructureProviderFactory, AccessInfoProviderFactory, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(ProductionCorpusStructureProviderFactory.class);
-    private final ArchiveObjectsDao aoDao;
-    private final ArchiveDao archiveDao;
+    private final ArchiveObjectDao aoDao;
+    private final ArchivePropertyDao archiveDao;
     private final CorpusStructureDao csDao;
 
     @Autowired
-    public ProductionCorpusStructureProviderFactory(ArchiveObjectsDao aoDao, ArchiveDao archiveDao, CorpusStructureDao csDao) {
-	logger.debug("Creating cs provider factory with {}, {}, {}", aoDao, archiveDao, csDao);
-	this.aoDao = aoDao;
-	this.archiveDao = archiveDao;
-	this.csDao = csDao;
+    public ProductionCorpusStructureProviderFactory(ArchiveObjectDao aoDao, ArchivePropertyDao archiveDao, CorpusStructureDao csDao) {
+        logger.debug("Creating cs provider factory with {}, {}, {}", aoDao, archiveDao, csDao);
+        this.aoDao = aoDao;
+        this.archiveDao = archiveDao;
+        this.csDao = csDao;
     }
 
     @Override
     public CorpusStructureProvider createCorpusStructureProvider() {
-	logger.debug("Constructing new CorpusStructureProviderImpl");
-	return new CorpusStructureProviderImpl(archiveDao, aoDao, csDao);
+        logger.debug("Constructing new CorpusStructureProviderImpl");
+        return new CorpusStructureProviderImpl(archiveDao, aoDao, csDao);
     }
 
     @Override
     public AccessInfoProvider createAccessInfoProvider() {
-	logger.debug("Constructing new CorpusStructureProviderImpl");
-	return new AccessInfoProviderImpl(aoDao);
+        logger.debug("Constructing new CorpusStructureProviderImpl");
+        return new AccessInfoProviderImpl(aoDao);
     }
 }
