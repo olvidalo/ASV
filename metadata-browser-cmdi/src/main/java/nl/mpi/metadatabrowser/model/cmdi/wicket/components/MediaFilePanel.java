@@ -62,7 +62,7 @@ public final class MediaFilePanel extends Panel {
         final List<MediaSource> mm = new ArrayList<MediaSource>();
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         Label resourcelabel;
-        add(new Label("viewTitle", node.getName()));
+        add(new Label("viewTitle", "Viewing " + node.getName()));
         boolean hasmp4 = false; // use to display video without mp4 double. Alternative display to html5
         URI nodeParent = csdb.getCanonicalParent(node.getNodeURI());
         List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeParent);
