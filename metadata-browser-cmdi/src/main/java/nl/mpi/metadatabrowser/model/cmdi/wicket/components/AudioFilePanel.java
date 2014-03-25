@@ -59,7 +59,7 @@ public final class AudioFilePanel extends Panel {
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         Label resourcelabel;
         boolean haswav = true;
-        add(new Label("viewTitle", "Listneing to " + node.getName()));
+        add(new Label("viewTitle", "Listening to " + node.getName()));
         if (node.getName().endsWith(".wav")) {
             mm.add(new MediaSource(nodeURL.toString()));
 //                  mm.add(new MediaSource(url in ogg format)); // ideally supported but not for now
