@@ -1,0 +1,9 @@
+Metadata browser 1.0-Alpha (25-03-2014)
+    Changes
+            - refactor and implement view file supporting html5 and iframe as backup
+            - Implements yamsSearch support (only for cmdi : status incomplete)
+            - new dependency to corpus-structure-1.0-beta2 + refactor some classes and xml files
+            - new log in front page
+
+    Fixes
+            - redirection to Annex was null (#3731)

@@ -108,6 +108,9 @@ nl.mpi.imexUrl
 nl.mpi.imdiSearchUrl
 (location of the IMDI Metadata Search webapp, referenced as $IMDISearchURL$)
 
+nl.mpi.yamsSearchUrl
+(location of the CMDI Metadata Search webapp, referenced as $YAMSSearchURL$)
+
 nl.mpi.rrsUrl
 (location of Resource Request System webapp, used together with nl.mpi.rrs*
 and can be referenced as $RRSURL$ when used in popup-menu-items.xml)

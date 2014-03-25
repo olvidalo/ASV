@@ -1,1 +1,5 @@
-no special steps are required.
+from version 1.0-Alpha
+    - add new parameter yamsSearchURL as below
+          <Parameter name="nl.mpi.yamsSearchUrl"
+         value="http://lux17.mpi.nl/ds/yaas/search.html"
+         description="location of the YAMS Search webapp" /
