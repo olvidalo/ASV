@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi.impl;
+package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.net.URI;
 import java.util.Date;
@@ -27,7 +27,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-class MockTypedCorpusNode implements TypedCorpusNode {
+public class MockTypedCorpusNode implements TypedCorpusNode {
 
     private final String uri;
     private final String name;
@@ -36,71 +36,71 @@ class MockTypedCorpusNode implements TypedCorpusNode {
     private FileInfo fileInfo;
 
     public MockTypedCorpusNode(NodeType nodeType, String uri, String name) {
-	this.uri = uri;
-	this.name = name;
-	this.nodeType = nodeType;
+        this.uri = uri;
+        this.name = name;
+        this.nodeType = nodeType;
     }
 
     @Override
     public URI getNodeURI() {
-	return URI.create(uri);
+        return URI.create(uri);
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 
     @Override
     public NodeType getNodeType() {
-	return nodeType;
+        return nodeType;
     }
 
     @Override
     public URI getProfile() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public FileInfo getFileInfo() {
-	return fileInfo;
+        return fileInfo;
     }
 
     public void setFileInfo(FileInfo fileInfo) {
-	this.fileInfo = fileInfo;
+        this.fileInfo = fileInfo;
     }
 
     @Override
     public CorpusNodeType getType() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Date getLastUpdate() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean isOnSite() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public String getFormat() {
-	return format;
+        return format;
     }
 
     public void setFormat(String format) {
-	this.format = format;
+        this.format = format;
     }
 
     @Override
     public String toString() {
-	return getName();
+        return getName();
     }
 
     @Override
     public URI getPID() {
-	return URI.create("hdl:1839/12345678910111213");
+        return URI.create("hdl:1839/12345678910111213");
     }
 }

@@ -20,12 +20,17 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +45,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDISearchNodeAction implements NodeAction {
 
-    private NodeActionsConfiguration nodeActionsConfiguration;
+    private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private FilterNodeIds filterNodeId;
+    private final FilterNodeIds filterNodeId;
+    private final NodeResolver nodeResolver;
 
     @Autowired
-    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds) {
+    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds, NodeResolver nodeResolver) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.filterNodeId = filterNodeIds;
+        this.nodeResolver = nodeResolver;
     }
 
     @Override
@@ -63,17 +70,36 @@ public class CMDISearchNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        URI targetURI;
+        URI targetURI = null;
         NavigationActionRequest request = null;
-        UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
+        UriBuilder uriBuilder;
+        String wraphandleOrNodeURL;
         for (TypedCorpusNode node : nodes) {
-            //Buil redirect to CMDI Search
-            URI nodeId = node.getNodeURI();
-            String nodeid = filterNodeId.getURIParam(nodeId);
-            uriBuilder = uriBuilder.queryParam("nodeid", nodeid);
+            if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
+                //Buil redirect to CMDI Search
+                uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getYamsSearchURL());
+                URI handle = node.getPID();
+                if (handle.toString() == null) { // can be null, pass URL instead
+                    wraphandleOrNodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
+                    targetURI = uriBuilder.queryParam("url", wraphandleOrNodeURL).build();
+                } else {
+                    wraphandleOrNodeURL = handle.toString();
+                    if (handle.toString().contains(":")) {
+                        wraphandleOrNodeURL = handle.toString().split(":")[1];
+                    }
+                    targetURI = uriBuilder.queryParam("hdl", wraphandleOrNodeURL).build();
+                }
+
+            } else {
+                //Buil redirect to IMDI Search
+                URI nodeId = node.getNodeURI();
+                String nodeid = filterNodeId.getURIParam(nodeId);
+                uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
+                uriBuilder = uriBuilder.queryParam("nodeid", nodeid);
+                targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
+            }
         }
         try {
-            targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
             request = new NavigationActionRequest(targetURI.toURL());
         } catch (MalformedURLException ex) {
             logger.error("URL syntax exception:" + ex);

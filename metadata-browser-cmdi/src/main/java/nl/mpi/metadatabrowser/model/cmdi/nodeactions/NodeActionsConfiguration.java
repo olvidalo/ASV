@@ -38,6 +38,7 @@ public class NodeActionsConfiguration implements Serializable {
     private String rrsIndexUrl;
     private String annexURL;
     private String mdSearchURL;
+    private String yamsSearchURL;
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
@@ -122,6 +123,14 @@ public class NodeActionsConfiguration implements Serializable {
      */
     public String getMdSearchURL() {
         return mdSearchURL;
+    }
+
+    /**
+     *
+     * @return URL for yams seach
+     */
+    String getYamsSearchURL() {
+        return yamsSearchURL;
     }
 
     /**
@@ -211,6 +220,18 @@ public class NodeActionsConfiguration implements Serializable {
     }
 
     /**
+     * Only use for CMDI so can be null
+     *
+     * @param yamsSearchURL
+     */
+    @Value("${nl.mpi.yamsSearchUrl}")
+    public void setYamsSearchURL(String yamsSearchURL) {
+        yamsSearchURL = processLinkProtocol(yamsSearchURL, ssl);
+        checkWarning(yamsSearchURL, "nl.mpi.yamsSearchUrl");
+        this.yamsSearchURL = yamsSearchURL;
+    }
+
+    /**
      *
      * @param trovaURL
      */
@@ -255,8 +276,8 @@ public class NodeActionsConfiguration implements Serializable {
     }
 
     /**
-     * Method that will convert url from http to Https or otherwise depending
-     * on current url and wished secure connection level setup in context.xml.
+     * Method that will convert url from http to Https or otherwise depending on
+     * current url and wished secure connection level setup in context.xml.
      *
      * @param url, url as string to be check for secure connection
      * @param isHttps, boolean that give information whether url is already
@@ -291,7 +312,9 @@ public class NodeActionsConfiguration implements Serializable {
 
     /**
      * If 'parameter' is null, log an error about 'name' not being set.
-     * @param parameter, String of the parameter value that needs to be checked (e.g value of amsURL)
+     *
+     * @param parameter, String of the parameter value that needs to be checked
+     * (e.g value of amsURL)
      * @param name, String of the parameter name (e.g amsURL)
      */
     private void checkWarning(String parameter, String name) {

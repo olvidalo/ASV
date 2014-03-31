@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;

@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
@@ -55,10 +56,10 @@ import static org.junit.Assert.*;
 public class CMDINodePresentationProviderTest {
 
     private final Mockery context = new JUnit4Mockery() {
-	{
-	    // Adds ability to mock abstract classes (in this case javax.xml.transform.Transformer)
-	    setImposteriser(ClassImposteriser.INSTANCE);
-	}
+        {
+            // Adds ability to mock abstract classes (in this case javax.xml.transform.Transformer)
+            setImposteriser(ClassImposteriser.INSTANCE);
+        }
     };
     private final TypedCorpusNode cmdiNode = new MockTypedCorpusNode(new CMDIMetadataType(), "node:1", "CMDI MockNode");
     private final TypedCorpusNode imdiNode = new MockTypedCorpusNode(new IMDISessionType(), "node:2", "IMDI MockNode");
@@ -73,150 +74,154 @@ public class CMDINodePresentationProviderTest {
 
     @Before
     public void setUp() {
-	nodeResolver = context.mock(NodeResolver.class);
-	imdiTemplates = context.mock(Templates.class, "imdiTemplates");
-	cmdiTemplates = context.mock(Templates.class, "cmdiTemplates");
-	transformer = context.mock(Transformer.class);
+        nodeResolver = context.mock(NodeResolver.class);
+        imdiTemplates = context.mock(Templates.class, "imdiTemplates");
+        cmdiTemplates = context.mock(Templates.class, "cmdiTemplates");
+        transformer = context.mock(Transformer.class);
         csp = context.mock(CorpusStructureProvider.class);
-	instance = new CMDINodePresentationProvider(nodeResolver, csp, nti, imdiTemplates, cmdiTemplates);
+        instance = new CMDINodePresentationProvider(nodeResolver, csp, nti, imdiTemplates, cmdiTemplates);
     }
 
     /**
-     * Test of getNodePresentation method, of class CMDINodePresentationProvider.
+     * Test of getNodePresentation method, of class
+     * CMDINodePresentationProvider.
      */
     @Test
     public void testGetNodePresentationForCmdi() throws Exception {
-	context.checking(new Expectations() {
-	    {
-		// transformer will be created from templates (CMDI in this case)
-		oneOf(cmdiTemplates).newTransformer();
-		will(returnValue(transformer));
+        context.checking(new Expectations() {
+            {
+                // transformer will be created from templates (CMDI in this case)
+                oneOf(cmdiTemplates).newTransformer();
+                will(returnValue(transformer));
 
-		never(imdiTemplates).newTransformer();
+                never(imdiTemplates).newTransformer();
 
-		// transformer will be configured...
-		allowing(transformer).setOutputProperty(with(any(String.class)), with(any(String.class)));
-		allowing(transformer).setParameter(with(any(String.class)), with(any(String.class)));
+                // transformer will be configured...
+                allowing(transformer).setOutputProperty(with(any(String.class)), with(any(String.class)));
+                allowing(transformer).setParameter(with(any(String.class)), with(any(String.class)));
 
-		// transformable content will be read
-		oneOf(nodeResolver).getInputStream(cmdiNode);
-		will(returnValue(getClass().getResourceAsStream("/IPROSLA_Nijmegen.cmdi")));
+                // transformable content will be read
+                oneOf(nodeResolver).getInputStream(cmdiNode);
+                will(returnValue(getClass().getResourceAsStream("/IPROSLA_Nijmegen.cmdi")));
 
-		// transformer will be requested to transform content
-		oneOf(transformer).transform(with(any(StreamSource.class)), with(any(Result.class)));
-	    }
-	});
+                // transformer will be requested to transform content
+                oneOf(transformer).transform(with(any(StreamSource.class)), with(any(Result.class)));
+            }
+        });
 
-	// Wicket tester is required to provide a wicket application context
-	WicketTester tester = new WicketTester();
-	// This call will trigger the transformation and wrap it in a component
-	Component result = instance.getNodePresentation("test", Arrays.asList(cmdiNode));
-	tester.startComponentInPage(result);
+        // Wicket tester is required to provide a wicket application context
+        WicketTester tester = new WicketTester();
+        // This call will trigger the transformation and wrap it in a component
+        Component result = instance.getNodePresentation("test", Arrays.asList(cmdiNode));
+        tester.startComponentInPage(result);
 
-	assertNotNull(result);
-	assertEquals(result.getId(), "test");
+        assertNotNull(result);
+        assertEquals(result.getId(), "test");
     }
 
     /**
-     * Test of getNodePresentation method, of class CMDINodePresentationProvider.
+     * Test of getNodePresentation method, of class
+     * CMDINodePresentationProvider.
      */
     @Test
     public void testGetNodePresentationForImdi() throws Exception {
-	context.checking(new Expectations() {
-	    {
-		// transformer will be created from templates (IMDI in this case)
-		oneOf(imdiTemplates).newTransformer();
-		will(returnValue(transformer));
+        context.checking(new Expectations() {
+            {
+                // transformer will be created from templates (IMDI in this case)
+                oneOf(imdiTemplates).newTransformer();
+                will(returnValue(transformer));
 
-		never(cmdiTemplates).newTransformer();
+                never(cmdiTemplates).newTransformer();
 
-		// transformer will be configured...
-		allowing(transformer).setOutputProperty(with(any(String.class)), with(any(String.class)));
-		allowing(transformer).setParameter(with(any(String.class)), with(any(String.class)));
+                // transformer will be configured...
+                allowing(transformer).setOutputProperty(with(any(String.class)), with(any(String.class)));
+                allowing(transformer).setParameter(with(any(String.class)), with(any(String.class)));
 
-		// transformable content will be read
-		oneOf(nodeResolver).getInputStream(imdiNode);
-		will(returnValue(getClass().getResourceAsStream("/IPROSLA_Nijmegen.cmdi")));
+                // transformable content will be read
+                oneOf(nodeResolver).getInputStream(imdiNode);
+                will(returnValue(getClass().getResourceAsStream("/IPROSLA_Nijmegen.cmdi")));
 
-		// transformer will be requested to transform content
-		oneOf(transformer).transform(with(any(StreamSource.class)), with(any(Result.class)));
-	    }
-	});
+                // transformer will be requested to transform content
+                oneOf(transformer).transform(with(any(StreamSource.class)), with(any(Result.class)));
+            }
+        });
 
-	// Wicket tester is required to provide a wicket application context
-	WicketTester tester = new WicketTester();
-	// This call will trigger the transformation and wrap it in a component
-	Component result = instance.getNodePresentation("test", Arrays.asList(imdiNode));
-	tester.startComponentInPage(result);
+        // Wicket tester is required to provide a wicket application context
+        WicketTester tester = new WicketTester();
+        // This call will trigger the transformation and wrap it in a component
+        Component result = instance.getNodePresentation("test", Arrays.asList(imdiNode));
+        tester.startComponentInPage(result);
 
-	assertNotNull(result);
-	assertEquals(result.getId(), "test");
+        assertNotNull(result);
+        assertEquals(result.getId(), "test");
     }
 
     /**
-     * Test of getNodePresentation method, of class CMDINodePresentationProvider.
+     * Test of getNodePresentation method, of class
+     * CMDINodePresentationProvider.
      */
     @Test
     public void testGetNodePresentationForMultiple() throws Exception {
-	context.checking(new Expectations() {
-	    {
-		// transformer will be created from templates (IMDI in this case)
-		never(imdiTemplates).newTransformer();
-		never(cmdiTemplates).newTransformer();
-	    }
-	});
+        context.checking(new Expectations() {
+            {
+                // transformer will be created from templates (IMDI in this case)
+                never(imdiTemplates).newTransformer();
+                never(cmdiTemplates).newTransformer();
+            }
+        });
 
-	// Wicket tester is required to provide a wicket application context
-	WicketTester tester = new WicketTester();
-	// This call will create a component but perform no transformation
-	Component result = instance.getNodePresentation("test", Arrays.asList(imdiNode, cmdiNode));
-	tester.startComponentInPage(result);
+        // Wicket tester is required to provide a wicket application context
+        WicketTester tester = new WicketTester();
+        // This call will create a component but perform no transformation
+        Component result = instance.getNodePresentation("test", Arrays.asList(imdiNode, cmdiNode));
+        tester.startComponentInPage(result);
 
-	assertNotNull(result);
-	assertEquals(result.getId(), "test");
+        assertNotNull(result);
+        assertEquals(result.getId(), "test");
     }
 
     /**
-     * Test of getNodePresentation method, of class CMDINodePresentationProvider.
+     * Test of getNodePresentation method, of class
+     * CMDINodePresentationProvider.
      */
     @Ignore("fix resourcepresentation implementation")
     @Test
     public void testGetNodePresentationForResource() throws Exception {
-	final AccessInfoProvider accessInfoProvider = context.mock(AccessInfoProvider.class);
-	final FileInfo fileInfo = context.mock(FileInfo.class);
-	resourceNode.setFileInfo(fileInfo);
+        final AccessInfoProvider accessInfoProvider = context.mock(AccessInfoProvider.class);
+        final FileInfo fileInfo = context.mock(FileInfo.class);
+        resourceNode.setFileInfo(fileInfo);
 
-	context.checking(new Expectations() {
-	    {
-		// transformer will be created from templates (IMDI in this case)
-		never(imdiTemplates).newTransformer();
-		never(cmdiTemplates).newTransformer();
+        context.checking(new Expectations() {
+            {
+                // transformer will be created from templates (IMDI in this case)
+                never(imdiTemplates).newTransformer();
+                never(cmdiTemplates).newTransformer();
 
-		allowing(nodeResolver).getUrl(resourceNode);
-		will(returnValue(new URL("http://myresource")));
+                allowing(nodeResolver).getUrl(resourceNode);
+                will(returnValue(new URL("http://myresource")));
 
-		allowing(accessInfoProvider).hasReadAccess(with(equalTo(resourceNode.getNodeURI())), with(any(String.class)));
-		will(returnValue(true));
-		allowing(accessInfoProvider).getAccessLevel(with(equalTo(resourceNode.getNodeURI())));
-		will(returnValue(AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY));
+                allowing(accessInfoProvider).hasReadAccess(with(equalTo(resourceNode.getNodeURI())), with(any(String.class)));
+                will(returnValue(true));
+                allowing(accessInfoProvider).getAccessLevel(with(equalTo(resourceNode.getNodeURI())));
+                will(returnValue(AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY));
 
-		allowing(fileInfo).getChecksum();
-		will(returnValue(""));
-		allowing(fileInfo).getSize();
-		will(returnValue(123l));
-		allowing(fileInfo).getFileTime();
-		will(returnValue(new Date()));
-	    }
-	});
+                allowing(fileInfo).getChecksum();
+                will(returnValue(""));
+                allowing(fileInfo).getSize();
+                will(returnValue(123l));
+                allowing(fileInfo).getFileTime();
+                will(returnValue(new Date()));
+            }
+        });
 
-	// Wicket tester is required to provide a wicket application context
-	WicketTester tester = new WicketTester();
-	// This call will trigger the transformation and wrap it in a component
-	Component result = instance.getNodePresentation("test", Arrays.<TypedCorpusNode>asList(resourceNode));
-	tester.startComponentInPage(result);
+        // Wicket tester is required to provide a wicket application context
+        WicketTester tester = new WicketTester();
+        // This call will trigger the transformation and wrap it in a component
+        Component result = instance.getNodePresentation("test", Arrays.<TypedCorpusNode>asList(resourceNode));
+        tester.startComponentInPage(result);
 
-	assertThat(result, instanceOf(ResourcePresentation.class));
-	assertEquals(result.getId(), "test");
+        assertThat(result, instanceOf(ResourcePresentation.class));
+        assertEquals(result.getId(), "test");
     }
     //TODO: Add cases for IMDI, resource and fallback presentation
 }

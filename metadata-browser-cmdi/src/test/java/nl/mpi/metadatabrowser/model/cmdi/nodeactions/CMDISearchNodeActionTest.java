@@ -24,10 +24,13 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import static org.junit.Assert.*;
@@ -43,6 +46,8 @@ public class CMDISearchNodeActionTest {
     private FilterNodeIds filterIdProvider;
     private Mockery context;
     private static URI NODE_ID;
+    private static URI NODE_PID;
+//    private TypedCorpusNode node;
 
     public CMDISearchNodeActionTest() {
     }
@@ -53,6 +58,8 @@ public class CMDISearchNodeActionTest {
         nodeActionsConfiguration = new NodeActionsConfiguration();
         context = new JUnit4Mockery();
         NODE_ID = URI.create("node:1");
+        NODE_PID = URI.create("11142/123456789101");
+//        node = new MockTypedCorpusNode(new IMDISessionType(), "node:0", "parent");
     }
 
     @After
@@ -76,7 +83,7 @@ public class CMDISearchNodeActionTest {
      * Test of execute method, of class CMDISearchNodeAction.
      */
     @Test
-    public void testExecute() throws Exception {
+    public void testExecuteIMDISearch() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
@@ -88,6 +95,9 @@ public class CMDISearchNodeActionTest {
 
         context.checking(new Expectations() {
             {
+                allowing(node).getNodeType();
+                will(returnValue(new IMDISessionType()));
+
                 allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));
             }
@@ -106,5 +116,43 @@ public class CMDISearchNodeActionTest {
         NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
         assertNotNull(navigationActionRequest.getTargetURL());
         assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+    }
+
+    /**
+     * Test of execute method, of class CMDISearchNodeAction.
+     */
+    @Test
+    public void testExecuteCMDISearch() throws Exception {
+        System.out.println("execute");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+        Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
+        nodes.add(node);
+        nodeActionsConfiguration.setYamsSearchURL("http://lux17.mpi.nl/ds/yaas/search.html");
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getYamsSearchURL());
+        URI targetURI = url.queryParam("hdl", NODE_PID.toString()).build();
+
+        context.checking(new Expectations() {
+            {
+                allowing(node).getNodeType();
+                will(returnValue(new CMDIMetadataType()));
+
+                allowing(node).getPID();
+                will(returnValue(NODE_PID));
+            }
+        });
+
+
+
+        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider);
+        NodeActionResult result = instance.execute(nodes);
+        assertEquals("Metadata Search", instance.getName());
+
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURI.toURL().toString(), navigationActionRequest.getTargetURL().toString());
     }
 }
