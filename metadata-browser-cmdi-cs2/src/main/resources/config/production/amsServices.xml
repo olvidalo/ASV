@@ -13,7 +13,7 @@
     <bean id="AmsService" class="nl.mpi.metadatabrowser.ams.AmsRemoteServiceCMDIAdapter"/>
     <bean id="AmsRemoteService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl"
-                  value="172.16.22.46:8080/ams2-war/api/v1/httpinvoker/AmsRemoteService" />
+                  value="http://lux16/am/ams2-cmdi/api/v1/httpinvoker/AmsRemoteService" />
         <property name="serviceInterface" value="nl.mpi.lat.ams.IAmsRemoteService" />
     </bean>
 
