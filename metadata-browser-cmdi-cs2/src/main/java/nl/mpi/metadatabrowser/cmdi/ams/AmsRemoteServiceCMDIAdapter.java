@@ -27,12 +27,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * implements the service for ams. 
  */
 public class AmsRemoteServiceCMDIAdapter implements AmsService {
 
     @Autowired
     private IAmsRemoteService amsRemoteService;
 
+    /**
+     * Method that return a number of licenses for a specific node as a List of String. The String will be used for display
+     * @param nodeURI, URI of the node for which we want licenses
+     * @return List<String> of licenses for the given node URI
+     */
     @Override
     public List<String[]> getLicense(URI nodeURI) {
         List<String[]> licenseViews = new ArrayList<>();
