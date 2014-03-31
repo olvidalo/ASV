@@ -120,7 +120,7 @@
             <artifactId>mpgaai-shhaa</artifactId>
             <groupId>de.mpg.mpgaai</groupId>
             <type>jar</type>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
     </dependencies>
 
