@@ -40,8 +40,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
-    private NodeActionsConfiguration nodeActionsConfiguration;
-    private FilterNodeIds filterIdProvider;
+    private final NodeActionsConfiguration nodeActionsConfiguration;
+    private final FilterNodeIds filterIdProvider;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Autowired
