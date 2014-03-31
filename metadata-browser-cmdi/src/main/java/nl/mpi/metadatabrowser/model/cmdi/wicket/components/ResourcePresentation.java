@@ -17,7 +17,6 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -25,14 +24,12 @@ import javax.ws.rs.core.UriBuilder;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.core.service.ams.AmsAuthorizationService;
-import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicense;
-import nl.mpi.archiving.corpusstructure.core.service.ams.AmsLicenseService;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.apache.wicket.MarkupContainer;
@@ -62,9 +59,7 @@ public final class ResourcePresentation extends Panel {
     @SpringBean
     private NodeResolver resolver;
     @SpringBean
-    private AmsAuthorizationService authService;
-    @SpringBean
-    private AmsLicenseService licenseService;
+    private AmsService amsService;
     @SpringBean
     protected AuthenticationHolder auth;
     @SpringBean
@@ -85,9 +80,9 @@ public final class ResourcePresentation extends Panel {
         if (nodeURL != null) {
             Boolean hasaccess;
             if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-                hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
+                hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);
             } else {
-                hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
+                hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), userid);
             }
 
             String wrapHandle = "";
@@ -178,15 +173,7 @@ public final class ResourcePresentation extends Panel {
             }
 
             // get the licenses for a nodeId
-            List<AmsLicense> licenses = authService.getLicenseAcceptance(node.getNodeURI(), null); //TODO: UID?
-            List<String[]> licenseViews = new ArrayList<String[]>();
-            for (AmsLicense license : licenses) {
-                String url = licenseService.getLicenseLink(license);
-                String[] licenseData = new String[2];
-                licenseData[0] = license.getName();
-                licenseData[1] = url;
-                licenseViews.add(licenseData);
-            }
+            List<String[]> licenseViews = amsService.getLicense(node.getNodeURI());
 
             StringBuilder sb = new StringBuilder();
             Label licensesLabel;
