@@ -10,12 +10,11 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
        profile="cmdi-production,cmdi-production-ams">
 
-    <!-- 
-	Currently MOCK implementations; todo: implement for actual AMS
-    -->
+    <bean id="AmsService" class="nl.mpi.metadatabrowser.ams.AmsRemoteServiceCMDIAdapter"/>
+    <bean id="AmsRemoteService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl"
+                  value="172.16.22.46:8080/ams2-war/api/v1/httpinvoker/AmsRemoteService" />
+        <property name="serviceInterface" value="nl.mpi.lat.ams.IAmsRemoteService" />
+    </bean>
 
-    <bean id="authService" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthorizationService" />
-    
-    <bean id="licenseService" class="nl.mpi.metadatabrowser.services.cmdi.mock.MockLicenseService" />
-    
 </beans>
