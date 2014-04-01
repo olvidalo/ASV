@@ -30,7 +30,7 @@
 
 	
         <authorization>
-            <location  target="/login.jsp" />
+            <location  target="/login*" />
         </authorization>
 	
 	
