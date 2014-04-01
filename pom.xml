@@ -98,10 +98,10 @@
         <spring.version>3.2.7.RELEASE</spring.version>
         <!-- Maven Version -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <war_project.version>1.0</war_project.version>
-        <cmdi_project_version>1.0</cmdi_project_version>
-        <adapter_project_version>1.0</adapter_project_version>
-        <cs2_project_version>1.0</cs2_project_version>
+        <war_project.version>1.0-RELEASE</war_project.version>
+        <cmdi_project_version>1.0-RELEASE</cmdi_project_version>
+        <adapter_project_version>1.0-RELEASE</adapter_project_version>
+        <cs2_project_version>1.0-RELEASE</cs2_project_version>
         <maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
         <year>${maven.build.timestamp}</year>
     </properties>

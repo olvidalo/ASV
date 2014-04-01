@@ -1,3 +1,14 @@
+Metadata browser 1.0-RELEASE (01-04-2014)
+    Changes:
+            - update dependencies to corpus-structure-2-1.0-beta-3 and Mpgaai-shhaa 1.0.4 (#3795 and #3793)
+            - incorporate AMS remote interface (#3791) Now uses an interface and either use old ams or the new one depending on the profile
+            - further implementation of yamsSearch. Now support url and handle
+            - class refactoring and tests modifications
+
+    Fixes:
+            - login is working again (#3797)
+
+
 Metadata browser 1.0-Alpha (25-03-2014)
     Changes
             - refactor and implement view file supporting html5 and iframe as backup
