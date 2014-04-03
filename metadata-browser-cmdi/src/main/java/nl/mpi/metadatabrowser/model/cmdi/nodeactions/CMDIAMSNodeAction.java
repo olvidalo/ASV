@@ -16,16 +16,17 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,12 +68,23 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         URI nodeId = node.getNodeURI();
         String nodeid = filterIdProvider.getURIParam(nodeId);
         URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
-        NavigationActionRequest request = null;
-        try {
-            request = new NavigationActionRequest(targetURI.toURL());
-        } catch (MalformedURLException ex) {
-            logger.error("URL syntax exception:" + ex);
+        ShowComponentRequest request = null;
+        if (targetURI != null) {
+            final String redirectURL = targetURI.toString();
+            request = new ShowComponentRequest() {
+
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                    return new PanelEmbedActionDisplay(id, redirectURL);
+                }
+            };
         }
-        return new SimpleNodeActionResult(request);
+            return new SimpleNodeActionResult(request);
+//        try {
+//            request = new NavigationActionRequest(targetURI.toURL());
+//        } catch (MalformedURLException ex) {
+//            logger.error("URL syntax exception:" + ex);
+//        }
+//        return new SimpleNodeActionResult(request);
     }
 }

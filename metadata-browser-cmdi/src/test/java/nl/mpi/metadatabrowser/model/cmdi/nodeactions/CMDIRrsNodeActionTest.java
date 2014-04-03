@@ -22,17 +22,20 @@ import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
+import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.*;
-
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.*;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -87,7 +90,6 @@ public class CMDIRrsNodeActionTest {
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
         URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", "session_id").build();
 
-
         context.checking(new Expectations() {
             {
                 allowing(node).getNodeURI();
@@ -95,18 +97,17 @@ public class CMDIRrsNodeActionTest {
             }
         });
 
-
-
         CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration, filterNodeIds);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("Request Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-
-        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
+//        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+//
+//        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+//        assertNotNull(navigationActionRequest.getTargetURL());
+//        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }

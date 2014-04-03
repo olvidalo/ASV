@@ -59,7 +59,7 @@ public final class MediaFilePanel extends Panel {
      */
     public MediaFilePanel(String id, NodeResolver resolver, TypedCorpusNode node, NodeActionsConfiguration nodeActionsConfiguration, CorpusStructureProvider csdb) {
         super(id);
-        final List<MediaSource> mm = new ArrayList<MediaSource>();
+        final List<MediaSource> mm = new ArrayList<>();
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         Label resourcelabel;
         add(new Label("viewTitle", "Viewing " + node.getName()));
@@ -72,7 +72,7 @@ public final class MediaFilePanel extends Panel {
                 String childNodeName = FilenameUtils.removeExtension(childNode.getName());
                 if (name.equals(childNodeName)) { // name comparison. Should be same node if only extension differs within the same session
                     final String childNodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(childNode).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
-                    mm.add(new MediaSource(childNodeURL.toString(), "video/mp4"));
+                    mm.add(new MediaSource(childNodeURL, "video/mp4"));
 //                  mm.add(new MediaSource(url in ogg format, "video/ogg.")); // ideally supported but not for now
                     hasmp4 = true;
                     resourcelabel = new Label("altView", ""); // used for wicket id
@@ -87,7 +87,7 @@ public final class MediaFilePanel extends Panel {
             StringBuilder sb = new StringBuilder();
             // create label for resource
             sb.append("<iframe id=\"viewFrame\" src=\"");
-            sb.append(nodeURL.toString());
+            sb.append(nodeURL);
             sb.append("\">");
             sb.append("</iframe>");
             resourcelabel = new Label("altView", sb.toString());
@@ -124,6 +124,6 @@ public final class MediaFilePanel extends Panel {
 
         add(video);
 
-        add(new ExternalLink("viewVideo", nodeURL.toString()));
+        add(new ExternalLink("viewVideo", nodeURL));
     }
 }

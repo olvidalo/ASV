@@ -16,21 +16,22 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,8 @@ public class CMDISearchNodeAction implements NodeAction {
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
         URI targetURI = null;
-        NavigationActionRequest request = null;
+//        NavigationActionRequest request = null;
+        ShowComponentRequest request;
         UriBuilder uriBuilder;
         String wraphandleOrNodeURL;
         for (TypedCorpusNode node : nodes) {
@@ -79,7 +81,7 @@ public class CMDISearchNodeAction implements NodeAction {
                 //Buil redirect to CMDI Search
                 uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getYamsSearchURL());
                 URI handle = node.getPID();
-                if (handle.toString() == null) { // can be null, pass URL instead
+                if (handle == null) { // can be null, pass URL instead
                     wraphandleOrNodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
                     targetURI = uriBuilder.queryParam("url", wraphandleOrNodeURL).build();
                 } else {
@@ -99,12 +101,24 @@ public class CMDISearchNodeAction implements NodeAction {
                 targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
             }
         }
-        try {
-            request = new NavigationActionRequest(targetURI.toURL());
-        } catch (MalformedURLException ex) {
-            logger.error("URL syntax exception:" + ex);
-        }
+        if (targetURI != null) {
+            final String redirectURL = targetURI.toString();
+            request = new ShowComponentRequest() {
 
-        return new SimpleNodeActionResult(request);
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                    return new PanelEmbedActionDisplay(id, redirectURL);
+                }
+            };
+//        try {
+//            request = new NavigationActionRequest(targetURI.toURL());
+//        } catch (MalformedURLException ex) {
+//            logger.error("URL syntax exception:" + ex);
+//        }
+
+            return new SimpleNodeActionResult(request);
+        } else {
+            throw new NodeActionException(this, "target uri could not be build. This is likely to happen when no node was found. If this is not the case please check configuration paramters.");
+        }
     }
 }

@@ -16,16 +16,17 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +41,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDITrovaNodeAction implements NodeAction {
 
-    private NodeActionsConfiguration nodeActionsConfiguration;
+    private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private FilterNodeIds filterNodeId;
+    private final FilterNodeIds filterNodeId;
 
     @Autowired
     public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeId) {
@@ -63,22 +64,35 @@ public class CMDITrovaNodeAction implements NodeAction {
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
-        URI targetURI;
-        NavigationActionRequest request = null;
+        URI targetURI = null;
+        ShowComponentRequest request;
         UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getTrovaURL());
         for (TypedCorpusNode node : nodes) {
             //Buil redirect to trova action
             URI nodeId = node.getNodeURI();
             String nodeid = filterNodeId.getURIParam(nodeId);
-            uriBuilder = uriBuilder.queryParam("nodeid", nodeid);
+            targetURI = uriBuilder.queryParam("nodeid", nodeid).build();
         }
-        try {
-            // TODO think of jsessionID. Maybe needs to be added here
-            targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
-            request = new NavigationActionRequest(targetURI.toURL());
-        } catch (MalformedURLException ex) {
-            logger.error("URL syntax exception:" + ex);
+        if (targetURI != null) {
+            final String redirectURL = targetURI.toString();
+            request = new ShowComponentRequest() {
+
+                @Override
+                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                    return new PanelEmbedActionDisplay(id, redirectURL);
+                }
+            };
+            return new SimpleNodeActionResult(request);
+        } else {
+            throw new NodeActionException(this, "target uri could not be build. This is likely to happen when no node was found. If this is not the case please check configuration paramters.");
         }
-        return new SimpleNodeActionResult(request);
+//        try {
+//            // TODO think of jsessionID. Maybe needs to be added here
+//            targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
+//            request = new NavigationActionRequest(targetURI.toURL());
+//        } catch (MalformedURLException ex) {
+//            logger.error("URL syntax exception:" + ex);
+//        }
+//        return new SimpleNodeActionResult(request);
     }
 }
