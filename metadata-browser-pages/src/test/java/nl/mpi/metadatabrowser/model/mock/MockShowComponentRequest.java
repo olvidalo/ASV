@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.basic.Label;
  */
 public class MockShowComponentRequest implements ShowComponentRequest, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String text;
 
     @Override

@@ -21,7 +21,6 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsListModel;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -59,9 +58,9 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 final NodeAction action = item.getModelObject();
                 final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
                 Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
-                if (action.getName().equals("Metadata Search") || action.getName().equals("Resource Access (RRS)") || action.getName().equals("Annotation Content Search") || action.getName().equals("Manage Access Rights")) {
-                    actionLink.add(new AttributeModifier("target", "_blank"));
-                }
+//                if (action.getName().equals("Annotation Content Search")) {
+//                    actionLink.add(new AttributeModifier("target", "_blank"));
+//                }
                 String className = action.getName().replaceAll("\\s", "");
                 if (className.equals("ResourceAccess(RRS)")) {
                     className = "ResourceAccess";
