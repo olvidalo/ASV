@@ -24,10 +24,13 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.After;
@@ -79,7 +82,7 @@ public class CMDIAMSNodeActionTest {
      * Test of execute method, of class CMDIAMSNodeAction.
      */
     @Test
-    public void testExecute() throws Exception {
+    public void testExecuteAms() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
 //        MockFilterNodeId filterIdProvider = new MockFilterNodeId();
@@ -90,6 +93,9 @@ public class CMDIAMSNodeActionTest {
         context.checking(
                 new Expectations() {
                     {
+                        allowing(node).getNodeType();
+                        will(returnValue(new IMDISessionType()));
+
                         allowing(node).getNodeURI();
                         will(returnValue(NODE_ID));
 
@@ -104,6 +110,55 @@ public class CMDIAMSNodeActionTest {
                 "http://lux16.mpi.nl/am/ams2/index.face");
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
         URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
+        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
+        NodeActionResult result = instance.execute(node);
+
+        assertEquals(
+                "Manage Access", instance.getName());
+
+        ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
+
+//        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+//
+//        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+//
+//        assertNotNull(navigationActionRequest.getTargetURL());
+//        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+    }
+
+    /**
+     * Test of execute method, of class CMDIAMSNodeAction.
+     */
+    @Test
+    public void testExecuteAmscs2() throws Exception {
+        System.out.println("execute");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
+//        MockFilterNodeId filterIdProvider = new MockFilterNodeId();
+        Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
+
+        nodes.add(node);
+//        String id = filterIdProvider.getURIParam(NODE_ID);
+        nodeActionsConfiguration.setAmsURLForcs2("http://lux16.mpi.nl/am/ams2-cmdi/index.face");
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURLForcs2());
+        URI targetURI = url.queryParam("nodeid", NODE_ID.toString()).build();
+
+        context.checking(
+                new Expectations() {
+                    {
+                        allowing(node).getNodeType();
+                        will(returnValue(new CMDIMetadataType()));
+
+                        allowing(node).getNodeURI();
+                        will(returnValue(NODE_ID));
+
+                        oneOf(node).getPID();
+                        will(returnValue(NODE_ID.toString()));
+                    }
+                });
+
+
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
         NodeActionResult result = instance.execute(node);
 

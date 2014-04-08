@@ -26,6 +26,10 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.slf4j.Logger;
@@ -67,7 +71,12 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         // Build redirect to AMS
         URI nodeId = node.getNodeURI();
         String nodeid = filterIdProvider.getURIParam(nodeId);
-        URI targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
+        URI targetURI;
+        if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
+            targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURLForcs2()).queryParam("nodeid", nodeid).build();
+        } else {
+            targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
+        }
         ShowComponentRequest request = null;
         if (targetURI != null) {
             final String redirectURL = targetURI.toString();
@@ -79,7 +88,7 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
                 }
             };
         }
-            return new SimpleNodeActionResult(request);
+        return new SimpleNodeActionResult(request);
 //        try {
 //            request = new NavigationActionRequest(targetURI.toURL());
 //        } catch (MalformedURLException ex) {

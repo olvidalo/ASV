@@ -1,0 +1,10 @@
+{
+    "attributes": {
+        "wicket:id": {
+            "context": "iframe"
+        }
+    },
+    "elements": {
+        "wicket:panel": {}
+    }
+}
