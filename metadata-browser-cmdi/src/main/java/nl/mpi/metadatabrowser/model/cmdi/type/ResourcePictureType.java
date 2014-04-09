@@ -20,9 +20,9 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class IMDIResourceAudioType extends AbstractNodeType {
-    public IMDIResourceAudioType(){
-        super("resourceAudio");
+public class ResourcePictureType extends AbstractNodeType {
+    public ResourcePictureType(){
+        super("resourcePicture");
     }
 
 }

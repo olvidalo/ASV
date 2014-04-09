@@ -28,16 +28,15 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import static nl.mpi.metadatabrowser.services.NodeTypeIdentifier.UNKNOWN_NODE_TYPE;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static nl.mpi.metadatabrowser.services.NodeTypeIdentifier.UNKNOWN_NODE_TYPE;
 
 /**
  *
@@ -84,13 +83,13 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
             case RESOURCE_VIDEO:
                 return getResourceVideoType(name);
             case RESOURCE_AUDIO:
-                return new CMDIResourceType();
+                return getResourceVideoType(name); // previous new CMDIResourceType();
             case RESOURCE_OTHER:
-                return new CMDIResourceType();
+                return new CMDIResourceType(); // default icon Media
             case RESOURCE_ANNOTATION:
                 return getResourceAnnotationType(name);
             case RESOURCE_LEXICAL:
-                return new CMDIResourceTxtType();
+                return getResourceAnnotationType(name); // previous new CMDIResourceTxtType();
             case METADATA:
                 return getMetadataType(node);
             case COLLECTION:
@@ -149,14 +148,14 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      * })
      *
      * @param name, String as the name of a node
-     * @return
+     * @return Type of the Node
      * @see CorpusNodeType#RESOURCE_ANNOTATION
      */
     private NodeType getResourceAnnotationType(String name) {
         if (name.endsWith(".txt") || name.endsWith(".pdf") || name.endsWith(".eaf") || name.endsWith(".html") || name.endsWith(".csv") || name.endsWith(".lmf") || name.endsWith(".xml") || name.endsWith(".xsd") || name.endsWith("tbt") || name.endsWith(".cha")) {
-            return new IMDIResourceWrittenType();
+            return new ResourceWrittenType();
         } else {
-            return new CMDIResourceTxtType();
+            return new CMDIResourceTxtType(); // will return default Text Icon
         }
     }
 
@@ -165,18 +164,18 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      * })
      *
      * @param name, String as the name of a node
-     * @return
+     * @return Type of the Node
      * @see CorpusNodeType#RESOURCE_VIDEO
      */
     private NodeType getResourceVideoType(String name) {
         if (name.endsWith(".jpg") || name.endsWith(".html") || name.endsWith(".gif") || name.endsWith(".tif") || name.endsWith(".tiff") || name.endsWith(".png")) {
-            return new IMDIResourcePictureType();
+            return new ResourcePictureType();
         } else if (name.endsWith(".wav") || name.endsWith(".mp3") || name.endsWith(".m4a") || name.endsWith(".aif")) {
-            return new IMDIResourceAudioType();
+            return new ResourceAudioType();
         } else if (name.endsWith(".mpeg") || name.endsWith(".mpg") || name.endsWith(".mov") || name.endsWith(".mpv") || name.endsWith(".mp4") || name.endsWith(".smil")) {
-            return new IMDIResourceVideoType();
+            return new ResourceVideoType();
         } else {
-            return new CMDIResourceType();
+            return new CMDIResourceType(); // will return a default Media Icon
         }
     }
 }

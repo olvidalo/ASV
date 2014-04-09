@@ -31,9 +31,9 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
@@ -77,7 +77,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         URI targetURI = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
         boolean navType = false;
-        if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof IMDIResourceWrittenType && node.getName().endsWith(".srt") || node.getName().endsWith(".eaf") || node.getName().endsWith("tbt") || node.getName().endsWith(".cha")) {
+        if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof ResourceWrittenType && node.getName().endsWith(".srt") || node.getName().endsWith(".eaf") || node.getName().endsWith("tbt") || node.getName().endsWith(".cha")) {
             //TODO get session id
             URI nodeid = node.getNodeURI();// should be handle
             String nodeId = filterNodeId.getURIParam(nodeid);
@@ -99,7 +99,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             } catch (MalformedURLException ex) {
                 logger.error("URL syntax exception:" + ex);
             }
-        } else if (node.getNodeType() instanceof IMDIResourceVideoType) {
+        } else if (node.getNodeType() instanceof ResourceVideoType) {
             final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
@@ -108,7 +108,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
             };
             return new SimpleNodeActionResult(componentRequest);
 
-        } else if (node.getNodeType() instanceof IMDIResourceAudioType) {
+        } else if (node.getNodeType() instanceof ResourceAudioType) {
             final ShowComponentRequest componentRequest = new ShowComponentRequest() {
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {

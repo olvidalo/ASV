@@ -38,10 +38,10 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.services.NodeActionsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,10 +170,10 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                         }
                     }
                 }
-                if (node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof IMDIResourceVideoType || node.getNodeType() instanceof IMDIResourcePictureType || node.getNodeType() instanceof IMDIResourceAudioType) {
+                if (node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof ResourceVideoType || node.getNodeType() instanceof ResourcePictureType || node.getNodeType() instanceof ResourceAudioType) {
                     return resourceAudioVideoNodeActionList;
                 }
-                if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof IMDIResourceWrittenType) {
+                if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof ResourceWrittenType) {
                     return resourcetxtNodeActionList;
                 }
             }

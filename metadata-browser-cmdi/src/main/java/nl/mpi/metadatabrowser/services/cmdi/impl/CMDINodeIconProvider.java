@@ -39,10 +39,10 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
@@ -198,13 +198,13 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             nodeTypeIcon = cmdiIcon;
         } else if (nodeType instanceof IMDIInfoType) {
             nodeTypeIcon = infoIcon;
-        } else if (nodeType instanceof IMDIResourceVideoType) {
+        } else if (nodeType instanceof ResourceVideoType) {
             nodeTypeIcon = videoIcon;
-        } else if (nodeType instanceof IMDIResourceAudioType) {
+        } else if (nodeType instanceof ResourceAudioType) {
             nodeTypeIcon = audioIcon;
-        } else if (nodeType instanceof IMDIResourcePictureType) {
+        } else if (nodeType instanceof ResourcePictureType) {
             nodeTypeIcon = pictureIcon;
-        } else if (nodeType instanceof IMDIResourceWrittenType) {
+        } else if (nodeType instanceof ResourceWrittenType) {
             nodeTypeIcon = writtenIcon;
         } else {
             nodeTypeIcon = unknownIcon;

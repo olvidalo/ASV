@@ -20,8 +20,9 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class IMDIResourceWrittenType extends AbstractNodeType{
- public IMDIResourceWrittenType(){
-     super("resourceWritten");
- }
+public class ResourceAudioType extends AbstractNodeType {
+    public ResourceAudioType(){
+        super("resourceAudio");
+    }
+
 }

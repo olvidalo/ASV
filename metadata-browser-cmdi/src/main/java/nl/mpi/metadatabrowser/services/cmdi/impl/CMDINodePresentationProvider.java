@@ -29,10 +29,10 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceAudioType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourcePictureType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.IMDIResourceWrittenType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourcePictureType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
@@ -95,7 +95,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
                 if (node.getNodeType() instanceof MetadataType || node.getNodeType() instanceof CollectionType) {
                     logger.debug("Metadata: presentation through transformation");
                     return createMetadataTransformation(node, wicketId);
-                } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof IMDIResourceVideoType || node.getNodeType() instanceof IMDIResourcePictureType || node.getNodeType() instanceof IMDIResourceAudioType || node.getNodeType() instanceof IMDIResourceWrittenType) {
+                } else if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof ResourceVideoType || node.getNodeType() instanceof ResourcePictureType || node.getNodeType() instanceof ResourceAudioType || node.getNodeType() instanceof ResourceWrittenType) {
                     logger.debug("Resource: presentation of resource info");
                     return new ResourcePresentation(wicketId, node);
                 } else if (node.getNodeType() instanceof IMDIInfoType) {

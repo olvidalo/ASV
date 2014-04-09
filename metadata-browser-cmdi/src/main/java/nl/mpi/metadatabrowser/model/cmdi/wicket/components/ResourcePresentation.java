@@ -164,7 +164,9 @@ public final class ResourcePresentation extends Panel {
                 tableContainer.add(new Image("access_icon", externalIcon));
                 tableContainer.add(new Label("accesslevel", "This resource is external"));
             } else {
-                tableContainer.add(new Image("access_icon", new ContextRelativeResource("")));
+                Image icon  = new Image("access_icon", new ContextRelativeResource(""));
+                icon.setVisible(false);
+                tableContainer.add(icon);
                 tableContainer.add(new Label("accesslevel", "No access level has been calculated yet"));
             }
             if (requestLink == null) {

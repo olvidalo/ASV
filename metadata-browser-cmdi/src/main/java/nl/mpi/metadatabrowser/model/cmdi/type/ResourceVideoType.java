@@ -21,9 +21,9 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class IMDIResourceVideoType extends AbstractNodeType {
+public class ResourceVideoType extends AbstractNodeType {
 
-    public IMDIResourceVideoType() {
+    public ResourceVideoType() {
         super("resourceVideo");
     }
 }
