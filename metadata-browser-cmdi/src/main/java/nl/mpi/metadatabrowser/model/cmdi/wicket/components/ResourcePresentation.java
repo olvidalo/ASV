@@ -39,7 +39,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.resource.ContextRelativeResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -164,7 +163,7 @@ public final class ResourcePresentation extends Panel {
                 tableContainer.add(new Image("access_icon", externalIcon));
                 tableContainer.add(new Label("accesslevel", "This resource is external"));
             } else {
-                Image icon  = new Image("access_icon", new ContextRelativeResource(""));
+                Image icon  = new Image("access_icon", "");
                 icon.setVisible(false);
                 tableContainer.add(icon);
                 tableContainer.add(new Label("accesslevel", "No access level has been calculated yet"));
