@@ -86,19 +86,18 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
     private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
     private final NodeTypeIdentifier nodeTypeIdentifier;
-    private final CorpusStructureProvider csProvider;
     private final AccessInfoProvider accessInfoProvider;
 
     /**
      * Constructor
+     * Autowired in providers.xml
      *
-     * @param nodeTypeIdentifier
-     * @param csProvider
+     * @param nodeTypeIdentifier NodeTypeIdentifier, give the type of a node 
+     * @param accessInfoProvider AccessInfoProvider, provide access level for a node
      */
     @Autowired
-    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, CorpusStructureProvider csProvider, AccessInfoProvider accessInfoProvider) {
+    public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, AccessInfoProvider accessInfoProvider) {
         this.nodeTypeIdentifier = nodeTypeIdentifier;
-        this.csProvider = csProvider;
         this.accessInfoProvider = accessInfoProvider;
         populateIconMap();
     }
@@ -117,8 +116,6 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
             final ImageIcon nodeTypeIcon = getNodeTypeIcon(nodeType);
             combinedIcon = checkNodeAccess(contentNode, nodeTypeIcon);
-            //} catch (UnknownNodeException ex) {
-            //  Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NodeTypeIdentifierException ex) {
             Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -137,7 +134,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
         final ImageIcon accessIcon = getNodeAccessIcon(accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
 
         // retrieve the corresponding combined icon based on nodetype and accesslevel
-        final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<ImageIcon, ImageIcon>(typeNode, accessIcon);
+        final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<>(typeNode, accessIcon);
         return iconMap.get(iconTuple);
     }
 
@@ -149,7 +146,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
         for (ImageIcon nodetypeIcon : nodeIcon) {
             for (ImageIcon accesslevelIcon : accessIcon) {
                 final String name = String.format("node_icon_%d", i++);
-                final Entry<ImageIcon, ImageIcon> iconsMap = new SimpleEntry<ImageIcon, ImageIcon>(nodetypeIcon, accesslevelIcon);
+                final Entry<ImageIcon, ImageIcon> iconsMap = new SimpleEntry<>(nodetypeIcon, accesslevelIcon);
                 iconMap.put(iconsMap, createCombinedIcon(nodetypeIcon, accesslevelIcon, name));
             }
         }

@@ -21,21 +21,19 @@ import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.jmock.Expectations.returnValue;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -62,6 +60,8 @@ public class CMDINodeIconProviderTest {
 
     /**
      * Test of getNodeIcon method, of class CMDINodeIconProvider.
+     * @throws nl.mpi.metadatabrowser.services.NodeTypeIdentifierException
+     * @throws java.net.URISyntaxException
      */
     @Test
     public void testGetNodeIcon() throws NodeTypeIdentifierException, URISyntaxException {
@@ -69,9 +69,8 @@ public class CMDINodeIconProviderTest {
 	final URI nodeid = new URI("nodeid1");
 	final CorpusNode contentNode = context.mock(CorpusNode.class);
 	final NodeTypeIdentifier nodeTypeId = context.mock(NodeTypeIdentifier.class);
-	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
 	final AccessInfoProvider aiProvider = context.mock(AccessInfoProvider.class);
-	final CMDINodeIconProvider instance = new CMDINodeIconProvider(nodeTypeId, csdb, aiProvider);
+	final CMDINodeIconProvider instance = new CMDINodeIconProvider(nodeTypeId, aiProvider);
 
 	context.checking(new Expectations() {
 	    {
@@ -80,8 +79,8 @@ public class CMDINodeIconProviderTest {
 		atLeast(1).of(contentNode).getNodeURI();
 		will(returnValue(nodeid));
 
-		atLeast(1).of(csdb).getNode(nodeid);
-		will(returnValue(contentNode));
+//		atLeast(1).of(csdb).getNode(nodeid);
+//		will(returnValue(contentNode));
 
 		oneOf(aiProvider).getAccessLevel(nodeid);
 		will(returnValue(AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY));

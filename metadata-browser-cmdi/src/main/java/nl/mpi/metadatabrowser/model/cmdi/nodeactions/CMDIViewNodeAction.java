@@ -50,13 +50,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
-    private NodeResolver resolver;
+    private final NodeResolver resolver;
     private final CorpusStructureProvider csdb;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeActionsConfiguration nodeActionsConfiguration;
     @Autowired
     private FilterNodeIds filterNodeId;
 
+    /**
+     * Action class are autowired in nodeActions.xml
+     * @param nodeActionsConfiguration NodeActionsConfiguration, get Annex url
+     * @param nodeResolver NodeResolver, pass by other components
+     * @param csdb CorpusStructureProvider, process by other components
+     */
     @Autowired
     public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, CorpusStructureProvider csdb) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
@@ -70,26 +76,26 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         URI targetURI = null;
         UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-//        String[] formats = SearchClient.getSearchableFormats();
-//        List<String> formatslist = new ArrayList<String>(formats.length);
-//        formatslist.addAll(Arrays.asList(formats));
         boolean navType = false;
         if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof IMDIResourceWrittenType && node.getName().endsWith(".srt") || node.getName().endsWith(".eaf") || node.getName().endsWith("tbt") || node.getName().endsWith(".cha")) {
             //TODO get session id
             URI nodeid = node.getNodeURI();// should be handle
             String nodeId = filterNodeId.getURIParam(nodeid);
             navType = true;
-            if ((nodeId.toString().startsWith("hdl")) || nodeId.toString().startsWith("1839")) {
-                targetURI = uriBuilder.queryParam("handle", nodeId).queryParam("jsessionID", "session_id").build();
+            if ((nodeId.startsWith("hdl")) || nodeId.startsWith("1839")) {
+                targetURI = uriBuilder.queryParam("handle", nodeId).build();
             } else {
-                targetURI = uriBuilder.queryParam("nodeid", nodeId).queryParam("jsessionID", "session_id").build();
+                targetURI = uriBuilder.queryParam("nodeid", nodeId).build();
             }
         }
 
         if (navType == true) {
             try {
+                if(targetURI != null){
                 final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
                 return new SimpleNodeActionResult(request);
+                }
+                logger.error("URL syntax exception, annex url could not be found. Please check configuration file");
             } catch (MalformedURLException ex) {
                 logger.error("URL syntax exception:" + ex);
             }

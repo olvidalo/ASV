@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 /**
  * Configuration class that holds all the getters and setters for each parameter
  * needed. Parameters are defined in the context.xml from tomcat
- *
+ * <p>
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
@@ -45,10 +45,10 @@ public class NodeActionsConfiguration implements Serializable {
     private String forceHttpOrHttps;
     private String forceHttpsPrefix;
     private String amscs2URL;
-    private static Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
+    private static final Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
     // what to assume as default for "same" protocol if it is not known whether https is used
     final boolean ssl = false;
-    
+
     /**
      * @getters
      */
@@ -77,7 +77,7 @@ public class NodeActionsConfiguration implements Serializable {
     public String getAmsURL() {
         return amsURL;
     }
-    
+
     /**
      *
      * @return url for AMS based on cs2
@@ -164,7 +164,7 @@ public class NodeActionsConfiguration implements Serializable {
     /**
      *
      * @param amsURL
-     *
+     * <p>
      */
     @Value("${nl.mpi.amsUrl}")
     public void setAmsURL(String amsURL) {
@@ -172,17 +172,17 @@ public class NodeActionsConfiguration implements Serializable {
         checkWarning(amsURL, "nl.mpi.amsUrl");
         this.amsURL = amsURL;
     }
-    
-        /**
+
+    /**
      *
-     * @param amsURL
-     *
+     * @param amscs2Url
+     * <p>
      */
-    @Value("${nl.mpi.ams2Url}")
-    public void setAmsURLForcs2(String amsURL) {
-        amsURL = processLinkProtocol(amsURL, ssl);
-        checkWarning(amsURL, "nl.mpi.amscs2Url");
-        this.amscs2URL = amsURL;
+    @Value("${nl.mpi.amscs2Url}")
+    public void setAmsURLForcs2(String amscs2Url) {
+        amscs2Url = processLinkProtocol(amscs2Url, ssl);
+        checkWarning(amscs2Url, "nl.mpi.amscs2Url");
+        this.amscs2URL = amscs2Url;
     }
 
     /**
@@ -242,7 +242,7 @@ public class NodeActionsConfiguration implements Serializable {
 
     /**
      * Only use for CMDI so can be null
-     *
+     * <p>
      * @param yamsSearchURL
      */
     @Value("${nl.mpi.yamsSearchUrl}")
@@ -299,7 +299,7 @@ public class NodeActionsConfiguration implements Serializable {
     /**
      * Method that will convert url from http to Https or otherwise depending on
      * current url and wished secure connection level setup in context.xml.
-     *
+     * <p>
      * @param url, url as string to be check for secure connection
      * @param isHttps, boolean that give information whether url is already
      * secure or not
@@ -333,7 +333,7 @@ public class NodeActionsConfiguration implements Serializable {
 
     /**
      * If 'parameter' is null, log an error about 'name' not being set.
-     *
+     * <p>
      * @param parameter, String of the parameter value that needs to be checked
      * (e.g value of amsURL)
      * @param name, String of the parameter name (e.g amsURL)
