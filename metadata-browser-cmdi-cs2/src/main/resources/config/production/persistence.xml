@@ -47,6 +47,7 @@
 	<property name="jndiName" value="java:comp/env/jdbc/CSDB2"/>   
 	<property name="resourceRef" value="true" />
     </bean>
+    <!-- placeholder for the OpenEntityManagerInViewFilter needed for the CMDI profile -->
     <bean id="springHibernateFilter" class="org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter">
         <property name="entityManagerFactoryBeanName" value="entityManagerFactory"/>
     </bean>
