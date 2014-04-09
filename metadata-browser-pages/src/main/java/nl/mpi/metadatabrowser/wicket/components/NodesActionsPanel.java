@@ -21,6 +21,7 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsListModel;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -45,12 +46,22 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
 
     private final static CssResourceReference NodesActionsPanel_CSS = new CssResourceReference(NodesActionsPanel.class, "res/nodeActionsPanel.css");
 
+    /**
+     *
+     * @param id
+     */
     public NodesActionsPanel(String id) {
         this(id, new NodeActionsStructure());
     }
 
+    /**
+     * Method that build the nodeAction button using wicket and decide whether to open in a new window/tab
+     * Handle renaming if necessary, class attribution and title.
+     * @param id
+     * @param model
+     */
     public NodesActionsPanel(String id, NodeActionsStructure model) {
-        super(id, new Model<NodeActionsStructure>(model));
+        super(id, new Model<>(model));
 
         add(new ListView<NodeAction>("nodeActions", new NodeActionsListModel(getModel())) {
             @Override
@@ -58,9 +69,9 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 final NodeAction action = item.getModelObject();
                 final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
                 Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
-//                if (action.getName().equals("Annotation Content Search")) {
-//                    actionLink.add(new AttributeModifier("target", "_blank"));
-//                }
+                if (action.getName().equals("Annotation Content Search")) {
+                    actionLink.add(new AttributeModifier("target", "_blank"));
+                }
                 String className = action.getName().replaceAll("\\s", "");
                 if (className.equals("ResourceAccess(RRS)")) {
                     className = "ResourceAccess";
@@ -75,8 +86,6 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        //response.render(JavaScriptReferenceHeaderItem.forReference(JQuery));
-        //response.render(JavaScriptReferenceHeaderItem.forReference(ANIMATE));
         response.render(CssHeaderItem.forReference(NodesActionsPanel_CSS));
     }
 }
