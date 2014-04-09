@@ -84,7 +84,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon restrictedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_orange.png"));
     private final static ImageIcon closedIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_red.png"));
     private final static ImageIcon externalIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_black.png"));
-    private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<Entry<ImageIcon, ImageIcon>, ResourceReference>();
+    private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<>();
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final AccessInfoProvider accessInfoProvider;
 
