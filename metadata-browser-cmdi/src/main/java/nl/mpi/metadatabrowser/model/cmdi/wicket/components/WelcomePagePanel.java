@@ -16,8 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.include.Include;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -28,9 +27,6 @@ public final class WelcomePagePanel extends Panel {
 
     public WelcomePagePanel(String id) {
         super(id);
-
-        final MarkupContainer welcomeContainer = new WebMarkupContainer("welcomeContainer");
-        add(welcomeContainer);
-
+       add(new Include("include", "HomePage.html"));
     }
 }
