@@ -37,7 +37,6 @@
     
     <!-- Annotation configuration needs to be enabled for the autowiring to work -->
     <context:annotation-config />
-    
     <tx:annotation-driven/>
     
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -48,7 +47,9 @@
 	<property name="jndiName" value="java:comp/env/jdbc/CSDB2"/>   
 	<property name="resourceRef" value="true" />
     </bean>
-    
+    <bean id="springHibernateFilter" class="org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter">
+        <property name="entityManagerFactoryBeanName" value="entityManagerFactory"/>
+    </bean>
     <bean id="entityManagerFactory"
 	  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 	<property name="packagesToScan" value="nl.mpi.archiving.corpusstructure.core.database.pojo" />
