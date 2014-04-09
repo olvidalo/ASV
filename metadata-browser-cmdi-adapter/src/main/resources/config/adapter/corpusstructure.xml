@@ -40,4 +40,8 @@
         </constructor-arg>
         <constructor-arg name="translationServiceBaseUri" value="http://tlatest01.mpi.nl/ds/TranslationService/" />
     </bean>-->
+    
+    <!-- Bean to refer to empty filter. Does absolutely nothing. It' a placeholder for the SessionInViewFilter we need for the CMDI profile -->
+    <bean id="springHibernateFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.PassThroughFilter">
+    </bean>
 </beans>
