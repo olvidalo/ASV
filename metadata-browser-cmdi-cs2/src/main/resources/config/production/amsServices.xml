@@ -10,7 +10,7 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
        profile="cmdi-production,cmdi-production-ams">
 
-    <bean id="AmsService" class="nl.mpi.metadatabrowser.ams.AmsRemoteServiceCMDIAdapter"/>
+    <bean id="AmsService" class="nl.mpi.metadatabrowser.cmdi.ams.AmsRemoteServiceCMDIAdapter"/>
     <bean id="AmsRemoteService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl"
                   value="http://lux16/am/ams2-cmdi/api/v1/httpinvoker/AmsRemoteService" />
