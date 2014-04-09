@@ -30,6 +30,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
  * Wrapper for {@link CorpusNode} that also encapsulates a {@link NodeType}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
+ * @param <SerializableCorpusNode>
  */
 public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, CorpusNodeWrapper, Serializable {
 
@@ -50,7 +51,7 @@ public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNo
 	return nodeType;
     }
 
-    @Override
+    @Override 
     public URI getNodeURI() {
 	return corpusNode.getNodeURI();
     }
