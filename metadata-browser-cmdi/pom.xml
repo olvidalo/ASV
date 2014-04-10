@@ -60,7 +60,7 @@
         <dependency>
             <groupId>nl.mpi.corpusstructure</groupId>
             <artifactId>corpus-structure-2-tree-model</artifactId>
-            <version>1.0-beta-3.1</version>
+            <version>1.0-beta-3.2</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
@@ -101,12 +101,12 @@
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
