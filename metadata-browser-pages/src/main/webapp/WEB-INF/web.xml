@@ -39,14 +39,21 @@
 <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <context-param>
+    
+    <!-- PROFILE CONTEXTCONFIGLOCATION -->
+    <!-- used when adpter profile is used comment out otherwise -->
+<!--    <context-param> 
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:config/**/*.xml, classpath:spring-config/core.xml,classpath:spring-config/persistence.xml,classpath:spring-config/datasource-jndi.xml</param-value>
-    </context-param>
-<!--        <context-param>
+    </context-param>-->
+    
+    <!-- used when cmdi profile is used comment out otherwise -->
+        <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:config/**/*.xml</param-value>
-    </context-param>-->
+    </context-param>
+    <!-- END PROFILE CONTEXTCONFIGLOCATION  -->
+    
         <context-param> <!-- used when shibboleth is enabled ignored otherwise -->
         <param-name>ShhaaConfigLocation</param-name>
         <param-value>/WEB-INF/shhaa.xml</param-value>
