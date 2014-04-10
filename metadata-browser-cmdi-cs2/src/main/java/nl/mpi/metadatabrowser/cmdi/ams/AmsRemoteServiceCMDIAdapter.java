@@ -19,9 +19,9 @@ package nl.mpi.metadatabrowser.cmdi.ams;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.lat.ams.AmsLicense;
 import nl.mpi.lat.ams.IAmsRemoteService;
+import nl.mpi.metadatabrowser.services.AmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
