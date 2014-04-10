@@ -113,4 +113,9 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     public int getChildNodeCount(URI nodeUri) {
 	return getChildNodeURIs(nodeUri).size();
     }
+
+    @Override
+    public void initialize() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
