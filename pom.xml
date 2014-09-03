@@ -81,6 +81,12 @@
             <version>${jmock.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Bridge commons logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${mpi.parent.slf4j.version}</version>
+        </dependency>
         <!-- Logging in testing -->
         <dependency>
             <groupId>org.slf4j</groupId>
