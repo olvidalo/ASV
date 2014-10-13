@@ -77,16 +77,6 @@ public class MockCorpusNode implements CorpusNode, Serializable{
     public URI getNodeURI() {
 	return nodeId;
     }
-
-    @Override
-    public URI getPID() {
-        try {
-            return new URI("hdl:1839/12345678910111213");
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(MockCorpusNode.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
     
     @Override
     public String getName() {
@@ -158,6 +148,16 @@ public class MockCorpusNode implements CorpusNode, Serializable{
     @Override
     public String getFormat() {
 	return "test/test-format";
+    }
+
+    @Override
+    public CorpusNode getOlderVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public CorpusNode getNewerVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

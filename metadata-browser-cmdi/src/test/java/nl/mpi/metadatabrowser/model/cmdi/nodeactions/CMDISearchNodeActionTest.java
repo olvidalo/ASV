@@ -135,43 +135,43 @@ public class CMDISearchNodeActionTest {
      * @throws java.lang.Exception
      */
     @Test
-	public void testExecuteCMDISearch() throws Exception {
-		System.out.println("execute");
-		final TypedCorpusNode node = context.mock(TypedCorpusNode.class,
-				"parent");
-		Collection<TypedCorpusNode> nodes = new ArrayList<>();
-		nodes.add(node);
-		nodeActionsConfiguration
-				.setYamsSearchURL("http://lux17.mpi.nl/ds/yaas/search.html");
-		UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration
-				.getYamsSearchURL());
-		URI targetURI = url.queryParam("hdl", NODE_PID.toString()).build();
+    public void testExecuteCMDISearch() throws Exception {
+        System.out.println("execute");
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class,
+                "parent");
+        final NodeResolver resolver = context.mock(NodeResolver.class);
+        Collection<TypedCorpusNode> nodes = new ArrayList<>();
+        nodes.add(node);
+        nodeActionsConfiguration
+                .setYamsSearchURL("http://lux17.mpi.nl/ds/yaas/search.html");
+        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration
+                .getYamsSearchURL());
+        URI targetURI = url.queryParam("hdl", NODE_PID.toString()).build();
 
-		context.checking(new Expectations() {
-			{
-				allowing(node).getNodeType();
-				will(returnValue(new CMDIMetadataType()));
+        context.checking(new Expectations() {
+            {
+                allowing(node).getNodeType();
+                will(returnValue(new CMDIMetadataType()));
 
-				allowing(node).getPID();
-				will(returnValue(NODE_PID));
-			}
-		});
+                allowing(resolver).getPID(node);
+                will(returnValue(NODE_PID));
+            }
+        });
 
-		CMDISearchNodeAction instance = new CMDISearchNodeAction(
-				nodeActionsConfiguration, filterIdProvider,
-				context.mock(NodeResolver.class));
-		NodeActionResult result = instance.execute(nodes);
-		assertEquals("Metadata Search", instance.getName());
+        CMDISearchNodeAction instance = new CMDISearchNodeAction(
+                nodeActionsConfiguration, filterIdProvider, resolver);
+        NodeActionResult result = instance.execute(nodes);
+        assertEquals("Metadata Search", instance.getName());
 
-		ControllerActionRequest actionRequest = result
-				.getControllerActionRequest();
-		assertNotNull(actionRequest);
-		assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
+        ControllerActionRequest actionRequest = result
+                .getControllerActionRequest();
+        assertNotNull(actionRequest);
+        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
 //		assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
 //
 //		NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
 //		assertNotNull(navigationActionRequest.getTargetURL());
 //		assertEquals(targetURI.toURL().toString(), navigationActionRequest
 //				.getTargetURL().toString());
-	}
+    }
 }

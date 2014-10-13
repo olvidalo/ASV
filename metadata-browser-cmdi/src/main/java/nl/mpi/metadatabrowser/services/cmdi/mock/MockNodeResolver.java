@@ -58,4 +58,14 @@ public class MockNodeResolver extends BaseNodeResolver {
 	    return baseResolver.getUrl(node);
 	}
     }
+
+    @Override
+    public URI getPID(CorpusNode node) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getId(CorpusNode node) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

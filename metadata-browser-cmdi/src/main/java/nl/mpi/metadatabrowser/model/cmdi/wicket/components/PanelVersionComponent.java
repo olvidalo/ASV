@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriBuilderException;
+import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -54,9 +56,11 @@ public class PanelVersionComponent extends Panel {
     private AccessInfoProvider accessInfoProvider;
     @SpringBean
     private NodeActionsConfiguration nodeActionsConfiguration;
+    private final NodeResolver resolver;
 
-    public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver resolver, String userid, MockVersioningAPI versions) {
+    public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver, String userid, MockVersioningAPI versions) {
         super(id);
+        this.resolver = nodeResolver;
         try {
             List versionsNodeIds = null;
 
@@ -71,63 +75,73 @@ public class PanelVersionComponent extends Panel {
                 versionsNodeIds = versions.getAllVersions(node.getNodeURI(), showRetired);
             }
             URL nodeURL = resolver.getUrl(node);
-            String handleResolver = csdb.getHandleResolverURI().toString();
             if ((nodeURL != null)) {
-                Boolean hasaccess; // check accessibility node for the user
-                if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-                    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
-                } else {
-                    hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
-                }
+                try {
+                    final Boolean hasaccess = hasAccess(userid, node);
 
-                // loop through the list of versions for a node to write them in the table.
-                if (versionsNodeIds != null && versionsNodeIds.size() > 0) {
-                    for (int v = 0; v < versionsNodeIds.size(); v++) {
-                        // for each loop add a row
-                        AbstractItem item = new AbstractItem(repeating.newChildId());
-                        repeating.add(item);
-                        URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
-                        URL currentNodeUrlStr = resolver.getUrl(node);
-                        String secureCurrentNodeUrlStr = nodeActionsConfiguration.processLinkProtocol(currentNodeUrlStr.toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));// request.isSecure() unless override active
-                        // add fields for each row
-                        Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
-                        item.add(new Label("hasaccess", hasaccess.toString()));
-                        item.add(new Label("currentNodeDate", currentNodeDate.toString()));
-                        item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, filterNodeId.getURIParam(node.getNodeURI())));
-
-                        URI nodePID = node.getPID();
-                        if (nodePID != null) {
-                            item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + nodePID.toString()).build().toString(), nodePID.toString()));
-                        } else {
-                            item.add(new ExternalLink("linktoPID", "", "no link to the specified node were found"));
-                        }
-
-                        final int idx = v;
-                        item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            public String getObject() {
-                                return (idx % 2 == 1) ? "even" : "odd";
-                            }
-                        }));
+                    // loop through the list of versions for a node to write them in the table.
+                    if (versionsNodeIds != null && versionsNodeIds.size() > 0) {
+                        final String handleResolver = csdb.getHandleResolverURI().toString();
+                        addVersionInfo(versionsNodeIds, repeating, node, versions, hasaccess, handleResolver);
+                    } else { // list is empty
+                        //TODO decide if it is revelant to display table with no value or simply return a message.
+                        repeating.add(new Label("hasaccess", hasaccess.toString()));
+                        repeating.add(new Label("currentNodeDate", "unknown"));
+                        repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
+                        repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
+                        add(repeating);
                     }
-
-                } else { // list is empty
-                    //TODO decide if it is revelant to display table with no value or simply return a message.
-                    repeating.add(new Label("hasaccess", hasaccess.toString()));
-                    repeating.add(new Label("currentNodeDate", "unknown"));
-                    repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
-                    repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
-                    add(repeating);
+                } catch (NodeNotFoundException ex) {
+                    Session.get().error(ex.getMessage());
+                    logger.warn("Node not found: {}", nodeURL, ex);
                 }
             }
         } catch (URISyntaxException ex) {
             Session.get().error(ex.getMessage());
-            logger.error("", ex);
-        }// catch (UnknownNodeException ex) {
-        //    Session.get().error(ex.getMessage());
-        //    logger.error("", ex);
-        //}
+            logger.error("Illegal URI", ex);
+        }
+    }
+
+    private void addVersionInfo(List versionsNodeIds, RepeatingView repeating, TypedCorpusNode node, MockVersioningAPI versions, final Boolean hasaccess, String handleResolver) throws URISyntaxException, IllegalArgumentException, UriBuilderException {
+        for (int v = 0; v < versionsNodeIds.size(); v++) {
+            // for each loop add a row
+            AbstractItem item = new AbstractItem(repeating.newChildId());
+            repeating.add(item);
+            URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
+            URL currentNodeUrlStr = resolver.getUrl(node);
+            String secureCurrentNodeUrlStr = nodeActionsConfiguration.processLinkProtocol(currentNodeUrlStr.toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));// request.isSecure() unless override active
+            // add fields for each row
+            Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
+            item.add(new Label("hasaccess", hasaccess.toString()));
+            item.add(new Label("currentNodeDate", currentNodeDate.toString()));
+            item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, filterNodeId.getURIParam(node.getNodeURI())));
+
+            URI nodePID = resolver.getPID(node);
+            if (nodePID != null) {
+                item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + nodePID.toString()).build().toString(), nodePID.toString()));
+            } else {
+                item.add(new ExternalLink("linktoPID", "", "no link to the specified node were found"));
+            }
+
+            final int idx = v;
+            item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public String getObject() {
+                    return (idx % 2 == 1) ? "even" : "odd";
+                }
+            }));
+        }
+    }
+
+    private Boolean hasAccess(String userid, TypedCorpusNode node) throws NodeNotFoundException {
+        Boolean hasaccess; // check accessibility node for the user
+        if (userid == null || userid.equals("") || userid.equals("anonymous")) {
+            hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
+        } else {
+            hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
+        }
+        return hasaccess;
     }
 }

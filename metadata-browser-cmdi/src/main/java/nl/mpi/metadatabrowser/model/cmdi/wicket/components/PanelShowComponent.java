@@ -77,7 +77,7 @@ public final class PanelShowComponent extends Panel {
         }
 
         String wrapHandle = "";
-        URI handle = node.getPID(); // can be null
+        URI handle = nodeResolver.getPID(node); // can be null
         if (handle != null) {
             wrapHandle = handle.toString();
             if (wrapHandle.contains(":")) {

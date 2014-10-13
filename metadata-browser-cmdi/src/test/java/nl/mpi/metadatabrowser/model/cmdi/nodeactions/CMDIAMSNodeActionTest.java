@@ -99,8 +99,8 @@ public class CMDIAMSNodeActionTest {
                         allowing(node).getNodeURI();
                         will(returnValue(NODE_ID));
 
-                        oneOf(node).getPID();
-                        will(returnValue(NODE_ID.toString()));
+//                        oneOf(node).getPID();
+//                        will(returnValue(NODE_ID.toString()));
                     }
                 });
 
@@ -153,8 +153,8 @@ public class CMDIAMSNodeActionTest {
                         allowing(node).getNodeURI();
                         will(returnValue(NODE_ID));
 
-                        oneOf(node).getPID();
-                        will(returnValue(NODE_ID.toString()));
+//                        oneOf(node).getPID();
+//                        will(returnValue(NODE_ID.toString()));
                     }
                 });
 

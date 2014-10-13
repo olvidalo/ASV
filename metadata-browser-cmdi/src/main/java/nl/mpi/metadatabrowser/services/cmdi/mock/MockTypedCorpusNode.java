@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.net.URI;
 import java.util.Date;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -100,7 +101,12 @@ public class MockTypedCorpusNode implements TypedCorpusNode {
     }
 
     @Override
-    public URI getPID() {
-        return URI.create("hdl:1839/12345678910111213");
+    public CorpusNode getOlderVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public CorpusNode getNewerVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

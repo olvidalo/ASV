@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
+import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -72,20 +73,21 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
         //try {
         // HANDLE download action here
-        if (userHasAccess(node, nodeUri, userid)) {
-            final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-            final String fileName = new File(nodeUri.getPath()).getName();
-            final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
-            return new SimpleNodeActionResult(request);
-        } else {
-            return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
+        try {
+            if (userHasAccess(node, nodeUri, userid)) {
+                final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
+                final String fileName = new File(nodeUri.getPath()).getName();
+                final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
+                return new SimpleNodeActionResult(request);
+            } else {
+                return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
+            }
+        } catch (NodeNotFoundException ex) {
+            throw new NodeActionException(this, ex);
         }
-        //} catch (UnknownNodeException ex) {
-        //    throw new NodeActionException(this, ex);
-        //}
     }
 
-    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri, String userid) {
+    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri, String userid) throws NodeNotFoundException {
         final boolean hasaccess;
         if (userid == null || userid.equals("") || userid.equals("anonymous")) {
             hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);

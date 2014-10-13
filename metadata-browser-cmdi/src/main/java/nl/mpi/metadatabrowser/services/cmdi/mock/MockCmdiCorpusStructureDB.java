@@ -19,9 +19,11 @@ package nl.mpi.metadatabrowser.services.cmdi.mock;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 
 /**
@@ -116,6 +118,30 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
 
     @Override
     public void initialize() {
+    }
+
+    @Override
+    public List<URI> getCanonicalVPathURIs(URI nodeUri) throws IllegalStateException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<URI> getDescendants(URI nodeUri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<URI> getDescendantsByType(URI nodeUri, List<CorpusNodeType> types) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<CorpusNode> getDescendantNodes(URI nodeUri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<CorpusNode> getDescendantNodesByType(URI nodeUri, List<CorpusNodeType> types) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

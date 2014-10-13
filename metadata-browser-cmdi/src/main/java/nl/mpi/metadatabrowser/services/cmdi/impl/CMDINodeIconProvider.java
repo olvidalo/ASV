@@ -24,11 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
@@ -47,9 +46,12 @@ import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 ;
@@ -66,6 +68,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNodeIconProvider<T> {
 
+    private final static Logger logger = LoggerFactory.getLogger(CMDINodeIconProvider.class);
     private final static ImageIcon sessionIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/session_color.gif"));
     private final static ImageIcon catalogueIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/catalogue.png"));
     private final static ImageIcon corpusIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/corpusnode_color.png"));
@@ -89,11 +92,11 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final AccessInfoProvider accessInfoProvider;
 
     /**
-     * Constructor
-     * Autowired in providers.xml
+     * Constructor Autowired in providers.xml
      *
-     * @param nodeTypeIdentifier NodeTypeIdentifier, give the type of a node 
-     * @param accessInfoProvider AccessInfoProvider, provide access level for a node
+     * @param nodeTypeIdentifier NodeTypeIdentifier, give the type of a node
+     * @param accessInfoProvider AccessInfoProvider, provide access level for a
+     * node
      */
     @Autowired
     public CMDINodeIconProvider(NodeTypeIdentifier nodeTypeIdentifier, AccessInfoProvider accessInfoProvider) {
@@ -111,15 +114,16 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      */
     @Override
     public ResourceReference getNodeIcon(T contentNode) {
-        ResourceReference combinedIcon = null;
         try {
             final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
             final ImageIcon nodeTypeIcon = getNodeTypeIcon(nodeType);
-            combinedIcon = checkNodeAccess(contentNode, nodeTypeIcon);
+            return checkNodeAccess(contentNode, nodeTypeIcon);
         } catch (NodeTypeIdentifierException ex) {
-            Logger.getLogger(CMDINodeIconProvider.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Could not identify node type of {}", contentNode, ex);
+        } catch (NodeNotFoundException ex) {
+            logger.warn("Not not found: {}", contentNode, ex);
         }
-        return combinedIcon;
+        return null; // no icon for non-node or unknown type...
     }
 
     /**
@@ -130,7 +134,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @param csdb , instance of corpusStructureDb
      * @return ImageIcon, corresponding to access level
      */
-    private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) {
+    private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) throws NodeNotFoundException {
         final ImageIcon accessIcon = getNodeAccessIcon(accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
 
         // retrieve the corresponding combined icon based on nodetype and accesslevel

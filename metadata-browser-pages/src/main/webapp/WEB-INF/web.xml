@@ -36,7 +36,7 @@
     <listener>
         <listener-class>de.mpg.aai.shhaa.config.ConfigContextListener</listener-class>
     </listener>
-<listener>
+    <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     
@@ -48,7 +48,7 @@
     </context-param>-->
     
     <!-- used when cmdi profile is used comment out otherwise -->
-        <context-param>
+    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:config/**/*.xml</param-value>
     </context-param>

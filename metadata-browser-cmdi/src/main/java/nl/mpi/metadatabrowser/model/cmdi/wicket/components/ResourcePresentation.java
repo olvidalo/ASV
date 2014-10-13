@@ -21,8 +21,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
+import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -33,6 +35,7 @@ import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -77,155 +80,165 @@ public final class ResourcePresentation extends Panel {
         String nodeid = filterNodeId.getURIParam(node.getNodeURI());
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
         if (nodeURL != null) {
-            Boolean hasaccess;
-            if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-                hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);
+            try {
+                addContent(userid, node, nodeid, nodeURL);
+            } catch (NodeNotFoundException ex) {
+                Session.get().error(ex);
+                logger.warn("Not not found: {}", nodeURL, ex);
+            }
+        }
+    }
+
+    private void addContent(final String userid, TypedCorpusNode node, String nodeid, final String nodeURL) throws IllegalArgumentException, UriBuilderException, NodeNotFoundException {
+        final boolean hasaccess = hasAccess(userid, node);
+
+        String wrapHandle = "";
+        URI handle = resolver.getPID(node);
+        if (handle != null) {
+            wrapHandle = handle.toString();
+            if (wrapHandle.contains(":")) {
+                wrapHandle = wrapHandle.split(":")[1];
+                wrapHandle = "http://hdl.handle.net/" + wrapHandle;
+            }
+        }
+        String nodetype = "unknown";
+        String format = node.getFormat();
+
+        final FileInfo fileInfo = node.getFileInfo();
+        String checksum = fileInfo.getChecksum();
+        String size = "unknown";
+        String lastmodified = "unknown";
+        long isize = fileInfo.getSize();
+
+        if (isize > 0) {
+            if (isize < (10 * 1024)) {
+                size = String.valueOf(isize) + " bytes";
+            } else if (isize < (10 * 1024 * 1024)) {
+                size = String.valueOf(isize / 1024) + " KB";
             } else {
-                hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), userid);
+                size = String.valueOf(isize / (1024 * 1024)) + " MB";
             }
-
-            String wrapHandle = "";
-            URI handle = node.getPID();
-            if (handle != null) {
-                wrapHandle = handle.toString();
-                if (wrapHandle.contains(":")) {
-                    wrapHandle = wrapHandle.split(":")[1];
-                    wrapHandle = "http://hdl.handle.net/" + wrapHandle;
-                }
+            final Date filetime = fileInfo.getFileTime();
+            if (filetime != null) {
+                lastmodified = new Date(filetime.getTime()).toString();
             }
-            String nodetype = "unknown";
-            String format = node.getFormat();
+        }
 
-            final FileInfo fileInfo = node.getFileInfo();
-            String checksum = fileInfo.getChecksum();
-            String size = "unknown";
-            String lastmodified = "unknown";
-            long isize = fileInfo.getSize();
+        if (node.getNodeType() instanceof CMDIResourceTxtType) {
+            nodetype = "Written Resource";
+        } else if (node.getNodeType() instanceof CMDIResourceType) {
+            nodetype = "Media Resource";
+        }
 
-            if (isize > 0) {
-                if (isize < (10 * 1024)) {
-                    size = String.valueOf(isize) + " bytes";
-                } else if (isize < (10 * 1024 * 1024)) {
-                    size = String.valueOf(isize / 1024) + " KB";
-                } else {
-                    size = String.valueOf(isize / (1024 * 1024)) + " MB";
-                }
-                final Date filetime = fileInfo.getFileTime();
-                if (filetime != null) {
-                    lastmodified = new Date(filetime.getTime()).toString();
-                }
-            }
-
-            if (node.getNodeType() instanceof CMDIResourceTxtType) {
-                nodetype = "Written Resource";
-            } else if (node.getNodeType() instanceof CMDIResourceType) {
-                nodetype = "Media Resource";
-            }
-
-            if (checksum == null) {
-                checksum = "unknown";
-            }
-
+        if (checksum == null) {
+            checksum = "unknown";
+        }
 
 //	    AccessLevel nodeAccessLevel = AccessLevel.ACCESS_LEVEL_UNKNOWN;
 //	    if (nAccessInfo.getAccessLevel() > AccessLevel.ACCESS_LEVEL_UNKNOWN) {
-            AccessLevel nodeAccessLevel = accessInfoProvider.getAccessLevel(node.getNodeURI());
+        AccessLevel nodeAccessLevel = accessInfoProvider.getAccessLevel(node.getNodeURI());
 //	    }
 
-            final MarkupContainer tableContainer = new WebMarkupContainer("tableContainer");
-            ExternalLink requestLink = null;
+        final MarkupContainer tableContainer = new WebMarkupContainer("tableContainer");
+        ExternalLink requestLink = null;
 
-            if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY) {
-                tableContainer.add(new Image("access_icon", openIcon));
-                tableContainer.add(new Label("accesslevel", "This resource is openly available"));
+        if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_OPEN_EVERYBODY) {
+            tableContainer.add(new Image("access_icon", openIcon));
+            tableContainer.add(new Label("accesslevel", "This resource is openly available"));
 
-            } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_OPEN_REGISTERED_USERS) {
-                tableContainer.add(new Image("access_icon", licensedIcon));
-                tableContainer.add(new Label("accesslevel", "This resource is accessible to registered users of the archive"));
+        } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_OPEN_REGISTERED_USERS) {
+            tableContainer.add(new Image("access_icon", licensedIcon));
+            tableContainer.add(new Label("accesslevel", "This resource is accessible to registered users of the archive"));
 
-            } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_PERMISSION_NEEDED) {
-                UriBuilder rrsurl = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
-                URI requestedUri = rrsurl.queryParam("nodeid", nodeid).build();
-                requestLink = new ExternalLink("requestLink", requestedUri.toString(), "requested") {
-                    @Override
-                    protected void onComponentTag(ComponentTag tag) {
-                        super.onComponentTag(tag);
-                        tag.put("target", "_blank");
-                    }
-                };
-                tableContainer.add(new Image("access_icon", restrictedIcon));
-                tableContainer.add(new Label("accesslevel", "Access to this resource can be "));
-            } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_CLOSED) {
-                tableContainer.add(new Image("access_icon", closedIcon));
-                tableContainer.add(new Label("accesslevel", "Access to this resource is prohibited"));
-
-            } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_EXTERNAL) {
-                tableContainer.add(new Image("access_icon", externalIcon));
-                tableContainer.add(new Label("accesslevel", "This resource is external"));
-            } else {
-                Image icon  = new Image("access_icon", "");
-                icon.setVisible(false);
-                tableContainer.add(icon);
-                tableContainer.add(new Label("accesslevel", "No access level has been calculated yet"));
-            }
-            if (requestLink == null) {
-                requestLink = new ExternalLink("requestLink", "");
-                requestLink.setVisible(false);
-            }
-
-            // get the licenses for a nodeId
-            List<String[]> licenseViews = amsService.getLicense(node.getNodeURI());
-
-            StringBuilder sb = new StringBuilder();
-            Label licensesLabel;
-
-            // create label for licenses
-            if (licenseViews.isEmpty()) {
-                licensesLabel = new Label("licenses", "No licenses required for this resource.");
-            } else {
-                Iterator<String[]> it = licenseViews.iterator();
-                while (it.hasNext()) {
-                    String lic[] = it.next();
-                    sb.append("<a href=\"");
-                    sb.append(lic[1]);
-                    sb.append("\">");
-                    sb.append(lic[0]);
-                    sb.append("</a><br/> ");
+        } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_PERMISSION_NEEDED) {
+            UriBuilder rrsurl = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
+            URI requestedUri = rrsurl.queryParam("nodeid", nodeid).build();
+            requestLink = new ExternalLink("requestLink", requestedUri.toString(), "requested") {
+                @Override
+                protected void onComponentTag(ComponentTag tag) {
+                    super.onComponentTag(tag);
+                    tag.put("target", "_blank");
                 }
-                licensesLabel = new Label("licenses", sb.toString());
+            };
+            tableContainer.add(new Image("access_icon", restrictedIcon));
+            tableContainer.add(new Label("accesslevel", "Access to this resource can be "));
+        } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_CLOSED) {
+            tableContainer.add(new Image("access_icon", closedIcon));
+            tableContainer.add(new Label("accesslevel", "Access to this resource is prohibited"));
 
+        } else if (nodeAccessLevel == AccessLevel.ACCESS_LEVEL_EXTERNAL) {
+            tableContainer.add(new Image("access_icon", externalIcon));
+            tableContainer.add(new Label("accesslevel", "This resource is external"));
+        } else {
+            Image icon = new Image("access_icon", "");
+            icon.setVisible(false);
+            tableContainer.add(icon);
+            tableContainer.add(new Label("accesslevel", "No access level has been calculated yet"));
+        }
+        if (requestLink == null) {
+            requestLink = new ExternalLink("requestLink", "");
+            requestLink.setVisible(false);
+        }
+
+        // get the licenses for a nodeId
+        List<String[]> licenseViews = amsService.getLicense(node.getNodeURI());
+
+        StringBuilder sb = new StringBuilder();
+        Label licensesLabel;
+
+        // create label for licenses
+        if (licenseViews.isEmpty()) {
+            licensesLabel = new Label("licenses", "No licenses required for this resource.");
+        } else {
+            Iterator<String[]> it = licenseViews.iterator();
+            while (it.hasNext()) {
+                String lic[] = it.next();
+                sb.append("<a href=\"");
+                sb.append(lic[1]);
+                sb.append("\">");
+                sb.append(lic[0]);
+                sb.append("</a><br/> ");
             }
-            licensesLabel.setEscapeModelStrings(false);
-
-
-
-            // Add all labels to table container to be displayed in html
-            tableContainer.add(licensesLabel);
-            if (hasaccess) {
-                tableContainer.add(new Label("hasaccess", "yes"));
-            } else {
-                tableContainer.add(new Label("hasaccess", "no"));
-            }
-            tableContainer.add(new Label("nodeId", nodeid));
-            if (handle != null) {
-                tableContainer.add(new ExternalLink("handle", wrapHandle, wrapHandle));
-            } else {
-                tableContainer.add(new ExternalLink("handle", "", "no handle was found for this resource"));
-            }
-            tableContainer.add(new ExternalLink("url", nodeURL, nodeURL));
-            tableContainer.add(new Label("nodetype", nodetype));
-            tableContainer.add(new Label("format", format));
-            tableContainer.add(new Label("checksum", checksum));
-            tableContainer.add(new Label("size", size));
-            tableContainer.add(new Label("last_modified", lastmodified));
-
-            tableContainer.add(new Label("userid", userid));
-
-            tableContainer.add(new ExternalLink("link", nodeURL, "link"));
-            tableContainer.add(requestLink);
-            // Add container to page
-            add(tableContainer);
+            licensesLabel = new Label("licenses", sb.toString());
 
         }
+        licensesLabel.setEscapeModelStrings(false);
+
+        // Add all labels to table container to be displayed in html
+        tableContainer.add(licensesLabel);
+        if (hasaccess) {
+            tableContainer.add(new Label("hasaccess", "yes"));
+        } else {
+            tableContainer.add(new Label("hasaccess", "no"));
+        }
+        tableContainer.add(new Label("nodeId", nodeid));
+        if (handle != null) {
+            tableContainer.add(new ExternalLink("handle", wrapHandle, wrapHandle));
+        } else {
+            tableContainer.add(new ExternalLink("handle", "", "no handle was found for this resource"));
+        }
+        tableContainer.add(new ExternalLink("url", nodeURL, nodeURL));
+        tableContainer.add(new Label("nodetype", nodetype));
+        tableContainer.add(new Label("format", format));
+        tableContainer.add(new Label("checksum", checksum));
+        tableContainer.add(new Label("size", size));
+        tableContainer.add(new Label("last_modified", lastmodified));
+
+        tableContainer.add(new Label("userid", userid));
+
+        tableContainer.add(new ExternalLink("link", nodeURL, "link"));
+        tableContainer.add(requestLink);
+        // Add container to page
+        add(tableContainer);
+    }
+
+    private Boolean hasAccess(final String userid, TypedCorpusNode node) throws NodeNotFoundException {
+        Boolean hasaccess;
+        if (userid == null || userid.equals("") || userid.equals("anonymous")) {
+            hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);
+        } else {
+            hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), userid);
+        }
+        return hasaccess;
     }
 }

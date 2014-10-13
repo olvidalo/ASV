@@ -80,7 +80,7 @@ public class CMDISearchNodeAction implements NodeAction {
             if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
                 //Buil redirect to CMDI Search
                 uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getYamsSearchURL());
-                URI handle = node.getPID();
+                URI handle = nodeResolver.getPID(node);
                 if (handle == null) { // can be null, pass URL instead
                     wraphandleOrNodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
                     targetURI = uriBuilder.queryParam("url", wraphandleOrNodeURL).build();
