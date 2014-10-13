@@ -4,13 +4,11 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -33,10 +31,6 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
     private static final long serialVersionUID = 1L;
-    @SpringBean
-    private FilterNodeIds nodeIdFilter;
-    @SpringBean
-    private CorpusStructureProvider csprovider;
     @SpringBean
     private GenericTreeModelProvider treeModelProvider;
     @SpringBean(required = false)
@@ -118,8 +112,10 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private URI getNodeUriToOpen(PageParameters parameters) {
         String uriString = parameters.get("openpath").toString();
         if (uriString == null) {
-            String handle = parameters.get("openhandle").toString();
+            // no open path, try openhandle
+            final String handle = parameters.get("openhandle").toString();
             if (handle != null) {
+                // already a handle URI? If not, prepend scheme
                 if (handle.startsWith("hdl:")) {
                     uriString = handle;
                 } else {
@@ -132,10 +128,15 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
             return null;
         } else {
             try {
-                URI nodeUri = new URI(uriString);
+                final URI nodeUri = new URI(uriString);
                 final String uriScheme = nodeUri.getScheme();
-                if (!uriScheme.equalsIgnoreCase("node") && !uriScheme.equalsIgnoreCase("hdl") && !uriScheme.startsWith("http")) {
-                    return new URI("node:" + nodeIdFilter.getURIParam(nodeUri));
+                //TODO: Deal with openhandle=MPI123# format (=>node:123)
+                if (uriScheme == null
+                        || (!uriScheme.equalsIgnoreCase("node") //not an explicit node URI
+                        && !uriScheme.equalsIgnoreCase("hdl") //not a handle
+                        && !uriScheme.startsWith("http"))) { // not an ordinary URL
+                    // assume it's a node ID, so fall back to node URI
+                    return new URI("node:" + nodeUri.getSchemeSpecificPart());
                 } else {
                     return nodeUri;
                 }
