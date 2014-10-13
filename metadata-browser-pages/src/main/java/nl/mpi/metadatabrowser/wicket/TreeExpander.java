@@ -29,6 +29,8 @@ import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.corpusstructure.UnknownNodeException;
 import org.apache.wicket.extensions.markup.html.tree.Tree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -39,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class TreeExpander implements Serializable {
 
+    private final static Logger logger = LoggerFactory.getLogger(TreeExpander.class);
     @Autowired
     private CorpusStructureProvider csprovider;
 
@@ -58,9 +61,11 @@ public class TreeExpander implements Serializable {
      * @return whether the tree was expanded
      */
     public boolean openPath(Tree tree, Object rootObj, URI nodeUri) {
+        logger.debug("Trying to expand archive tree to [{}]", nodeUri);
         // retrieve actual node to:
         // 1. check whether it exists
         // 2. obtain the NodeUri in case it was requested by means of its handle
+        //    (node URIs will be assumed when expanding the tree later on)
         final CorpusNode node = csprovider.getNode(nodeUri);
         if (node != null) {
             final List<URI> parentNodes = new ArrayList<>();
@@ -84,6 +89,7 @@ public class TreeExpander implements Serializable {
      */
     private boolean getParentNode(URI node, Tree tree, List<URI> parentNodes, Object rootObj) {
         URI parentNodeURI = csprovider.getCanonicalParent(node);// get parent URI
+        logger.trace("Expanding tree: found parent node [{}]", parentNodeURI);
         if (parentNodeURI != null) {
             parentNodes.add(parentNodeURI); //add parent to the list
             return getParentNode(parentNodeURI, tree, parentNodes, rootObj);// find next parent
@@ -95,11 +101,13 @@ public class TreeExpander implements Serializable {
     /**
      * Method that expand the nodes
      *
-     * @param parentNodes List<URI>, list of node URI that need to be expanded
+     * @param parentNodes list of node URIs (not handles!) that need to be
+     * expanded
      * @param treePanel ArchivePanel, treePanel in which node will be expanded
      * @param rootObj Object, the root node which is already expanded
      */
     private boolean expandTreeToSelectedNode(List<URI> parentNodes, Tree tree, Object rootObj) {
+        logger.debug("Found parents, expanding node path {}", parentNodes);
         // Generate an iterator. Start just after the last element.(reverse reading)
         ListIterator<URI> li = parentNodes.listIterator(parentNodes.size());
         Object currentTreeNode = rootObj;// this is root node (already expanded)
@@ -108,6 +116,7 @@ public class TreeExpander implements Serializable {
             URI nodeUri = li.previous();
             currentTreeNode = findTreeNodeObject((GenericTreeSwingTreeNodeWrapper) currentTreeNode, nodeUri);
             if (currentTreeNode == null) {
+                logger.error("Node not found while expanding trees!", nodeUri);
                 return false;
             } else {
                 tree.getTreeState().expandNode(currentTreeNode);
@@ -119,7 +128,7 @@ public class TreeExpander implements Serializable {
 
     /**
      * Method that will find the object of a given node. Goes through all the
-     * children of a node to find the perfect match
+     * children of a node to find a match
      *
      * @param currentTreeNode GenericTreeSwingTreeNodeWrapper, object to be
      * matched with nopdeURI
