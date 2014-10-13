@@ -6,12 +6,12 @@
     <parent>
         <groupId>nl.mpi.metadata-browser</groupId>
         <artifactId>metadata-browser-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>nl.mpi.metadata-browser</groupId>
     <artifactId>metadata-browser-cmdi-cs2</artifactId>
-    <version>${cs2_project_version}</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Metadata Browser Services CMDI Implementation - Corpus Structure 2 Profile</name>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>metadata-browser-cmdi</artifactId>
-            <version>${cmdi_project_version}</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi.corpusstructure</groupId>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>8.4-702.jdbc4</version>
+            <version>9.1-901-1.jdbc4</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

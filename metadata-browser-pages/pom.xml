@@ -5,7 +5,7 @@
     <parent>
         <groupId>nl.mpi.metadata-browser</groupId>
         <artifactId>metadata-browser-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -14,7 +14,7 @@
     <artifactId>metadata-browser-pages</artifactId>
     <name>metadata-browser-pages</name>
     <packaging>war</packaging>
-    <version>${war_project.version}</version>
+    <version>1.1-SNAPSHOT</version>
     <description>Metadata Browser Wicket Pages</description>
 
 
@@ -35,7 +35,7 @@
                 <dependency>
                     <groupId>${project.groupId}</groupId>
                     <artifactId>metadata-browser-cmdi-adapter</artifactId>
-                    <version>${adapter_project_version}</version>
+                    <version>1.1-SNAPSHOT</version>
                     <exclusions>
 <!--                        <exclusion>
                             <artifactId>javax.servlet-api</artifactId>
@@ -51,7 +51,7 @@
                 <dependency>
                     <groupId>${project.groupId}</groupId>
                     <artifactId>metadata-browser-cmdi-cs2</artifactId>
-                    <version>${cs2_project_version}</version>
+                    <version>1.1-SNAPSHOT</version>
                 </dependency>
             </dependencies>
         </profile>
