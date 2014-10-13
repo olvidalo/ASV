@@ -9,8 +9,12 @@
     
     <!-- Global Spring configuration for the Metadata Browser (no profile specific configuration in here please) -->
 
+    <!-- Services -->
+    <bean id="treeExpander" class="nl.mpi.metadatabrowser.wicket.TreeExpander" />
+    
     <!-- Wicket application class -->	
     <bean id="wicketApplication" class="nl.mpi.metadatabrowser.wicket.MetadataBrowserApplication" />
+
     <!-- Services -->
     <bean id="actionRequestHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ControllerActionRequestHandlerImpl">
 	<property name="navigationRequestHandler">
