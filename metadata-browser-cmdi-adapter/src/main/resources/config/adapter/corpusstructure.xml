@@ -32,6 +32,10 @@
     <!-- Provider for correct id format. This used to get the appropriate ID as string and prevent a dependency to the Adapter in the cmdi implementation. -->
     <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.FilterNodeId"/>
 
+    <bean id="filePathTranslatorAdapter" class="nl.mpi.archiving.corpusstructure.adapter.crawler.FilePathTranslatorAdapter">
+        <constructor-arg ref="corpusStructureProvider" />
+    </bean>
+    
     <!--     Wrapper node resolver that wraps metadata URL's in the translation service to always get the CMDI version
     <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.adapter.TranslatingNodeResolver">
         <constructor-arg name="baseNodeResolver">
