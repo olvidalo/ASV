@@ -97,11 +97,12 @@
     </dependencies>
     <properties>
         <!-- Version of Wicket to depend on in module projects -->
-        <wicket.version>6.11.0</wicket.version>
+        <wicket.version>6.17.0</wicket.version>
         <jmock.version>2.6.0</jmock.version>
         <!-- Hint for NetBeans to insert license header -->
         <netbeans.hint.license>gpl30</netbeans.hint.license>
-        <spring.version>3.2.7.RELEASE</spring.version>
+        <spring.version>3.2.11.RELEASE</spring.version>
+        <spring.security.version>3.2.0.RELEASE</spring.security.version>
         <!-- Maven Version -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
