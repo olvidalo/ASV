@@ -12,6 +12,20 @@
 
     <!--
         Spring configuration of adapter AMS services
+        
+        This AMS wiring gets imported from the AMS library. To make it work,
+        the following resource is needed in the Tomcat context (fill in
+        host, username and password according to deployment situation):
+        
+        <Resource
+                name="jdbc/AMS2DB"
+                auth="Container"
+                type="javax.sql.DataSource"
+                driverClassName="org.postgresql.Driver"
+                url="jdbc:postgresql://<HOST>:5432/ams2?useUnicode=true&amp;charSet=UTF-8"
+                username="<USER>"
+                password="<PASSWORD>"
+        />
     -->
 
     <import resource="classpath:spring-ams2-core.xml"/>
