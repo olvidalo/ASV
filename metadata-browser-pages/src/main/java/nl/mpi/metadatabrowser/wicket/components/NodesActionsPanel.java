@@ -41,8 +41,6 @@ import org.apache.wicket.request.resource.CssResourceReference;
  */
 public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> {
     // overlaping javascript caused tree to reload on each request. animateLoad.js is now inline in correpsonding html. JQuery was duplicated with wicket.
-//    private static final JavaScriptResourceReference JQuery = new JavaScriptResourceReference(NodesActionsPanel.class, "res/jquery-1.3.2.js");
-//    private static final JavaScriptResourceReference ANIMATE = new JavaScriptResourceReference(NodesActionsPanel.class, "res/animateOnLoad.js");
 
     private final static CssResourceReference NodesActionsPanel_CSS = new CssResourceReference(NodesActionsPanel.class, "res/nodeActionsPanel.css");
 
@@ -55,8 +53,10 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
     }
 
     /**
-     * Method that build the nodeAction button using wicket and decide whether to open in a new window/tab
-     * Handle renaming if necessary, class attribution and title.
+     * Method that build the nodeAction button using wicket and decide whether
+     * to open in a new window/tab Handle renaming if necessary, class
+     * attribution and title.
+     *
      * @param id
      * @param model
      */
@@ -68,15 +68,20 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
             protected void populateItem(ListItem<NodeAction> item) {
                 final NodeAction action = item.getModelObject();
                 final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
-                Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
-                if (action.getName().equals("Annotation Content Search")) {
+                final Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
+                final String actionName = action.getName();
+
+                //TODO: replace with more robust check than by name
+                if (actionName.equals("Annotation Content Search")) {
                     actionLink.add(new AttributeModifier("target", "_blank"));
                 }
-                String className = action.getName().replaceAll("\\s", "");
+
+                //TODO: replace with more robust check than by name
+                String className = actionName.replaceAll("\\s", "");
                 if (className.equals("ResourceAccess(RRS)")) {
                     className = "ResourceAccess";
                 }
-                actionLink.add(new Label("linkLabel", action.getName()));
+                actionLink.add(new Label("linkLabel", actionName));
                 actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b " + className));
                 item.add(actionLink);
                 item.add(new AttributeAppender("title", action.getTitle()));
