@@ -64,15 +64,15 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
+        logger.debug("Multiple download action invoked on {}", node);
         try {
-            String userid = auth.getPrincipalName();
+            final String userid = auth.getPrincipalName();
             final File zipFile = zipService.createZipFileForNodes(node, userid);
             if (zipFile == null) {
                 logger.error("none of the files are accessible to user : " + userid);
                 return new SimpleNodeActionResult(String.format("User %s has no access to any of the nodes. No zip could be created.", userid));
             }
-            IResourceStream resStream = new FileResourceStream(zipFile) {
+            final IResourceStream resStream = new FileResourceStream(zipFile) {
                 @Override
                 public void close() throws IOException {
                     super.close();
@@ -87,10 +87,8 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
             return new SimpleNodeActionResult(request);
         } catch (IOException ex) {
-            logger.error("an exception has occured when trying to download package of : " + node + " || " + ex);
+            logger.error("an exception has occured when trying to download package of : {}", node, ex);
             throw new NodeActionException(this, ex);
-        }// catch (UnknownNodeException ex) {
-        //   throw new NodeActionException(this, ex);
-        //}
+        }
     }
 }

@@ -67,12 +67,9 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        String userid = auth.getPrincipalName();
+        logger.debug("Single download action invoked on {}", node);
+        final String userid = auth.getPrincipalName();
         final URL nodeUri = nodeResolver.getUrl(node);
-
-        //try {
-        // HANDLE download action here
         try {
             if (userHasAccess(node, nodeUri, userid)) {
                 final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);

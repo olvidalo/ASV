@@ -44,10 +44,10 @@ class NodeActionLink extends Link {
     private ControllerActionRequestHandler actionRequestHandler;
     // Properties
     private final NodeAction action;
-    private Collection<TypedCorpusNode> nodes;
+    private final Collection<TypedCorpusNode> nodes;
 
     public NodeActionLink(String id, Collection<TypedCorpusNode> nodes, NodeAction action) {
-	super(id, new Model<String>(action.getName()));
+	super(id, Model.of(action.getName()));
 	this.nodes = nodes;
 	this.action = action;
     }
