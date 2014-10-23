@@ -17,16 +17,18 @@
 package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.core.OutputFormat;
 import nl.mpi.archiving.corpusstructure.core.service.BaseNodeResolver;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.tree.corpusstructure.CorpusStructureDBNodeResolver;
 
 /**
- * Node resolver that resolves URI's to resource file locations using a static map while wrapping another resolver
- * (base resolver) to act as a fallback.
+ * Node resolver that resolves URI's to resource file locations using a static
+ * map while wrapping another resolver (base resolver) to act as a fallback.
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
@@ -37,26 +39,43 @@ public class MockNodeResolver extends BaseNodeResolver {
 
     /**
      *
-     * @param nodeResourcesMap mapping node URI's to resource locations (e.g. node:123 -> /nl/mpi/metadatabrowser/my/resource.xml)
+     * @param nodeResourcesMap mapping node URI's to resource locations (e.g.
+     * node:123 -> /nl/mpi/metadatabrowser/my/resource.xml)
      */
     public MockNodeResolver(Map<URI, String> nodeResourcesMap) {
-	this(new CorpusStructureDBNodeResolver(), nodeResourcesMap);
+        this(new CorpusStructureDBNodeResolver(), nodeResourcesMap);
     }
 
     public MockNodeResolver(NodeResolver baseResolver, Map<URI, String> nodeResourcesMap) {
-	this.baseResolver = baseResolver;
-	this.nodeResourcesMap = nodeResourcesMap;
+        this.baseResolver = baseResolver;
+        this.nodeResourcesMap = nodeResourcesMap;
     }
 
     @Override
     public URL getUrl(CorpusNode node) {
-	final URI nodeId = node.getNodeURI();
-	if (nodeResourcesMap.containsKey(nodeId)) {
-	    String resourceLocation = nodeResourcesMap.get(nodeId);
-	    return getClass().getResource(resourceLocation);
-	} else {
-	    return baseResolver.getUrl(node);
-	}
+        final URI nodeId = node.getNodeURI();
+        if (nodeResourcesMap.containsKey(nodeId)) {
+            String resourceLocation = nodeResourcesMap.get(nodeId);
+            return getClass().getResource(resourceLocation);
+        } else {
+            return baseResolver.getUrl(node);
+        }
+    }
+
+    /**
+     * Get the url for this corpus node with the specified output format. This
+     * might result in a translation service url.
+     *
+     * @param node
+     * @param format
+     * @return
+     */
+    public URI getUrl(CorpusNode node, OutputFormat format) {
+        try {
+            return getUrl(node).toURI();
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
