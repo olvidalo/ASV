@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import com.google.common.io.ByteStreams;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,8 +25,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
@@ -33,6 +32,7 @@ import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.apache.commons.io.FileUtils;
@@ -55,7 +55,6 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
     private final AccessInfoProvider accessInfoProvider;
-    private int overallSize = 0; //TODO: Make this a local variable (if we need it at all)
 
     /**
      * Constructor
@@ -74,86 +73,91 @@ public class ZipServiceImpl implements ZipService, Serializable {
     /**
      * create zip and logic to add file to the zip
      *
-     * @param node TypedCorpusNode : parent node
-     * @param userid String : user that request the download
-     * @return File : return file which is basically the zip file.
+     * @param node parent node
+     * @param userid user that request the download
+     * @return return file which is basically the zip file.
      * @throws IOException
      * @throws FileNotFoundException
      */
     @Override
     @Transactional
     public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException {
-        //create object of FileOutputStream
-        final File tmpFile = File.createTempFile("mdtbrowser", ".zip");
-        final FileOutputStream fout = new FileOutputStream(tmpFile);
-        final ZipOutputStream zout = new ZipOutputStream(fout);
+        final File zipFile = File.createTempFile("mdtbrowser", ".zip");
+        final FileOutputStream fileStream = new FileOutputStream(zipFile);
 
-        try {
-            int filesAdded = addChildren(zout, node.getNodeURI(), userid, 0);
-            if (filesAdded == 0) {
-                return null;
+        try (ZipOutputStream zipStream = new ZipOutputStream(fileStream)) {
+            // add PID to zip as comment
+            zipStream.setComment(getZipComment(node));
+
+            // add this node and its children
+            final int filesCount = addFile(node, userid, zipStream);
+            if (filesCount > 1) {
+                return zipFile;
             } else {
-                return tmpFile;
+                // at least one child must be present, otherwise fail
+                logger.warn("Children of node could not be added to zip");
+                return null;
             }
-        } finally {
-            //close the ZipOutputStream
-            zout.close(); //TODO: double check that this also closes the file stream
+        } catch (NodeNotFoundException ex) {
+            logger.warn("Node not found while creating zip archive", ex);
+            return null;
+        }
+    }
+
+    private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream) throws NodeNotFoundException, IOException {
+        // wrap a new long so that it can be updated while writing
+        final ThreadLocal<Long> sizeCount = new ThreadLocal<>();
+        sizeCount.set(0L);
+
+        return addFile(node, userid, zipStream, sizeCount);
+    }
+
+    private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream, ThreadLocal<Long> sizeCount) throws NodeNotFoundException, IOException {
+        final URI nodeURI = node.getNodeURI();
+        if (checkAccess(userid, nodeURI)) {
+            // start counting written items (only root initially)
+            int count = 1;
+
+            // copy contents of current node to zip stream
+            final long written = writeToZipStream(node, zipStream);
+            updateWriteSizeCount(sizeCount, written);
+
+            // add children, add recursively
+            for (CorpusNode child : csdb.getChildNodes(nodeURI)) {
+                count += addFile(child, userid, zipStream, sizeCount);
+            }
+            return count;
+        } else {
+            return 0;
         }
     }
 
     /**
-     * recursive method to add file and children to zip
      *
-     * @param zout the zip stream
-     * @param nodeUri uri of the node to be zipped or checked for children
-     * @param userid the user that request the download
-     * @param itemsadded number to check that at least one item will be added to
-     * the zip
-     * @param overallSize check the limit of the zip file size.
+     * @param node node to write
+     * @param zipStream stream to write to
+     * @return number of bytes written
+     * @throws IOException
      */
-    private int addChildren(ZipOutputStream zout, URI nodeUri, String userid, int itemsAdded) {
-        final List<CorpusNode> childrenNodes = new CopyOnWriteArrayList<CorpusNode>(csdb.getChildNodes(nodeUri));
-        int filesAdded = 0;
-        if (childrenNodes.size() > 0) {
-            for (CorpusNode childNode : childrenNodes) {
-                try {
-                    final URI childUri = childNode.getNodeURI();
-                    if (itemsAdded == 0) { // check if at least one resource is accessible for user
-                        if (childUri != null) {
-                            itemsAdded = addChild(userid, childUri, itemsAdded);
-                        }
-                    }
-                    //TODO: overallSize should *not* be a class variable to this service (criticial!!) 
-                    if (overallSize > MAX_LIMIT) { // check size limit 4GB
-                        overallSize = 0;
-                        logger.info("maximum size limit of {} GB reached", ((double) MAX_LIMIT) / FileUtils.ONE_GB);
-                        break;
-                    }
-                    if (!csdb.getChildNodes(childUri).isEmpty()) {
-                        //TODO: pass hasAccess, it seems like it gets checked in two places now
-                        filesAdded = zipFile(zout, childNode, userid, itemsAdded, filesAdded); // here zip parent file
-                        addChildren(zout, childUri, userid, itemsAdded);// getChildren for parent file
-                    } else {
-                        filesAdded = zipFile(zout, childNode, userid, itemsAdded, filesAdded);
-                    }
-                } catch (NodeNotFoundException ex) {
-                    // skipping this child node
-                    logger.warn("Node not found while adding to zip, skipping node {}", childNode.getNodeURI(), ex);
-                }
-            }
-        } else { // might as well be a node without children. But parent node might have children
-            logger.error("Error: called resources-download for  node without children");
-        }
-        return filesAdded;
-    }
+    private long writeToZipStream(CorpusNode node, ZipOutputStream zipStream) throws IOException {
+        final URL nodeUrl = nodeResolver.getUrl(node);
+        final String fileName = new File(nodeUrl.getPath()).getName();
 
-    private int addChild(String userid, URI childUri, int itemsAdded) throws NodeNotFoundException {
-        final boolean hasaccess = checkAccess(userid, childUri);// get access rights for each resource
-        logger.debug("resources-download, access for " + childUri + ", " + userid + ", " + hasaccess);
-        if (hasaccess) {
-            itemsAdded++;
+        // prepare target stream for this entry
+        final ZipEntry zipEntry = new ZipEntry(fileName);
+        zipEntry.setComment(node.getName());
+        zipStream.putNextEntry(zipEntry);
+
+        // write node contents
+        final long written;
+        try (InputStream inputStream = nodeResolver.getInputStream(node)) {
+            written = ByteStreams.copy(inputStream, zipStream);
         }
-        return itemsAdded;
+
+        // end of writing this entry
+        zipStream.closeEntry();
+
+        return written;
     }
 
     /**
@@ -173,62 +177,28 @@ public class ZipServiceImpl implements ZipService, Serializable {
         }
     }
 
-    /**
-     *
-     * Core method of adding files to the zip.
-     *
-     * @param zout ZipOutputStream : the zip stream
-     * @param childNode CorpusNode: node to be added to the zip
-     * @param userid String : user that is requesting access and download action
-     * @param itemsAdded int : number of items to be added. should be 1 to
-     * process
-     * @throws UnknownNodeException
-     */
-    private int zipFile(ZipOutputStream zout, CorpusNode childNode, String userid, int itemsAdded, int filesAdded) throws NodeNotFoundException {
-        try {
-            if (itemsAdded > 0) { // must be minimum 1 to proceed = 1 accessible resource for user
-                final byte[] buffer = new byte[1024];
-                final URL childNodeUrl = nodeResolver.getUrl(childNode);
-
-                if (childNodeUrl != null) {
-                    final URI childNodeURI = childNode.getNodeURI();
-                    final boolean hasaccess = checkAccess(userid, childNode.getNodeURI());// get access rights for the given node
-                    logger.debug("resources-download, access for {}, {}: {}", childNodeURI, userid, hasaccess);
-                    if (hasaccess) {// acess granted, add node to zip
-                        logger.trace("resources-download: {}", childNodeUrl);
-
-                        final String fileName = new File(childNodeUrl.getPath()).getName();
-                        //String fileNameWithoutExtn = fileName.substring(0, fileName.lastIndexOf('.'));
-                        final InputStream is = nodeResolver.getInputStream(childNode);
-                        try {
-                            final ZipEntry ze = new ZipEntry(fileName);
-                            zout.putNextEntry(ze);
-
-                            //TODO: use stream utils instead for copying
-                            int length;
-                            while ((length = is.read(buffer)) > 0) {
-                                zout.write(buffer, 0, length);
-                            }
-                            zout.closeEntry();
-                            filesAdded++;
-                            overallSize += ze.getCompressedSize(); // increment zip size for latter limit size check
-                            logger.debug("Copied resource: {} to zipFile", childNodeUrl);
-                        } catch (NullPointerException e) {
-                            logger.error("unvalid type of file. Could not find path for this file : {}", fileName, e);
-                        } finally {
-                            is.close();
-                        }
-                    } else {
-                        logger.warn("User {} has no access to {}", userid, childNodeUrl);
-                    }
-
-                } else {
-                    logger.error("Error: nodeurl for resourcenode {} was not found", childNode);
-                }
-            }
-        } catch (IOException ioe) {
-            logger.error("I/O error while constructing zip for download", ioe);
+    private String getZipComment(TypedCorpusNode node) {
+        final URI pid = nodeResolver.getPID(node);
+        if (pid != null) {
+            return pid.toString();
+        } else {
+            return nodeResolver.getUrl(node).toString();
         }
-        return filesAdded;
+    }
+
+    private void updateWriteSizeCount(ThreadLocal<Long> sizeCount, final long written) throws IOException {
+        // update written byte count accumulator
+        final long totalBytes = sizeCount.get() + written;
+
+        logger.debug("Written {}, total {}", written, totalBytes);
+
+        // check against limit
+        if (totalBytes > MAX_LIMIT) {
+            final long kbLimit = MAX_LIMIT / FileUtils.ONE_KB;
+            logger.warn("Written {} bytes to ZIP archive, limit of {} kilobytes exceeded", totalBytes, kbLimit);
+            throw new IOException("Size limit of " + kbLimit + " kilobytes for ZIP archive exceeded");
+        } else {
+            sizeCount.set(totalBytes);
+        }
     }
 }
