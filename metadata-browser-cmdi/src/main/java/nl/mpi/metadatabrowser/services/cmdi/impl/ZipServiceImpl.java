@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ZipServiceImpl implements ZipService, Serializable {
-
+    
     private final static Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
     private final static long MAX_LIMIT = FileUtils.ONE_GB * 2;
     private final CorpusStructureProvider csdb;
@@ -84,7 +84,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException {
         final File zipFile = File.createTempFile("mdtbrowser", ".zip");
         final FileOutputStream fileStream = new FileOutputStream(zipFile);
-
+        
         try (ZipOutputStream zipStream = new ZipOutputStream(fileStream)) {
             // add PID to zip as comment
             zipStream.setComment(getZipComment(node));
@@ -103,18 +103,21 @@ public class ZipServiceImpl implements ZipService, Serializable {
             return null;
         }
     }
-
+    
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream) throws NodeNotFoundException, IOException {
         // wrap a new long so that it can be updated while writing
         final ThreadLocal<Long> sizeCount = new ThreadLocal<>();
         sizeCount.set(0L);
-
+        
         return addFile(node, userid, zipStream, sizeCount);
     }
-
+    
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream, ThreadLocal<Long> sizeCount) throws NodeNotFoundException, IOException {
         final URI nodeURI = node.getNodeURI();
+        
         if (checkAccess(userid, nodeURI)) {
+            logger.debug("Adding {} to ZIP", nodeURI);
+
             // start counting written items (only root initially)
             int count = 1;
 
@@ -128,6 +131,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
             }
             return count;
         } else {
+            logger.trace("Skipped adding {} to ZIP, user has no access", nodeURI);
             return 0;
         }
     }
@@ -142,6 +146,8 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private long writeToZipStream(CorpusNode node, ZipOutputStream zipStream) throws IOException {
         final URL nodeUrl = nodeResolver.getUrl(node);
         final String fileName = new File(nodeUrl.getPath()).getName();
+        
+        logger.trace("Writing {} to ZIP as {}", node.getNodeURI(), fileName);
 
         // prepare target stream for this entry
         final ZipEntry zipEntry = new ZipEntry(fileName);
@@ -156,7 +162,9 @@ public class ZipServiceImpl implements ZipService, Serializable {
 
         // end of writing this entry
         zipStream.closeEntry();
-
+        
+        logger.trace("Done writing {} to ZIP", fileName);
+        
         return written;
     }
 
@@ -177,6 +185,11 @@ public class ZipServiceImpl implements ZipService, Serializable {
         }
     }
 
+    /**
+     *
+     * @param node node to get a comment text for
+     * @return the PID, or as a fallback the URL, of the given node as a string
+     */
     private String getZipComment(TypedCorpusNode node) {
         final URI pid = nodeResolver.getPID(node);
         if (pid != null) {
@@ -186,11 +199,19 @@ public class ZipServiceImpl implements ZipService, Serializable {
         }
     }
 
-    private void updateWriteSizeCount(ThreadLocal<Long> sizeCount, final long written) throws IOException {
+    /**
+     * Updates and checks the number of bytes written
+     *
+     * @param sizeCount wrapper for byte count
+     * @param addedBytes number of bytes to add
+     * @throws IOException if the total number of bytes (size + added) exceeds
+     * {@link #MAX_LIMIT}
+     */
+    private void updateWriteSizeCount(ThreadLocal<Long> sizeCount, final long addedBytes) throws IOException {
         // update written byte count accumulator
-        final long totalBytes = sizeCount.get() + written;
-
-        logger.debug("Written {}, total {}", written, totalBytes);
+        final long totalBytes = sizeCount.get() + addedBytes;
+        
+        logger.trace("Written {}, total {}", addedBytes, totalBytes);
 
         // check against limit
         if (totalBytes > MAX_LIMIT) {
