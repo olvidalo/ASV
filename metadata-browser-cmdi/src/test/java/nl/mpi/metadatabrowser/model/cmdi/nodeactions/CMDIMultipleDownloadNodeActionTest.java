@@ -19,12 +19,12 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
-import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockAuthenticationHolderImpl;
 import org.apache.wicket.util.resource.FileResourceStream;
@@ -123,9 +123,11 @@ public class CMDIMultipleDownloadNodeActionTest {
         IResourceStream downloadStream = downloadActionRequest.getDownloadStream();
         assertThat(downloadStream, instanceOf(FileResourceStream.class));
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(downloadStream.getInputStream()));
-        String readContent = reader.readLine();
-        assertEquals("Test content", readContent);
+        try (InputStream inputStream = downloadStream.getInputStream()) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String readContent = reader.readLine();
+            assertEquals("Test content", readContent);
+        }
 
         assertTrue(zipFile.exists());
         downloadStream.close();

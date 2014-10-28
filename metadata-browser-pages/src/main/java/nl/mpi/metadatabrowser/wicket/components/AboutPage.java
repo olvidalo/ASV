@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.wicket.components;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,21 +29,21 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-
 public final class AboutPage extends WebPage {
+
     public AboutPage(PageParameters parameters) {
-        try {
+        try (InputStream propsStream = this.getClass().getResourceAsStream("/metadata_browser.properties")) {
             Properties versionProps = new Properties();
-            versionProps.load(this.getClass().getResource("/metadata_browser.properties").openStream());
+            versionProps.load(propsStream);
 
             add(new Label("version", versionProps.getProperty("metadata_browser.version")));
-                add(new Label("build", versionProps.getProperty("metadata_browser.build")));
-                add(new Label("date", versionProps.getProperty("metadata_browser.date")));
-                add(new Label("year", versionProps.getProperty("metadata_browser.year")));
-                add(new Label("appname", "Metadata-Browser"));
-                add(new Label("title", "About Metadata Browser"));
+            add(new Label("build", versionProps.getProperty("metadata_browser.build")));
+            add(new Label("date", versionProps.getProperty("metadata_browser.date")));
+            add(new Label("year", versionProps.getProperty("metadata_browser.year")));
+            add(new Label("appname", "Metadata-Browser"));
+            add(new Label("title", "About Metadata Browser"));
         } catch (IOException ex) {
             Logger.getLogger(AboutPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
     }
+}

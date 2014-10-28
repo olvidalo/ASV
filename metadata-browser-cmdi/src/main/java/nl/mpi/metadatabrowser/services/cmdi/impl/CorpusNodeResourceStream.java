@@ -18,7 +18,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import org.apache.wicket.util.resource.AbstractResourceStream;
