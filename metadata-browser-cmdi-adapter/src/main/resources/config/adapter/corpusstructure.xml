@@ -14,33 +14,52 @@
         These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
         or 'cmdi-production-csdb' is active.
     -->
-
-    <!-- CSDB factory for CorpusStructureAPI adapter -->
-    <bean id="csdbFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
+    
+    <!-- Load properties from context.xml via servlet container -->
+    <bean
+        class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="false" />
+    </bean>
+    
+    <!-- CSDB proxy -->
+    <bean id="csdbImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureDBImplFactory">
         <constructor-arg value="java:comp/env/jdbc/CSDB" />
+    </bean>    
+    <bean id="csdbProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.CorpusStructureDBProxy" name="adapterCSDB" />
+
+    <!-- Archive Objects proxy -->
+    <bean id="aoImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.ArchiveObjectsDBImplFactory">
+        <constructor-arg value="java:comp/env/jdbc/CSDB" />
+    </bean>
+    <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO" />
+    
+    <!-- CSDB factory for CorpusStructureAPI adapter -->
+    <bean id="csProviderFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
+        <constructor-arg ref="csdbProxy" />
+        <constructor-arg ref="aoProxy" />        
+        <constructor-arg value="${nl.mpi.translationservicebase}" />
     </bean>
 
     <!-- Corpus structure provider created from factory -->
-    <bean id="corpusStructureProvider" factory-bean="csdbFactory" factory-method="createCorpusStructureProvider" />
+    <bean id="corpusStructureProvider" factory-bean="csProviderFactory" factory-method="createCorpusStructureProvider" />
 
     <!-- Access info provider (also adapter) -->
-    <bean id="accessInfoProvider" factory-bean="csdbFactory" factory-method="createAccessInfoProvider" />
-
-    <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
-    <bean id="nodeResolver" factory-bean="csdbFactory" factory-method="createNodeResolver" />
+    <bean id="accessInfoProvider" factory-bean="csProviderFactory" factory-method="createAccessInfoProvider" />
 
     <!-- Provider for correct id format. This used to get the appropriate ID as string and prevent a dependency to the Adapter in the cmdi implementation. -->
     <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.FilterNodeId"/>
 
-    <bean id="filePathTranslatorAdapter" class="nl.mpi.archiving.corpusstructure.adapter.crawler.FilePathTranslatorAdapter">
-        <constructor-arg ref="corpusStructureProvider" />
-    </bean>
+    <!-- File path translator used by node resolver -->
+    <bean id="filePathTranslatorAdapter" factory-bean="csProviderFactory" factory-method="createFilePathTranslator" />
+
+    <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
+    <bean id="nodeResolver" factory-bean="csProviderFactory" factory-method="createNodeResolver" />
     
     <!--     Wrapper node resolver that wraps metadata URL's in the translation service to always get the CMDI version
     <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.adapter.TranslatingNodeResolver">
         <constructor-arg name="baseNodeResolver">
              Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider
-            <bean factory-bean="csdbFactory" factory-method="createNodeResolver" />
+            <bean factory-bean="csProviderFactory" factory-method="createNodeResolver" />
         </constructor-arg>
         <constructor-arg name="translationServiceBaseUri" value="http://tlatest01.mpi.nl/ds/TranslationService/" />
     </bean>-->
