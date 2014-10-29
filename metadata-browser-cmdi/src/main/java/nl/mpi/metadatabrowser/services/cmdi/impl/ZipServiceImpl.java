@@ -82,7 +82,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     @Override
     @Transactional
     public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException {
-        final File zipFile = File.createTempFile("mdtbrowser", ".zip");
+        final File zipFile = File.createTempFile("mdbrowser", ".zip");
         final FileOutputStream fileStream = new FileOutputStream(zipFile);
 
         final int filesCount;
@@ -96,6 +96,8 @@ public class ZipServiceImpl implements ZipService, Serializable {
             logger.warn("Node not found while creating zip archive", ex);
             return null;
         }
+
+        logger.debug("Added {} files to archive of node {}: {}", filesCount, node.getNodeURI(), zipFile.getAbsolutePath());
 
         // at least one child must be present, otherwise fail
         if (filesCount > 1) {
