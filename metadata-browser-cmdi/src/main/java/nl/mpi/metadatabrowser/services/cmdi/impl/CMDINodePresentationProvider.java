@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.xml.transform.Templates;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -41,7 +40,6 @@ import nl.mpi.metadatabrowser.model.cmdi.wicket.components.WelcomePagePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
-import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
@@ -63,8 +61,6 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
     private final NodeResolver nodeResolver;
     private Templates imdiTemplates;
     private Templates cmdiTemplates;
-    private CorpusStructureProvider csp;
-    private NodeTypeIdentifier nodeTypeIdentifier;
 
     /**
      *
@@ -73,14 +69,12 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
      * @param cmdiTemplates
      */
     @Autowired
-    public CMDINodePresentationProvider(NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier,
+    public CMDINodePresentationProvider(NodeResolver nodeResolver,
             @Qualifier("imdiTemplates") Templates imdiTemplates,
             @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
         this.nodeResolver = nodeResolver;
         this.imdiTemplates = imdiTemplates;
         this.cmdiTemplates = cmdiTemplates;
-        this.csp = csp;
-        this.nodeTypeIdentifier = nodeTypeIdentifier;
     }
 
     @Override
@@ -117,7 +111,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
     }
 
     private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException, NodeTypeIdentifierException {
-        final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(nodeResolver, node, getTemplates(node), csp, nodeTypeIdentifier));
+        final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(node, getTemplates(node)));
         contentLabel.setEscapeModelStrings(false);
         return contentLabel;
     }

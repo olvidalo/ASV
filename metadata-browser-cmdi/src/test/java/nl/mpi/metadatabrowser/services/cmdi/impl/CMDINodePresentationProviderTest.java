@@ -35,6 +35,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.wicket.MetadataBrowserServicesLocator;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -47,6 +48,7 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.*;
 import static org.jmock.Expectations.returnValue;
+import org.junit.After;
 import static org.junit.Assert.*;
 
 /**
@@ -68,18 +70,43 @@ public class CMDINodePresentationProviderTest {
     private Templates imdiTemplates;
     private Templates cmdiTemplates;
     private Transformer transformer;
+    private CorpusStructureProvider csProvider;
+    private NodeTypeIdentifier nodeTypeIdentifier;
     private CMDINodePresentationProvider instance;
-    private CorpusStructureProvider csp;
-    private NodeTypeIdentifier nti;
 
     @Before
     public void setUp() {
         nodeResolver = context.mock(NodeResolver.class);
         imdiTemplates = context.mock(Templates.class, "imdiTemplates");
         cmdiTemplates = context.mock(Templates.class, "cmdiTemplates");
+        nodeTypeIdentifier = context.mock(NodeTypeIdentifier.class);
+        csProvider = context.mock(CorpusStructureProvider.class);
         transformer = context.mock(Transformer.class);
-        csp = context.mock(CorpusStructureProvider.class);
-        instance = new CMDINodePresentationProvider(nodeResolver, csp, nti, imdiTemplates, cmdiTemplates);
+
+        MetadataBrowserServicesLocator.Instance.set(new MetadataBrowserServicesLocator() {
+
+            @Override
+            public NodeResolver getNodeResolver() {
+                return nodeResolver;
+            }
+
+            @Override
+            public NodeTypeIdentifier getNodeTypeIdentifier() {
+                return nodeTypeIdentifier;
+            }
+
+            @Override
+            public CorpusStructureProvider getCorpusStructureProvider() {
+                return csProvider;
+            }
+        });
+
+        instance = new CMDINodePresentationProvider(nodeResolver, imdiTemplates, cmdiTemplates);
+    }
+
+    @After
+    public void cleanUp() {
+        MetadataBrowserServicesLocator.Instance.set(null);
     }
 
     /**

@@ -29,15 +29,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
-import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
+import nl.mpi.metadatabrowser.wicket.MetadataBrowserServicesLocator;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,27 +49,44 @@ import org.slf4j.LoggerFactory;
 public final class MetadataTransformingModel extends AbstractReadOnlyModel<String> {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
-    private final String content;
+    private final Templates templates;
+    private final TypedCorpusNode node;
+    private List<CorpusNode> catalogueNodesUnderCorpus;
 
     /**
      * model Constructor, set parameters and call for transformation
      *
-     * @param nodeResolver NodeResolver, get inputStream for a given node
      * @param node TypedCorusNode, node to be transformed
      * @param templates, Templates, template to be use for transformation
      * (either cmdi or imdi)
-     * @param csp CorpusStructureProvider, instanceof to be passed on for usage
-     * in getCatalogueNodesUnderCorpus
-     * @param nodeTypeIdentifier NodeTypeIdenfier, instanceof to be passed on
-     * for usage in getCatalogueNodesUnderCorpus
-     * @throws NodePresentationException
-     * @throws NodeTypeIdentifierException
      */
-    public MetadataTransformingModel(NodeResolver nodeResolver, TypedCorpusNode node, Templates templates, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodePresentationException, NodeTypeIdentifierException {
+    public MetadataTransformingModel(TypedCorpusNode node, Templates templates) {
+        this.node = node;
+        this.templates = templates; //TODO: get templates out of some store (on basis of key) rather than keep in model?
+
+        if (node.getNodeType() instanceof IMDICorpusType) {
+            try {
+                this.catalogueNodesUnderCorpus = getCatalogueNodesUnderCorpus(node);
+            } catch (NodeTypeIdentifierException ex) {
+                logger.warn("Could not retrieve corpus child nodes");
+            }
+        }
+    }
+
+    @Override
+    public String getObject() {
+        try {
+            return transform();
+        } catch (NodePresentationException | NodeTypeIdentifierException ex) {
+            return ex.toString();
+        }
+    }
+
+    private String transform() throws NodePresentationException, IllegalArgumentException, NodeTypeIdentifierException {
         try {
             logger.debug("Transforming node {} using templates {}", node, templates);
             StringWriter strWriter = new StringWriter();
-            try (final InputStream in = nodeResolver.getInputStream(node)) {
+            try (final InputStream in = getServicesLocator().getNodeResolver().getInputStream(node)) {
                 final Transformer transformer = templates.newTransformer();
                 // set transformer options
                 transformer.setOutputProperty(OutputKeys.METHOD, "html");
@@ -80,13 +95,13 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
                 transformer.setParameter("CORPUS_LINKING", "false");
                 transformer.setParameter("DOCUMENT_ID", node.toString());
                 transformNodeContent(strWriter, in, transformer);
-                if (node.getNodeType() instanceof IMDICorpusType) {
-                    strWriter = addCatalogueContentToCorpusView(node, transformer, strWriter, nodeResolver, csp, nodeTypeIdentifier);
+                if (catalogueNodesUnderCorpus != null) {
+                    strWriter = addCatalogueContentToCorpusView(transformer, strWriter);
                 }
             }
 
             // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-            content = strWriter.toString();
+            return strWriter.toString();
         } catch (IOException ex) {
             throw new NodePresentationException("Could not read metadata for transformation", ex);
         } catch (TransformerException ex) {
@@ -94,11 +109,6 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
         } catch (NodeTypeIdentifierException ex) {
             throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
         }
-    }
-
-    @Override
-    public String getObject() {
-        return content;
     }
 
     /**
@@ -122,17 +132,15 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @throws NodePresentationException
      * @throws NodeTypeIdentifierException
      */
-    private StringWriter addCatalogueContentToCorpusView(TypedCorpusNode node, Transformer transformer, StringWriter strWriter, NodeResolver nodeResolver, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws IOException, NodePresentationException, NodeTypeIdentifierException {
+    private StringWriter addCatalogueContentToCorpusView(Transformer transformer, StringWriter strWriter) throws IOException, NodePresentationException, NodeTypeIdentifierException {
         StringWriter result = strWriter;
-
-        List<CorpusNode> catalogueNodeURLs = getCatalogueNodesUnderCorpus(node, csp, nodeTypeIdentifier);
-        if (!catalogueNodeURLs.isEmpty()) {
+        if (!catalogueNodesUnderCorpus.isEmpty()) {
             transformer.setParameter("DISPLAY_ONLY_BODY", "true");
         }
-        for (CorpusNode catalogueNodeUrl : catalogueNodeURLs) {
-            InputStream in = nodeResolver.getInputStream(catalogueNodeUrl);
-            transformNodeContent(strWriter, in, transformer);
-            in.close();
+        for (CorpusNode catalogueNodeUrl : catalogueNodesUnderCorpus) {
+            try (InputStream in = getServicesLocator().getNodeResolver().getInputStream(catalogueNodeUrl)) {
+                transformNodeContent(strWriter, in, transformer);
+            }
         }
         return result;
     }
@@ -149,11 +157,11 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @return List of Catalogue Node as CorpusNode
      * @throws NodeTypeIdentifierException
      */
-    private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode, CorpusStructureProvider csp, NodeTypeIdentifier nodeTypeIdentifier) throws NodeTypeIdentifierException {
+    private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode) throws NodeTypeIdentifierException {
         List<CorpusNode> result = new ArrayList<CorpusNode>();
-        List<CorpusNode> children = csp.getChildNodes(corpusNode.getNodeURI());
+        List<CorpusNode> children = getServicesLocator().getCorpusStructureProvider().getChildNodes(corpusNode.getNodeURI());
         for (CorpusNode childNode : children) {
-            if (nodeTypeIdentifier.getNodeType(childNode) instanceof IMDICatalogueType) {
+            if (getServicesLocator().getNodeTypeIdentifier().getNodeType(childNode) instanceof IMDICatalogueType) {
                 result.add(childNode);
             }
         }
@@ -176,5 +184,9 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
         } catch (TransformerException ex) {
             throw new NodePresentationException("Could not transform metadata", ex);
         }
+    }
+
+    protected MetadataBrowserServicesLocator getServicesLocator() {
+        return MetadataBrowserServicesLocator.Instance.get();
     }
 }
