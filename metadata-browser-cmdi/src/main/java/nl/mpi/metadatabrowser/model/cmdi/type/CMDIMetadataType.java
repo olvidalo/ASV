@@ -23,6 +23,6 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
 public class CMDIMetadataType extends AbstractNodeType implements MetadataType {
 
     public CMDIMetadataType() {
-	super("Metadata");
+	super("CMDI metadata");
     }
 }

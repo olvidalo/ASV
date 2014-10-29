@@ -23,6 +23,6 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
 public class CMDICollectionType extends AbstractNodeType implements CollectionType {
 
     public CMDICollectionType() {
-	super("Collection");
+	super("CMDI Collection");
     }
 }

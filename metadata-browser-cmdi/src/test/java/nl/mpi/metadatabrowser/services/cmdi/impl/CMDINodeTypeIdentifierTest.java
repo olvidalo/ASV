@@ -16,19 +16,24 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.io.File;
 import java.net.URI;
+import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.*;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertEquals;
+import static org.jmock.Expectations.returnValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -40,19 +45,15 @@ public class CMDINodeTypeIdentifierTest {
     public static final URI NODE_1_ID = URI.create("node:1");
     private final Mockery context = new JUnit4Mockery();
 
-    public CMDINodeTypeIdentifierTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
+    private CorpusStructureProvider csdb;
+    private NodeResolver nodeResolver;
+    private CMDINodeTypeIdentifier instance;
 
     @Before
     public void setUp() {
+        csdb = context.mock(CorpusStructureProvider.class);
+        nodeResolver = context.mock(NodeResolver.class);
+        instance = new CMDINodeTypeIdentifier(csdb, nodeResolver);
     }
 
     @After
@@ -63,24 +64,58 @@ public class CMDINodeTypeIdentifierTest {
      * Test of getNodeType method, of class CMDINodeTypeIdentifier.
      */
     @Test
-    public void testGetNodeType() throws Exception {
-        System.out.println("getNodeType");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-
+    public void testGetNodeTypeAudio() throws Exception {
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class);
         context.checking(new Expectations() {
             {
-                oneOf(node).getName();
-                will(returnValue("parent"));
+                oneOf(nodeResolver).getLocalFile(node);
+                will(returnValue(new File("audio.wav")));
 
                 allowing(node).getType();
                 will(returnValue(CorpusNodeType.RESOURCE_AUDIO));
             }
         });
-        CMDINodeTypeIdentifier instance = new CMDINodeTypeIdentifier(csdb);
-        NodeType expResult = new CMDIResourceType();
         NodeType result = instance.getNodeType(node);
-        assertThat(result, instanceOf(CMDIResourceType.class));
-        assertEquals(expResult.getName(), result.getName());
+        assertThat(result, instanceOf(ResourceAudioType.class));
+    }    
+    
+    @Test
+    public void testGetNodeTypeTransformedCmdiRecord() throws Exception {
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class);
+
+        context.checking(new Expectations() {
+            {
+                oneOf(nodeResolver).getLocalFile(node);
+                will(returnValue(new File("record.cmdi")));
+
+                allowing(node).getType();
+                will(returnValue(CorpusNodeType.METADATA));
+                
+                allowing(node).getFormat();
+                will(returnValue("application/imdi+xml"));
+            }
+        });
+        NodeType result = instance.getNodeType(node);
+        assertThat(result, instanceOf(CMDIMetadataType.class));
+    } 
+    
+    @Test
+    public void testGetNodeTypeTransformedCmdiCollection() throws Exception {
+        final TypedCorpusNode node = context.mock(TypedCorpusNode.class);
+
+        context.checking(new Expectations() {
+            {
+                oneOf(nodeResolver).getLocalFile(node);
+                will(returnValue(new File("collection.cmdi")));
+
+                allowing(node).getType();
+                will(returnValue(CorpusNodeType.COLLECTION));
+                
+                allowing(node).getFormat();
+                will(returnValue("application/imdi+xml"));
+            }
+        });
+        NodeType result = instance.getNodeType(node);
+        assertThat(result, instanceOf(CMDICollectionType.class));
     }
 }

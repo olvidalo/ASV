@@ -16,9 +16,12 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.io.File;
 import java.net.URI;
+import java.util.regex.Pattern;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
@@ -45,17 +48,20 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
+    private final static Pattern CMDI_FILE_PATTERN = Pattern.compile(".*\\.cmdi$", Pattern.CASE_INSENSITIVE);
     public static final String IMDI_MIME_TYPE = "application/imdi+xml";
     public static final URI COLLECTION_PROFILE_ID = URI.create("profile"); //TODO: have a list of profileID or add correct profileID
     private final ProfileIdentifierImpl profileIdentifier;
+    private final NodeResolver nodeResolver;
 
     /**
      *
      * @param csProvider
      */
     @Autowired
-    public CMDINodeTypeIdentifier(CorpusStructureProvider csProvider) {
+    public CMDINodeTypeIdentifier(CorpusStructureProvider csProvider, NodeResolver nodeResolver) {
         this.profileIdentifier = new ProfileIdentifierImpl(csProvider);
+        this.nodeResolver = nodeResolver;
     }
 
     /**
@@ -77,7 +83,15 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
             return UNKNOWN_NODE_TYPE;
         }
 
-        String name = node.getName();
+        // determine node file name
+        final String name;
+        final File localFile = nodeResolver.getLocalFile(node);
+        if (localFile == null) {
+            name = nodeResolver.getUrl(node).getPath();
+        } else {
+            name = localFile.getName();
+        }
+
         // We have a type in the corpus node, determine CorpusNodeType
         switch (corpusNodeType) {
             case RESOURCE_VIDEO:
@@ -91,9 +105,9 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
             case RESOURCE_LEXICAL:
                 return getResourceAnnotationType(name); // previous new CMDIResourceTxtType();
             case METADATA:
-                return getMetadataType(node);
+                return getMetadataType(node, name);
             case COLLECTION:
-                return getCollectionType(node);
+                return getCollectionType(node, name);
             case IMDICATALOGUE:
                 return new IMDICatalogueType();
             case IMDIINFO:
@@ -111,9 +125,14 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      * @return either IMDI session or CMDI type
      * @see CorpusNodeType#METADATA
      */
-    private NodeType getMetadataType(CorpusNode node) {
+    private NodeType getMetadataType(CorpusNode node, String name) {
         if (node.getFormat().equals(IMDI_MIME_TYPE)) {
-            return new IMDISessionType();
+            // can still be transformed CMDI, check
+            if (CMDI_FILE_PATTERN.matcher(name).matches()) {
+                return new CMDIMetadataType();
+            } else {
+                return new IMDISessionType();
+            }
         } else {
             return getCMDIType(node);
         }
@@ -135,9 +154,14 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      * @return
      * @see CorpusNodeType#COLLECTION
      */
-    private NodeType getCollectionType(CorpusNode node) {
+    private NodeType getCollectionType(CorpusNode node, String name) {
         if (node.getFormat().equals(IMDI_MIME_TYPE)) {
-            return new IMDICorpusType();
+            // can still be transformed CMDI, check
+            if (CMDI_FILE_PATTERN.matcher(name).matches()) {
+                return new CMDICollectionType();
+            } else {
+                return new IMDICorpusType();
+            }
         } else {
             return new CMDICollectionType();
         }
