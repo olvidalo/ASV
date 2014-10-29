@@ -51,7 +51,6 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     private final Templates templates;
     private final TypedCorpusNode node;
-    private List<CorpusNode> catalogueNodesUnderCorpus;
 
     /**
      * model Constructor, set parameters and call for transformation
@@ -63,14 +62,6 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
     public MetadataTransformingModel(TypedCorpusNode node, Templates templates) {
         this.node = node;
         this.templates = templates; //TODO: get templates out of some store (on basis of key) rather than keep in model?
-
-        if (node.getNodeType() instanceof IMDICorpusType) {
-            try {
-                this.catalogueNodesUnderCorpus = getCatalogueNodesUnderCorpus(node);
-            } catch (NodeTypeIdentifierException ex) {
-                logger.warn("Could not retrieve corpus child nodes");
-            }
-        }
     }
 
     @Override
@@ -95,8 +86,8 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
                 transformer.setParameter("CORPUS_LINKING", "false");
                 transformer.setParameter("DOCUMENT_ID", node.toString());
                 transformNodeContent(strWriter, in, transformer);
-                if (catalogueNodesUnderCorpus != null) {
-                    strWriter = addCatalogueContentToCorpusView(transformer, strWriter);
+                if (node.getNodeType() instanceof IMDICorpusType) {
+                    addCatalogueContentToCorpusView(transformer, strWriter);
                 }
             }
 
@@ -116,33 +107,24 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * catalogue node return a list with at least one element. Makes call to
      * transformation for catalogue nodes to be added to corpus view
      *
-     * @param node TypedCorpusNode, node under which existing catalogue nodes
-     * will be added to view
      * @param transformer Transformer, transformer will set specific parameter
      * if at least one catalogue node exist
      * @param strWriter StringWriter, StringWriter use for transformation
-     * @param nodeResolver NodeResolver, retrieve the input stram for catalogue
-     * node
-     * @param csp CorpusStructureProvider, passes on provider to retrieve
-     * children in getCatalogueNodesUnderCorpus
-     * @param nodeTypeIdentifier NodeTypeIdentifier, passes on identifier types
-     * to check for catalogue typein getCatalogueNodesUnderCorpus
      * @return StringWriter to be tranformed
      * @throws IOException
      * @throws NodePresentationException
      * @throws NodeTypeIdentifierException
      */
-    private StringWriter addCatalogueContentToCorpusView(Transformer transformer, StringWriter strWriter) throws IOException, NodePresentationException, NodeTypeIdentifierException {
-        StringWriter result = strWriter;
-        if (!catalogueNodesUnderCorpus.isEmpty()) {
+    private void addCatalogueContentToCorpusView(Transformer transformer, StringWriter strWriter) throws IOException, NodePresentationException, NodeTypeIdentifierException {
+        final List<CorpusNode> catalogueNodes = getCatalogueNodesUnderCorpus(node);
+        if (!catalogueNodes.isEmpty()) {
             transformer.setParameter("DISPLAY_ONLY_BODY", "true");
         }
-        for (CorpusNode catalogueNodeUrl : catalogueNodesUnderCorpus) {
+        for (CorpusNode catalogueNodeUrl : catalogueNodes) {
             try (InputStream in = getServicesLocator().getNodeResolver().getInputStream(catalogueNodeUrl)) {
                 transformNodeContent(strWriter, in, transformer);
             }
         }
-        return result;
     }
 
     /**
@@ -158,7 +140,7 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      * @throws NodeTypeIdentifierException
      */
     private List<CorpusNode> getCatalogueNodesUnderCorpus(TypedCorpusNode corpusNode) throws NodeTypeIdentifierException {
-        List<CorpusNode> result = new ArrayList<CorpusNode>();
+        List<CorpusNode> result = new ArrayList<>();
         List<CorpusNode> children = getServicesLocator().getCorpusStructureProvider().getChildNodes(corpusNode.getNodeURI());
         for (CorpusNode childNode : children) {
             if (getServicesLocator().getNodeTypeIdentifier().getNodeType(childNode) instanceof IMDICatalogueType) {
