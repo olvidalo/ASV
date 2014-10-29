@@ -23,13 +23,13 @@
     
     <!-- CSDB proxy -->
     <bean id="csdbImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureDBImplFactory">
-        <constructor-arg value="java:comp/env/jdbc/CSDB" />
+        <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
     </bean>    
     <bean id="csdbProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.CorpusStructureDBProxy" name="adapterCSDB" />
 
     <!-- Archive Objects proxy -->
     <bean id="aoImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.ArchiveObjectsDBImplFactory">
-        <constructor-arg value="java:comp/env/jdbc/CSDB" />
+        <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
     </bean>
     <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO" />
     

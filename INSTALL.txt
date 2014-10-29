@@ -115,6 +115,14 @@ nl.mpi.rrsUrl
 (location of Resource Request System webapp, used together with nl.mpi.rrs*
 and can be referenced as $RRSURL$ when used in popup-menu-items.xml)
 
+nl.mpi.translationservicebase
+Base url for the translation service up to "/translate?...", 
+e.g. "https://lux16.mpi.nl/ds/TranslationService"
+
+nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+Name of the JNDI resource to use to connect to the corpus structure database (in case
+of the 'adapter' profile)
+
 CSDBConnectionResource
 (typically java:comp/env/jdbc/CSDB pointing to read-only corpusstructure DB)
 
