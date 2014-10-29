@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
@@ -69,8 +69,8 @@ public class CMDIDownloadNodeActionTest {
 
         context.checking(new Expectations() {
             {
-                oneOf(nodeResolver).getUrl(node);
-                will(returnValue(new URL("http://my/nodeUri")));
+                oneOf(nodeResolver).getLocalFile(node);
+                will(returnValue(new File("/my/nodeUri")));
 
                 allowing(node).getNodeURI();
                 will(returnValue(NODE_ID));

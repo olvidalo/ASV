@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -69,11 +70,20 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Single download action invoked on {}", node);
         final String userid = auth.getPrincipalName();
-        final URL nodeUri = nodeResolver.getUrl(node);
+        final URI nodeUri = node.getNodeURI();
         try {
             if (userHasAccess(node, nodeUri, userid)) {
                 final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
-                final String fileName = new File(nodeUri.getPath()).getName();
+                final File localFile = nodeResolver.getLocalFile(node);
+
+                final String fileName;
+                if (localFile == null) {
+                    final URL nodeUrl = nodeResolver.getUrl(node);
+                    fileName = new File(nodeUrl.getPath()).getName();
+                } else {
+                    fileName = localFile.getName();
+                }
+
                 final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
                 return new SimpleNodeActionResult(request);
             } else {
@@ -84,7 +94,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
         }
     }
 
-    private boolean userHasAccess(TypedCorpusNode node, final URL nodeUri, String userid) throws NodeNotFoundException {
+    private boolean userHasAccess(TypedCorpusNode node, final URI nodeUri, String userid) throws NodeNotFoundException {
         final boolean hasaccess;
         if (userid == null || userid.equals("") || userid.equals("anonymous")) {
             hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);

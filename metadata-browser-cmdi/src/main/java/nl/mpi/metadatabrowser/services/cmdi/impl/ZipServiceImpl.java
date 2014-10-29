@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ZipServiceImpl implements ZipService, Serializable {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
     private final static long MAX_LIMIT = FileUtils.ONE_GB * 2;
     private final CorpusStructureProvider csdb;
@@ -84,7 +84,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException {
         final File zipFile = File.createTempFile("mdtbrowser", ".zip");
         final FileOutputStream fileStream = new FileOutputStream(zipFile);
-        
+
         try (ZipOutputStream zipStream = new ZipOutputStream(fileStream)) {
             // add PID to zip as comment
             zipStream.setComment(getZipComment(node));
@@ -103,18 +103,18 @@ public class ZipServiceImpl implements ZipService, Serializable {
             return null;
         }
     }
-    
+
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream) throws NodeNotFoundException, IOException {
         // wrap a new long so that it can be updated while writing
         final ThreadLocal<Long> sizeCount = new ThreadLocal<>();
         sizeCount.set(0L);
-        
+
         return addFile(node, userid, zipStream, sizeCount);
     }
-    
+
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream, ThreadLocal<Long> sizeCount) throws NodeNotFoundException, IOException {
         final URI nodeURI = node.getNodeURI();
-        
+
         if (checkAccess(userid, nodeURI)) {
             logger.debug("Adding {} to ZIP", nodeURI);
 
@@ -144,9 +144,16 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @throws IOException
      */
     private long writeToZipStream(CorpusNode node, ZipOutputStream zipStream) throws IOException {
-        final URL nodeUrl = nodeResolver.getUrl(node);
-        final String fileName = new File(nodeUrl.getPath()).getName();
-        
+        final File localFile = nodeResolver.getLocalFile(node);
+
+        final String fileName;
+        if (localFile == null) {
+            final URL nodeUrl = nodeResolver.getUrl(node);
+            fileName = new File(nodeUrl.getPath()).getName();
+        } else {
+            fileName = localFile.getName();
+        }
+
         logger.trace("Writing {} to ZIP as {}", node.getNodeURI(), fileName);
 
         // prepare target stream for this entry
@@ -162,9 +169,9 @@ public class ZipServiceImpl implements ZipService, Serializable {
 
         // end of writing this entry
         zipStream.closeEntry();
-        
+
         logger.trace("Done writing {} to ZIP", fileName);
-        
+
         return written;
     }
 
@@ -210,7 +217,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private void updateWriteSizeCount(ThreadLocal<Long> sizeCount, final long addedBytes) throws IOException {
         // update written byte count accumulator
         final long totalBytes = sizeCount.get() + addedBytes;
-        
+
         logger.trace("Written {}, total {}", addedBytes, totalBytes);
 
         // check against limit

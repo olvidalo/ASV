@@ -128,23 +128,29 @@ public class ZipServiceImplTest {
                 allowing(csdb).getChildNodes(NODE2_ID);
                 will(returnValue(Collections.emptyList()));
 
-                allowing(nodeResolver).getUrl(node);
-                will(returnValue(new URL("file://test/root")));
+                allowing(nodeResolver).getLocalFile(node);
+                will(returnValue(new File("/test/root")));
                 allowing(nodeResolver).getPID(node);
                 will(returnValue(new URI("hdl:1234/abcdef")));
                 allowing(nodeResolver).getInputStream(node);
                 will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Nijmegen.cmdi")));
 
+                allowing(nodeResolver).getLocalFile(child1);
+                will(returnValue(null));
                 allowing(nodeResolver).getUrl(child1);
                 will(returnValue(new URL("file://test/first")));
                 allowing(nodeResolver).getInputStream(child1);
                 will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Nijmegen.cmdi")));
 
+                allowing(nodeResolver).getLocalFile(child2);
+                will(returnValue(null));
                 allowing(nodeResolver).getUrl(child2);
                 will(returnValue(new URL("file://test/second")));
                 allowing(nodeResolver).getInputStream(child2);
                 will(returnValue(getClass().getClassLoader().getResourceAsStream("IPROSLA_Corpora.cmdi")));
 
+                allowing(nodeResolver).getLocalFile(child3);
+                will(returnValue(null));
                 allowing(nodeResolver).getUrl(child3);
                 will(returnValue(new URL("file://test/third")));
                 allowing(nodeResolver).getInputStream(child3);
