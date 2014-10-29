@@ -121,7 +121,9 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction,
                 bookmarkNodeAction,
-                downloadNodeAction);
+                downloadNodeAction,
+                multipleDownloadNodeAction
+                );
 
         resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
                 amsNodeAction,

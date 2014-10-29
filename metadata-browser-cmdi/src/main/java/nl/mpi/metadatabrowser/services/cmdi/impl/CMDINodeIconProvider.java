@@ -32,6 +32,7 @@ import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
@@ -200,6 +201,8 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             nodeTypeIcon = catalogueIcon;
         } else if (nodeType instanceof CMDIMetadataType) {
             nodeTypeIcon = cmdiIcon;
+        } else if (nodeType instanceof CMDICollectionType) {
+            nodeTypeIcon = corpusIcon; //TODO: Separate CMDI collection type?
         } else if (nodeType instanceof IMDIInfoType) {
             nodeTypeIcon = infoIcon;
         } else if (nodeType instanceof ResourceVideoType) {

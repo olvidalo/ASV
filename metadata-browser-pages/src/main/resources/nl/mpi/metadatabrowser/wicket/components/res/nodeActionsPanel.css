@@ -164,6 +164,10 @@ ul#navigation a {
     content: "\e60a";
 }
 
+.DownloadAll:before {
+    content: "\e60a"; /* TODO: separate icon for multi download */
+}
+
 .MetadataSearch:before {
     content: "\e60c";
 }
@@ -186,10 +190,6 @@ ul#navigation a {
 
 .VersionInfo:before {
     content: "\e60d";;
-}
-
-.DownloadAll{
-    content: "\e60a";
 }
 
 
