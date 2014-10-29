@@ -85,21 +85,27 @@ public class ZipServiceImpl implements ZipService, Serializable {
         final File zipFile = File.createTempFile("mdtbrowser", ".zip");
         final FileOutputStream fileStream = new FileOutputStream(zipFile);
 
+        final int filesCount;
         try (ZipOutputStream zipStream = new ZipOutputStream(fileStream)) {
             // add PID to zip as comment
             zipStream.setComment(getZipComment(node));
 
             // add this node and its children
-            final int filesCount = addFile(node, userid, zipStream);
-            if (filesCount > 1) {
-                return zipFile;
-            } else {
-                // at least one child must be present, otherwise fail
-                logger.warn("Children of node could not be added to zip");
-                return null;
-            }
+            filesCount = addFile(node, userid, zipStream);
         } catch (NodeNotFoundException ex) {
             logger.warn("Node not found while creating zip archive", ex);
+            return null;
+        }
+
+        // at least one child must be present, otherwise fail
+        if (filesCount > 1) {
+            return zipFile;
+        } else {
+            logger.info("Children of node could not be added to ZIP (either non-existent or not accessible by user {})", userid);
+            logger.debug("Deleting abandoned ZIP file {}", zipFile.getAbsolutePath());
+            if (!zipFile.delete()) {
+                logger.warn("Could not remove abandoned ZIP file: {}", zipFile.getAbsolutePath());
+            }
             return null;
         }
     }
