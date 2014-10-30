@@ -148,3 +148,24 @@ However, the recommended syntax is now, with a nl.mpi.imdiBrowser prefix:
 
 Example configuration text can be found in WEB-INF/context-xml-snippets.txt
 
+	OPTIONAL REWRITE RULES
+	
+The metadata browser accepts the following URL GET parameters:
+
+- rootnode
+- openpath
+- openhandle
+
+Handles are supported in the form of handle URIs such as 
+	'hdl:1234/abc-def'
+
+Node IDs are supported in the form of node ID URIs such as 
+	'node:5678'
+
+In order to be backwards compatible and support cases such as
+	'openpath=MPI84114%23'
+define a rewrite rule (for the first two of these parameters) that rewrites this to
+a node URI, e.g. in this case
+	'openpath=node:84114'
+	
+
