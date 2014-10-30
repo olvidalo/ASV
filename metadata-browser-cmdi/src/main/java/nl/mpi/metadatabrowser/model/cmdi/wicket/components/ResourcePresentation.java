@@ -225,8 +225,7 @@ public final class ResourcePresentation extends Panel {
         tableContainer.add(new Label("last_modified", lastmodified));
 
         tableContainer.add(new Label("userid", userid));
-
-        tableContainer.add(new ExternalLink("link", nodeURL, "link"));
+//        tableContainer.add(new ExternalLink("link", nodeURL, "link"));
         tableContainer.add(requestLink);
         // Add container to page
         add(tableContainer);
