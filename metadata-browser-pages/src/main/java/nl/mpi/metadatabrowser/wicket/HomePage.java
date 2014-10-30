@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +31,14 @@ import org.slf4j.LoggerFactory;
  */
 public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> extends WebPage {
 
+    private static final long serialVersionUID = 1L;
+
+    private static final String ROOT_NODE_PARAM = "rootnode";
+    private static final String OPEN_HANDLE_PARAM = "openhandle";
+    private static final String OPEN_PATH_PARAM = "openpath";
+
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
 
-    private static final long serialVersionUID = 1L;
     @SpringBean
     private GenericTreeModelProviderFactory treeModelProviderFactory;
     @SpringBean
@@ -59,11 +65,10 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         final HeaderPanel headerPanel = new HeaderPanel("headerPanel", auth.getPrincipalName());
         add(headerPanel);
 
-        //TODO: Allow parameter for *custom* root node
-        final URI rootNodeUri = csProvider.getRootNodeURI();
+        final URI rootNodeUri = getRootNodeURI(parameters);
         final CorpusNode rootNode = csProvider.getNode(rootNodeUri);
         final GenericTreeModelProvider treeModelProvider = treeModelProviderFactory.createTreeModelProvider(rootNode);
-        
+
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
         treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
         treePanel.setLinkType(LinkType.AJAX_FALLBACK);
@@ -96,6 +101,31 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     }
 
     /**
+     * Determines the root URI used to initialise the tree provider; if the
+     * {@link #ROOT_NODE_PARAM} parameter is set and it is a valid URI (usually
+     * a node ID URI or handle is expected depending on the provider) this is
+     * returned; in all other cases the root node URI provided by the
+     * CorpusStructure provider is returned
+     *
+     * @param parameters Wicket page parameters
+     * @return root URI to use
+     * @see #ROOT_NODE_PARAM
+     * @see CorpusStructureProvider#getRootNodeURI()
+     */
+    private URI getRootNodeURI(final PageParameters parameters) {
+        final StringValue rootNodeParam = parameters.get(ROOT_NODE_PARAM);
+        if (!rootNodeParam.isEmpty()) {
+            try {
+                logger.debug("Using custom root node {}", rootNodeParam);
+                return new URI(rootNodeParam.toString());
+            } catch (URISyntaxException ex) {
+                logger.error("Invalid root node URI: {}; falling back to database default");
+            }
+        }
+        return csProvider.getRootNodeURI();
+    }
+
+    /**
      * Method that will check for an 'openpath' or 'openhandle' parameter
      *
      * 'openpath' is assumed to have a node ID or a URI with 'hdl' scheme as its
@@ -119,10 +149,10 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     }
 
     private URI getNodeUriToOpen(PageParameters parameters) {
-        String uriString = parameters.get("openpath").toString();
+        String uriString = parameters.get(OPEN_PATH_PARAM).toString();
         if (uriString == null) {
             // no open path, try openhandle
-            final String handle = parameters.get("openhandle").toString();
+            final String handle = parameters.get(OPEN_HANDLE_PARAM).toString();
             if (handle != null) {
                 // already a handle URI? If not, prepend scheme
                 if (handle.startsWith("hdl:")) {
