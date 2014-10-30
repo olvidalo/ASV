@@ -24,21 +24,24 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
+ * IFrame that simply embeds a resource by its URL
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @see NodeResolver
  */
 public final class ViewInfoFile extends Panel {
 
     @SpringBean
     NodeActionsConfiguration nodeActionsConfiguration;
+    @SpringBean
+    NodeResolver nodeResolver;
 
-    public ViewInfoFile(String id, NodeResolver nodeResolver, TypedCorpusNode node) {
+    public ViewInfoFile(String id, TypedCorpusNode node) {
         super(id);
         //final MarkupContainer viewContainer = new WebMarkupContainer("viewContainer");
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
 
 //        if (node.getNodeType() instanceof IMDIResourcePictureType) {
-
         StringBuilder sb = new StringBuilder();
         Label resourcelabel;
         // create label for resource
@@ -57,6 +60,5 @@ public final class ViewInfoFile extends Panel {
 //        final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
 //            add(new DocumentInlineFrame("infoView", resStream));
 //        }
-
     }
 }

@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.html5.media.MediaSource;
@@ -39,6 +40,11 @@ import org.wicketstuff.html5.media.audio.Html5Audio;
  */
 public final class AudioFilePanel extends Panel {
 
+    @SpringBean
+    private NodeResolver resolver;
+    @SpringBean
+    private NodeActionsConfiguration nodeActionsConfiguration;
+    
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     /**
@@ -46,14 +52,9 @@ public final class AudioFilePanel extends Panel {
      * wicket front-end of the panel.
      *
      * @param id
-     * @param resolver NodeResolver, used to retrieve the node URL
      * @param node TypedCorpusNode, the node to be displayed as video
-     * @param nodeActionsConfiguration NodeActionsConfiguration, configurations
-     * to convert Http to Https
-     * @param csdb CorpusStructureProvider, access corpusStructure to get
-     * parents and children.
      */
-    public AudioFilePanel(String id, NodeResolver resolver, TypedCorpusNode node, NodeActionsConfiguration nodeActionsConfiguration, CorpusStructureProvider csdb) {
+    public AudioFilePanel(String id, TypedCorpusNode node) {
         super(id);
         final List<MediaSource> mm = new ArrayList<MediaSource>();
         final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));

@@ -31,9 +31,9 @@ public interface NodePresentationProvider {
      * Gets a renderable (through Wicket) component offering a presentation of the specified nodes
      *
      * @param wicketId string that the returned component should have as its id (see {@link Component#getId() }
-     * @param nodes nodes to render a presentation for
-     * @param nodeType the type of the node identified by nodeUri
+     * @param nodes collection of nodes with type information to render a presentation for
      * @return a Wicket Component representing
+     * @throws nl.mpi.metadatabrowser.services.NodePresentationException
      */
     Component getNodePresentation(String wicketId, Collection<TypedCorpusNode> nodes) throws NodePresentationException;
 }

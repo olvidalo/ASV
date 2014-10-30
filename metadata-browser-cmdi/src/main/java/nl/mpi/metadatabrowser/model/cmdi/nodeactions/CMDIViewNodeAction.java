@@ -19,12 +19,12 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.MalformedURLException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
@@ -46,87 +46,94 @@ import org.springframework.stereotype.Component;
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
-    private final NodeResolver resolver;
-    private final CorpusStructureProvider csdb;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeActionsConfiguration nodeActionsConfiguration;
-    @Autowired
-    private FilterNodeIds filterNodeId;
+    private final FilterNodeIds nodeIdFilter;
 
     /**
      * Action class are autowired in nodeActions.xml
+     *
      * @param nodeActionsConfiguration NodeActionsConfiguration, get Annex url
-     * @param nodeResolver NodeResolver, pass by other components
-     * @param csdb CorpusStructureProvider, process by other components
+     * @param nodeIdFilter Node ID filter
      */
     @Autowired
-    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, CorpusStructureProvider csdb) {
+    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds nodeIdFilter) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
-        this.resolver = nodeResolver;
-        this.csdb = csdb;
+        this.nodeIdFilter = nodeIdFilter;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         //Buil redirect to Annex here
-        logger.debug("Action [{}] invoked on {}", getName(), node);
-        URI targetURI = null;
-        UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-        boolean navType = false;
-        if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof ResourceWrittenType && node.getName().endsWith(".srt") || node.getName().endsWith(".eaf") || node.getName().endsWith("tbt") || node.getName().endsWith(".cha")) {
-            //TODO get session id
-            URI nodeid = node.getNodeURI();// should be handle
-            String nodeId = filterNodeId.getURIParam(nodeid);
-            navType = true;
-            if ((nodeId.startsWith("hdl")) || nodeId.startsWith("1839")) {
+        logger.debug("View on {} requested", node);
+
+        if (isAnnexViewable(node)) {
+            return createAnnexRequest(node);
+        } else {
+            return createViewRequest(node);
+        }
+    }
+
+    private boolean isAnnexViewable(final TypedCorpusNode node) {
+        final NodeType nodeType = node.getNodeType();
+        final boolean isAnnexViewable = nodeType instanceof CMDIResourceTxtType
+                || nodeType instanceof ResourceWrittenType && node.getName().endsWith(".srt")
+                || node.getName().endsWith(".eaf")
+                || node.getName().endsWith("tbt")
+                || node.getName().endsWith(".cha");
+        return isAnnexViewable;
+    }
+
+    private NodeActionResult createAnnexRequest(final TypedCorpusNode node) throws IllegalArgumentException, UriBuilderException {
+        //TODO get session id
+        final String nodeId = nodeIdFilter.getURIParam(node.getNodeURI());
+        
+        final URI targetURI;
+        {
+            final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
+            if ((nodeId.startsWith("hdl")) || nodeId.startsWith("1839")) { //TODO: remove hard coded handle prefix
                 targetURI = uriBuilder.queryParam("handle", nodeId).build();
             } else {
                 targetURI = uriBuilder.queryParam("nodeid", nodeId).build();
             }
         }
 
-        if (navType == true) {
-            try {
-                if(targetURI != null){
-                final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
-                return new SimpleNodeActionResult(request);
-                }
-                logger.error("URL syntax exception, annex url could not be found. Please check configuration file");
-            } catch (MalformedURLException ex) {
-                logger.error("URL syntax exception:" + ex);
-            }
-        } else if (node.getNodeType() instanceof ResourceVideoType) {
-            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    return new MediaFilePanel(id, resolver, node, nodeActionsConfiguration, csdb);
-                }
-            };
-            return new SimpleNodeActionResult(componentRequest);
-
-        } else if (node.getNodeType() instanceof ResourceAudioType) {
-            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    return new AudioFilePanel(id, resolver, node, nodeActionsConfiguration, csdb);
-                }
-            };
-            return new SimpleNodeActionResult(componentRequest);
-
-        } else {
-            final ShowComponentRequest componentRequest = new ShowComponentRequest() {
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    return new ViewInfoFile(id, resolver, node);
-                }
-            };
-            return new SimpleNodeActionResult(componentRequest);
+        try {
+            final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
+            return new SimpleNodeActionResult(request);
+        } catch (MalformedURLException ex) {
+            logger.error("URL syntax exception while creating Annex URL", ex);
         }
         return null;
+    }
+
+    /**
+     *
+     * @param node
+     * @return a {@link SimpleNodeActionResult} with a component depending on
+     * the type of node - either a media panel, audio panel or general IFrame
+     * viewer
+     */
+    private NodeActionResult createViewRequest(final TypedCorpusNode node) {
+        final NodeType nodeType = node.getNodeType();
+        final ShowComponentRequest componentRequest = new ShowComponentRequest() {
+            @Override
+            public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
+                if (nodeType instanceof ResourceVideoType) {
+                    return new MediaFilePanel(id, node);
+                } else if (nodeType instanceof ResourceAudioType) {
+                    return new AudioFilePanel(id, node);
+                } else {
+                    return new ViewInfoFile(id, node);
+                }
+            }
+        };
+        return new SimpleNodeActionResult(componentRequest);
     }
 
     @Override

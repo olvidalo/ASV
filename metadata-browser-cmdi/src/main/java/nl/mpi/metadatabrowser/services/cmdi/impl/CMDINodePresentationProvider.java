@@ -94,7 +94,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
                     return new ResourcePresentation(wicketId, node);
                 } else if (node.getNodeType() instanceof IMDIInfoType) {
                     logger.debug("Resource presentation for info file");
-                    return new ViewInfoFile(wicketId, nodeResolver, node);
+                    return new ViewInfoFile(wicketId, node);
                 } else {
                     logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
                     return new Label(wicketId, node.toString());
