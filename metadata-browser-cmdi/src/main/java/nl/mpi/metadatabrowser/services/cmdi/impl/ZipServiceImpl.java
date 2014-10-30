@@ -32,8 +32,8 @@ import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.corpusstructure.UnknownNodeException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private final static long MAX_LIMIT = FileUtils.ONE_GB * 2;
     private final CorpusStructureProvider csdb;
     private final NodeResolver nodeResolver;
-    private final AccessInfoProvider accessInfoProvider;
+    private final AccessChecker accessChecker;
 
     /**
      * Constructor
@@ -64,10 +64,10 @@ public class ZipServiceImpl implements ZipService, Serializable {
      * @param accessInfoProvider
      */
     @Autowired
-    public ZipServiceImpl(CorpusStructureProvider csdb, NodeResolver nodeResolver, AccessInfoProvider accessInfoProvider) {
+    public ZipServiceImpl(CorpusStructureProvider csdb, NodeResolver nodeResolver, AccessChecker accessChecker) {
         this.csdb = csdb;
         this.nodeResolver = nodeResolver;
-        this.accessInfoProvider = accessInfoProvider;
+        this.accessChecker = accessChecker;
     }
 
     /**
@@ -123,7 +123,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream, ThreadLocal<Long> sizeCount) throws NodeNotFoundException, IOException {
         final URI nodeURI = node.getNodeURI();
 
-        if (checkAccess(userid, nodeURI)) {
+        if (accessChecker.hasAccess(userid, nodeURI)) {
             logger.debug("Adding {} to ZIP", nodeURI);
 
             // start counting written items (only root initially)
@@ -181,23 +181,6 @@ public class ZipServiceImpl implements ZipService, Serializable {
         logger.trace("Done writing {} to ZIP", fileName);
 
         return written;
-    }
-
-    /**
-     * method to check accessibility to a node for user
-     *
-     * @param userid Stirng: user that request the download
-     * @param nodeid URI: uri from the node that needs to grant access to the
-     * user
-     * @return boolean. true if user has access to the specificed node
-     * @throws UnknownNodeException
-     */
-    private boolean checkAccess(String userid, URI nodeId) throws NodeNotFoundException {
-        if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-            return accessInfoProvider.hasReadAccess(nodeId, AccessInfoProvider.EVERYBODY);
-        } else {
-            return accessInfoProvider.hasReadAccess(nodeId, userid);
-        }
     }
 
     /**

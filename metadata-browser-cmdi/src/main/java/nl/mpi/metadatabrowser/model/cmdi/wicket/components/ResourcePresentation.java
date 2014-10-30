@@ -28,6 +28,7 @@ import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
@@ -58,6 +59,8 @@ public final class ResourcePresentation extends Panel {
     private FilterNodeIds filterNodeId;
     @SpringBean
     private AccessInfoProvider accessInfoProvider;
+    @SpringBean
+    private AccessChecker accessChecker;
     @SpringBean
     private NodeResolver resolver;
     @SpringBean
@@ -90,7 +93,7 @@ public final class ResourcePresentation extends Panel {
     }
 
     private void addContent(final String userid, TypedCorpusNode node, String nodeid, final String nodeURL) throws IllegalArgumentException, UriBuilderException, NodeNotFoundException {
-        final boolean hasaccess = hasAccess(userid, node);
+        final boolean hasaccess = accessChecker.hasAccess(userid, node);
 
         String wrapHandle = "";
         URI handle = resolver.getPID(node);
@@ -229,15 +232,5 @@ public final class ResourcePresentation extends Panel {
         tableContainer.add(requestLink);
         // Add container to page
         add(tableContainer);
-    }
-
-    private Boolean hasAccess(final String userid, TypedCorpusNode node) throws NodeNotFoundException {
-        Boolean hasaccess;
-        if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-            hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);
-        } else {
-            hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), userid);
-        }
-        return hasaccess;
     }
 }

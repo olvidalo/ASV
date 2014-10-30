@@ -34,8 +34,8 @@
     <bean id="authenticationHolder" class="nl.mpi.metadatabrowser.services.authentication.AuthenticationHolderImpl">
 <!--    <aop:scope:proxy/>-->
     </bean>
-
-
+    
+    <bean id="accessChecker" class="nl.mpi.metadatabrowser.services.authentication.AccessCheckerImpl" />
 
 <!--    <security:http use-expressions="true" entry-point-ref="customEntryPoint">
         <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />

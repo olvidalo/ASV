@@ -28,6 +28,7 @@ import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
@@ -48,12 +49,12 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeResolver nodeResolver;
-    private final AccessInfoProvider accessInfoProvider;
+    private final AccessChecker accessChecker;
 
     @Autowired
-    public CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessInfoProvider accessInfoProvider) {
+    public CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessChecker accessChecker) {
         this.nodeResolver = nodeResolver;
-        this.accessInfoProvider = accessInfoProvider;
+        this.accessChecker = accessChecker;
     }
 
     @Override
@@ -70,9 +71,8 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Single download action invoked on {}", node);
         final String userid = auth.getPrincipalName();
-        final URI nodeUri = node.getNodeURI();
         try {
-            if (userHasAccess(node, nodeUri, userid)) {
+            if (accessChecker.hasAccess(userid, node)) {
                 final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
                 final File localFile = nodeResolver.getLocalFile(node);
 
@@ -87,21 +87,10 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
                 final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
                 return new SimpleNodeActionResult(request);
             } else {
-                return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
+                return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, node.getNodeURI()));
             }
         } catch (NodeNotFoundException ex) {
             throw new NodeActionException(this, ex);
         }
-    }
-
-    private boolean userHasAccess(TypedCorpusNode node, final URI nodeUri, String userid) throws NodeNotFoundException {
-        final boolean hasaccess;
-        if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-            hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY);
-        } else {
-            hasaccess = accessInfoProvider.hasReadAccess(node.getNodeURI(), userid);
-        }
-        logger.debug("resource-download, access for {}, {}: {}", nodeUri, userid, hasaccess);
-        return hasaccess;
     }
 }

@@ -28,6 +28,7 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
@@ -53,7 +54,7 @@ public class PanelVersionComponent extends Panel {
     @SpringBean
     private FilterNodeIds filterNodeId;
     @SpringBean
-    private AccessInfoProvider accessInfoProvider;
+    private AccessChecker accessChecker;
     @SpringBean
     private NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeResolver resolver;
@@ -77,7 +78,7 @@ public class PanelVersionComponent extends Panel {
             URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null)) {
                 try {
-                    final Boolean hasaccess = hasAccess(userid, node);
+                    final Boolean hasaccess = accessChecker.hasAccess(userid, node);
 
                     // loop through the list of versions for a node to write them in the table.
                     if (versionsNodeIds != null && versionsNodeIds.size() > 0) {
@@ -133,15 +134,5 @@ public class PanelVersionComponent extends Panel {
                 }
             }));
         }
-    }
-
-    private Boolean hasAccess(String userid, TypedCorpusNode node) throws NodeNotFoundException {
-        Boolean hasaccess; // check accessibility node for the user
-        if (userid == null || userid.equals("") || userid.equals("anonymous")) {
-            hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), AccessInfoProvider.EVERYBODY));
-        } else {
-            hasaccess = Boolean.valueOf(accessInfoProvider.hasReadAccess(node.getNodeURI(), userid));
-        }
-        return hasaccess;
     }
 }

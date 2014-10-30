@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
+import nl.mpi.metadatabrowser.services.authentication.AccessCheckerImpl;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -87,7 +88,7 @@ public class CMDIDownloadNodeActionTest {
             }
         });
 
-        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver, aiProvider);
+        CMDIDownloadNodeAction instance = new CMDIDownloadNodeAction(nodeResolver, new AccessCheckerImpl(aiProvider));
         auth.setPrincipalName(null);// this is a test for no authenticated user
         instance.setAuthenticationHolder(auth);
         NodeActionResult result = instance.execute(node);

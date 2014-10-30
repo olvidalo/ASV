@@ -27,6 +27,7 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.authentication.AccessCheckerImpl;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -170,7 +171,7 @@ public class ZipServiceImplTest {
             }
         });
 
-        ZipServiceImpl instance = new ZipServiceImpl(csdb, nodeResolver, aiProvider);
+        ZipServiceImpl instance = new ZipServiceImpl(csdb, nodeResolver, new AccessCheckerImpl(aiProvider));
         File result = instance.createZipFileForNodes(node, userId);
         ZipFile zip = new ZipFile(result);
 
