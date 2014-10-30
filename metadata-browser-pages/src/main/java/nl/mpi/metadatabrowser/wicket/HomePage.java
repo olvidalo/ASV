@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
+import nl.mpi.archiving.tree.GenericTreeModelProviderFactory;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
@@ -32,7 +34,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 
     private static final long serialVersionUID = 1L;
     @SpringBean
-    private GenericTreeModelProvider treeModelProvider;
+    private GenericTreeModelProviderFactory treeModelProviderFactory;
+    @SpringBean
+    private CorpusStructureProvider csProvider;
     @SpringBean(required = false)
     private ArchiveTreeNodeIconProvider<CorpusNode> treeIconProvider;
     @SpringBean
@@ -55,6 +59,11 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         final HeaderPanel headerPanel = new HeaderPanel("headerPanel", auth.getPrincipalName());
         add(headerPanel);
 
+        //TODO: Allow parameter for *custom* root node
+        final URI rootNodeUri = csProvider.getRootNodeURI();
+        final CorpusNode rootNode = csProvider.getNode(rootNodeUri);
+        final GenericTreeModelProvider treeModelProvider = treeModelProviderFactory.createTreeModelProvider(rootNode);
+        
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
         treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
         treePanel.setLinkType(LinkType.AJAX_FALLBACK);
