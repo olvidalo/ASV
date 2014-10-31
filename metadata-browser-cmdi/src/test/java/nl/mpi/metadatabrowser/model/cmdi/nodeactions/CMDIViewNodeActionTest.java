@@ -17,12 +17,13 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -40,26 +41,26 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIViewNodeActionTest {
-
-    private NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
+    
+    private final NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
     private final static URI NODE_ID = URI.create("node:1");
-
+    
     public CMDIViewNodeActionTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
@@ -72,18 +73,31 @@ public class CMDIViewNodeActionTest {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
         final FilterNodeIds filter = context.mock(FilterNodeIds.class);
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
+        final AccessChecker accessChecker = context.mock(AccessChecker.class);
+        final AuthenticationHolder auth = context.mock(AuthenticationHolder.class);
         nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
         context.checking(new Expectations() {
             {
                 allowing(node).getNodeType();
                 will(returnValue(context.mock(NodeType.class)));
+                
                 allowing(node).getName();
                 will(returnValue("parent.jpg"));
+                
+                oneOf(auth).getPrincipalName();
+                will(returnValue("user"));
+                
+                oneOf(node).getNodeURI();
+                will(returnValue(URI.create("node:123")));
+                
+                oneOf(accessChecker).hasAccess("user", URI.create("node:123"));
+                will(returnValue(true));
             }
         });
-
-        CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeActionsConfiguration, filter);
+        
+        final CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeActionsConfiguration, filter, accessChecker);
+        instance.setAuthenticationHolder(auth);
+        
         NodeActionResult result = instance.execute(node);
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);

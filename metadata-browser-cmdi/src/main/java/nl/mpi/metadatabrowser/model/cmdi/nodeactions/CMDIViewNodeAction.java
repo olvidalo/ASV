@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
+import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -38,6 +39,7 @@ import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final FilterNodeIds nodeIdFilter;
+    private final AccessChecker accessChecker;
 
     /**
      * Action class are autowired in nodeActions.xml
@@ -62,9 +65,10 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
      * @param nodeIdFilter Node ID filter
      */
     @Autowired
-    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds nodeIdFilter) {
+    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds nodeIdFilter, AccessChecker accessChecker) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.nodeIdFilter = nodeIdFilter;
+        this.accessChecker = accessChecker;
     }
 
     @Override
@@ -72,10 +76,14 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
         //Buil redirect to Annex here
         logger.debug("View on {} requested", node);
 
-        if (isAnnexViewable(node)) {
-            return createAnnexRequest(node);
-        } else {
-            return createViewRequest(node);
+        try {
+            if (isAnnexViewable(node)) {
+                return createAnnexRequest(node);
+            } else {
+                return createViewRequest(node);
+            }
+        } catch (NodeNotFoundException ex) {
+            throw new NodeActionException(this, "Node not found", ex);
         }
     }
 
@@ -92,7 +100,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private NodeActionResult createAnnexRequest(final TypedCorpusNode node) throws IllegalArgumentException, UriBuilderException {
         //TODO get session id
         final String nodeId = nodeIdFilter.getURIParam(node.getNodeURI());
-        
+
         final URI targetURI;
         {
             final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
@@ -119,18 +127,27 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
      * the type of node - either a media panel, audio panel or general IFrame
      * viewer
      */
-    private NodeActionResult createViewRequest(final TypedCorpusNode node) {
+    private NodeActionResult createViewRequest(final TypedCorpusNode node) throws NodeNotFoundException {
         final NodeType nodeType = node.getNodeType();
+        final String userid = auth.getPrincipalName();
+        final boolean hasAccess = accessChecker.hasAccess(userid, node.getNodeURI());
+
+        // construct a request to show a component depending on the type of resource
         final ShowComponentRequest componentRequest = new ShowComponentRequest() {
             @Override
             public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                if (nodeType instanceof ResourceVideoType) {
-                    return new MediaFilePanel(id, node);
-                } else if (nodeType instanceof ResourceAudioType) {
-                    return new AudioFilePanel(id, node);
-                } else {
-                    return new ViewInfoFile(id, node);
+
+                if (hasAccess) { // do not show players if the user has no access to the resource
+                    if (nodeType instanceof ResourceVideoType) {
+                        return new MediaFilePanel(id, node);
+                    } else if (nodeType instanceof ResourceAudioType) {
+                        return new AudioFilePanel(id, node);
+                    }
                 }
+
+                // Fallback for non-media files (e.g. images) to be rendered by the browser
+                // If resource is not accessible, this will provide more information
+                return new ViewInfoFile(id, node);
             }
         };
         return new SimpleNodeActionResult(componentRequest);

@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model;
 
-import java.net.URI;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ public abstract class SingleNodeAction implements NodeAction {
      * Executes {@link #execute(java.net.URI) } for the single node contained by
      * the node URIs list
      *
-     * @param nodeUris singleton list of node URIs to execute the action on
      * @return the result of {@link #execute(java.net.URI) }
      * @throws NodeActionException if the provided list of node URIs does not
      * contain exactly one item or whatever gets thrown by
