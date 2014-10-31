@@ -1,5 +1,17 @@
+from 1.0 to >= 1.1
+	- add new context parameter nl.mpi.translationservicebase
+
+		e.g. <Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
+					    value="java:comp/env/jdbc/CSDB3" />          
+
+	- add new context parameter nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+
+		e.g.  <Parameter name="nl.mpi.translationservicebase"
+						 value="https://lux16.mpi.nl/ds/TranslationService" />
+						 
 from version 1.0-Alpha
     - add new parameter yamsSearchURL as below
           <Parameter name="nl.mpi.yamsSearchUrl"
          value="http://lux17.mpi.nl/ds/yaas/search.html"
          description="location of the YAMS Search webapp" /
+         
