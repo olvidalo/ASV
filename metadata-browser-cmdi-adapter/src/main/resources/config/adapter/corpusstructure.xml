@@ -33,10 +33,13 @@
     </bean>
     <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO" />
     
+    <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HttpHandleResolver" />
+    
     <!-- CSDB factory for CorpusStructureAPI adapter -->
     <bean id="csProviderFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
         <constructor-arg ref="csdbProxy" />
         <constructor-arg ref="aoProxy" />        
+        <constructor-arg ref="handleResolver" />
         <constructor-arg value="${nl.mpi.translationservicebase}" />
     </bean>
 
