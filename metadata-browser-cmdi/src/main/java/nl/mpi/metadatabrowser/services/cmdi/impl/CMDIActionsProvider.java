@@ -23,6 +23,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
@@ -30,7 +31,6 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIRrsNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIStatsNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIVersionNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
@@ -38,6 +38,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourcePictureType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
@@ -80,6 +81,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     private List<NodeAction> collectionNodeActionList;
     private List<NodeAction> multipleNodeActionList;
     private List<NodeAction> catalogueMetadataNodeActionList;
+    private List<NodeAction> infoFileActionList;
 
     @Autowired
     public CMDIActionsProvider(CorpusStructureProvider csdb) {
@@ -140,6 +142,12 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 bookmarkNodeAction,
                 downloadNodeAction,
                 versionNodeAction);
+        
+        infoFileActionList = Arrays.<NodeAction>asList(
+                amsNodeAction,
+                bookmarkNodeAction,
+                downloadNodeAction
+        );
 
         multipleNodeActionList = Arrays.<NodeAction>asList(
                 searchNodeAction,
@@ -153,11 +161,13 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     public List<NodeAction> getNodeActions(Collection<TypedCorpusNode> nodes) {
         if (nodes.size() > 0 && nodes.size() == 1) {
             for (TypedCorpusNode node : nodes) {
-                if (node.getNodeType() instanceof CollectionType) {
+                final NodeType nodeType = node.getNodeType();
+                
+                if (nodeType instanceof CollectionType) {
                     return collectionNodeActionList;
                 }
-                if (node.getNodeType() instanceof MetadataType) {
-                    if (node.getNodeType() instanceof IMDICatalogueType) {
+                else if (nodeType instanceof MetadataType) {
+                    if (nodeType instanceof IMDICatalogueType) {
                         return catalogueMetadataNodeActionList;
                     }
                     URI childNodeUri = node.getNodeURI();
@@ -171,11 +181,13 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                         }
                     }
                 }
-                if (node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof ResourceVideoType || node.getNodeType() instanceof ResourcePictureType || node.getNodeType() instanceof ResourceAudioType) {
+                else if (nodeType instanceof CMDIResourceType || nodeType instanceof ResourceVideoType || nodeType instanceof ResourcePictureType || nodeType instanceof ResourceAudioType) {
                     return resourceAudioVideoNodeActionList;
                 }
-                if (node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof ResourceWrittenType) {
+                else if (nodeType instanceof CMDIResourceTxtType || nodeType instanceof ResourceWrittenType) {
                     return resourcetxtNodeActionList;
+                } else if(nodeType instanceof IMDIInfoType) {
+                    return infoFileActionList;
                 }
             }
         } else if (nodes.size() > 1) {
