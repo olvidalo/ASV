@@ -33,7 +33,7 @@
     </bean>
     <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO" />
     
-    <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HttpHandleResolver" />
+    <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
     
     <!-- CSDB factory for CorpusStructureAPI adapter -->
     <bean id="csProviderFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
