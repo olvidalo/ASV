@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.net.URI;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -36,12 +35,6 @@ public class AccessCheckerImpl implements AccessChecker, Serializable {
     public AccessCheckerImpl(AccessInfoProvider accessInfoProvider) {
         this.accessInfoProvider = accessInfoProvider;
     }
-
-    @Override
-    public Boolean hasAccess(final String userid, TypedCorpusNode node) throws NodeNotFoundException {
-        return hasAccess(userid, node.getNodeURI());
-    }
-
 
     /**
      * method to check accessibility to a node for user

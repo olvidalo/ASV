@@ -18,11 +18,9 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -72,7 +70,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
         logger.debug("Single download action invoked on {}", node);
         final String userid = auth.getPrincipalName();
         try {
-            if (accessChecker.hasAccess(userid, node)) {
+            if (accessChecker.hasAccess(userid, node.getNodeURI())) {
                 final IResourceStream resStream = new CorpusNodeResourceStream(nodeResolver, node);
                 final File localFile = nodeResolver.getLocalFile(node);
 

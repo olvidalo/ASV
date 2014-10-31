@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
@@ -71,14 +70,15 @@ public class PanelVersionComponent extends Panel {
 
             boolean showRetired = true;
 
+            final URI nodeURI = node.getNodeURI();
             //versions = new VersioningAPI(Configuration.getInstance().versDBConnectionURL);
             if (versions.getStatus("versioningTableInfo")) {
-                versionsNodeIds = versions.getAllVersions(node.getNodeURI(), showRetired);
+                versionsNodeIds = versions.getAllVersions(nodeURI, showRetired);
             }
             URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null)) {
                 try {
-                    final Boolean hasaccess = accessChecker.hasAccess(userid, node);
+                    final Boolean hasaccess = accessChecker.hasAccess(userid, nodeURI);
 
                     // loop through the list of versions for a node to write them in the table.
                     if (versionsNodeIds != null && versionsNodeIds.size() > 0) {

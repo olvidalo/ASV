@@ -18,15 +18,12 @@ package nl.mpi.metadatabrowser.services.authentication;
 
 import java.net.URI;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
-import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public interface AccessChecker {
-
-    Boolean hasAccess(final String userid, TypedCorpusNode node) throws NodeNotFoundException;
 
     /**
      * method to check accessibility to a node for user

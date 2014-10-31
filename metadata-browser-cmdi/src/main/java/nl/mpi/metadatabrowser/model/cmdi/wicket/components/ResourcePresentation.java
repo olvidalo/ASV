@@ -92,8 +92,9 @@ public final class ResourcePresentation extends Panel {
         }
     }
 
-    private void addContent(final String userid, TypedCorpusNode node, String nodeid, final String nodeURL) throws IllegalArgumentException, UriBuilderException, NodeNotFoundException {
-        final boolean hasaccess = accessChecker.hasAccess(userid, node);
+    private void addContent(final String userid, final TypedCorpusNode node, String nodeid, final String nodeURL) throws IllegalArgumentException, UriBuilderException, NodeNotFoundException {
+        final URI nodeURI = node.getNodeURI();
+        final boolean hasaccess = accessChecker.hasAccess(userid, nodeURI);
 
         String wrapHandle = "";
         URI handle = resolver.getPID(node);
@@ -139,7 +140,7 @@ public final class ResourcePresentation extends Panel {
 
 //	    AccessLevel nodeAccessLevel = AccessLevel.ACCESS_LEVEL_UNKNOWN;
 //	    if (nAccessInfo.getAccessLevel() > AccessLevel.ACCESS_LEVEL_UNKNOWN) {
-        AccessLevel nodeAccessLevel = accessInfoProvider.getAccessLevel(node.getNodeURI());
+        AccessLevel nodeAccessLevel = accessInfoProvider.getAccessLevel(nodeURI);
 //	    }
 
         final MarkupContainer tableContainer = new WebMarkupContainer("tableContainer");
@@ -184,7 +185,7 @@ public final class ResourcePresentation extends Panel {
         }
 
         // get the licenses for a nodeId
-        List<String[]> licenseViews = amsService.getLicense(node.getNodeURI());
+        List<String[]> licenseViews = amsService.getLicense(nodeURI);
 
         StringBuilder sb = new StringBuilder();
         Label licensesLabel;
