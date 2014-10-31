@@ -18,7 +18,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
@@ -27,6 +26,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
+import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -45,15 +45,15 @@ public class CMDINodeTypeIdentifierTest {
     public static final URI NODE_1_ID = URI.create("node:1");
     private final Mockery context = new JUnit4Mockery();
 
-    private CorpusStructureProvider csdb;
+    private ProfileIdentifier profileIdentifier;
     private NodeResolver nodeResolver;
     private CMDINodeTypeIdentifier instance;
 
     @Before
     public void setUp() {
-        csdb = context.mock(CorpusStructureProvider.class);
+        profileIdentifier = context.mock(ProfileIdentifier.class);
         nodeResolver = context.mock(NodeResolver.class);
-        instance = new CMDINodeTypeIdentifier(csdb, nodeResolver);
+        instance = new CMDINodeTypeIdentifier(profileIdentifier, nodeResolver);
     }
 
     @After

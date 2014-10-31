@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
@@ -39,9 +38,15 @@ import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import static nl.mpi.metadatabrowser.services.NodeTypeIdentifier.UNKNOWN_NODE_TYPE;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+import nl.mpi.metadatabrowser.services.cmdi.ProfileIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * Service that provides information about the node type of some corpus node
+ *
+ * TODO: Add (thread or session local?) caching of node URI -> type mapping (not
+ * likely to change very often) - com.google.common.cache.CacheBuilder might be
+ * a good basis
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  * @author Twan Goosen <twan.goosen@mpi.nl>
@@ -51,16 +56,17 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
     private final static Pattern CMDI_FILE_PATTERN = Pattern.compile(".*\\.cmdi$", Pattern.CASE_INSENSITIVE);
     public static final String IMDI_MIME_TYPE = "application/imdi+xml";
     public static final URI COLLECTION_PROFILE_ID = URI.create("profile"); //TODO: have a list of profileID or add correct profileID
-    private final ProfileIdentifierImpl profileIdentifier;
+    private final ProfileIdentifier profileIdentifier;
     private final NodeResolver nodeResolver;
 
     /**
      *
-     * @param csProvider
+     * @param profileIdentifier profile identifier to use for CMDI metadata
+     * @param nodeResolver resolver for looking up node locations
      */
     @Autowired
-    public CMDINodeTypeIdentifier(CorpusStructureProvider csProvider, NodeResolver nodeResolver) {
-        this.profileIdentifier = new ProfileIdentifierImpl(csProvider);
+    public CMDINodeTypeIdentifier(ProfileIdentifier profileIdentifier, NodeResolver nodeResolver) {
+        this.profileIdentifier = profileIdentifier;
         this.nodeResolver = nodeResolver;
     }
 
@@ -85,6 +91,9 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
 
         // determine node file name
         final String name;
+        // the following step can be expensive when it needs a handle lookup
+        // (depending on the implementation) - consider using a caching
+        // implementation
         final File localFile = nodeResolver.getLocalFile(node);
         if (localFile == null) {
             name = nodeResolver.getUrl(node).getPath();
