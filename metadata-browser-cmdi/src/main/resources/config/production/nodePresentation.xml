@@ -27,7 +27,7 @@
 	<qualifier value="imdiTemplates" /> <!-- Qualifier to disambiguate from CMDI templates -->
 	<constructor-arg>
 	    <bean class="javax.xml.transform.stream.StreamSource">
-		<constructor-arg value="classpath:imdi-viewer.xsl" type="java.io.InputStream"/>
+		<constructor-arg value="classpath:xslt/imdi-viewer.xsl" type="java.io.InputStream"/>
 	    </bean>
 	</constructor-arg>
     </bean>
@@ -37,7 +37,7 @@
 	<qualifier value="cmdiTemplates" /> <!-- Qualifier to disambiguate from IMDI templates -->
 	<constructor-arg>
 	    <bean class="javax.xml.transform.stream.StreamSource">
-		<constructor-arg value="classpath:cmdi2xhtml.xsl" type="java.io.InputStream"/>
+		<constructor-arg value="classpath:xslt/cmdi2xhtml.xsl" type="java.io.InputStream"/>
 	    </bean>
 	</constructor-arg>
     </bean>
