@@ -80,9 +80,6 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
             try (final InputStream in = getServicesLocator().getNodeResolver().getInputStream(node)) {
                 final Transformer transformer = templates.newTransformer();
                 // set transformer options
-                transformer.setOutputProperty(OutputKeys.METHOD, "html");
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
                 transformer.setParameter("CORPUS_LINKING", "false");
                 transformer.setParameter("DOCUMENT_ID", node.toString());
                 transformNodeContent(strWriter, in, transformer);
