@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -89,8 +88,8 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
             }
 
             // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-            return strWriter.toString();
-        } catch (IOException ex) {
+            return strWriter.toString(); 
+       } catch (IOException ex) {
             throw new NodePresentationException("Could not read metadata for transformation", ex);
         } catch (TransformerException ex) {
             throw new NodePresentationException("Could not transform metadata", ex);
