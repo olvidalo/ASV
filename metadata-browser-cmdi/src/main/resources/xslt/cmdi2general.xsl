@@ -7,10 +7,7 @@
     exclude-result-prefixes="xs"
     version="2.0"
     xpath-default-namespace="http://www.clarin.eu/cmd/">
-    <!--
-    <!DOCTYPE html>
-    -->
-
+    
     <xsl:output
         method="html"
         encoding="UTF-8"
@@ -136,69 +133,8 @@
         </ul>
     </xsl:template>
 
-    <xsl:template match="CMD">
-        <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-            <meta charset="utf-8"/>
-            <head>
-                <title>CMDI collection "<xsl:value-of select="./Header/MdCollectionDisplayName" xmlns="cmd"/>"</title>
-                <link rel="stylesheet" type="text/css" href="http://catalog.clarin.eu/ds/vlo/css/main.css"></link>
+    <xsl:template name="cmdi2general" match="CMD">
 
-                <style media="screen" type="text/css">
-	                    <![CDATA[
-	                    .metadataNode
-	                    {
-	                        margin: 20px;
-	                        margin-left: -1.2em;
-	                    }
-
-	                    .node
-	                    {
-	                        background-color: rgba(188, 205, 232, 0.8);
-	                        border: 1px ridge;
-	                        font-weight: bold;
-	                        padding: 5px;
-	                        /*float: left;*/
-	                    }
-
-	                    .leaf
-	                    {
-	                    }
-
-	                    .Component_tree_node_content
-	                    {
-	                        background-color: rgba(188, 200, 232, 0.3);
-	                        border: 1px dotted red;
-	                        margin-top: 10px;
-	                        margin-left: 10px;
-	                        padding: 5px;
-	                        display: inline-block;
-	                        /*float: left;*/
-	                        /*display: table-cell;*/
-	                    }
-
-	                    .attributes
-	                    {
-	                        display: inline-block;
-	                        font-style: italic;
-	                        font-weight: normal;
-	                        /*background-color: rgba(100, 201, 234, 0.4);*/
-	                    }
-
-	                    footer
-	                    {
-	                        border: 1px dotted;
-	                    }
-
-	                    address
-	                    {
-	                        display: inline-block;
-	                    }
-
-	                    .searchword { background-color: yellow; }
-	                    ]]>
-                </style>
-            </head>
-            <body>
                 <article style="background-color:#EEEEEE">
                     <div class="endgame">
                         <xsl:if test="not(not(Resources/*[normalize-space()]))">
@@ -277,7 +213,5 @@
                         <xsl:call-template name="Component_tree"/>
                     </p>
                 </article>
-            </body>
-        </html>
     </xsl:template>
 </xsl:stylesheet>

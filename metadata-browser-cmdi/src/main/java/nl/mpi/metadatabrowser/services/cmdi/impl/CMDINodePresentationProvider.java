@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.xml.transform.Templates;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -56,23 +55,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 public class CMDINodePresentationProvider implements NodePresentationProvider, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
-    public static final String IMDI_XSL = "/imdi-viewer.xsl";
-    public static final String CMDI_XSL = "/cmdi2xhtml.xsl";
-    private final NodeResolver nodeResolver;
-    private Templates imdiTemplates;
-    private Templates cmdiTemplates;
+    public static final String IMDI_XSL = "/xslt/imdi-viewer.xsl";
+    public static final String CMDI_XSL = "/xslt/cmdi2xhtml.xsl";
+    private final Templates imdiTemplates;
+    private final Templates cmdiTemplates;
 
     /**
      *
-     * @param nodeResolver
      * @param imdiTemplates
      * @param cmdiTemplates
      */
     @Autowired
-    public CMDINodePresentationProvider(NodeResolver nodeResolver,
+    public CMDINodePresentationProvider(
             @Qualifier("imdiTemplates") Templates imdiTemplates,
             @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
-        this.nodeResolver = nodeResolver;
         this.imdiTemplates = imdiTemplates;
         this.cmdiTemplates = cmdiTemplates;
     }

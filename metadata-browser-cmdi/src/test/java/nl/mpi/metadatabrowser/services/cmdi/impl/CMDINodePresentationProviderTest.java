@@ -16,6 +16,9 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode;
 import java.net.URL;
 import java.util.Arrays;
@@ -23,6 +26,9 @@ import java.util.Date;
 import javax.xml.transform.Result;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamSource;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.FileInfo;
@@ -101,7 +107,7 @@ public class CMDINodePresentationProviderTest {
             }
         });
 
-        instance = new CMDINodePresentationProvider(nodeResolver, imdiTemplates, cmdiTemplates);
+        instance = new CMDINodePresentationProvider(imdiTemplates, cmdiTemplates);
     }
 
     @After
@@ -250,5 +256,22 @@ public class CMDINodePresentationProviderTest {
         assertThat(result, instanceOf(ResourcePresentation.class));
         assertEquals(result.getId(), "test");
     }
+
+    @Test
+    public void testStylesheetsCmdi() throws Exception {
+        createTemplates(CMDINodePresentationProvider.CMDI_XSL);
+    }
+
+    @Test
+    public void testStylesheetsImdi() throws Exception {
+        createTemplates(CMDINodePresentationProvider.IMDI_XSL);
+    }
+
+    private void createTemplates(final String xsltResource) throws IOException, TransformerFactoryConfigurationError, TransformerConfigurationException, URISyntaxException {
+        final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        final StreamSource streamSource = new StreamSource(new File(getClass().getResource(xsltResource).toURI()));
+        transformerFactory.newTemplates(streamSource);
+    }
+
     //TODO: Add cases for IMDI, resource and fallback presentation
 }

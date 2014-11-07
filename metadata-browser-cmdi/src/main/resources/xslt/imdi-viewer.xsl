@@ -749,10 +749,10 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
         <xsl:param name="group-name"/>
         <xsl:param name="group-info"/>
         <xsl:param name="id"/>
-        <xsl:variable name="xpath-id">
+<!--        <xsl:variable name="xpath-id">
             <xsl:value-of select="saxon:path()"/>
         </xsl:variable>
-        <div>
+-->        <div>
             <xsl:attribute name="class">IMDI_group_header_dynamic</xsl:attribute>
             <xsl:if test="$IMAGE_CLOSED">
                 <img class="IMDI_click_image">
@@ -767,9 +767,9 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                 </img>
             </xsl:if>
             <span class="IMDI_group_header_link">
-                <xsl:attribute name="id">
+                <!--<xsl:attribute name="id">
                     <xsl:value-of select="$xpath-id"/>
-                </xsl:attribute>
+                </xsl:attribute>-->
                 <xsl:element name="a">
                     <xsl:attribute name="href">
                         <xsl:text>javascript:</xsl:text>
@@ -796,9 +796,9 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             <xsl:attribute name="class">
                 <xsl:text>IMDI_group_header_static</xsl:text>
             </xsl:attribute>
-            <xsl:attribute name="id">
+<!--            <xsl:attribute name="id">
                 <xsl:value-of select="saxon:path()"/>
-            </xsl:attribute>
+            </xsl:attribute>-->
             <xsl:value-of select="$group-name"/>
         </div>
     </xsl:template>
@@ -809,17 +809,17 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
         <xsl:param name="level"/>
         <xsl:param name="name"/>
         <xsl:param name="value"/>
-        <xsl:variable name="xpath-id">
+<!--        <xsl:variable name="xpath-id">
             <xsl:value-of select="saxon:path()"/>
         </xsl:variable>
-        <div class="IMDI_name_value">
+-->        <div class="IMDI_name_value">
             <span>
                 <xsl:attribute name ="class">
                     <xsl:text>IMDI_label</xsl:text>
                 </xsl:attribute>
-                <xsl:attribute name="id">
+               <!-- <xsl:attribute name="id">
                     <xsl:value-of select="$xpath-id"/>
-                </xsl:attribute>
+                </xsl:attribute>-->
                 <xsl:copy-of select="$name"/>
             </span>
             <span class="IMDI_value">
@@ -835,17 +835,17 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
         <xsl:param name="level"/>
         <xsl:param name="name"/>
         <xsl:param name="value"/>
-        <xsl:variable name="xpath-id">
+        <!--<xsl:variable name="xpath-id">
             <xsl:value-of select="saxon:path()"/>
-        </xsl:variable>
+        </xsl:variable>-->
         <div class="IMDI_key_name_value">
             <span>
                 <xsl:attribute name ="class">
                     <xsl:text>IMDI_key_label</xsl:text>
                 </xsl:attribute>
-                <xsl:attribute name="id">
+               <!-- <xsl:attribute name="id">
                     <xsl:value-of select="$xpath-id"/>
-                </xsl:attribute>
+                </xsl:attribute>-->
                 <xsl:copy-of select="$name"/>
             </span>
             <span class="IMDI_key_value">
