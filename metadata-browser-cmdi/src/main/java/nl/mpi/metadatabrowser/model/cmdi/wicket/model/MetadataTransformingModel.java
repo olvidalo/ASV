@@ -33,6 +33,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICorpusType;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+import nl.mpi.metadatabrowser.services.TemplatesStore;
 import nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider;
 import nl.mpi.metadatabrowser.wicket.MetadataBrowserServicesLocator;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -48,19 +49,19 @@ import org.slf4j.LoggerFactory;
 public final class MetadataTransformingModel extends AbstractReadOnlyModel<String> {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
-    private final Templates templates;
+    private final String templatesKey;
     private final TypedCorpusNode node;
 
     /**
      * model Constructor, set parameters and call for transformation
      *
      * @param node TypedCorusNode, node to be transformed
-     * @param templates, Templates, template to be use for transformation
-     * (either cmdi or imdi)
+     * @param templatesKey, Key oftemplate to be use for transformation
+     * (retrieved on the fly from the registered {@link TemplatesStore})
      */
-    public MetadataTransformingModel(TypedCorpusNode node, Templates templates) {
+    public MetadataTransformingModel(TypedCorpusNode node, String templatesKey) {
         this.node = node;
-        this.templates = templates; //TODO: get templates out of some store (on basis of key) rather than keep in model?
+        this.templatesKey = templatesKey; //TODO: get templates out of some store (on basis of key) rather than keep in model?
     }
 
     @Override
@@ -74,10 +75,10 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
 
     private String transform() throws NodePresentationException, IllegalArgumentException, NodeTypeIdentifierException {
         try {
-            logger.debug("Transforming node {} using templates {}", node, templates);
+            logger.debug("Transforming node {} using templates {}", node, templatesKey);
             StringWriter strWriter = new StringWriter();
             try (final InputStream in = getServicesLocator().getNodeResolver().getInputStream(node)) {
-                final Transformer transformer = templates.newTransformer();
+                final Transformer transformer = getTemplates().newTransformer();
                 // set transformer options
                 transformer.setParameter("CORPUS_LINKING", "false");
                 transformer.setParameter("DOCUMENT_ID", node.toString());
@@ -88,14 +89,22 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
             }
 
             // write to wicket the result of the parsing - not escaping model string so as to pass through the verbatim HTML 
-            return strWriter.toString(); 
-       } catch (IOException ex) {
+            return strWriter.toString();
+        } catch (IOException ex) {
             throw new NodePresentationException("Could not read metadata for transformation", ex);
         } catch (TransformerException ex) {
             throw new NodePresentationException("Could not transform metadata", ex);
         } catch (NodeTypeIdentifierException ex) {
             throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
         }
+    }
+
+    private Templates getTemplates() throws NodePresentationException {
+        final Templates templates = getServicesLocator().getTemplatesProvider().getTemplates(templatesKey);
+        if (templates == null) {
+            throw new NodePresentationException("No template found for key: " + templatesKey);
+        }
+        return templates;
     }
 
     /**

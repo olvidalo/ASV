@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.wicket;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.TemplatesStore;
 
 /**
  * Locator interface to be used in (exceptional!) cases where dependency
@@ -34,6 +35,8 @@ public interface MetadataBrowserServicesLocator {
     NodeTypeIdentifier getNodeTypeIdentifier();
 
     CorpusStructureProvider getCorpusStructureProvider();
+    
+    TemplatesStore getTemplatesProvider();
 
     /**
      * Instance where a singleton instance of the service locator can be registered

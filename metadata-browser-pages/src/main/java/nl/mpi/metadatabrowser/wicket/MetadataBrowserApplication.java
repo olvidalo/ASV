@@ -3,6 +3,7 @@ package nl.mpi.metadatabrowser.wicket;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.TemplatesStore;
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -23,6 +24,9 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
 
     @Autowired
     private NodeTypeIdentifier nodeTypeIdentifier;
+    
+    @Autowired
+    private TemplatesStore templatesProvider;
 
     /**
      * @see org.apache.wicket.Application#getHomePage()
@@ -63,5 +67,10 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
     @Override
     public CorpusStructureProvider getCorpusStructureProvider() {
         return corpusStructureProvider;
+    }
+
+    @Override
+    public TemplatesStore getTemplatesProvider() {
+        return templatesProvider;
     }
 }

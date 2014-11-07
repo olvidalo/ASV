@@ -14,8 +14,8 @@
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>cmdi2xhtml collection</String>
                                         <String>cmdi2xhtml DiscAn</String>
+                                        <String>cmdi2xhtml collection</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">

@@ -44,8 +44,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  *
@@ -57,20 +55,13 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     public static final String IMDI_XSL = "/xslt/imdi-viewer.xsl";
     public static final String CMDI_XSL = "/xslt/cmdi2xhtml.xsl";
-    private final Templates imdiTemplates;
-    private final Templates cmdiTemplates;
 
     /**
      *
      * @param imdiTemplates
      * @param cmdiTemplates
      */
-    @Autowired
-    public CMDINodePresentationProvider(
-            @Qualifier("imdiTemplates") Templates imdiTemplates,
-            @Qualifier("cmdiTemplates") Templates cmdiTemplates) {
-        this.imdiTemplates = imdiTemplates;
-        this.cmdiTemplates = cmdiTemplates;
+    public CMDINodePresentationProvider() {
     }
 
     @Override
@@ -112,14 +103,12 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
         return contentLabel;
     }
 
-    private Templates getTemplates(final TypedCorpusNode node) {
+    private String getTemplates(final TypedCorpusNode node) {
         final NodeType nodeType = node.getNodeType();
-        final Templates templates;
         if (nodeType instanceof IMDICorpusType || nodeType instanceof IMDISessionType || nodeType instanceof IMDICatalogueType) {
-            templates = imdiTemplates;
+            return TemplateKeys.IMDI;
         } else {
-            templates = cmdiTemplates;
+            return TemplateKeys.CMDI;
         }
-        return templates;
     }
 }

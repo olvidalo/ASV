@@ -23,6 +23,8 @@ import nl.mpi.metadatabrowser.services.cmdi.mock.MockTypedCorpusNode;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.transform.Result;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -41,6 +43,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
+import nl.mpi.metadatabrowser.services.TemplatesStore;
 import nl.mpi.metadatabrowser.wicket.MetadataBrowserServicesLocator;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTester;
@@ -105,9 +108,18 @@ public class CMDINodePresentationProviderTest {
             public CorpusStructureProvider getCorpusStructureProvider() {
                 return csProvider;
             }
+
+            @Override
+            public TemplatesStore getTemplatesProvider() {
+                final Map<String, Templates> templates = new HashMap<>();
+                templates.put(TemplateKeys.IMDI, imdiTemplates);
+                templates.put(TemplateKeys.CMDI, cmdiTemplates);
+                return new TemplatesStore(templates);
+            }
+
         });
 
-        instance = new CMDINodePresentationProvider(imdiTemplates, cmdiTemplates);
+        instance = new CMDINodePresentationProvider();
     }
 
     @After
