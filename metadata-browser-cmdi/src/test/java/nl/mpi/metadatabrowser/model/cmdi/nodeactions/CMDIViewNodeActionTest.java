@@ -17,20 +17,20 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.jmock.Expectations.returnValue;
@@ -41,66 +41,113 @@ import static org.junit.Assert.*;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class CMDIViewNodeActionTest {
-    
+
     private final NodeActionsConfiguration nodeActionsConfiguration = new NodeActionsConfiguration();
     private final Mockery context = new JUnit4Mockery();
-    private final static URI NODE_ID = URI.create("node:1");
-    
-    public CMDIViewNodeActionTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+
+    private AuthenticationHolder auth;
+    private NodeResolver nodeResolver;
+    private AccessChecker accessChecker;
+    private FilterNodeIds filter;
+    private TypedCorpusNode node;
+    private CMDIViewNodeAction instance;
+
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        node = context.mock(TypedCorpusNode.class, "parent");
+        filter = context.mock(FilterNodeIds.class);
+        accessChecker = context.mock(AccessChecker.class);
+        nodeResolver = context.mock(NodeResolver.class);
+        auth = context.mock(AuthenticationHolder.class);
+        nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
+
+        instance = new CMDIViewNodeAction(nodeActionsConfiguration, nodeResolver, filter, accessChecker);
+        instance.setAuthenticationHolder(auth);
     }
 
     /**
      * Test of execute method, of class CMDIViewNodeAction.
      */
     @Test
-    public void testExecute() throws Exception {
-        System.out.println("execute");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final FilterNodeIds filter = context.mock(FilterNodeIds.class);
-        final AccessChecker accessChecker = context.mock(AccessChecker.class);
-        final AuthenticationHolder auth = context.mock(AuthenticationHolder.class);
-        nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
+    public void testExecuteView() throws Exception {
         context.checking(new Expectations() {
             {
                 allowing(node).getNodeType();
                 will(returnValue(context.mock(NodeType.class)));
-                
+
                 allowing(node).getName();
                 will(returnValue("parent.jpg"));
-                
+
                 oneOf(auth).getPrincipalName();
                 will(returnValue("user"));
-                
+
                 oneOf(node).getNodeURI();
                 will(returnValue(URI.create("node:123")));
-                
+
                 oneOf(accessChecker).hasAccess("user", URI.create("node:123"));
                 will(returnValue(true));
             }
         });
-        
-        final CMDIViewNodeAction instance = new CMDIViewNodeAction(nodeActionsConfiguration, filter, accessChecker);
-        instance.setAuthenticationHolder(auth);
-        
-        NodeActionResult result = instance.execute(node);
-        ControllerActionRequest actionRequest = result.getControllerActionRequest();
-        assertNotNull(actionRequest);
+
+        final NodeActionResult result = instance.execute(node);
+        final ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertTrue(actionRequest instanceof ShowComponentRequest);
     }
-    //TODO: Add test for view node action cases
+
+    /**
+     * Test of execute method, of class CMDIViewNodeAction.
+     */
+    @Test
+    public void testExecuteAnnex() throws Exception {
+        context.checking(new Expectations() {
+            {
+                allowing(node).getNodeType();
+                will(returnValue(context.mock(NodeType.class)));
+
+                allowing(node).getName();
+                will(returnValue("parent.eaf"));
+
+                oneOf(nodeResolver).getPID(node);
+                will(returnValue(URI.create("hdl:1234/5678-abcd")));
+            }
+        });
+
+        final NodeActionResult result = instance.execute(node);
+        final ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertTrue(actionRequest instanceof NavigationActionRequest);
+        NavigationActionRequest navRequest = (NavigationActionRequest) actionRequest;
+        assertTrue(navRequest.getTargetURL().toString().contains("handle=hdl:1234/5678-abcd"));
+    }
+
+    /**
+     * Test of execute method, of class CMDIViewNodeAction.
+     */
+    @Test
+    public void testExecuteAnnexNoPid() throws Exception {
+        final URI nodeId = URI.create("node:123");
+        context.checking(new Expectations() {
+            {
+                allowing(node).getNodeType();
+                will(returnValue(context.mock(NodeType.class)));
+
+                allowing(node).getName();
+                will(returnValue("parent.eaf"));
+
+                oneOf(nodeResolver).getPID(node);
+                will(returnValue(null));
+
+                oneOf(node).getNodeURI();
+                will(returnValue(nodeId));
+
+                oneOf(filter).getURIParam(nodeId);
+                will(returnValue("NODE-ID-PARAM"));
+            }
+        });
+
+        final NodeActionResult result = instance.execute(node);
+        final ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertTrue(actionRequest instanceof NavigationActionRequest);
+        NavigationActionRequest navRequest = (NavigationActionRequest) actionRequest;
+        assertTrue(navRequest.getTargetURL().toString().contains("nodeid=NODE-ID-PARAM"));
+    }
 }

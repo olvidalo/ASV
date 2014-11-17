@@ -21,6 +21,7 @@ import java.net.URI;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -57,18 +58,22 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final FilterNodeIds nodeIdFilter;
     private final AccessChecker accessChecker;
+    private final NodeResolver nodeResolver;
 
     /**
      * Action class are autowired in nodeActions.xml
      *
      * @param nodeActionsConfiguration NodeActionsConfiguration, get Annex url
+     * @param nodeResolver node resolver
      * @param nodeIdFilter Node ID filter
+     * @param accessChecker access checker
      */
     @Autowired
-    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds nodeIdFilter, AccessChecker accessChecker) {
+    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, FilterNodeIds nodeIdFilter, AccessChecker accessChecker) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.nodeIdFilter = nodeIdFilter;
         this.accessChecker = accessChecker;
+        this.nodeResolver = nodeResolver;
     }
 
     @Override
@@ -98,16 +103,15 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
     }
 
     private NodeActionResult createAnnexRequest(final TypedCorpusNode node) throws IllegalArgumentException, UriBuilderException {
-        //TODO get session id
-        final String nodeId = nodeIdFilter.getURIParam(node.getNodeURI());
-
+        final URI pid = nodeResolver.getPID(node);
         final URI targetURI;
         {
             final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-            if ((nodeId.startsWith("hdl")) || nodeId.startsWith("1839")) { //TODO: remove hard coded handle prefix
-                targetURI = uriBuilder.queryParam("handle", nodeId).build();
-            } else {
+            if (pid == null) {
+                final String nodeId = nodeIdFilter.getURIParam(node.getNodeURI());
                 targetURI = uriBuilder.queryParam("nodeid", nodeId).build();
+            } else {
+                targetURI = uriBuilder.queryParam("handle", pid.toString()).build();
             }
         }
 
