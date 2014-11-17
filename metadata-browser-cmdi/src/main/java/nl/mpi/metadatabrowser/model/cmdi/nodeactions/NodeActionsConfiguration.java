@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 
-//@PropertySource(value = "classpath:config/production/defaultServiceLocations.properties")
 /**
  * Configuration class that holds all the getters and setters for each parameter
  * needed. Parameters are defined in the context.xml from tomcat
