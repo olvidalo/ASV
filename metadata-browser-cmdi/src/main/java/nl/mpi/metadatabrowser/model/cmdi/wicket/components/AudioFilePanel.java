@@ -16,13 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -43,8 +43,8 @@ public final class AudioFilePanel extends Panel {
     @SpringBean
     private NodeResolver resolver;
     @SpringBean
-    private NodeActionsConfiguration nodeActionsConfiguration;
-    
+    private URIFilter nodeUriFilter;
+
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     /**
@@ -57,14 +57,21 @@ public final class AudioFilePanel extends Panel {
     public AudioFilePanel(String id, TypedCorpusNode node) {
         super(id);
         final List<MediaSource> mm = new ArrayList<MediaSource>();
-        final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
-        Label resourcelabel;
-        boolean haswav = true;
+        String nodeURL;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeURL = resolver.getUrl(node).toString();
+        }
         add(new Label("viewTitle", "Listening to " + node.getName()));
-        if (node.getName().endsWith(".wav")) {
-            mm.add(new MediaSource(nodeURL.toString()));
+        final boolean haswav = node.getName().endsWith(".wav");
+        if (haswav) {
+            mm.add(new MediaSource(nodeURL));
 //                  mm.add(new MediaSource(url in ogg format)); // ideally supported but not for now
-            resourcelabel = new Label("altView", ""); // used for wicket id
+            Label resourcelabel = new Label("altView", ""); // used for wicket id
             resourcelabel.setVisibilityAllowed(false);
             add(resourcelabel);
         } else { // backup to display audio in iframe. No html5
@@ -74,10 +81,9 @@ public final class AudioFilePanel extends Panel {
             sb.append(nodeURL.toString());
             sb.append("\">");
             sb.append("</iframe>");
-            resourcelabel = new Label("altView", sb.toString());
+            Label resourcelabel = new Label("altView", sb.toString());
             resourcelabel.setEscapeModelStrings(false);
             add(resourcelabel);
-            haswav = false;
         }
 
         IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {

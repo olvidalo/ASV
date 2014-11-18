@@ -9,6 +9,21 @@ from 1.0 to >= 1.1
 		e.g.  <Parameter name="nl.mpi.translationservicebase"
 						 value="https://lux16.mpi.nl/ds/TranslationService" />
 						 
+
+	- add new context parameters nl.mpi.metadatabrowser.schemeReplacePrefix and
+								 nl.mpi.metadatabrowser.schemeReplaceTargetScheme
+				(which replace nl.mpi.imdiBrowser.forceHttpOrHttps and
+							   nl.mpi.imdiBrowser.forceHttpsPrefix)
+						 
+      e.g.:
+      <Parameter name="nl.mpi.metadatabrowser.schemeReplacePattern"
+         value="^http:\/\/lux16\.mpi\.nl"
+         description="URLs matching this regex will have their scheme rewritten" />
+         
+      <Parameter name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"
+         value="https"
+         description="protocol enforcement on matching URLs, e.g. http or https" />
+						 
 from version 1.0-Alpha
     - add new parameter yamsSearchURL as below
           <Parameter name="nl.mpi.yamsSearchUrl"

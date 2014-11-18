@@ -28,6 +28,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import static org.jmock.Expectations.returnValue;
@@ -47,6 +48,7 @@ import org.junit.Test;
 public class CMDISearchNodeActionTest {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
+    private URIFilter uriFilter;
     private FilterNodeIds filterIdProvider;
     private Mockery context;
     private static URI NODE_ID;
@@ -60,7 +62,8 @@ public class CMDISearchNodeActionTest {
     public void setUp() {
         nodeActionsConfiguration = new NodeActionsConfiguration();
         context = new JUnit4Mockery();
-        filterIdProvider = context.mock(FilterNodeIds.class); //new MockFilterNodeId();       
+        filterIdProvider = context.mock(FilterNodeIds.class);
+        uriFilter = context.mock(URIFilter.class);
         NODE_ID = URI.create("node:1");
         NODE_PID = URI.create("11142/123456789101");
 //        node = new MockTypedCorpusNode(new IMDISessionType(), "node:0", "parent");
@@ -77,7 +80,7 @@ public class CMDISearchNodeActionTest {
     public void testGetName() {
         final NodeResolver nodeResolver = context.mock(NodeResolver.class);
         System.out.println("getName");
-        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider, nodeResolver);
+        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider, nodeResolver, uriFilter);
         String expResult = "Metadata Search";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -115,7 +118,7 @@ public class CMDISearchNodeActionTest {
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getMdSearchURL());
         URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_number")).build();
 
-        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider, nodeResolver);
+        CMDISearchNodeAction instance = new CMDISearchNodeAction(nodeActionsConfiguration, filterIdProvider, nodeResolver, uriFilter);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("Metadata Search", instance.getName());
 
@@ -159,7 +162,7 @@ public class CMDISearchNodeActionTest {
         });
 
         CMDISearchNodeAction instance = new CMDISearchNodeAction(
-                nodeActionsConfiguration, filterIdProvider, resolver);
+                nodeActionsConfiguration, filterIdProvider, resolver, uriFilter);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("Metadata Search", instance.getName());
 

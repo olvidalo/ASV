@@ -28,8 +28,8 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Session;
@@ -55,12 +55,14 @@ public class PanelVersionComponent extends Panel {
     @SpringBean
     private AccessChecker accessChecker;
     @SpringBean
-    private NodeActionsConfiguration nodeActionsConfiguration;
-    private final NodeResolver resolver;
+    private CorpusStructureProvider csdb;
+    @SpringBean
+    private NodeResolver resolver;
+    @SpringBean
+    private URIFilter nodeUriFilter;
 
-    public PanelVersionComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver, String userid, MockVersioningAPI versions) {
+    public PanelVersionComponent(String id, TypedCorpusNode node, String userid, MockVersioningAPI versions) {
         super(id);
-        this.resolver = nodeResolver;
         try {
             List versionsNodeIds = null;
 
@@ -108,9 +110,18 @@ public class PanelVersionComponent extends Panel {
             // for each loop add a row
             AbstractItem item = new AbstractItem(repeating.newChildId());
             repeating.add(item);
-            URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
-            URL currentNodeUrlStr = resolver.getUrl(node);
-            String secureCurrentNodeUrlStr = nodeActionsConfiguration.processLinkProtocol(currentNodeUrlStr.toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));// request.isSecure() unless override active
+            final URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
+
+            String secureCurrentNodeUrlStr;
+            try {
+                // allow filter to rewrite, e.g. http->https
+                secureCurrentNodeUrlStr = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+            } catch (URISyntaxException ex) {
+                // highly unlikely
+                logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+                secureCurrentNodeUrlStr = resolver.getUrl(node).toString();
+            }
+
             // add fields for each row
             Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
             item.add(new Label("hasaccess", hasaccess.toString()));

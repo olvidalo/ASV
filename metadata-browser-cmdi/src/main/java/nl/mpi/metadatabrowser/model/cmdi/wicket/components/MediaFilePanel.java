@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
@@ -25,6 +26,7 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -49,8 +51,8 @@ public final class MediaFilePanel extends Panel {
     @SpringBean
     private CorpusStructureProvider csdb;
     @SpringBean
-    private NodeActionsConfiguration nodeActionsConfiguration;
-    
+    private URIFilter nodeUriFilter;
+
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     /**
@@ -63,7 +65,17 @@ public final class MediaFilePanel extends Panel {
     public MediaFilePanel(String id, TypedCorpusNode node) {
         super(id);
         final List<MediaSource> mm = new ArrayList<>();
-        final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
+
+        String nodeURL;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeURL = resolver.getUrl(node).toString();
+        }
+
         Label resourcelabel;
         add(new Label("viewTitle", "Viewing " + node.getName()));
         boolean hasmp4 = false; // use to display video without mp4 double. Alternative display to html5
@@ -74,7 +86,18 @@ public final class MediaFilePanel extends Panel {
                 String name = FilenameUtils.removeExtension(node.getName());
                 String childNodeName = FilenameUtils.removeExtension(childNode.getName());
                 if (name.equals(childNodeName)) { // name comparison. Should be same node if only extension differs within the same session
-                    final String childNodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(childNode).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
+
+                    String childNodeURL;
+                    try {
+                        // allow filter to rewrite, e.g. http->https
+                        childNodeURL = nodeUriFilter.filterURI(resolver.getUrl(childNode).toURI()).toString();
+                    } catch (URISyntaxException ex) {
+                        // highly unlikely
+                        logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+                        childNodeURL = resolver.getUrl(node).toString();
+                    }
+
+                    // allow filter to rewrite, e.g. http->https
                     mm.add(new MediaSource(childNodeURL, "video/mp4"));
 //                  mm.add(new MediaSource(url in ogg format, "video/ogg.")); // ideally supported but not for now
                     hasmp4 = true;
@@ -86,7 +109,7 @@ public final class MediaFilePanel extends Panel {
                 }
             }
         }
-        if (!hasmp4) { // backup to display video in iframe. No html5
+        if (!hasmp4) { // backup to display video in iframe. No html5            
             StringBuilder sb = new StringBuilder();
             // create label for resource
             sb.append("<iframe id=\"viewFrame\" src=\"");

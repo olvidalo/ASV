@@ -16,12 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
+import java.net.URISyntaxException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * IFrame that simply embeds a resource by its URL
@@ -32,14 +36,26 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 public final class ViewInfoFile extends Panel {
 
     @SpringBean
-    NodeActionsConfiguration nodeActionsConfiguration;
+    private NodeActionsConfiguration nodeActionsConfiguration;
     @SpringBean
-    NodeResolver nodeResolver;
+    private NodeResolver nodeResolver;
+    @SpringBean
+    private URIFilter nodeUriFilter;
+
+    private final static Logger logger = LoggerFactory.getLogger(ViewInfoFile.class);
 
     public ViewInfoFile(String id, TypedCorpusNode node) {
         super(id);
-        //final MarkupContainer viewContainer = new WebMarkupContainer("viewContainer");
-        final String nodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
+
+        String nodeURL;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeURL = nodeUriFilter.filterURI(nodeResolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeURL = nodeResolver.getUrl(node).toString();
+        }
 
 //        if (node.getNodeType() instanceof IMDIResourcePictureType) {
         StringBuilder sb = new StringBuilder();

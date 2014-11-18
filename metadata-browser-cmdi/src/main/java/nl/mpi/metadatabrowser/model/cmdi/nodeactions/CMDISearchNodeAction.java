@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -33,6 +34,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +52,23 @@ public class CMDISearchNodeAction implements NodeAction {
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final FilterNodeIds filterNodeId;
     private final NodeResolver nodeResolver;
+    private final URIFilter uriFilter;
 
+    /**
+     *
+     * @param nodeActionsConfiguration
+     * @param filterNodeIds filter that rewrites node IDs when passed as query
+     * parameters
+     * @param nodeResolver
+     * @param nodeUriFilter filter that rewrites a node URL (e.g. to intercept
+     * non-HTTPS URIs)
+     */
     @Autowired
-    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds, NodeResolver nodeResolver) {
+    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds, NodeResolver nodeResolver, URIFilter nodeUriFilter) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.filterNodeId = filterNodeIds;
         this.nodeResolver = nodeResolver;
+        this.uriFilter = nodeUriFilter;
     }
 
     @Override
@@ -72,50 +85,45 @@ public class CMDISearchNodeAction implements NodeAction {
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
         URI targetURI = null;
-//        NavigationActionRequest request = null;
-        ShowComponentRequest request;
-        UriBuilder uriBuilder;
         String wraphandleOrNodeURL;
+        //TODO: deal with multiple nodes properly
         for (TypedCorpusNode node : nodes) {
             if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
-                //Buil redirect to CMDI Search
-                uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getYamsSearchURL());
-                URI handle = nodeResolver.getPID(node);
-                if (handle == null) { // can be null, pass URL instead
-                    wraphandleOrNodeURL = nodeActionsConfiguration.processLinkProtocol(nodeResolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
-                    targetURI = uriBuilder.queryParam("url", wraphandleOrNodeURL).build();
-                } else {
-                    wraphandleOrNodeURL = handle.toString();
-                    if (handle.toString().contains(":")) {
-                        wraphandleOrNodeURL = handle.toString().split(":")[1];
+                try {
+                    //Buil redirect to CMDI Search
+                    final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getYamsSearchURL());
+                    final URI handle = nodeResolver.getPID(node);
+                    if (handle == null) { // can be null, pass URL instead
+                        // allow filter to rewrite, e.g. http->https
+                        wraphandleOrNodeURL = uriFilter.filterURI(nodeResolver.getUrl(node).toURI()).toString();
+                        targetURI = uriBuilder.queryParam("url", wraphandleOrNodeURL).build();
+                    } else {
+                        wraphandleOrNodeURL = handle.toString();
+                        if (handle.toString().contains(":")) {
+                            wraphandleOrNodeURL = handle.toString().split(":")[1];
+                        }
+                        targetURI = uriBuilder.queryParam("hdl", wraphandleOrNodeURL).build();
                     }
-                    targetURI = uriBuilder.queryParam("hdl", wraphandleOrNodeURL).build();
+                } catch (URISyntaxException ex) {
+                    throw new NodeActionException(this, "Invalid URI for node", ex);
                 }
-
             } else {
                 //Buil redirect to IMDI Search
-                URI nodeId = node.getNodeURI();
-                String nodeid = filterNodeId.getURIParam(nodeId);
-                uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
-                uriBuilder = uriBuilder.queryParam("nodeid", nodeid);
+                final URI nodeId = node.getNodeURI();
+                final String nodeid = filterNodeId.getURIParam(nodeId);
+                final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL()).queryParam("nodeid", nodeid);
                 targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
             }
         }
         if (targetURI != null) {
             final String redirectURL = targetURI.toString();
-            request = new ShowComponentRequest() {
+            final ShowComponentRequest request = new ShowComponentRequest() {
 
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
                     return new PanelEmbedActionDisplay(id, redirectURL);
                 }
             };
-//        try {
-//            request = new NavigationActionRequest(targetURI.toURL());
-//        } catch (MalformedURLException ex) {
-//            logger.error("URL syntax exception:" + ex);
-//        }
-
             return new SimpleNodeActionResult(request);
         } else {
             throw new NodeActionException(this, "target uri could not be build. This is likely to happen when no node was found. If this is not the case please check configuration paramters.");

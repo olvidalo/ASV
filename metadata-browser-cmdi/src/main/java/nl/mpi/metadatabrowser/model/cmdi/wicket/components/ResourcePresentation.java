@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -35,6 +36,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.URIFilter;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
@@ -69,6 +71,8 @@ public final class ResourcePresentation extends Panel {
     protected AuthenticationHolder auth;
     @SpringBean
     private NodeActionsConfiguration nodeActionsConfiguration;
+    @SpringBean
+    private URIFilter nodeUriFilter;
     private final ResourceReference openIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_green.png");
     private final ResourceReference licensedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_yellow.png");
     private final ResourceReference restrictedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_orange.png");
@@ -81,7 +85,17 @@ public final class ResourcePresentation extends Panel {
         //String nodeId = Integer.toString(node.getNodeURI());
         final String userid = auth.getPrincipalName();
         String nodeid = filterNodeId.getURIParam(node.getNodeURI());
-        final String nodeURL = nodeActionsConfiguration.processLinkProtocol(resolver.getUrl(node).toString(), nodeActionsConfiguration.getForceHttpOrHttps().equals("https"));
+        
+        String nodeURL;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeURL = resolver.getUrl(node).toString();
+        }
+
         if (nodeURL != null) {
             try {
                 addContent(userid, node, nodeid, nodeURL);

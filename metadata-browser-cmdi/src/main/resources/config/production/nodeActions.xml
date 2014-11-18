@@ -21,7 +21,18 @@
     <context:annotation-config />
     <!-- Node actions are components, use component scan to autoinstantiate -->
     <context:component-scan base-package="nl.mpi.metadatabrowser.model.cmdi.nodeactions" />
-
+    
+    <!-- Load properties from context.xml via servlet container -->
+    <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="false" />
+    </bean>
+    
     <!-- Node actions get injected into actions provider. TODO: Define mapping here! -->
     <bean id="nodeActionsProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDIActionsProvider" />
+   
+    <!-- Filter that rewrites e.g. http URIs to https or the other way around -->
+    <bean id="uriFilter" class="nl.mpi.metadatabrowser.services.cmdi.impl.URISchemeRewriteFilter">
+        <constructor-arg name="prefixPattern" value="${nl.mpi.metadatabrowser.schemeReplacePattern}" />
+        <constructor-arg name="targetScheme" value="${nl.mpi.metadatabrowser.schemeReplaceTargetScheme}" />
+    </bean>
 </beans>

@@ -60,7 +60,7 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
             @Override
             public org.apache.wicket.Component getComponent(String id) {
                 // create panel form for version action
-                return new PanelVersionComponent(id, node, csdb, resolver, userid, versions);
+                return new PanelVersionComponent(id, node, userid, versions);
             }
         };
         return new SimpleNodeActionResult(request);
