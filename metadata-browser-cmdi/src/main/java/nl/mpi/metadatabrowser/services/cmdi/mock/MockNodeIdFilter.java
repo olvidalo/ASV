@@ -14,20 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.mpi.metadatabrowser.services.cmdi.filter;
+package nl.mpi.metadatabrowser.services.cmdi.mock;
 
 import java.net.URI;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class FilterNodeId implements FilterNodeIds {
+public class MockNodeIdFilter implements NodeIdFilter {
 
     @Override
     public String getURIParam(URI nodeid) {
-        return nodeid.toString();
+        return "node:1";
     }
 }

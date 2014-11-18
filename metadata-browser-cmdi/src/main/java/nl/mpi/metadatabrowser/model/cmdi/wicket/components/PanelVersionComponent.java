@@ -28,7 +28,7 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.apache.wicket.AttributeModifier;
@@ -51,7 +51,7 @@ public class PanelVersionComponent extends Panel {
 
     private final Logger logger = LoggerFactory.getLogger(PanelVersionComponent.class);
     @SpringBean
-    private FilterNodeIds filterNodeId;
+    private NodeIdFilter nodeIdFilter;
     @SpringBean
     private AccessChecker accessChecker;
     @SpringBean
@@ -126,7 +126,7 @@ public class PanelVersionComponent extends Panel {
             Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
             item.add(new Label("hasaccess", hasaccess.toString()));
             item.add(new Label("currentNodeDate", currentNodeDate.toString()));
-            item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, filterNodeId.getURIParam(node.getNodeURI())));
+            item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, nodeIdFilter.getURIParam(node.getNodeURI())));
 
             URI nodePID = resolver.getPID(node);
             if (nodePID != null) {

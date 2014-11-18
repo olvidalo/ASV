@@ -1,9 +1,3 @@
-package nl.mpi.metadatabrowser.services.cmdi.filter;
-
-import java.net.URI;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
-
 /*
  * Copyright (C) 2014 Max Planck Institute for Psycholinguistics
  *
@@ -20,14 +14,19 @@ import nl.mpi.metadatabrowser.services.FilterNodeIds;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package nl.mpi.metadatabrowser.services.cmdi.filter;
+
+import java.net.URI;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
+
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class FilterNodeId implements FilterNodeIds {
+public class IdentityNodeIdFilter implements NodeIdFilter {
 
     @Override
     public String getURIParam(URI nodeid) {
-        return AdapterUtils.toNodeIdString(nodeid);
+        return nodeid.toString();
     }
 }

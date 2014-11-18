@@ -33,7 +33,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,23 +50,23 @@ public class CMDISearchNodeAction implements NodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final FilterNodeIds filterNodeId;
+    private final NodeIdFilter nodeIdFilter;
     private final NodeResolver nodeResolver;
     private final URIFilter uriFilter;
 
     /**
      *
      * @param nodeActionsConfiguration
-     * @param filterNodeIds filter that rewrites node IDs when passed as query
+     * @param nodeIdFilter filter that rewrites node IDs when passed as query
      * parameters
      * @param nodeResolver
      * @param nodeUriFilter filter that rewrites a node URL (e.g. to intercept
      * non-HTTPS URIs)
      */
     @Autowired
-    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds, NodeResolver nodeResolver, URIFilter nodeUriFilter) {
+    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter, NodeResolver nodeResolver, URIFilter nodeUriFilter) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
-        this.filterNodeId = filterNodeIds;
+        this.nodeIdFilter = nodeIdFilter;
         this.nodeResolver = nodeResolver;
         this.uriFilter = nodeUriFilter;
     }
@@ -110,7 +110,7 @@ public class CMDISearchNodeAction implements NodeAction {
             } else {
                 //Buil redirect to IMDI Search
                 final URI nodeId = node.getNodeURI();
-                final String nodeid = filterNodeId.getURIParam(nodeId);
+                final String nodeid = nodeIdFilter.getURIParam(nodeId);
                 final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL()).queryParam("nodeid", nodeid);
                 targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
             }

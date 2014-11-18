@@ -27,7 +27,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +43,12 @@ public class CMDIRrsNodeAction implements NodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
-    private final FilterNodeIds filterNodeId;
+    private final NodeIdFilter nodeIdFilter;
 
     @Autowired
-    public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeIds) {
+    public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
-        this.filterNodeId = filterNodeIds;
+        this.nodeIdFilter = nodeIdFilter;
     }
 
     @Override
@@ -65,17 +65,17 @@ public class CMDIRrsNodeAction implements NodeAction {
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), nodes);
         URI targetURI = null;
-        ShowComponentRequest request;
         UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
+        //TODO: properly support multiple nodes
         for (TypedCorpusNode node : nodes) {
             //Buil redirect to RRS
             URI nodeId = node.getNodeURI();
-            String nodeid = filterNodeId.getURIParam(nodeId);
+            String nodeid = nodeIdFilter.getURIParam(nodeId);
             targetURI = uriBuilder.queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         }
         if (targetURI != null) {
             final String redirectURL = targetURI.toString();
-            request = new ShowComponentRequest() {
+            final ShowComponentRequest request = new ShowComponentRequest() {
 
                 @Override
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {

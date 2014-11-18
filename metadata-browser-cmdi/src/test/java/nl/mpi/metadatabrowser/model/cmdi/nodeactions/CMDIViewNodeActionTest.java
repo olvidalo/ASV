@@ -25,7 +25,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -48,14 +48,14 @@ public class CMDIViewNodeActionTest {
     private AuthenticationHolder auth;
     private NodeResolver nodeResolver;
     private AccessChecker accessChecker;
-    private FilterNodeIds filter;
+    private NodeIdFilter filter;
     private TypedCorpusNode node;
     private CMDIViewNodeAction instance;
 
     @Before
     public void setUp() {
         node = context.mock(TypedCorpusNode.class, "parent");
-        filter = context.mock(FilterNodeIds.class);
+        filter = context.mock(NodeIdFilter.class);
         accessChecker = context.mock(AccessChecker.class);
         nodeResolver = context.mock(NodeResolver.class);
         auth = context.mock(AuthenticationHolder.class);

@@ -26,8 +26,8 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeIdFilter;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import static org.jmock.Expectations.returnValue;
@@ -47,7 +47,7 @@ import org.junit.Test;
 public class CMDIAMSNodeActionTest {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
-    private FilterNodeIds filterIdProvider;
+    private NodeIdFilter filterIdProvider;
     private Mockery context;
     private static URI NODE_ID;
 
@@ -59,7 +59,7 @@ public class CMDIAMSNodeActionTest {
         context = new JUnit4Mockery();
         NODE_ID = URI.create("node:1");
         nodeActionsConfiguration = new NodeActionsConfiguration();
-        filterIdProvider = new MockFilterNodeId();
+        filterIdProvider = new MockNodeIdFilter();
     }
 
     @After

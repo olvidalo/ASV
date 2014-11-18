@@ -35,7 +35,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
 public final class ResourcePresentation extends Panel {
 
     @SpringBean
-    private FilterNodeIds filterNodeId;
+    private NodeIdFilter nodeIdFilter;
     @SpringBean
     private AccessInfoProvider accessInfoProvider;
     @SpringBean
@@ -82,10 +82,8 @@ public final class ResourcePresentation extends Panel {
 
     public ResourcePresentation(String id, TypedCorpusNode node) {
         super(id);
-        //String nodeId = Integer.toString(node.getNodeURI());
         final String userid = auth.getPrincipalName();
-        String nodeid = filterNodeId.getURIParam(node.getNodeURI());
-        
+
         String nodeURL;
         try {
             // allow filter to rewrite, e.g. http->https
@@ -98,6 +96,7 @@ public final class ResourcePresentation extends Panel {
 
         if (nodeURL != null) {
             try {
+                final String nodeid = nodeIdFilter.getURIParam(node.getNodeURI());
                 addContent(userid, node, nodeid, nodeURL);
             } catch (NodeNotFoundException ex) {
                 Session.get().error(ex);

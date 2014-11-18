@@ -39,7 +39,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeActionsConfiguration nodeActionsConfiguration;
-    private final FilterNodeIds nodeIdFilter;
+    private final NodeIdFilter nodeIdFilter;
     private final AccessChecker accessChecker;
     private final NodeResolver nodeResolver;
 
@@ -69,7 +69,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
      * @param accessChecker access checker
      */
     @Autowired
-    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, FilterNodeIds nodeIdFilter, AccessChecker accessChecker) {
+    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, NodeIdFilter nodeIdFilter, AccessChecker accessChecker) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.nodeIdFilter = nodeIdFilter;
         this.accessChecker = accessChecker;

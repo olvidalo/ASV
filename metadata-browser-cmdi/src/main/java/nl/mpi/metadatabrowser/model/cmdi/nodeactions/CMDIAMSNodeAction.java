@@ -31,7 +31,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +46,11 @@ import org.springframework.stereotype.Component;
 public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
-    private final FilterNodeIds filterIdProvider;
+    private final NodeIdFilter filterIdProvider;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Autowired
-    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration, FilterNodeIds filterIdProvider) {
+    public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration, NodeIdFilter filterIdProvider) {
         this.nodeActionsConfiguration = nodeActionsCongiguration;
         this.filterIdProvider = filterIdProvider;
     }

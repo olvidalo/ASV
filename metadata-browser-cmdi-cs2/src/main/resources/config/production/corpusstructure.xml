@@ -28,7 +28,7 @@
     <bean id="providerFactory" class="nl.mpi.metadatabrowser.services.cmdi.provider.ProductionCorpusStructureProviderFactory" />
 
     <!-- Provider for correct id format. This used to get the appropriate ID as string and prevent a dependency to the Adapter in the cmdi implementation. -->
-    <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.FilterNodeId"/>
+    <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.IdentityNodeIdFilter"/>
 
     <!-- CSDB created from factory -->
     <bean id="corpusStructureProvider" factory-bean="providerFactory" factory-method="createCorpusStructureProvider" />

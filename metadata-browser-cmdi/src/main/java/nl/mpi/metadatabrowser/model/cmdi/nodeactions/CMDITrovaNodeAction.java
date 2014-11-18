@@ -27,7 +27,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +43,12 @@ public class CMDITrovaNodeAction implements NodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final FilterNodeIds filterNodeId;
+    private final NodeIdFilter nodeIdFilter;
 
     @Autowired
-    public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration, FilterNodeIds filterNodeId) {
+    public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
-        this.filterNodeId = filterNodeId;
+        this.nodeIdFilter = nodeIdFilter;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CMDITrovaNodeAction implements NodeAction {
         for (TypedCorpusNode node : nodes) {
             //Buil redirect to trova action
             URI nodeId = node.getNodeURI();
-            String nodeid = filterNodeId.getURIParam(nodeId);
+            String nodeid = nodeIdFilter.getURIParam(nodeId);
             targetURI = uriBuilder.queryParam("nodeid", nodeid).build();
         }
         if (targetURI != null) {

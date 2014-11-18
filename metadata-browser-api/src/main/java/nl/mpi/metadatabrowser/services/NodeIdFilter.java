@@ -23,7 +23,7 @@ import java.net.URI;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface FilterNodeIds extends Serializable {
+public interface NodeIdFilter extends Serializable {
 
     String getURIParam(URI nodeid);
 }

@@ -24,8 +24,8 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeIdFilter;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -44,7 +44,7 @@ import org.junit.Test;
 public class CMDITrovaNodeActionTest {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
-    private FilterNodeIds filterIdProvider;
+    private NodeIdFilter filterIdProvider;
     private Mockery context;
     private static URI NODE_ID;
     private static URI NODE_ID2;
@@ -58,7 +58,7 @@ public class CMDITrovaNodeActionTest {
         context = new JUnit4Mockery();
         URI NODE_ID = URI.create("node:1");
         URI NODE_ID2 = URI.create("node:2");
-        filterIdProvider = new MockFilterNodeId();
+        filterIdProvider = new MockNodeIdFilter();
     }
 
     @After

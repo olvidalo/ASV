@@ -24,8 +24,8 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockFilterNodeId;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeIdFilter;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -44,7 +44,7 @@ import org.junit.Test;
 public class CMDIRrsNodeActionTest {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
-    private FilterNodeIds filterNodeIds;
+    private NodeIdFilter nodeIdFilter;
     private Mockery context;
     private static URI NODE_ID;
 
@@ -56,7 +56,7 @@ public class CMDIRrsNodeActionTest {
         nodeActionsConfiguration = new NodeActionsConfiguration();
         context = new JUnit4Mockery();
         NODE_ID = URI.create("node:1");
-        filterNodeIds = new MockFilterNodeId();
+        nodeIdFilter = new MockNodeIdFilter();
     }
 
     @After
@@ -69,7 +69,7 @@ public class CMDIRrsNodeActionTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration, filterNodeIds);
+        CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration, nodeIdFilter);
         String expResult = "Request Access";
         String result = instance.getName();
         assertEquals(expResult, result);
@@ -97,7 +97,7 @@ public class CMDIRrsNodeActionTest {
             }
         });
 
-        CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration, filterNodeIds);
+        CMDIRrsNodeAction instance = new CMDIRrsNodeAction(nodeActionsConfiguration, nodeIdFilter);
         NodeActionResult result = instance.execute(nodes);
         assertEquals("Request Access", instance.getName());
 

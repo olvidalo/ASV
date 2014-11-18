@@ -27,7 +27,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
 import static org.hamcrest.Matchers.instanceOf;
 import org.jmock.Expectations;
@@ -49,7 +49,7 @@ public class CMDISearchNodeActionTest {
 
     private NodeActionsConfiguration nodeActionsConfiguration;
     private URIFilter uriFilter;
-    private FilterNodeIds filterIdProvider;
+    private NodeIdFilter filterIdProvider;
     private Mockery context;
     private static URI NODE_ID;
     private static URI NODE_PID;
@@ -62,7 +62,7 @@ public class CMDISearchNodeActionTest {
     public void setUp() {
         nodeActionsConfiguration = new NodeActionsConfiguration();
         context = new JUnit4Mockery();
-        filterIdProvider = context.mock(FilterNodeIds.class);
+        filterIdProvider = context.mock(NodeIdFilter.class);
         uriFilter = context.mock(URIFilter.class);
         NODE_ID = URI.create("node:1");
         NODE_PID = URI.create("11142/123456789101");

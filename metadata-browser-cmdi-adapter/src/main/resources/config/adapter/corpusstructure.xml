@@ -50,7 +50,7 @@
     <bean id="accessInfoProvider" factory-bean="csProviderFactory" factory-method="createAccessInfoProvider" />
 
     <!-- Provider for correct id format. This used to get the appropriate ID as string and prevent a dependency to the Adapter in the cmdi implementation. -->
-    <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.FilterNodeId"/>
+    <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.AdapterNodeIdFilter"/>
 
     <!-- File path translator used by node resolver -->
     <bean id="filePathTranslatorAdapter" factory-bean="csProviderFactory" factory-method="createFilePathTranslator" />

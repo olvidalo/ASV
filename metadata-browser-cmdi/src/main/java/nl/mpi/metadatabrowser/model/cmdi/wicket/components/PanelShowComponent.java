@@ -23,7 +23,7 @@ import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.services.FilterNodeIds;
+import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -44,7 +44,7 @@ public final class PanelShowComponent extends Panel {
 
     private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
     @SpringBean
-    private FilterNodeIds filterNodeId;
+    private NodeIdFilter nodeIdFilter;
 
     public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnsupportedEncodingException {
         super(id);
@@ -97,7 +97,7 @@ public final class PanelShowComponent extends Panel {
         //embeded citation down the page
         ExternalLink openpath = new ExternalLink("openpath", "?openpath=" + node.getNodeURI(), nodeName);
         formDetails.add(openpath);
-        formDetails.add(new Label("nodeId", filterNodeId.getURIParam(nodeId)));
+        formDetails.add(new Label("nodeId", nodeIdFilter.getURIParam(nodeId)));
         formDetails.add(new Label("title", title));
 
         formDetails.add(new Label("cite_title", title));

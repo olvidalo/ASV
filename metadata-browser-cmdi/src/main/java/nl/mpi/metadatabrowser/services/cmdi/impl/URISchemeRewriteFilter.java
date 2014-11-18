@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import com.google.common.base.Strings;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
@@ -27,7 +28,7 @@ import nl.mpi.metadatabrowser.services.URIFilter;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class URISchemeRewriteFilter implements URIFilter {
+public class URISchemeRewriteFilter implements URIFilter, Serializable {
 
     private final Pattern prefixPattern;
     private final String targetScheme;
