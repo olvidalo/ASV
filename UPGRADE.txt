@@ -1,14 +1,13 @@
 from 1.0 to >= 1.1
 	- add new context parameter nl.mpi.translationservicebase
 
-		e.g. <Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
-					    value="java:comp/env/jdbc/CSDB3" />          
+		e.g.  <Parameter name="nl.mpi.translationservicebase"
+						 value="https://lux16.mpi.nl/ds/TranslationService" />       
 
 	- add new context parameter nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
-
-		e.g.  <Parameter name="nl.mpi.translationservicebase"
-						 value="https://lux16.mpi.nl/ds/TranslationService" />
-						 
+				 
+		e.g. <Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
+					    value="java:comp/env/jdbc/CSDB3" />   
 
 	- add new context parameters nl.mpi.metadatabrowser.schemeReplacePrefix and
 								 nl.mpi.metadatabrowser.schemeReplaceTargetScheme
@@ -17,7 +16,7 @@ from 1.0 to >= 1.1
 						 
       e.g.:
       <Parameter name="nl.mpi.metadatabrowser.schemeReplacePattern"
-         value="^http:\/\/lux16\.mpi\.nl"
+         value="http:\/\/lux16\.mpi\.nl.*"
          description="URLs matching this regex will have their scheme rewritten" />
          
       <Parameter name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"

@@ -69,13 +69,14 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
         try {
             return transform();
         } catch (NodePresentationException | NodeTypeIdentifierException ex) {
+            logger.warn("Error while trying to transform {} '{}'", node.getNodeURI(), node, ex);
             return ex.toString();
         }
     }
 
     private String transform() throws NodePresentationException, IllegalArgumentException, NodeTypeIdentifierException {
         try {
-            logger.debug("Transforming node {} using templates {}", node, templatesKey);
+            logger.debug("Transforming node '{}' using templates '{}'", node, templatesKey);
             StringWriter strWriter = new StringWriter();
             try (final InputStream in = getServicesLocator().getNodeResolver().getInputStream(node)) {
                 final Transformer transformer = getTemplates().newTransformer();
