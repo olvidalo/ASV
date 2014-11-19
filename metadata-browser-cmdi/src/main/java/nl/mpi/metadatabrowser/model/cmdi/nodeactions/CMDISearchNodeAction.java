@@ -16,10 +16,12 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -27,12 +29,13 @@ import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
 import org.slf4j.Logger;
@@ -46,10 +49,9 @@ import org.springframework.stereotype.Component;
  * Class that calls redirect to CMDI Search
  */
 @Component
-public class CMDISearchNodeAction implements NodeAction {
+public class CMDISearchNodeAction  extends RedirectingNodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
-    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final NodeIdFilter nodeIdFilter;
     private final NodeResolver nodeResolver;
     private final URIFilter uriFilter;
@@ -82,8 +84,7 @@ public class CMDISearchNodeAction implements NodeAction {
     }
 
     @Override
-    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+    protected URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         URI targetURI = null;
         String wraphandleOrNodeURL;
         //TODO: deal with multiple nodes properly
@@ -115,18 +116,6 @@ public class CMDISearchNodeAction implements NodeAction {
                 targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
             }
         }
-        if (targetURI != null) {
-            final String redirectURL = targetURI.toString();
-            final ShowComponentRequest request = new ShowComponentRequest() {
-
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    return new PanelEmbedActionDisplay(id, redirectURL);
-                }
-            };
-            return new SimpleNodeActionResult(request);
-        } else {
-            throw new NodeActionException(this, "target uri could not be build. This is likely to happen when no node was found. If this is not the case please check configuration paramters.");
-        }
+        return targetURI;
     }
 }

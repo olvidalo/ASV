@@ -17,23 +17,15 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
+import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
-import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.ShowComponentRequest;
-import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,11 +35,10 @@ import org.springframework.stereotype.Component;
  * Class Action to call AMS (Manage Access Rights).
  */
 @Component
-public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDIAMSNodeAction extends RedirectingNodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter filterIdProvider;
-    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 
     @Autowired
     public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration, NodeIdFilter filterIdProvider) {
@@ -66,8 +57,13 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
     }
 
     @Override
-    public NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), node);
+    protected URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException {
+        // assuming a single node
+        if (nodes.size() != 1) {
+            throw new NodeActionException(this, "Action only suitable one single node selections");
+        }
+        final TypedCorpusNode node = nodes.iterator().next();
+
         // Build redirect to AMS
         URI nodeId = node.getNodeURI();
         String nodeid = filterIdProvider.getURIParam(nodeId);
@@ -77,23 +73,6 @@ public class CMDIAMSNodeAction extends SingleNodeAction implements NodeAction {
         } else {
             targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         }
-        ShowComponentRequest request = null;
-        if (targetURI != null) {
-            final String redirectURL = targetURI.toString();
-            request = new ShowComponentRequest() {
-
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    return new PanelEmbedActionDisplay(id, redirectURL);
-                }
-            };
-        }
-        return new SimpleNodeActionResult(request);
-//        try {
-//            request = new NavigationActionRequest(targetURI.toURL());
-//        } catch (MalformedURLException ex) {
-//            logger.error("URL syntax exception:" + ex);
-//        }
-//        return new SimpleNodeActionResult(request);
+        return targetURI;
     }
 }

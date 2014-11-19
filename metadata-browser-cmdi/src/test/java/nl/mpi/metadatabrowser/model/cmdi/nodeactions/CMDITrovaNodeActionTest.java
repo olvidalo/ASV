@@ -22,8 +22,8 @@ import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeIdFilter;
 import static org.hamcrest.Matchers.instanceOf;
@@ -92,7 +92,7 @@ public class CMDITrovaNodeActionTest {
         String id2 = filterIdProvider.getURIParam(NODE_ID2);
         nodeActionsConfiguration.setTrovaURL("http://lux16.mpi.nl/ds/trova/search.jsp");
         UriBuilder targetURL = UriBuilder.fromUri(nodeActionsConfiguration.getTrovaURL());
-        URI targetURI = targetURL.queryParam("nodeid", id).queryParam("nodeid", id2).queryParam("jsessionID", new URI("session_number")).build();
+        URI targetURI = targetURL.queryParam("nodeid", id).queryParam("nodeid", id2).build();
 
         context.checking(new Expectations() {
             {
@@ -109,12 +109,11 @@ public class CMDITrovaNodeActionTest {
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
-//        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-//
-//        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-//        assertNotNull(navigationActionRequest.getTargetURL());
-//        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
 
     }
 }

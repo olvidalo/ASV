@@ -16,17 +16,20 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelEmbedActionDisplay;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +42,9 @@ import org.springframework.stereotype.Component;
  * Class that call redirect to RRS
  */
 @Component
-public class CMDIRrsNodeAction implements NodeAction {
+public class CMDIRrsNodeAction  extends RedirectingNodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
-    private final static Logger logger = LoggerFactory.getLogger(CMDIRrsNodeAction.class);
     private final NodeIdFilter nodeIdFilter;
 
     @Autowired
@@ -62,8 +64,7 @@ public class CMDIRrsNodeAction implements NodeAction {
     }
 
     @Override
-    public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        logger.debug("Action [{}] invoked on {}", getName(), nodes);
+    protected URI getTarget(Collection<TypedCorpusNode> nodes)  {
         URI targetURI = null;
         UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
         //TODO: properly support multiple nodes
@@ -73,24 +74,6 @@ public class CMDIRrsNodeAction implements NodeAction {
             String nodeid = nodeIdFilter.getURIParam(nodeId);
             targetURI = uriBuilder.queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         }
-        if (targetURI != null) {
-            final String redirectURL = targetURI.toString();
-            final ShowComponentRequest request = new ShowComponentRequest() {
-
-                @Override
-                public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                    return new PanelEmbedActionDisplay(id, redirectURL);
-                }
-            };
-            return new SimpleNodeActionResult(request);
-        } else {
-            throw new NodeActionException(this, "target uri could not be build. This is likely to happen when no node was found. If this is not the case please check configuration paramters.");
-        }
-//        try {
-//            request = new NavigationActionRequest(targetURI.toURL());
-//        } catch (MalformedURLException ex) {
-//            logger.error("URL syntax exception:" + ex);
-//        }
-//        return new SimpleNodeActionResult(request);
+        return targetURI;
     }
 }

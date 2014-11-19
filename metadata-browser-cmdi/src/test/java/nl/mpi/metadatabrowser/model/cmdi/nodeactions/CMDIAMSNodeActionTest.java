@@ -19,11 +19,12 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
@@ -111,21 +112,20 @@ public class CMDIAMSNodeActionTest {
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
         URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
-        NodeActionResult result = instance.execute(node);
+        NodeActionResult result = instance.execute(Collections.singleton(node));
 
         assertEquals(
                 "Manage Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
 
-//        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-//
-//        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-//
-//        assertNotNull(navigationActionRequest.getTargetURL());
-//        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 
     /**
@@ -160,20 +160,19 @@ public class CMDIAMSNodeActionTest {
 
 
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
-        NodeActionResult result = instance.execute(node);
+        NodeActionResult result = instance.execute(Collections.singleton(node));
 
         assertEquals(
                 "Manage Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
 
-//        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-//
-//        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-//
-//        assertNotNull(navigationActionRequest.getTargetURL());
-//        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 }

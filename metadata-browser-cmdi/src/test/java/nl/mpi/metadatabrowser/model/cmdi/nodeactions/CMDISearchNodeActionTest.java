@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
@@ -124,12 +125,11 @@ public class CMDISearchNodeActionTest {
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
-//        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-//
-//        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-//        assertNotNull(navigationActionRequest.getTargetURL());
-//        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
     }
 
     /**
@@ -169,12 +169,11 @@ public class CMDISearchNodeActionTest {
         ControllerActionRequest actionRequest = result
                 .getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
-//		assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-//
-//		NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-//		assertNotNull(navigationActionRequest.getTargetURL());
-//		assertEquals(targetURI.toURL().toString(), navigationActionRequest
-//				.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
+
+        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
+        assertNotNull(navigationActionRequest.getTargetURL());
+        assertEquals(targetURI.toURL().toString(), navigationActionRequest
+                .getTargetURL().toString());
     }
 }
