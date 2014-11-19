@@ -16,23 +16,12 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriBuilderException;
-import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
-import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeActionException;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import nl.mpi.metadatabrowser.model.StyleSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
-import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +31,7 @@ import org.springframework.stereotype.Component;
  * Class that call redirect to RRS
  */
 @Component
-public class CMDIRrsNodeAction  extends RedirectingNodeAction {
+public class CMDIRrsNodeAction extends RedirectingNodeAction implements StyleSpecifier {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;
@@ -64,7 +53,12 @@ public class CMDIRrsNodeAction  extends RedirectingNodeAction {
     }
 
     @Override
-    protected URI getTarget(Collection<TypedCorpusNode> nodes)  {
+    public String getStyleClass() {
+        return "RequestAccess";
+    }
+
+    @Override
+    protected URI getTarget(Collection<TypedCorpusNode> nodes) {
         URI targetURI = null;
         UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
         //TODO: properly support multiple nodes

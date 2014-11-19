@@ -18,6 +18,8 @@ package nl.mpi.metadatabrowser.wicket.components;
 
 import java.util.Collection;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.StyleSpecifier;
+import nl.mpi.metadatabrowser.model.TargetSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsListModel;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
@@ -69,20 +71,14 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 final NodeAction action = item.getModelObject();
                 final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
                 final Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
-                final String actionName = action.getName();
 
-                //TODO: replace with more robust check than by name
-                if (actionName.equals("Annotation Content Search")) {
+                // the action may explicitly require the result to be shown in a new tab/window
+                if (action instanceof TargetSpecifier && ((TargetSpecifier) action).openInNew()) {
                     actionLink.add(new AttributeModifier("target", "_blank"));
                 }
 
-                //TODO: replace with more robust check than by name
-                String className = actionName.replaceAll("\\s", "");
-                if (className.equals("ResourceAccess(RRS)")) {
-                    className = "ResourceAccess";
-                }
-                actionLink.add(new Label("linkLabel", actionName));
-                actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b " + className));
+                actionLink.add(new Label("linkLabel", action.getName()));
+                actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b " + getClassName(action)));
                 item.add(actionLink);
                 item.add(new AttributeAppender("title", action.getTitle()));
             }
@@ -92,5 +88,15 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
     @Override
     public void renderHead(IHeaderResponse response) {
         response.render(CssHeaderItem.forReference(NodesActionsPanel_CSS));
+    }
+
+    private String getClassName(final NodeAction action) {
+        final String className;
+        if (action instanceof StyleSpecifier) {
+            className = ((StyleSpecifier) action).getStyleClass();
+        } else {
+            className = action.getName().replaceAll("\\s", "");
+        }
+        return className;
     }
 }

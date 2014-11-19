@@ -22,6 +22,7 @@ import java.util.Collection;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.TargetSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public abstract class RedirectingNodeAction implements NodeAction {
+public abstract class RedirectingNodeAction implements NodeAction, TargetSpecifier {
 
     private final static Logger logger = LoggerFactory.getLogger(RedirectingNodeAction.class);
 
@@ -53,5 +54,10 @@ public abstract class RedirectingNodeAction implements NodeAction {
     }
 
     protected abstract URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException;
+
+    @Override
+    public boolean openInNew() {
+        return true;
+    }
 
 }
