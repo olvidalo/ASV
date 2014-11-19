@@ -37,8 +37,8 @@ import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
@@ -151,7 +151,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
                 // Fallback for non-media files (e.g. images) to be rendered by the browser
                 // If resource is not accessible, this will provide more information
-                return new ViewInfoFile(id, node);
+                return new ExternalFramePanel(id, nodeResolver.getUrl(node).toString());
             }
         };
         return new SimpleNodeActionResult(componentRequest);

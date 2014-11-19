@@ -75,15 +75,7 @@ public final class AudioFilePanel extends Panel {
             resourcelabel.setVisibilityAllowed(false);
             add(resourcelabel);
         } else { // backup to display audio in iframe. No html5
-            StringBuilder sb = new StringBuilder();
-            // create label for resource
-            sb.append("<iframe id=\"viewFrame\" src=\"");
-            sb.append(nodeURL.toString());
-            sb.append("\">");
-            sb.append("</iframe>");
-            Label resourcelabel = new Label("altView", sb.toString());
-            resourcelabel.setEscapeModelStrings(false);
-            add(resourcelabel);
+            add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()));
         }
 
         IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {

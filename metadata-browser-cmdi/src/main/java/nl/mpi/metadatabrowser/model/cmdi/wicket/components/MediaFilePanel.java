@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.services.URIFilter;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,14 +79,17 @@ public final class MediaFilePanel extends Panel {
         Label resourcelabel;
         add(new Label("viewTitle", "Viewing " + node.getName()));
         boolean hasmp4 = false; // use to display video without mp4 double. Alternative display to html5
-        URI nodeParent = csdb.getCanonicalParent(node.getNodeURI());
-        List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeParent);
+        
+        final URI nodeParent = csdb.getCanonicalParent(node.getNodeURI());
+        final String parentBaseName = FilenameUtils.removeExtension(getFilename(node));
+        final List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeParent);
+        
         for (CorpusNode childNode : childrenNodes) { // parent has children
-            if (childNode.getName().endsWith(".mp4")) { // look up for children with mp4 extension
-                String name = FilenameUtils.removeExtension(node.getName());
-                String childNodeName = FilenameUtils.removeExtension(childNode.getName());
-                if (name.equals(childNodeName)) { // name comparison. Should be same node if only extension differs within the same session
-
+            final String childNodeName = getFilename(childNode);
+            if (childNodeName.endsWith(".mp4")) { // look up for children with mp4 extension
+                // name comparison. Should be same node if only extension differs within the same session
+                final String childBaseName = FilenameUtils.removeExtension(childNodeName);
+                if (parentBaseName.equals(childBaseName)) { 
                     String childNodeURL;
                     try {
                         // allow filter to rewrite, e.g. http->https
@@ -105,20 +108,12 @@ public final class MediaFilePanel extends Panel {
                     resourcelabel.setVisibilityAllowed(false);
                     add(resourcelabel);
                 } else {
-                    logger.error("video could not be found in mp4 format");
+                    logger.info("Matching video could not be found in mp4 format");
                 }
             }
         }
         if (!hasmp4) { // backup to display video in iframe. No html5            
-            StringBuilder sb = new StringBuilder();
-            // create label for resource
-            sb.append("<iframe id=\"viewFrame\" src=\"");
-            sb.append(nodeURL);
-            sb.append("\">");
-            sb.append("</iframe>");
-            resourcelabel = new Label("altView", sb.toString());
-            resourcelabel.setEscapeModelStrings(false);
-            add(resourcelabel);
+            add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()));
         }
 
         IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {
@@ -151,5 +146,15 @@ public final class MediaFilePanel extends Panel {
         add(video);
 
         add(new ExternalLink("viewVideo", nodeURL));
+    }
+
+    private String getFilename(CorpusNode node) {
+        final File localFile = resolver.getLocalFile(node);
+        if (localFile != null) {
+            return localFile.getName();
+        } else {
+            //fallback, best effort
+            return node.getName();
+        }
     }
 }

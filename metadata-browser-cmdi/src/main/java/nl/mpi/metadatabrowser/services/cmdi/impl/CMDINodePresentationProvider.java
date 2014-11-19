@@ -18,7 +18,7 @@ package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.io.Serializable;
 import java.util.Collection;
-import javax.xml.transform.Templates;
+import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
@@ -33,8 +33,8 @@ import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ViewInfoFile;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.WelcomePagePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
 import nl.mpi.metadatabrowser.services.NodePresentationException;
@@ -44,6 +44,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -55,13 +56,15 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     public static final String IMDI_XSL = "/xslt/imdi-viewer.xsl";
     public static final String CMDI_XSL = "/xslt/cmdi2xhtml.xsl";
+    private final NodeResolver nodeResolver;
 
     /**
      *
-     * @param imdiTemplates
-     * @param cmdiTemplates
+     * @param nodeResolver
      */
-    public CMDINodePresentationProvider() {
+    @Autowired
+    public CMDINodePresentationProvider(NodeResolver nodeResolver) {
+        this.nodeResolver = nodeResolver;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
                     return new ResourcePresentation(wicketId, node);
                 } else if (node.getNodeType() instanceof IMDIInfoType) {
                     logger.debug("Resource presentation for info file");
-                    return new ViewInfoFile(wicketId, node);
+                    return new ExternalFramePanel(wicketId, nodeResolver.getUrl(node).toString());
                 } else {
                     logger.debug("No presentation for node type: {}. Using plain node string representation", node.getNodeType());
                     return new Label(wicketId, node.toString());

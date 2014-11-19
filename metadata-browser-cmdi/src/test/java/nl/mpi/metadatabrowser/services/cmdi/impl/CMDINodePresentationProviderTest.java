@@ -119,7 +119,7 @@ public class CMDINodePresentationProviderTest {
 
         });
 
-        instance = new CMDINodePresentationProvider();
+        instance = new CMDINodePresentationProvider(nodeResolver);
     }
 
     @After
