@@ -64,68 +64,22 @@ public final class MediaFilePanel extends Panel {
      */
     public MediaFilePanel(String id, TypedCorpusNode node) {
         super(id);
-        final List<MediaSource> mm = new ArrayList<>();
-
-        String nodeURL;
-        try {
-            // allow filter to rewrite, e.g. http->https
-            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
-        } catch (URISyntaxException ex) {
-            // highly unlikely
-            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
-            nodeURL = resolver.getUrl(node).toString();
-        }
-
-        Label resourcelabel;
         add(new Label("viewTitle", "Viewing " + node.getName()));
-        boolean hasmp4 = false; // use to display video without mp4 double. Alternative display to html5
-        
-        final URI nodeParent = csdb.getCanonicalParent(node.getNodeURI());
-        final String parentBaseName = FilenameUtils.removeExtension(getFilename(node));
-        final List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeParent);
-        
-        for (CorpusNode childNode : childrenNodes) { // parent has children
-            final String childNodeName = getFilename(childNode);
-            if (childNodeName.endsWith(".mp4")) { // look up for children with mp4 extension
-                // name comparison. Should be same node if only extension differs within the same session
-                final String childBaseName = FilenameUtils.removeExtension(childNodeName);
-                if (parentBaseName.equals(childBaseName)) { 
-                    String childNodeURL;
-                    try {
-                        // allow filter to rewrite, e.g. http->https
-                        childNodeURL = nodeUriFilter.filterURI(resolver.getUrl(childNode).toURI()).toString();
-                    } catch (URISyntaxException ex) {
-                        // highly unlikely
-                        logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
-                        childNodeURL = resolver.getUrl(node).toString();
-                    }
 
-                    // allow filter to rewrite, e.g. http->https
-                    mm.add(new MediaSource(childNodeURL, "video/mp4"));
-//                  mm.add(new MediaSource(url in ogg format, "video/ogg.")); // ideally supported but not for now
-                    hasmp4 = true;
-                    resourcelabel = new Label("altView", ""); // used for wicket id
-                    resourcelabel.setVisibilityAllowed(false);
-                    add(resourcelabel);
-                } else {
-                    logger.info("Matching video could not be found in mp4 format");
-                }
-            }
-        }
-        if (!hasmp4) { // backup to display video in iframe. No html5            
-            add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()));
-        }
+        final List<MediaSource> html5media = findHtml5alternative(node);
 
-        IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {
-            private static final long serialVersionUID = 1L;
+        // add view for case where no HTML5 resources available
+        add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()) {
 
             @Override
-            public List<MediaSource> getObject() {
-                return mm;
+            public boolean isVisible() {
+                return html5media == null;
             }
-        };
 
-        Html5Video video = (new Html5Video("displayVideo", mediaSourceList) {
+        });
+
+        // add view for case where HTML5 resources is available
+        Html5Video video = (new Html5Video("displayVideo", createMediaModel(html5media)) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -137,15 +91,56 @@ public final class MediaFilePanel extends Panel {
             protected boolean isAutoPlay() {
                 return true;
             }
+
+            @Override
+            public boolean isVisible() {
+                return html5media != null;
+            }
+
         });
 
-        if (!hasmp4) {
-            video.setVisible(false);
-        }
-
         add(video);
+        add(new ExternalLink("viewVideo", getNodeUrl(node)));
+    }
 
-        add(new ExternalLink("viewVideo", nodeURL));
+    private List<MediaSource> findHtml5alternative(TypedCorpusNode node) {
+        final URI nodeParent = csdb.getCanonicalParent(node.getNodeURI());
+        final String parentName = getFilename(node);
+        final String parentBaseName = FilenameUtils.removeExtension(parentName);
+        final List<CorpusNode> childrenNodes = csdb.getChildNodes(nodeParent);
+
+        final List<MediaSource> mm = new ArrayList<>();
+        for (CorpusNode childNode : childrenNodes) { // parent has children
+            final String childNodeName = getFilename(childNode);
+            if (childNodeName.endsWith(".mp4")) { // look up for children with mp4 extension
+                // name comparison. Should be same node if only extension differs within the same session
+                final String childBaseName = FilenameUtils.removeExtension(childNodeName);
+                if (parentBaseName.equals(childBaseName)) {
+                    logger.debug("Found MP4 alternative for {}: {}", node, childNode);
+                    String childNodeURL = getNodeUrl(childNode);
+                    mm.add(new MediaSource(childNodeURL, "video/mp4"));
+//                  mm.add(new MediaSource(url in ogg format, "video/ogg.")); // ideally supported but not for now
+                }
+            }
+        }
+        if (mm.isEmpty()) {
+            return null;
+        } else {
+            return mm;
+        }
+    }
+
+    private String getNodeUrl(CorpusNode node) {
+        String nodeURL;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeURL = resolver.getUrl(node).toString();
+        }
+        return nodeURL;
     }
 
     private String getFilename(CorpusNode node) {
@@ -156,5 +151,17 @@ public final class MediaFilePanel extends Panel {
             //fallback, best effort
             return node.getName();
         }
+    }
+
+    private IModel<List<MediaSource>> createMediaModel(final List<MediaSource> html5media) {
+        IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public List<MediaSource> getObject() {
+                return html5media;
+            }
+        };
+        return mediaSourceList;
     }
 }

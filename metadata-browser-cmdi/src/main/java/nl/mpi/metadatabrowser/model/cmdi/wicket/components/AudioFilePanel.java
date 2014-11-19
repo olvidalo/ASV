@@ -56,38 +56,23 @@ public final class AudioFilePanel extends Panel {
      */
     public AudioFilePanel(String id, TypedCorpusNode node) {
         super(id);
-        final List<MediaSource> mm = new ArrayList<MediaSource>();
-        String nodeURL;
-        try {
-            // allow filter to rewrite, e.g. http->https
-            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
-        } catch (URISyntaxException ex) {
-            // highly unlikely
-            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
-            nodeURL = resolver.getUrl(node).toString();
-        }
+        final String nodeURL = getNodeUrl(node);
         add(new Label("viewTitle", "Listening to " + node.getName()));
-        final boolean haswav = node.getName().endsWith(".wav");
-        if (haswav) {
-            mm.add(new MediaSource(nodeURL));
-//                  mm.add(new MediaSource(url in ogg format)); // ideally supported but not for now
-            Label resourcelabel = new Label("altView", ""); // used for wicket id
-            resourcelabel.setVisibilityAllowed(false);
-            add(resourcelabel);
-        } else { // backup to display audio in iframe. No html5
-            add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()));
-        }
 
-        IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {
-            private static final long serialVersionUID = 1L;
+        final List<MediaSource> html5media = findHtml5Media(nodeURL);
+
+        // backup to display audio in iframe. No html5
+        add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()) {
 
             @Override
-            public List<MediaSource> getObject() {
-                return mm;
+            public boolean isVisible() {
+                return html5media == null;
             }
-        };
 
-        Html5Audio audio = (new Html5Audio("displayAudio", mediaSourceList) {
+        });
+
+        // add view for case where HTML5 resources is available
+        final Html5Audio audio = (new Html5Audio("displayAudio", createMediaModel(html5media)) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -99,12 +84,52 @@ public final class AudioFilePanel extends Panel {
             protected boolean isAutoPlay() {
                 return true;
             }
+
+            @Override
+            public boolean isVisible() {
+                return html5media != null;
+            }
         });
-        if (!haswav) {
-            audio.setVisible(false);
-        }
         add(audio);
 
         add(new ExternalLink("viewAudio", nodeURL.toString())); // let the browser handle the display if html5 is not supported.
+    }
+
+    private List<MediaSource> findHtml5Media(final String nodeURL) {
+        final List<MediaSource> mm = new ArrayList<MediaSource>();
+        if (nodeURL.endsWith(".wav")) {
+            mm.add(new MediaSource(nodeURL));
+            //mm.add(new MediaSource(url in ogg format)); // ideally supported but not for now
+        }
+        if (mm.isEmpty()) {
+            return null;
+        } else {
+            return mm;
+        }
+    }
+
+    private String getNodeUrl(TypedCorpusNode node) {
+        String nodeURL;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeURL = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeURL = resolver.getUrl(node).toString();
+        }
+        return nodeURL;
+    }
+
+    private IModel<List<MediaSource>> createMediaModel(final List<MediaSource> html5media) {
+        final IModel<List<MediaSource>> mediaSourceList = new AbstractReadOnlyModel<List<MediaSource>>() {
+            private static final long serialVersionUID = 1L;
+            
+            @Override
+            public List<MediaSource> getObject() {
+                return html5media;
+            }
+        };
+        return mediaSourceList;
     }
 }
