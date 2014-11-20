@@ -20,26 +20,18 @@
 
     <context:annotation-config />
 
-    <bean id="transformerFactory" class="javax.xml.transform.TransformerFactory" factory-method="newInstance" />
+    <bean id="templatesFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.ResourceTemplateFactory" />
     
     <!-- IMDI template definition is read from /imdi-viewer.xsl resource -->
-    <bean id="imdiTemplates" factory-bean="transformerFactory" factory-method="newTemplates">
+    <bean id="imdiTemplates" factory-bean="templatesFactory" factory-method="newTemplate">
         <qualifier value="imdiTemplates" /> <!-- Qualifier to disambiguate from CMDI templates -->
-        <constructor-arg>
-            <bean class="javax.xml.transform.stream.StreamSource">
-                <constructor-arg value="classpath:xslt/imdi-viewer.xsl" type="java.io.File"/>
-            </bean>
-        </constructor-arg>
+        <constructor-arg value="/xslt/imdi-viewer.xsl" />
     </bean>
     
     <!-- IMDI template definition is read from /cmd2xhtml.xsl resource -->
-    <bean id="cmdiTemplates" factory-bean="transformerFactory" factory-method="newTemplates">
+    <bean id="cmdiTemplates" factory-bean="templatesFactory" factory-method="newTemplate">
         <qualifier value="cmdiTemplates" /> <!-- Qualifier to disambiguate from IMDI templates -->
-        <constructor-arg>
-            <bean class="javax.xml.transform.stream.StreamSource">
-                <constructor-arg value="classpath:xslt/cmdi2xhtml.xsl" type="java.io.File"/>
-            </bean>
-        </constructor-arg>
+        <constructor-arg value="/xslt/cmdi2xhtml.xsl" />
     </bean>
     
     <!-- Put both templates beans in the templates store -->
