@@ -76,8 +76,8 @@
         <dependency>
             <!-- Saxon for transformation for presentation -->
             <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <version>8.7</version>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.6.0-1</version>
         </dependency>
         <!-- Testing -->
         <dependency>
