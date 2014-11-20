@@ -20,7 +20,9 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -29,34 +31,53 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 public class ExternalFramePanel extends Panel {
-
-    /**
-     *
-     */
+    
     private static final long serialVersionUID = 1L;
-
-    final boolean safeForFrame;
-    final IModel<String> redirectURL;
-
+    
+    private final IModel<String> redirectURL;
+    private final static Logger logger = LoggerFactory.getLogger(ExternalFramePanel.class);
+    
     public ExternalFramePanel(String id, String redirectURL) {
         this(id, Model.of(redirectURL));
     }
-
+    
     public ExternalFramePanel(String id, IModel<String> redirectURL) {
         super(id);
         this.redirectURL = redirectURL;
-        this.safeForFrame = true; //TOOD: determine dynamically
 
         // create external link (will be hidden of safe for frames)
         add(createExternalLink("linkContainer"));
         // create frame (will be hidden of not safe for frames)
         add(createFrameLabel("iframe"));
+    }
+    
+    private boolean determineFrameSafe(String targetUrlString) {
+        // check whether target and current request share scheme 
+        try {
+            final URI target = new URI(targetUrlString);
+            // try to obtain http servlet request
+            final Object containerRequest = getRequest().getContainerRequest();
+            if (containerRequest instanceof HttpServletRequest) {
+                final HttpServletRequest servletRequest = (HttpServletRequest) containerRequest;
+                final URI current = new URI(servletRequest.getRequestURL().toString());
+                return target.getScheme().equals(current.getScheme());
+                        //&& target.getHost().equals(current.getHost()); //also require host equality?
+            } else {
+                // no servlet request available, assume worst case
+                return false;
+            }
+        } catch (URISyntaxException ex) {
+            logger.warn("Invalid URI while checking whether resource is safe for iframe", ex);
+            return false;
+        }
     }
 
     /**
@@ -70,37 +91,36 @@ public class ExternalFramePanel extends Panel {
      */
     private Label createFrameLabel(String id) {
         final IModel<String> labelModel = new AbstractReadOnlyModel<String>() {
-
+            
             @Override
             public String getObject() {
                 return String.format("<iframe id=\"iframe\" width=\"100%%\" height=\"100%%\" align=\"center\" src=\"%1$s\"></iframe>", redirectURL.getObject());
             }
         };
-
+        
         final Label resourcelabel = new Label(id, labelModel) {
-
+            
             @Override
-            public boolean isVisible() {
-                return safeForFrame;
+            protected void onConfigure() {
+                setVisible(determineFrameSafe(redirectURL.getObject()));
             }
-
+            
         };
-        // render HTML as is
-        resourcelabel.setEscapeModelStrings(false);
+        resourcelabel.setEscapeModelStrings(false); // render HTML as is
         return resourcelabel;
     }
-
+    
     private Component createExternalLink(String link) {
         final WebMarkupContainer linkContainer = new WebMarkupContainer(link) {
-
+            
             @Override
-            public boolean isVisible() {
-                return !safeForFrame;
+            protected void onConfigure() {
+                setVisible(!determineFrameSafe(redirectURL.getObject()));
             }
-
+            
         };
         linkContainer.add(new ExternalLink("link", redirectURL));
         return linkContainer;
     }
-
+    
 }
