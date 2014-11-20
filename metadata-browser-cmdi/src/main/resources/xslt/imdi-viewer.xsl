@@ -571,12 +571,16 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
 
     <!--
         Content highlighting, using regex code.
+        
+        twagoo 2014-11-20: 
+            removed original template because it is not
+            compatible with Saxon-HE 9
     -->
-    <xsl:template match="text()" mode="highlight">
+<!--    <xsl:template match="text()" mode="highlight">
         <xsl:param name="string" select="."/>
         <xsl:param name="delimiters" select="' &#x9;&#xA;'"/>
         <xsl:choose>
-            <!-- nothing to do for empty string -->
+            <!-\- nothing to do for empty string -\->
             <xsl:when test="not($string)"/>
             <xsl:otherwise>
                 <xsl:analyze-string select="$string" regex="{$searchRegex}" flags="i">
@@ -591,7 +595,13 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
                 </xsl:analyze-string>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>-->
+    
+    <xsl:template match="text()" mode="highlight">
+        <xsl:value-of select="." />
     </xsl:template>
+    
+    
     <!--
         Count token matches
     -->
