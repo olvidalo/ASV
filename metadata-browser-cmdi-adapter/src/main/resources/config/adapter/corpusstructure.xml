@@ -22,16 +22,24 @@
     </bean>
     
     <!-- CSDB proxy -->
+    <bean id="csdbContainer" class="nl.mpi.metadatabrowser.services.cmdi.util.ThreadLocalCSDBContainer" />
+            
+<!--    <bean id="springCorpusStructureFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.CSDBConnectionFilter" />-->
+    
     <bean id="csdbImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureDBImplFactory">
         <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
     </bean>    
-    <bean id="csdbProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.CorpusStructureDBProxy" name="adapterCSDB" />
+    <bean id="csdbProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.CorpusStructureDBProxy" name="adapterCSDB">
+        <constructor-arg ref="csdbContainer" />
+    </bean>
 
     <!-- Archive Objects proxy -->
     <bean id="aoImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.ArchiveObjectsDBImplFactory">
         <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
     </bean>
-    <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO" />
+    <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO">
+        <constructor-arg ref="csdbContainer" />
+    </bean>
     
     <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
     
@@ -58,16 +66,6 @@
     <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
     <bean id="nodeResolver" factory-bean="csProviderFactory" factory-method="createNodeResolver" />
     
-    <!--     Wrapper node resolver that wraps metadata URL's in the translation service to always get the CMDI version
-    <bean id="nodeResolver" class="nl.mpi.archiving.corpusstructure.adapter.TranslatingNodeResolver">
-        <constructor-arg name="baseNodeResolver">
-             Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider
-            <bean factory-bean="csProviderFactory" factory-method="createNodeResolver" />
-        </constructor-arg>
-        <constructor-arg name="translationServiceBaseUri" value="http://tlatest01.mpi.nl/ds/TranslationService/" />
-    </bean>-->
-    
     <!-- Bean to refer to empty filter. Does absolutely nothing. It' a placeholder for the SessionInViewFilter we need for the CMDI profile -->
-    <bean id="springHibernateFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.PassThroughFilter">
-    </bean>
+    <bean id="springDataSourceConnectionFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.CSDBConnectionFilter" />
 </beans>
