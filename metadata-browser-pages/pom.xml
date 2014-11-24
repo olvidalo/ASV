@@ -178,10 +178,6 @@
             </resource>
             <resource>
                 <filtering>false</filtering>
-                <directory>src/main/html</directory>
-            </resource>
-            <resource>
-                <filtering>false</filtering>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**</include>
