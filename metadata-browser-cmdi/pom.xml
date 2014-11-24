@@ -66,7 +66,7 @@
         <dependency>
             <groupId>nl.mpi.corpusstructure</groupId>
             <artifactId>corpus-structure-2-tree-model</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>${corpusstructure2.version}</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
@@ -77,7 +77,7 @@
             <!-- Saxon for transformation for presentation -->
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
-            <version>9.6.0-1</version>
+            <version>9.6.0-2</version>
         </dependency>
         <!-- Testing -->
         <dependency>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>1.17.1</version>
+            <version>1.18.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
