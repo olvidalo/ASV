@@ -15,13 +15,34 @@ from 1.0 to >= 1.1
 							   nl.mpi.imdiBrowser.forceHttpsPrefix)
 						 
       e.g.:
-      <Parameter name="nl.mpi.metadatabrowser.schemeReplacePattern"
+      <Parameter 
+         name="nl.mpi.metadatabrowser.schemeReplacePattern"
          value="http:\/\/lux16\.mpi\.nl.*"
          description="URLs matching this regex will have their scheme rewritten" />
          
-      <Parameter name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"
+      <Parameter 
+         name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"
          value="https"
          description="protocol enforcement on matching URLs, e.g. http or https" />
+         
+	- (optional) add new optional context parameters 
+				nl.mpi.metadatabrowser.wicket.maxSizePerSession and
+				nl.mpi.metadatabrowser.wicket.inmemoryCacheSize
+	
+	  e.g. (with default values)
+	  
+	  <Parameter 
+	    name="nl.mpi.metadatabrowser.wicket.maxSizePerSession"
+		value="10M" 
+		description="Representation of the size for page store file (cache on disk per
+					 session), e.g. '10M' or '1024K'"/>   
+
+	  <Parameter 
+	    name="nl.mpi.metadatabrowser.wicket.inmemoryCacheSize"
+		value="0" 
+		description="The integer parameter is the maximum number of page instances that 
+     				 will be saved into application-scoped cache (0 is disabled)"/>   
+	  
 						 
 from version 1.0-Alpha
     - add new parameter yamsSearchURL as below
