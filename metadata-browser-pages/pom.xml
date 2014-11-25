@@ -37,7 +37,7 @@
                     <artifactId>metadata-browser-cmdi-adapter</artifactId>
                     <version>1.1-SNAPSHOT</version>
                     <exclusions>
-<!--                        <exclusion>
+                        <!--                        <exclusion>
                             <artifactId>javax.servlet-api</artifactId>
                             <groupId>javax.servlet</groupId>
                         </exclusion>-->
@@ -58,11 +58,6 @@
     </profiles>
 
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${mpi.parent.slf4j.version}</version>
-        </dependency>
         <!-- PROJECT DEPENDENCIES -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
@@ -97,7 +92,7 @@
             <artifactId>jstl</artifactId>
             <version>1.1.2</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
@@ -144,7 +139,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Java Melody for status monitoring -->
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+            <version>1.53.0</version>
+        </dependency>
     </dependencies>
+    
 
     <build>
         <filters>
