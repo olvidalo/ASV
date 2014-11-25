@@ -29,7 +29,7 @@
     <bean id="csdbImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureDBImplFactory">
         <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
     </bean>    
-    <bean id="csdbProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.CorpusStructureDBProxy" name="adapterCSDB">
+    <bean id="csdbProxy" class="nl.mpi.archiving.corpusstructure.adapter.db.proxy.CorpusStructureDBProxy" name="adapterCSDB" primary="true" >
         <constructor-arg ref="csdbContainer" />
     </bean>
 
@@ -37,20 +37,23 @@
     <bean id="aoImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.ArchiveObjectsDBImplFactory">
         <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
     </bean>
-    <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBProxy" name="adapterAO">
+    <bean id="aoProxy" class="nl.mpi.archiving.corpusstructure.adapter.db.proxy.ArchiveObjectsDBProxy" name="adapterAO" primary="true">
         <constructor-arg ref="csdbContainer" />
     </bean>
     
     <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
-    
+
+    <bean id="nodeUriUtils" class="nl.mpi.archiving.corpusstructure.adapter.NodeUriUtils" />
+
     <!-- CSDB factory for CorpusStructureAPI adapter -->
     <bean id="csProviderFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
         <constructor-arg ref="csdbProxy" />
         <constructor-arg ref="aoProxy" />        
         <constructor-arg ref="handleResolver" />
-        <constructor-arg value="${nl.mpi.translationservicebase}" />
+        <constructor-arg ref="nodeUriUtils" />
+        <constructor-arg name="translationServiceBaserUrl" value="${nl.mpi.translationservicebase}" />
     </bean>
-
+    
     <!-- Corpus structure provider created from factory -->
     <bean id="corpusStructureProvider" factory-bean="csProviderFactory" factory-method="createCorpusStructureProvider" />
 

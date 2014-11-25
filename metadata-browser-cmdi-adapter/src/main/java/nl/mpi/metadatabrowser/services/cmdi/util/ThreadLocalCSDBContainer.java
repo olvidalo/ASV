@@ -17,11 +17,12 @@
 package nl.mpi.metadatabrowser.services.cmdi.util;
 
 import java.io.Serializable;
-import nl.mpi.archiving.corpusstructure.adapter.proxy.ArchiveObjectsDBFactory;
-import nl.mpi.archiving.corpusstructure.adapter.proxy.CSDBContainer;
-import nl.mpi.archiving.corpusstructure.adapter.proxy.CorpusStructureDBFactory;
+import nl.mpi.archiving.corpusstructure.adapter.db.proxy.ArchiveObjectsDBFactory;
+import nl.mpi.archiving.corpusstructure.adapter.db.proxy.CSDBContainer;
+import nl.mpi.archiving.corpusstructure.adapter.db.proxy.CorpusStructureDBFactory;
 import nl.mpi.corpusstructure.ArchiveObjectsDB;
 import nl.mpi.corpusstructure.CorpusStructureDB;
+import nl.mpi.versioning.manager.VersioningAPIImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -99,6 +100,24 @@ public class ThreadLocalCSDBContainer implements CSDBContainer, Serializable {
         } else {
             localCSDB.set(csdb);
         }
+    }
+
+    /**
+     *
+     * @return @throws UnsupportedOperationException always
+     */
+    @Override
+    public VersioningAPIImpl getVersioningDb() { // not used in metadata browser
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     *
+     * @return @throws UnsupportedOperationException always
+     */
+    @Override
+    public void setVersioningDb(VersioningAPIImpl db) { // not used in metadata browser
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
