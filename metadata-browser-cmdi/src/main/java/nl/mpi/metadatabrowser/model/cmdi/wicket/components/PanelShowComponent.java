@@ -25,6 +25,8 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -49,7 +51,6 @@ public final class PanelShowComponent extends Panel {
     public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnsupportedEncodingException {
         super(id);
         String title;
-        final Form form = new Form("nodeInfoForm");
         final Form formDetails = new Form("nodeInfoDetails") {
             @Override
             public void onEvent(IEvent<?> event) {
@@ -57,7 +58,7 @@ public final class PanelShowComponent extends Panel {
             }
         };
         String nodeName = node.getName();
-        form.add(new Label("name", nodeName));
+        add(new Label("name", nodeName));
 
         final URI nodeId = node.getNodeURI();
         final URI parent = csdb.getCanonicalParent(nodeId);
@@ -66,17 +67,13 @@ public final class PanelShowComponent extends Panel {
         } else {
             title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getNode(parent).getName());
         }
-        Date objectFileTime = csdb.getNode(nodeId).getFileInfo().getFileTime();
-        String lastModified = "";
-        if (objectFileTime != null) {
-            lastModified = new Date(objectFileTime.getTime()).toString();
-        }
 
         String resolver = csdb.getHandleResolverURI().toString();
-        String archive_name = "archive"; //TODO enable csdb.getArchiveRoots().getArchiveName();
-        if (archive_name == null) {
-            archive_name = "unknown";
-        }
+        //TODO enable csdb.getArchiveRoots().getArchiveName();
+//        String archive_name = "archive";
+//        if (archive_name == null) {
+//            archive_name = "unknown";
+//        }
 
         final URI handle = nodeResolver.getPID(node); // can be null
         String wrapHandle = "";
@@ -84,7 +81,6 @@ public final class PanelShowComponent extends Panel {
             wrapHandle = handle.getSchemeSpecificPart();
         }
         final String resolvedHandle = resolver.concat(wrapHandle);
-        final String archiveName = archive_name;
         URL url = nodeResolver.getUrl(node);
 
         final String viewHandle = resolvedHandle.concat("@view");
@@ -92,44 +88,37 @@ public final class PanelShowComponent extends Panel {
         if (handle == null) {
             handleLink.setVisible(false);
         }
-        form.add(handleLink);
+        add(handleLink);
 
-        //embeded citation down the page
         ExternalLink openpath = new ExternalLink("openpath", "?openpath=" + node.getNodeURI(), nodeName);
-        formDetails.add(openpath);
+        add(openpath);
+
+        // details
         formDetails.add(new Label("nodeId", nodeIdFilter.getURIParam(nodeId)));
         formDetails.add(new Label("title", title));
 
-        formDetails.add(new Label("cite_title", title));
-        formDetails.add(new Label("author", "unknwon"));
-        formDetails.add(new Label("archive_name", archiveName));
-        formDetails.add(new Label("format", node.getFormat()));
-        formDetails.add(new Label("last_modified", lastModified));
-
-        if (handle != null) {
-            formDetails.add(new Label("cite_handle", wrapHandle));
-            formDetails.add(new Label("resolvedHandle", resolvedHandle));
-        } else {
-            formDetails.add(new Label("cite_handle", "no handle for this resource"));
-            formDetails.add(new Label("resolvedHandle", "no handle was found for this resource"));
-        }
         formDetails.add(new ExternalLink("nodeLink", url.toString(), url.toString()));
         formDetails.setVisible(false);
 
-        Link showDetails = new Link("showDetails") {
-            @Override
-            public void onClick() {
-                formDetails.setVisible(true);
-            }
-        };
-
         // Put details/submit form in container for refresh through AJAX
-        final MarkupContainer formInfoContainer = new WebMarkupContainer("formInfoContainer");
-        formInfoContainer.add(form);
-        // Add container to page
-        add(formInfoContainer);
-
         final MarkupContainer formDetailsContainer = new WebMarkupContainer("formDetailsContainer");
+        formDetailsContainer.setOutputMarkupId(true);
+
+        final Link showDetails = new AjaxFallbackLink("showDetails") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                formDetails.setVisible(true);
+                if (target != null) {
+                    target.add(formDetailsContainer);
+                }
+            } 
+
+            @Override
+            protected void onConfigure() {
+                setVisible(!formDetails.isVisible());
+            }
+            
+        };
         formDetailsContainer.add(showDetails);
         formDetailsContainer.add(formDetails);
         add(formDetailsContainer);

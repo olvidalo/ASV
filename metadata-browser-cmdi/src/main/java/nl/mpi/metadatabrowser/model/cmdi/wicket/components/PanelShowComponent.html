@@ -8,36 +8,22 @@
     <body>
         <wicket:panel>
             <h1>Cite this resource</h1>
-            <div wicket:id="formInfoContainer">
-                <form wicket:id="nodeInfoForm">
+            <div>
                     <p>"<span wicket:id="name">Name</span>" from The Language Archive: <a href="" wicket:id="handleLink"></a></p>
                     <p><em>Use the link above for citing this resource or (sub)corpus in a persistent way in your publications or for linking to it on web sites. Please have a look at the metadata description to find out which person(s) or project(s) should be mentioned as author.</em></p>
-                </form></div><br />
+
+                    <p>To save a reference to the CMDI Browser with the tree opened to this node, bookmark the following link:<br/>
+                        <a href="" wicket:id="openpath" target="parent">name</a><br/>
+                    </p></div><br />
             <div wicket:id="formDetailsContainer">
-                <input type="button" value="show details..." wicket:id="showDetails" />
+                <a wicket:id="showDetails">Show details...</a>
                 <form wicket:id="nodeInfoDetails">
-
-
-                    Internal node id: <span wicket:id="nodeId">Node id</span><br/>
+                    <hr />
+                    <h1>Details</h1>
                     Title: <span wicket:id="title">title</span><br/>
+                    Internal node id: <span wicket:id="nodeId">Node id</span><br/>
                     Link to the node: <a href="" wicket:id="nodeLink"></a><br/>
                     <br/>
-                    To save a reference to the CMDI Browser with the tree opened to this node, bookmark the following link:<br/>
-                    <a href="" wicket:id="openpath" target="parent">name</a><br/>
-                    <br/>
-                    <br/>
-                    <h1>Cite an archive node or resource</h1>
-                    <br/>
-                    You can create citations for this resource by embedding the following text in your document:
-                    <br/>
-
-                    Title: <span wicket:id="cite_title">title</span><br/>
-                    Author(s): <span wicket:id="author">author</span><br/>
-                    Archive Name: <span wicket:id="archive_name">archive name</span><br/>
-                    Resource format: <span wicket:id="format">format</span><br/>
-                    Published: <span wicket:id="last_modified">last modified</span><br/>
-                    Handle: <span wicket:id="cite_handle">Handle</span><br/>
-                    Link: <span wicket:id="resolvedHandle">Resolved Handle</span><br/>
                 </form>
             </div>
         </wicket:panel>
