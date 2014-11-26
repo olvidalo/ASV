@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-class NodeActionLink extends Link {
+class NodeActionLink extends Link { //TODO: AjaxFallbackLink
 
     private final static Logger logger = LoggerFactory.getLogger(NodeActionLink.class);
     // Services

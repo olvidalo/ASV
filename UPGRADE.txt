@@ -4,11 +4,23 @@ from 1.0 to >= 1.1
 		e.g.  <Parameter name="nl.mpi.translationservicebase"
 						 value="https://lux16.mpi.nl/ds/TranslationService" />       
 
-	- add new context parameter nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+	- add new context parameters nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+ 							     nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource
+ 							     nl.mpi.metadatabrowser.adapter.DAMLRResource
+ 							     nl.mpi.metadatabrowser.adapter.ADSResource
 				 
 		e.g. <Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
-					    value="java:comp/env/jdbc/CSDB3" />   
+					    value="java:comp/env/jdbc/CSDB" />   
+					    
+			<Parameter name="nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource"
+					    value="java:comp/env/jdbc/AMS2DB" />   
 
+			<Parameter name="nl.mpi.metadatabrowser.adapter.DAMLRResource"
+					    value="java:comp/env/ldap/DAMLR" />   
+			
+			<Parameter name="nl.mpi.metadatabrowser.adapter.ADSResource"
+					    value="java:comp/env/kdc/MPI-NL" />  
+					    
 	- add new context parameters nl.mpi.metadatabrowser.schemeReplacePrefix and
 								 nl.mpi.metadatabrowser.schemeReplaceTargetScheme
 				(which replace nl.mpi.imdiBrowser.forceHttpOrHttps and

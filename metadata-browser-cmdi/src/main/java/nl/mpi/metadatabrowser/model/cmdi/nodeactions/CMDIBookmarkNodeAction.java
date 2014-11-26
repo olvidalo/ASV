@@ -17,8 +17,6 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.UnsupportedEncodingException;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -30,7 +28,6 @@ import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelShowComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,14 +38,6 @@ import org.springframework.stereotype.Component;
 public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final CorpusStructureProvider csdb;
-    private final NodeResolver nodeResolver;
-
-    @Autowired
-    public CMDIBookmarkNodeAction(CorpusStructureProvider csdb, NodeResolver nodeResolver) {
-        this.csdb = csdb;
-        this.nodeResolver = nodeResolver;
-    }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
@@ -57,14 +46,8 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
         final ShowComponentRequest request = new ShowComponentRequest() {
             @Override
             public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-                try {
-                    // create panel form for bookmark action
-                    return new PanelShowComponent(id, node, csdb, nodeResolver);
-                    //} catch (UnknownNodeException ex) {
-                    //  throw new ControllerActionRequestException("Error creating display panel for node " + node.getNodeURI(), ex);
-                } catch (UnsupportedEncodingException ex) {
-                    throw new ControllerActionRequestException("Error due to encoding problem for creating display panel for node " + node.getNodeURI(), ex);
-                }
+                // create panel form for citation action
+                return new PanelShowComponent(id, node);
             }
         };
         return new SimpleNodeActionResult(request);
