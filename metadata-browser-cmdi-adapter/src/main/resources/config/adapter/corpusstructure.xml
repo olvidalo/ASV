@@ -24,7 +24,7 @@
     <!-- CSDB proxy -->
     <bean id="csdbContainer" class="nl.mpi.archiving.corpusstructure.adapter.servlet.ThreadLocalCSDBContainer" />
             
-<!--    <bean id="springCorpusStructureFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.CSDBConnectionFilter" />-->
+    <!--    <bean id="springCorpusStructureFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.CSDBConnectionFilter" />-->
     
     <bean id="csdbImplFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureDBImplFactory">
         <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
@@ -48,7 +48,13 @@
         <constructor-arg ref="csdbContainer" />
     </bean>
     
-    <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
+    <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.CachingHandleResolver">
+        <!-- Cache resolver results for 5 minutes -->
+        <constructor-arg>
+            <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
+        </constructor-arg>
+        <constructor-arg name="expireTime" value="300" />
+    </bean>
 
     <bean id="nodeUriUtils" class="nl.mpi.archiving.corpusstructure.adapter.NodeUriUtils" />
 
