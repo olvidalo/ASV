@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC 
+	"-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+	
+<beans>
+    <!-- Copied and adpated (to use context parameters to select JNDI resources) from AMS2 version 1.5 -->
+
+    <!-- Load properties from context.xml via servlet container -->
+    <bean
+        class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="false" />
+    </bean>
+    
+    <!-- ** persistence layer :: hibernate  ************************************ -->
+
+    <!-- datasource, driver & connection -->
+    <!-- datasource in JNDI mode -->
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" >
+        <property name="jndiName">
+            <value>${nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource}</value>
+        </property>
+    </bean>
+	
+    <!-- import resource="persistence.xml" /-->
+	
+</beans>

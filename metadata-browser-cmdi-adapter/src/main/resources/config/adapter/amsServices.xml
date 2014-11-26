@@ -28,7 +28,9 @@
         />
     -->
 
-    <import resource="classpath:spring-ams2-core.xml"/>
+    <!-- Import the copied and slightly adapted AMS wiring -->
+    <import resource="../../ams-config/spring-ams2-core.xml"/>
+    
     <bean id="AmsService" class="nl.mpi.metadatabrowser.cmdi.ams.AmsRemoteServiceHybridAdapter"/>
 
     <bean id="authService" class="nl.mpi.archiving.corpusstructure.adapter.ams.AmsAuthorizationServiceAdapter">
