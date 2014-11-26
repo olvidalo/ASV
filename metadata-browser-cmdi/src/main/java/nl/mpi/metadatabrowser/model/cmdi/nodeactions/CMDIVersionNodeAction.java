@@ -16,8 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -26,10 +24,8 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelVersionComponent;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,27 +36,17 @@ import org.springframework.stereotype.Component;
 public class CMDIVersionNodeAction extends SingleNodeAction implements NodeAction {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final CorpusStructureProvider csdb;
-    private final NodeResolver resolver;
-
-    @Autowired
-    public CMDIVersionNodeAction(CorpusStructureProvider csdb, NodeResolver resolver) {
-        this.csdb = csdb;
-        this.resolver = resolver;
-    }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         logger.debug("Action [{}] invoked on {}", getName(), node);
         final String userid = auth.getPrincipalName();
-        //TO DO connect to versionAPI DB
-        final MockVersioningAPI versions = new MockVersioningAPI("jdbcurl");
 
         final ShowComponentRequest request = new ShowComponentRequest() {
             @Override
             public org.apache.wicket.Component getComponent(String id) {
                 // create panel form for version action
-                return new PanelVersionComponent(id, node, userid, versions);
+                return new PanelVersionComponent(id, node, userid);
             }
         };
         return new SimpleNodeActionResult(request);

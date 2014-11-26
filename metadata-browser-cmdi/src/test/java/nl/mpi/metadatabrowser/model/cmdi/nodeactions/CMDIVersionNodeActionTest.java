@@ -16,8 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
@@ -58,31 +56,15 @@ public class CMDIVersionNodeActionTest {
     public void testExecute() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
         final MockAuthenticationHolderImpl auth = new MockAuthenticationHolderImpl();
         auth.setPrincipalName(null);
 
-        CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
+        CMDIVersionNodeAction instance = new CMDIVersionNodeAction();
         instance.setAuthenticationHolder(auth);
         NodeActionResult result = instance.execute(node);
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
         assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
-    }
-
-    /**
-     * Test of getName method, of class CMDIVersionNodeAction.
-     */
-    @Test
-    public void testGetName() {
-        System.out.println("getName");
-        final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-        final NodeResolver nodeResolver = context.mock(NodeResolver.class);
-        CMDIVersionNodeAction instance = new CMDIVersionNodeAction(csdb, nodeResolver);
-        String expResult = "Version Info";
-        String result = instance.getName();
-        assertEquals(expResult, result);
     }
 }

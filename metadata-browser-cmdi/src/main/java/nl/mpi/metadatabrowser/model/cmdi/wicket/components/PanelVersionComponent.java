@@ -19,26 +19,25 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
+import nl.mpi.archiving.corpusstructure.core.ExtendedCorpusNode;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.corpusstructure.provider.VersionInfoProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
-import nl.mpi.metadatabrowser.services.cmdi.mock.MockVersioningAPI;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,37 +58,34 @@ public class PanelVersionComponent extends Panel {
     @SpringBean
     private NodeResolver resolver;
     @SpringBean
+    private VersionInfoProvider versionInfoProvider;
+    @SpringBean
     private URIFilter nodeUriFilter;
 
-    public PanelVersionComponent(String id, TypedCorpusNode node, String userid, MockVersioningAPI versions) {
+    public PanelVersionComponent(String id, TypedCorpusNode node, String userid) {
         super(id);
         try {
-            List versionsNodeIds = null;
-
             // create marker for html wicket table
             RepeatingView repeating = new RepeatingView("rowItems");
             add(repeating);
-
-            boolean showRetired = true;
+            
+            add(new Label("nodeName", node.getName()));
 
             final URI nodeURI = node.getNodeURI();
-            //versions = new VersioningAPI(Configuration.getInstance().versDBConnectionURL);
-            if (versions.getStatus("versioningTableInfo")) {
-                versionsNodeIds = versions.getAllVersions(nodeURI, showRetired);
-            }
-            URL nodeURL = resolver.getUrl(node);
+            final Collection<ExtendedCorpusNode> versionsNodes = versionInfoProvider.getAllVersions(nodeURI);
+            final URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null)) {
                 try {
-                    final Boolean hasaccess = accessChecker.hasAccess(userid, nodeURI);
 
                     // loop through the list of versions for a node to write them in the table.
-                    if (versionsNodeIds != null && versionsNodeIds.size() > 0) {
+                    if (versionsNodes != null && versionsNodes.size() > 0) {
                         final String handleResolver = csdb.getHandleResolverURI().toString();
-                        addVersionInfo(versionsNodeIds, repeating, node, versions, hasaccess, handleResolver);
+                        addVersionInfo(versionsNodes, repeating, userid, handleResolver);
                     } else { // list is empty
                         //TODO decide if it is revelant to display table with no value or simply return a message.
+                        final Boolean hasaccess = accessChecker.hasAccess(userid, nodeURI);
                         repeating.add(new Label("hasaccess", hasaccess.toString()));
-                        repeating.add(new Label("currentNodeDate", "unknown"));
+                        repeating.add(new Label("currentNodeDate", ""));
                         repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
                         repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
                         add(repeating);
@@ -105,45 +101,53 @@ public class PanelVersionComponent extends Panel {
         }
     }
 
-    private void addVersionInfo(List versionsNodeIds, RepeatingView repeating, TypedCorpusNode node, MockVersioningAPI versions, final Boolean hasaccess, String handleResolver) throws URISyntaxException, IllegalArgumentException, UriBuilderException {
-        for (int v = 0; v < versionsNodeIds.size(); v++) {
+    private void addVersionInfo(Collection<ExtendedCorpusNode> versionsNodes, RepeatingView repeating, String userId, String handleResolver) throws URISyntaxException, IllegalArgumentException, UriBuilderException, NodeNotFoundException {
+        for (ExtendedCorpusNode node : versionsNodes) {
+            
             // for each loop add a row
             AbstractItem item = new AbstractItem(repeating.newChildId());
             repeating.add(item);
-            final URI currentNodeId = new URI(versionsNodeIds.get(v).toString());
 
-            String secureCurrentNodeUrlStr;
-            try {
-                // allow filter to rewrite, e.g. http->https
-                secureCurrentNodeUrlStr = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
-            } catch (URISyntaxException ex) {
-                // highly unlikely
-                logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
-                secureCurrentNodeUrlStr = resolver.getUrl(node).toString();
-            }
+            final URI nodeURI = node.getNodeURI();
+            
+            final String nodeUrl = getNodeUrl(node);
 
+            final Boolean hasaccess = accessChecker.hasAccess(userId, nodeURI);
             // add fields for each row
-            Date currentNodeDate = versions.getDateOfVersion(currentNodeId);
-            item.add(new Label("hasaccess", hasaccess.toString()));
-            item.add(new Label("currentNodeDate", currentNodeDate.toString()));
-            item.add(new ExternalLink("linktoNode", secureCurrentNodeUrlStr, nodeIdFilter.getURIParam(node.getNodeURI())));
+            Date currentNodeDate = versionInfoProvider.getDateOfVersion(nodeURI);
+            item.add(new Label("hasaccess", hasaccess ? "yes" : "no"));
+            item.add(new Label("currentNodeDate", currentNodeDate));
+            item.add(new ExternalLink("linktoNode", nodeUrl, nodeIdFilter.getURIParam(nodeURI)));
 
             URI nodePID = resolver.getPID(node);
             if (nodePID != null) {
                 item.add(new ExternalLink("linktoPID", UriBuilder.fromUri(handleResolver + nodePID.toString()).build().toString(), nodePID.toString()));
             } else {
-                item.add(new ExternalLink("linktoPID", "", "no link to the specified node were found"));
+                item.add(new ExternalLink("linktoPID", "", "no persistent identifier available"));
             }
 
-            final int idx = v;
-            item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public String getObject() {
-                    return (idx % 2 == 1) ? "even" : "odd";
-                }
-            }));
+//            final int idx = v;
+//            item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>() {
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public String getObject() {
+//                    return (idx % 2 == 1) ? "even" : "odd";
+//                }
+//            }));
         }
+    }
+
+    private String getNodeUrl(ExtendedCorpusNode node) {
+        String nodeUrl;
+        try {
+            // allow filter to rewrite, e.g. http->https
+            nodeUrl = nodeUriFilter.filterURI(resolver.getUrl(node).toURI()).toString();
+        } catch (URISyntaxException ex) {
+            // highly unlikely
+            logger.warn("Node resolver URL was not a valid URI!" + ex.getMessage());
+            nodeUrl = resolver.getUrl(node).toString();
+        }
+        return nodeUrl;
     }
 }
