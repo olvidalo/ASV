@@ -73,6 +73,6 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
 
     @Override
     public String getTitle() {
-        return "Shoe version information for the selected node";
+        return "Show version information for the selected node";
     }
 }
