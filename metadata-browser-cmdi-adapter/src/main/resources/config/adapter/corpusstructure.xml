@@ -22,7 +22,7 @@
     </bean>
     
     <!-- CSDB proxy -->
-    <bean id="csdbContainer" class="nl.mpi.metadatabrowser.services.cmdi.util.ThreadLocalCSDBContainer" />
+    <bean id="csdbContainer" class="nl.mpi.archiving.corpusstructure.adapter.servlet.ThreadLocalCSDBContainer" />
             
 <!--    <bean id="springCorpusStructureFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.CSDBConnectionFilter" />-->
     
@@ -41,6 +41,13 @@
         <constructor-arg ref="csdbContainer" />
     </bean>
     
+    <bean id="versioningFactory" class="nl.mpi.archiving.corpusstructure.adapter.VersioningAPIImplFactory">
+        <constructor-arg value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
+    </bean>
+    <bean id="versioningProxy" class="nl.mpi.archiving.corpusstructure.adapter.db.proxy.VersioningAPIProxy" name="adapterVersioning" primary="true">
+        <constructor-arg ref="csdbContainer" />
+    </bean>
+    
     <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
 
     <bean id="nodeUriUtils" class="nl.mpi.archiving.corpusstructure.adapter.NodeUriUtils" />
@@ -48,7 +55,8 @@
     <!-- CSDB factory for CorpusStructureAPI adapter -->
     <bean id="csProviderFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
         <constructor-arg ref="csdbProxy" />
-        <constructor-arg ref="aoProxy" />        
+        <constructor-arg ref="aoProxy" />     
+        <constructor-arg ref="versioningProxy" />   
         <constructor-arg ref="handleResolver" />
         <constructor-arg ref="nodeUriUtils" />
         <constructor-arg name="translationServiceBaserUrl" value="${nl.mpi.translationservicebase}" />
@@ -69,6 +77,9 @@
     <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
     <bean id="nodeResolver" factory-bean="csProviderFactory" factory-method="createNodeResolver" />
     
+    <!-- Versioning info provider -->
+    <bean id="versionInfoProvider" factory-bean="csProviderFactory" factory-method="createVersionInfoProvider" />
+    
     <!-- Bean to refer to empty filter. Does absolutely nothing. It' a placeholder for the SessionInViewFilter we need for the CMDI profile -->
-    <bean id="springDataSourceConnectionFilter" class="nl.mpi.metadatabrowser.services.cmdi.filter.CSDBConnectionFilter" />
+    <bean id="springDataSourceConnectionFilter" class="nl.mpi.archiving.corpusstructure.adapter.servlet.CSDBConnectionFilter" />
 </beans>
