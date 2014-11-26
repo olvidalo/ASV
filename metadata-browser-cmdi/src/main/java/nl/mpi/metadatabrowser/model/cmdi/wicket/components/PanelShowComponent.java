@@ -16,14 +16,13 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Date;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -35,8 +34,6 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -44,66 +41,68 @@ import org.slf4j.LoggerFactory;
  */
 public final class PanelShowComponent extends Panel {
 
-    private final static Logger logger = LoggerFactory.getLogger(PanelShowComponent.class);
     @SpringBean
     private NodeIdFilter nodeIdFilter;
+    @SpringBean
+    private CorpusStructureProvider csdb;
+    @SpringBean
+    private NodeResolver nodeResolver;
 
-    public PanelShowComponent(String id, TypedCorpusNode node, CorpusStructureProvider csdb, NodeResolver nodeResolver) throws UnsupportedEncodingException {
+    public PanelShowComponent(String id, TypedCorpusNode node) {
         super(id);
-        String title;
-        final Form formDetails = new Form("nodeInfoDetails") {
-            @Override
-            public void onEvent(IEvent<?> event) {
-                super.onEvent(event);
-            }
-        };
-        String nodeName = node.getName();
-        add(new Label("name", nodeName));
 
         final URI nodeId = node.getNodeURI();
+
+        final String nodeName = node.getName();
+        add(new Label("name", nodeName));
+
         final URI parent = csdb.getCanonicalParent(nodeId);
+        final String title;
         if (parent == null) {
             title = String.format("Resource \"%s\" is root node", node.getName());
         } else {
             title = String.format("Resource \"%s\" from \"%s\"", node.getName(), csdb.getNode(parent).getName());
         }
 
-        String resolver = csdb.getHandleResolverURI().toString();
-        //TODO enable csdb.getArchiveRoots().getArchiveName();
-//        String archive_name = "archive";
-//        if (archive_name == null) {
-//            archive_name = "unknown";
-//        }
-
+        final URL url = nodeResolver.getUrl(node);
         final URI handle = nodeResolver.getPID(node); // can be null
-        String wrapHandle = "";
         if (handle != null) {
-            wrapHandle = handle.getSchemeSpecificPart();
+            final String wrapHandle = handle.getSchemeSpecificPart();
+            final String resolver = csdb.getHandleResolverURI().toString();
+            final String viewHandle = resolver.concat(wrapHandle) + "@view";
+            add(new ExternalLink("handleLink", viewHandle, viewHandle));
+        } else {
+            add(new ExternalLink("handleLink", url.toString(), url.toString()));
         }
-        final String resolvedHandle = resolver.concat(wrapHandle);
-        URL url = nodeResolver.getUrl(node);
-
-        final String viewHandle = resolvedHandle.concat("@view");
-        ExternalLink handleLink = new ExternalLink("handleLink", viewHandle, viewHandle);
-        if (handle == null) {
-            handleLink.setVisible(false);
-        }
-        add(handleLink);
 
         ExternalLink openpath = new ExternalLink("openpath", "?openpath=" + node.getNodeURI(), nodeName);
         add(openpath);
 
+        add(createDetails(nodeId, title, url));
+    }
+
+    private Component createDetails(final URI nodeId, String title, final URL url) {
+
+        final Form formDetails = new Form("nodeInfoDetails") {
+            @Override
+            public void onEvent(IEvent<?> event) {
+                super.onEvent(event);
+            }
+        };
         // details
         formDetails.add(new Label("nodeId", nodeIdFilter.getURIParam(nodeId)));
         formDetails.add(new Label("title", title));
-
         formDetails.add(new ExternalLink("nodeLink", url.toString(), url.toString()));
         formDetails.setVisible(false);
 
+        //TODO (?) enable csdb.getArchiveRoots().getArchiveName();
+//        String archive_name = "archive";
+//        if (archive_name == null) {
+//            archive_name = "unknown";
+//        }
         // Put details/submit form in container for refresh through AJAX
         final MarkupContainer formDetailsContainer = new WebMarkupContainer("formDetailsContainer");
         formDetailsContainer.setOutputMarkupId(true);
-
         final Link showDetails = new AjaxFallbackLink("showDetails") {
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -111,16 +110,16 @@ public final class PanelShowComponent extends Panel {
                 if (target != null) {
                     target.add(formDetailsContainer);
                 }
-            } 
+            }
 
             @Override
             protected void onConfigure() {
                 setVisible(!formDetails.isVisible());
             }
-            
+
         };
         formDetailsContainer.add(showDetails);
         formDetailsContainer.add(formDetails);
-        add(formDetailsContainer);
+        return formDetailsContainer;
     }
 }

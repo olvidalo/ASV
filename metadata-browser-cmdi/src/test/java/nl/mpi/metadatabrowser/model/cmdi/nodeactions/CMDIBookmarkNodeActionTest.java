@@ -42,25 +42,6 @@ public class CMDIBookmarkNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
 
-    public CMDIBookmarkNodeActionTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of execute method, of class CMDIBookmarkNodeAction.
      */
@@ -68,13 +49,11 @@ public class CMDIBookmarkNodeActionTest {
     public void testExecute() throws Exception {
 	System.out.println("execute bookmark test");
 	final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-	final NodeResolver resolver = context.mock(NodeResolver.class);
 
 	Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
 	nodes.add(node);
 
-	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb, resolver);
+	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction();
 	NodeActionResult result = instance.execute(nodes);
 	assertEquals("Citation", instance.getName());
 
@@ -89,9 +68,7 @@ public class CMDIBookmarkNodeActionTest {
     @Test
     public void testGetName() {
 	System.out.println("getName");
-	final CorpusStructureProvider csdb = context.mock(CorpusStructureProvider.class);
-	final NodeResolver resolver = context.mock(NodeResolver.class);
-	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction(csdb, resolver);
+	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction();
 	String expResult = "Citation";
 	String result = instance.getName();
 	assertEquals(expResult, result);
