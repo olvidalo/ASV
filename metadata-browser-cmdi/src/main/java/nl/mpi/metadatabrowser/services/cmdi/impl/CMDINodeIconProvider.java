@@ -167,24 +167,27 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ResourceReference, combination of both icon given as parameters.
      */
     private ResourceReference createCombinedIcon(final ImageIcon typeIcon, final ImageIcon accessLevel, String name) {
-        ResourceReference combinedIcon = new ResourceReference(name) {
+        // create image
+        final int w = (int) (typeIcon.getImage().getWidth(null) + (float) accessLevel.getImage().getWidth(null));
+        final int h = Math.max(typeIcon.getImage().getHeight(null), accessLevel.getImage().getHeight(null));
+
+        final BufferedImage testing = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2 = testing.createGraphics();
+        typeIcon.paintIcon(null, g2, 1, 0);
+        accessLevel.paintIcon(null, g2, typeIcon.getImage().getWidth(null), 0);
+        g2.dispose();
+
+        // store the image in a buffered resource
+        final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
+        resource.setImage(testing);
+        resource.setFormat("PNG");
+
+        return new ResourceReference(name) {
             @Override
             public IResource getResource() {
-                final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();
-                int w = (int) (typeIcon.getImage().getWidth(null) + (float) accessLevel.getImage().getWidth(null));
-                int h = Math.max(typeIcon.getImage().getHeight(null), accessLevel.getImage().getHeight(null));
-
-                final BufferedImage testing = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2 = testing.createGraphics();
-                typeIcon.paintIcon(null, g2, 1, 0);
-                accessLevel.paintIcon(null, g2, typeIcon.getImage().getWidth(null), 0);
-                g2.dispose();
-                resource.setImage(testing);
-                resource.setFormat("PNG");
                 return resource;
             }
         };
-        return combinedIcon;
     }
 
     private ImageIcon getNodeTypeIcon(final NodeType nodeType) {
