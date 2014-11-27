@@ -53,7 +53,7 @@
         <constructor-arg>
             <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
         </constructor-arg>
-        <constructor-arg name="expireTime" value="300" />
+        <constructor-arg name="expireTime" value="${nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry}" /> 
     </bean>
 
     <bean id="nodeUriUtils" class="nl.mpi.archiving.corpusstructure.adapter.NodeUriUtils" />

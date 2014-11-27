@@ -37,6 +37,14 @@ from 1.0 to >= 1.1
          value="https"
          description="protocol enforcement on matching URLs, e.g. http or https" />
          
+    - add new context parameter
+    
+    e.g. <Parameter 
+            name="nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry"
+            value="600"
+            description="amount of time in seconds for which handle - URL resolutions
+                         should be cached" />
+         
 	- (optional) add new optional context parameters 
 				nl.mpi.metadatabrowser.wicket.maxSizePerSession and
 				nl.mpi.metadatabrowser.wicket.inmemoryCacheSize
