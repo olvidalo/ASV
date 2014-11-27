@@ -1,67 +1,63 @@
 from 1.0 to >= 1.1
-	- add new context parameter nl.mpi.translationservicebase
 
-		e.g.  <Parameter name="nl.mpi.translationservicebase"
-						 value="https://lux16.mpi.nl/ds/TranslationService" />       
-
-	- add new context parameters nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
- 							     nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource
- 							     nl.mpi.metadatabrowser.adapter.DAMLRResource
- 							     nl.mpi.metadatabrowser.adapter.ADSResource
-				 
-		e.g. <Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
-					    value="java:comp/env/jdbc/CSDB" />   
-					    
-			<Parameter name="nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource"
-					    value="java:comp/env/jdbc/AMS2DB" />   
-
-			<Parameter name="nl.mpi.metadatabrowser.adapter.DAMLRResource"
-					    value="java:comp/env/ldap/DAMLR" />   
-			
-			<Parameter name="nl.mpi.metadatabrowser.adapter.ADSResource"
-					    value="java:comp/env/kdc/MPI-NL" />  
-					    
-	- add new context parameters nl.mpi.metadatabrowser.schemeReplacePrefix and
-								 nl.mpi.metadatabrowser.schemeReplaceTargetScheme
-				(which replace nl.mpi.imdiBrowser.forceHttpOrHttps and
-							   nl.mpi.imdiBrowser.forceHttpsPrefix)
-						 
-      e.g.:
-      <Parameter 
-         name="nl.mpi.metadatabrowser.schemeReplacePattern"
-         value="http:\/\/lux16\.mpi\.nl.*"
-         description="URLs matching this regex will have their scheme rewritten" />
-         
-      <Parameter 
-         name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"
-         value="https"
-         description="protocol enforcement on matching URLs, e.g. http or https" />
-         
-    - add new context parameter
-    
-    e.g. <Parameter 
-            name="nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry"
-            value="600"
-            description="amount of time in seconds for which handle - URL resolutions
-                         should be cached" />
-         
-	- (optional) add new optional context parameters 
-				nl.mpi.metadatabrowser.wicket.maxSizePerSession and
-				nl.mpi.metadatabrowser.wicket.inmemoryCacheSize
+	* Add new context parameters: 
+		nl.mpi.translationservicebase
+		nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+		nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource
+		nl.mpi.metadatabrowser.adapter.DAMLRResource
+		nl.mpi.metadatabrowser.adapter.ADSResource
+		nl.mpi.metadatabrowser.schemeReplacePrefix
+		nl.mpi.metadatabrowser.schemeReplaceTargetScheme
+		nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry
+		[OPTIONAL] nl.mpi.metadatabrowser.wicket.maxSizePerSession 
+		[OPTIONAL] nl.mpi.metadatabrowser.wicket.inmemoryCacheSize
 	
-	  e.g. (with default values)
-	  
-	  <Parameter 
-	    name="nl.mpi.metadatabrowser.wicket.maxSizePerSession"
-		value="10M" 
-		description="Representation of the size for page store file (cache on disk per
-					 session), e.g. '10M' or '1024K'"/>   
+	  e.g.:
+	  <!-- BEGIN METADATA BROWSER 1.1 CONTEXT PARAMETERS EXAMPLE -->
+		<Parameter name="nl.mpi.translationservicebase"
+					 value="https://lux16.mpi.nl/ds/TranslationService" />       
 
-	  <Parameter 
-	    name="nl.mpi.metadatabrowser.wicket.inmemoryCacheSize"
-		value="0" 
-		description="The integer parameter is the maximum number of page instances that 
-     				 will be saved into application-scoped cache (0 is disabled)"/>   
+		<Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
+					value="java:comp/env/jdbc/CSDB" />   
+			
+		<Parameter name="nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource"
+					value="java:comp/env/jdbc/AMS2DB" />   
+
+		<Parameter name="nl.mpi.metadatabrowser.adapter.DAMLRResource"
+					value="java:comp/env/ldap/DAMLR" />   
+
+		<Parameter name="nl.mpi.metadatabrowser.adapter.ADSResource"
+					value="java:comp/env/kdc/MPI-NL" />  
+			
+		<Parameter name="nl.mpi.metadatabrowser.schemeReplacePattern"
+			value="http:\/\/lux16\.mpi\.nl.*"
+			description="URLs matching this regex will have their scheme rewritten" />
+
+		<Parameter name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"
+			value="https"
+			description="protocol enforcement on matching URLs, e.g. http or https" />
+
+		<Parameter name="nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry"
+			value="600"
+			description="amount of time in seconds for which handle - URL resolutions
+						 should be cached" />
+
+		<Parameter name="nl.mpi.metadatabrowser.wicket.maxSizePerSession"
+			value="10M" 
+			description="Representation of the size for page store file (cache on disk per
+					     session), e.g. '10M' or '1024K'"/>   
+
+		<Parameter name="nl.mpi.metadatabrowser.wicket.inmemoryCacheSize"
+			value="0" 
+			description="The integer parameter is the maximum number of page instances 
+					     that will be saved into application-scoped cache (0 is 
+					     disabled)"/>   
+					     
+	  <!-- END OF METADATA BROWSER 1.1 CONTEXT PARAMETERS EXAMPLE -->
+
+	* Remove context parameters:
+		nl.mpi.imdiBrowser.forceHttpOrHttps and
+		nl.mpi.imdiBrowser.forceHttpsPrefix)
 	  
 						 
 from version 1.0-Alpha

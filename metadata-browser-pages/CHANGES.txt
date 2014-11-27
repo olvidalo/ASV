@@ -1,7 +1,25 @@
+Metadata browser 1.1
+	Changes:
+			- development on cs2 profile dropped in favour of the adapter because of the
+			  decision to keep using the hybrid archive
+			- added support for the 'openhandle' parameter (#4208)
+			- added functioning display of version information
+			- action buttons available on info files
+	Fixes
+			- database connection and memory issues (#4026, #4029)
+			- downloading of protected resources (#3900, #3965)
+			- a number of performance improvements have been applied (#3468)
+			- display of resources when the URL scheme does not match (#4345)
+			
+	For more details, see <https://trac.mpi.nl/milestone/Metadatabrowser%201.1>;
+	Configuration details are described in UPGRADE.txt
+
 Metadata browser 1.0-RELEASE (01-04-2014)
     Changes:
-            - update dependencies to corpus-structure-2-1.0-beta-3 and Mpgaai-shhaa 1.0.4 (#3795 and #3793)
-            - incorporate AMS remote interface (#3791) Now uses an interface and either use old ams or the new one depending on the profile
+            - update dependencies to corpus-structure-2-1.0-beta-3 and Mpgaai-shhaa 1.0.4 
+              (#3795 and #3793)
+            - incorporate AMS remote interface (#3791) Now uses an interface and either 
+              use old ams or the new one depending on the profile
             - further implementation of yamsSearch. Now support url and handle
             - class refactoring and tests modifications
 
@@ -13,7 +31,8 @@ Metadata browser 1.0-Alpha (25-03-2014)
     Changes
             - refactor and implement view file supporting html5 and iframe as backup
             - Implements yamsSearch support (only for cmdi : status incomplete)
-            - new dependency to corpus-structure-1.0-beta2 + refactor some classes and xml files
+            - new dependency to corpus-structure-1.0-beta2 + refactor some classes and xml 
+              files
             - new log in front page
 
     Fixes
