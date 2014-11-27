@@ -17,6 +17,8 @@ from 1.0 to >= 1.1
 		<Parameter name="nl.mpi.translationservicebase"
 					 value="https://lux16.mpi.nl/ds/TranslationService" />       
 
+		<!-- Resources to use -->
+
 		<Parameter name="nl.mpi.metadatabrowser.adapter.CSDBConnectionResource"
 					value="java:comp/env/jdbc/CSDB" />   
 			
@@ -28,6 +30,8 @@ from 1.0 to >= 1.1
 
 		<Parameter name="nl.mpi.metadatabrowser.adapter.ADSResource"
 					value="java:comp/env/kdc/MPI-NL" />  
+					
+		<!-- Forcing redirection to https -->
 			
 		<Parameter name="nl.mpi.metadatabrowser.schemeReplacePattern"
 			value="http:\/\/lux16\.mpi\.nl.*"
@@ -36,11 +40,15 @@ from 1.0 to >= 1.1
 		<Parameter name="nl.mpi.metadatabrowser.schemeReplaceTargetScheme"
 			value="https"
 			description="protocol enforcement on matching URLs, e.g. http or https" />
+			
+	    <!-- Caching of handle resolution results -->
 
 		<Parameter name="nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry"
 			value="600"
 			description="amount of time in seconds for which handle - URL resolutions
 						 should be cached" />
+						 
+		<!-- Optional wicket cache settings -->
 
 		<Parameter name="nl.mpi.metadatabrowser.wicket.maxSizePerSession"
 			value="10M" 
