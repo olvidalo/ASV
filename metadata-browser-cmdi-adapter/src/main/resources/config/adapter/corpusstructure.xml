@@ -51,7 +51,7 @@
     <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.CachingHandleResolver">
         <!-- Cache resolver results for 5 minutes -->
         <constructor-arg>
-            <bean id="handleResolver" class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
+            <bean class="nl.mpi.archiving.corpusstructure.core.handle.HandleApiResolver" />
         </constructor-arg>
         <constructor-arg name="expireTime" value="${nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry}" /> 
     </bean>
