@@ -9,19 +9,22 @@
     <body>
         <wicket:panel>
             <span wicket:id="viewTitle"></span><br />
-            <video id="video" width="640" height="360" wicket:id="displayVideo">
-                Your browser doesn't support the HTML5 video tag. Try downloading the file instead.
-                Fallback flash player for no-HTML5 browsers with JavaScript turned off
-                <object width="640" height="360" type="application/x-shockwave-flash" data="../build/flashmediaelement.swf">
-                    <param name="movie" value="../build/flashmediaelement.swf" />
-                    <param name="flashvars" value="controls=true&amp;file=../media/echo-hereweare.mp4" />
-                </object>
-            </video>
+            <wicket:container wicket:id="streaming">
+                <video id="video" width="640" height="360" wicket:id="displayVideo">
+                    Your browser doesn't support the HTML5 video tag. Try downloading the file instead.
+                    Fallback flash player for no-HTML5 browsers with JavaScript turned off
+                    <object width="640" height="360" type="application/x-shockwave-flash" data="../build/flashmediaelement.swf">
+                        <param name="movie" value="../build/flashmediaelement.swf" />
+                        <param name="flashvars" value="controls=true&amp;file=../media/echo-hereweare.mp4" />
+                    </object>
+                </video>
+                <p>This is a streaming version of the selected media file that may be of reduced quality. Click <a wicket:id="original">here</a> to go to the original media.</p>
+            </wicket:container>
             <span wicket:id="altView"></span>
             <p> If you cannot see the video click <a href="" wicket:id="viewVideo" target="_blank">here </a> or consider downloading it.</p>
             <script>
                 $('audio,video').mediaelementplayer({
-                    success: function(player, node) {
+                    success: function (player, node) {
                         $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
                     }
                 });
