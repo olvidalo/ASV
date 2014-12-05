@@ -98,7 +98,7 @@ ul#navigation .Version a {
     font-style: normal;
 }
 
-ul#navigation a {
+ul#navigation a, div#linksPanel a {
     font-family: 'Verdana';
     font-weight: normal;
     font-style: normal;
@@ -157,7 +157,7 @@ ul#navigation a {
 }
 
 .View:before {
-    content: "\e60e";
+    content: "\e608";
 }
 
 .Download:before {
@@ -195,8 +195,6 @@ ul#navigation a {
 div#linksPanel a.Bookmark, div#linksPanel a.Bookmark:visited {
     float: right;
     margin-top: 1.5em;
-    width: 3.5em;
-    height: 3em;
     background: #97424c;
 }
 
@@ -209,11 +207,6 @@ div#linksPanel a.Bookmark:active {
 
 div#linksPanel a.Bookmark:before {
     content: "\e602";
-    border-right: none;
-}
-
-.Bookmark span {
-    display: none;
 }
 
 
