@@ -34,10 +34,14 @@ import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.model.TypedSerializableCorpusNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -69,16 +73,17 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     private final MarkupContainer nodePresentationContainer;
     private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(NodesPanel.class, "res/imdi-viewer.js");
     private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(NodesPanel.class, "res/imdi-viewer.css");
-    private final ExternalLink permalink;
-    
-    public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
+    private final Component bookmarkLink;
+
+    public NodesPanel(String id, final IModel<Collection<SerializableCorpusNode>> model) {
         super(id, model);
 
         // add a panel to show feedback information (updated on model change, i.e. node selection)
         add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
-        permalink = new ExternalLink("permalink", new NodeViewLinkModel(model));
-        
-        add(permalink);
+
+        final ModalWindow bookmarkDialogue = createBookmarkDialogue();
+        bookmarkLink = createBookmarkLink(model, bookmarkDialogue);
+        add(bookmarkLink);
 
         // Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
         nodeActionsPanel = new NodesActionsPanel("nodeActions");
@@ -90,6 +95,32 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
         nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
         nodePresentationContainer.setOutputMarkupId(true);
         add(nodePresentationContainer);
+    }
+
+    private ModalWindow createBookmarkDialogue() {
+        final ModalWindow modalWindow = new ModalWindow("bookmarkdialogue");
+        modalWindow.setTitle("Bookmark or link to this node");
+        modalWindow.setInitialWidth(40);
+        modalWindow.setWidthUnit("em");
+        modalWindow.setInitialHeight(10);
+        modalWindow.setHeightUnit("em");
+        modalWindow.setResizable(false);
+        modalWindow.setMaskType(ModalWindow.MaskType.SEMI_TRANSPARENT);
+        add(modalWindow);
+        return modalWindow;
+    }
+
+    private Component createBookmarkLink(final IModel<Collection<SerializableCorpusNode>> model, final ModalWindow bookmarkDialogue) {
+        final Component link = new ExternalLink("bookmark", new NodeViewLinkModel(model));
+        link.add(new AjaxEventBehavior("onclick") {
+
+            @Override
+            protected void onEvent(AjaxRequestTarget target) {
+                bookmarkDialogue.addOrReplace(new BookmarkDialogue(bookmarkDialogue.getContentId(), model));
+                bookmarkDialogue.show(target);
+            }
+        });
+        return link;
     }
 
     @Override
@@ -163,8 +194,7 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 
     @Override
     protected void onConfigure() {
-        permalink.setVisible(getModelObject().size() == 1);
+        bookmarkLink.setVisible(getModelObject().size() == 1);
     }
-    
-    
+
 }

@@ -152,8 +152,3 @@ div#Welcome {
 div#Welcome img{
     vertical-align:text-top;
 }
-
-div#linksPanel a {
-    float: right;
-    padding-top: .2em;
-}
