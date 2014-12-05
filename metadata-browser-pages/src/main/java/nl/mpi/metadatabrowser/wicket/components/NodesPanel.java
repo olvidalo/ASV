@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import nl.mpi.metadatabrowser.wicket.NodeViewLinkModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +38,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -67,12 +69,16 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     private final MarkupContainer nodePresentationContainer;
     private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(NodesPanel.class, "res/imdi-viewer.js");
     private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(NodesPanel.class, "res/imdi-viewer.css");
-
+    private final ExternalLink permalink;
+    
     public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
         super(id, model);
 
         // add a panel to show feedback information (updated on model change, i.e. node selection)
         add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
+        permalink = new ExternalLink("permalink", new NodeViewLinkModel(model));
+        
+        add(permalink);
 
         // Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
         nodeActionsPanel = new NodesActionsPanel("nodeActions");
@@ -154,4 +160,11 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
         response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
         response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
     }
+
+    @Override
+    protected void onConfigure() {
+        permalink.setVisible(getModelObject().size() == 1);
+    }
+    
+    
 }

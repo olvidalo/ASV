@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.io.UnsupportedEncodingException;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -26,6 +25,7 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelShowComponent;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class CMDIBookmarkNodeAction extends SingleNodeAction implements NodeActi
             @Override
             public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
                 // create panel form for citation action
-                return new PanelShowComponent(id, node);
+                return new PanelShowComponent(id, Model.of(node));
             }
         };
         return new SimpleNodeActionResult(request);
