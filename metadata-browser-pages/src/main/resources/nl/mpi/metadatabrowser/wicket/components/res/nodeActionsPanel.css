@@ -279,3 +279,7 @@ div#bookmarkdialogue a.bookmarkicon:before {
 div#bookmarkdialogue a.bookmarkicon span#title {
     display: none;
 }
+
+div.wicket-mask-dark {
+    opacity: 0.9 !important;
+}

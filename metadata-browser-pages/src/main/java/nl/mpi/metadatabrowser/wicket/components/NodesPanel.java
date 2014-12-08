@@ -101,10 +101,14 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
         final ModalWindow modalWindow = new ModalWindow("bookmarkdialogue");
         modalWindow
                 .setTitle("Bookmark or link to this node")
+                // Dimensions
                 .setInitialWidth(40).setWidthUnit("em")
                 .setInitialHeight(10).setHeightUnit("em")
                 .setResizable(false)
+                // Looks
+                .setCssClassName(ModalWindow.CSS_CLASS_GRAY)
                 .setMaskType(ModalWindow.MaskType.SEMI_TRANSPARENT)
+                // Don't try to prevent the user from clicking a link in the dialogue
                 .showUnloadConfirmation(false);
         add(modalWindow);
         return modalWindow;
