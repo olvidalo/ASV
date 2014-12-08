@@ -192,9 +192,13 @@ ul#navigation a, div#linksPanel a {
     content: "\e601";
 }
 
+div#linksPanel {
+    margin: 16px;
+}
+
 div#linksPanel a.Bookmark, div#linksPanel a.Bookmark:visited {
     float: right;
-    margin-top: 1.5em;
+    margin-top: 5px;
     background: #97424c;
 }
 
