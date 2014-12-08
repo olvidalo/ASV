@@ -99,13 +99,13 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 
     private ModalWindow createBookmarkDialogue() {
         final ModalWindow modalWindow = new ModalWindow("bookmarkdialogue");
-        modalWindow.setTitle("Bookmark or link to this node");
-        modalWindow.setInitialWidth(40);
-        modalWindow.setWidthUnit("em");
-        modalWindow.setInitialHeight(10);
-        modalWindow.setHeightUnit("em");
-        modalWindow.setResizable(false);
-        modalWindow.setMaskType(ModalWindow.MaskType.SEMI_TRANSPARENT);
+        modalWindow
+                .setTitle("Bookmark or link to this node")
+                .setInitialWidth(40).setWidthUnit("em")
+                .setInitialHeight(10).setHeightUnit("em")
+                .setResizable(false)
+                .setMaskType(ModalWindow.MaskType.SEMI_TRANSPARENT)
+                .showUnloadConfirmation(false);
         add(modalWindow);
         return modalWindow;
     }
