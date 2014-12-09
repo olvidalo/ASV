@@ -80,10 +80,6 @@ public final class CitationComponent extends Panel {
             add(new ExternalLink("handleLink", url.toString(), url.toString()));
         }
 
-        final NodeViewLinkModel nodesModel = new NodeViewLinkModel(new ReadOnlySingletonCollectionModel(nodeModel));
-        final ExternalLink viewLink = new ExternalLink("openpath", nodesModel, Model.of(nodeName));
-        add(viewLink);
-
         add(createDetails(nodeId, title, url));
     }
 
