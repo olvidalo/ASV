@@ -26,16 +26,19 @@ import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  * Class Action to call AMS (Manage Access Rights).
  */
 @Component
-public class CMDIAMSNodeAction extends RedirectingNodeAction {
+public class CMDIAMSNodeAction extends EmbeddedPageNodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter filterIdProvider;
@@ -65,9 +68,9 @@ public class CMDIAMSNodeAction extends RedirectingNodeAction {
         final TypedCorpusNode node = nodes.iterator().next();
 
         // Build redirect to AMS
-        URI nodeId = node.getNodeURI();
-        String nodeid = filterIdProvider.getURIParam(nodeId);
-        URI targetURI;
+        final URI nodeId = node.getNodeURI();
+        final String nodeid = filterIdProvider.getURIParam(nodeId);
+        final URI targetURI;
         if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
             targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURLForcs2()).queryParam("nodeid", nodeid).build();
         } else {
@@ -75,4 +78,10 @@ public class CMDIAMSNodeAction extends RedirectingNodeAction {
         }
         return targetURI;
     }
+
+    @Override
+    protected IModel<String> getOpenInNewLabelModel() {
+        return Model.of("Click here to manage node access");
+    }
+
 }

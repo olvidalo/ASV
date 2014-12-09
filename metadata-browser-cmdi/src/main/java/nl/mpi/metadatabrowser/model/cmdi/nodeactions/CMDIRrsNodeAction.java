@@ -22,6 +22,8 @@ import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.StyleSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,7 +33,7 @@ import org.springframework.stereotype.Component;
  * Class that call redirect to RRS
  */
 @Component
-public class CMDIRrsNodeAction extends RedirectingNodeAction implements StyleSpecifier {
+public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements StyleSpecifier {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;
@@ -69,5 +71,10 @@ public class CMDIRrsNodeAction extends RedirectingNodeAction implements StyleSpe
             targetURI = uriBuilder.queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
         }
         return targetURI;
+    }
+
+    @Override
+    protected IModel<String> getOpenInNewLabelModel() {
+        return Model.of("Click here to request access to this node");
     }
 }

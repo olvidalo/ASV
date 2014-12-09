@@ -35,20 +35,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Panel that renders an iframe for an external link if it is 'safe' (that is,
+ * if it does not constitute a scheme switch, for example a http frame inside a
+ * page resulting from a https request). If it is not safe, a fallback link will
+ * be shown that opens the external link in a new tab.
  *
- * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ExternalFramePanel extends Panel {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private final IModel<String> redirectURL;
     private final static Logger logger = LoggerFactory.getLogger(ExternalFramePanel.class);
-    
+
     public ExternalFramePanel(String id, String redirectURL) {
         this(id, Model.of(redirectURL));
     }
-    
+
     public ExternalFramePanel(String id, IModel<String> redirectURL) {
         super(id);
         this.redirectURL = redirectURL;
@@ -58,7 +62,7 @@ public class ExternalFramePanel extends Panel {
         // create frame (will be hidden of not safe for frames)
         add(createFrameLabel("iframe"));
     }
-    
+
     private boolean determineFrameSafe(String targetUrlString) {
         // check whether target and current request share scheme 
         try {
@@ -69,7 +73,7 @@ public class ExternalFramePanel extends Panel {
                 final HttpServletRequest servletRequest = (HttpServletRequest) containerRequest;
                 final URI current = new URI(servletRequest.getRequestURL().toString());
                 return target.getScheme().equals(current.getScheme());
-                        //&& target.getHost().equals(current.getHost()); //also require host equality?
+                //&& target.getHost().equals(current.getHost()); //also require host equality?
             } else {
                 // no servlet request available, assume worst case
                 return false;
@@ -91,36 +95,46 @@ public class ExternalFramePanel extends Panel {
      */
     private Label createFrameLabel(String id) {
         final IModel<String> labelModel = new AbstractReadOnlyModel<String>() {
-            
+
             @Override
             public String getObject() {
-                return String.format("<iframe id=\"iframe\" width=\"100%%\" height=\"100%%\" align=\"center\" src=\"%1$s\"></iframe>", redirectURL.getObject());
+                return String.format("<iframe id=\"iframe\" class=\"externalPage\" src=\"%1$s\"></iframe>", redirectURL.getObject());
             }
         };
-        
+
         final Label resourcelabel = new Label(id, labelModel) {
-            
+
             @Override
             protected void onConfigure() {
                 setVisible(determineFrameSafe(redirectURL.getObject()));
             }
-            
+
         };
         resourcelabel.setEscapeModelStrings(false); // render HTML as is
         return resourcelabel;
     }
-    
+
     private Component createExternalLink(String link) {
         final WebMarkupContainer linkContainer = new WebMarkupContainer(link) {
-            
+
             @Override
             protected void onConfigure() {
                 setVisible(!determineFrameSafe(redirectURL.getObject()));
             }
-            
+
         };
-        linkContainer.add(new ExternalLink("link", redirectURL));
+        linkContainer.add(new ExternalLink("link", redirectURL, getOpenInNewLabelModel()));
         return linkContainer;
     }
-    
+
+    /**
+     * Override to provide a custom link text
+     *
+     * @return In this implementation, a model wrapping the constant "Click here
+     * to see the resource"
+     */
+    protected IModel<String> getOpenInNewLabelModel() {
+        return Model.of("Click here to see the resource");
+    }
+
 }
