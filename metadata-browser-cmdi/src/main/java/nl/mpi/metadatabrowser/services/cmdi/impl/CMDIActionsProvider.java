@@ -96,7 +96,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction,
                 bookmarkNodeAction,
-                downloadNodeAction,
                 multipleDownloadNodeAction,
                 versionNodeAction);
 
@@ -105,8 +104,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 trovaNodeAction,
                 amsNodeAction,
                 rrsNodeAction,
-                bookmarkNodeAction,
-                downloadNodeAction);
+                bookmarkNodeAction);
 
         childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
                 searchNodeAction,
@@ -114,7 +112,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction,
                 bookmarkNodeAction,
-                downloadNodeAction,
                 versionNodeAction);
 
         collectionNodeActionList = Arrays.<NodeAction>asList(
@@ -122,8 +119,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 trovaNodeAction,
                 amsNodeAction,
                 rrsNodeAction,
-                bookmarkNodeAction,
-                downloadNodeAction
+                bookmarkNodeAction
                 );
 
         resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
