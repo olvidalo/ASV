@@ -43,7 +43,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class PanelShowComponent extends Panel {
+public final class CitationComponent extends Panel {
 
     @SpringBean
     private NodeIdFilter nodeIdFilter;
@@ -52,7 +52,7 @@ public final class PanelShowComponent extends Panel {
     @SpringBean
     private NodeResolver nodeResolver;
 
-    public PanelShowComponent(String id, IModel<TypedCorpusNode> nodeModel) {
+    public CitationComponent(String id, IModel<TypedCorpusNode> nodeModel) {
         super(id);
         final TypedCorpusNode node = nodeModel.getObject();
 

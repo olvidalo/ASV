@@ -38,12 +38,12 @@ import static org.junit.Assert.*;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class CMDIBookmarkNodeActionTest {
+public class CMDICitationNodeActionTest {
 
     private final Mockery context = new JUnit4Mockery();
 
     /**
-     * Test of execute method, of class CMDIBookmarkNodeAction.
+     * Test of execute method, of class CMDICitationNodeAction.
      */
     @Test
     public void testExecute() throws Exception {
@@ -53,7 +53,7 @@ public class CMDIBookmarkNodeActionTest {
 	Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
 	nodes.add(node);
 
-	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction();
+	CMDICitationNodeAction instance = new CMDICitationNodeAction();
 	NodeActionResult result = instance.execute(nodes);
 	assertEquals("Citation", instance.getName());
 
@@ -63,12 +63,12 @@ public class CMDIBookmarkNodeActionTest {
     }
 
     /**
-     * Test of getName method, of class CMDIBookmarkNodeAction.
+     * Test of getName method, of class CMDICitationNodeAction.
      */
     @Test
     public void testGetName() {
 	System.out.println("getName");
-	CMDIBookmarkNodeAction instance = new CMDIBookmarkNodeAction();
+	CMDICitationNodeAction instance = new CMDICitationNodeAction();
 	String expResult = "Citation";
 	String result = instance.getName();
 	assertEquals(expResult, result);
