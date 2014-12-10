@@ -258,6 +258,7 @@ div#bookmarkdialogue {
 }
 
 div#bookmarkdialogue  .bookmarklinks {
+    display: block;
     border: 1px dashed;
     padding: .5em;
     margin-left: .5em;

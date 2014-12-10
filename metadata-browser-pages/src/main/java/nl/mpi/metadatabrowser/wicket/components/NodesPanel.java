@@ -102,7 +102,7 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
         modalWindow
                 .setTitle("Bookmark or link to this node")
                 // Dimensions
-                .setInitialWidth(40).setWidthUnit("em")
+                .setInitialWidth(36).setWidthUnit("em")
                 .setInitialHeight(10).setHeightUnit("em")
                 .setResizable(false)
                 // Looks
