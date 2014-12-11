@@ -70,7 +70,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
             final File zipFile = zipService.createZipFileForNodes(node, userid);
             if (zipFile == null) {
                 logger.error("none of the files are accessible to user : " + userid);
-                return new SimpleNodeActionResult(String.format("User %s has no access to any of the nodes. No zip could be created.", userid));
+                return new SimpleNodeActionResult(String.format("User %s has no access to one or more of the child nodes. No zip could be created. Log in and/or request access, then try again.", userid));
             }
             final IResourceStream resStream = new FileResourceStream(zipFile) {
                 @Override

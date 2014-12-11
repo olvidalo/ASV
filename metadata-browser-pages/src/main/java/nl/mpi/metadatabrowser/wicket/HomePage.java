@@ -143,9 +143,17 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         if (nodeUri == null) {
             return false;
         } else {
-            return treeExpander.openPath(treePanel.getTree(), rootObj, nodeUri);
+            final boolean nodeFound = treeExpander.openPath(treePanel.getTree(), rootObj, nodeUri);
+            if (!nodeFound) {
+                logger.info("Node with URI {} requested but not found", nodeUri);
+                if (nodeUri.getScheme().equalsIgnoreCase("hdl")) {
+                    error(String.format("The node with the handle '%s' does not exist in our archive. Please check for typos or transposed digits.", nodeUri.getSchemeSpecificPart()));
+                } else {
+                    error(String.format("The node with the ID '%s' does not exist in our archive. Please check for typos or transposed digits.", nodeUri.getSchemeSpecificPart()));
+                }
+            }
+            return nodeFound;
         }
-
     }
 
     private URI getNodeUriToOpen(PageParameters parameters) {

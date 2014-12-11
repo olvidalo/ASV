@@ -16,14 +16,16 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.io.Serializable;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 
 /**
- * Interface for a Corpus Node that has type information (by means of {@link NodeType}) in addition
+ * Interface for a Corpus Node that has type information (by means of {@link NodeType}) in addition.
+ * Implemenations must be serializable!
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public interface TypedCorpusNode extends CorpusNode {
+public interface TypedCorpusNode extends CorpusNode, Serializable {
 
     /**
      *

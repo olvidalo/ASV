@@ -32,7 +32,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  * @param <SerializableCorpusNode>
  */
-public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, CorpusNodeWrapper, Serializable {
+public class TypedSerializableCorpusNode<SerializableCorpusNode extends CorpusNode & Serializable> implements TypedCorpusNode, CorpusNodeWrapper {
 
     private final SerializableCorpusNode corpusNode;
     private final NodeType nodeType;

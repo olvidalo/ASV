@@ -22,6 +22,8 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import nl.mpi.metadatabrowser.wicket.NodeViewLinkModel;
+import nl.mpi.metadatabrowser.wicket.ReadOnlySingletonCollectionModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -33,13 +35,15 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class PanelShowComponent extends Panel {
+public final class CitationComponent extends Panel {
 
     @SpringBean
     private NodeIdFilter nodeIdFilter;
@@ -48,8 +52,9 @@ public final class PanelShowComponent extends Panel {
     @SpringBean
     private NodeResolver nodeResolver;
 
-    public PanelShowComponent(String id, TypedCorpusNode node) {
+    public CitationComponent(String id, IModel<TypedCorpusNode> nodeModel) {
         super(id);
+        final TypedCorpusNode node = nodeModel.getObject();
 
         final URI nodeId = node.getNodeURI();
 
@@ -74,9 +79,6 @@ public final class PanelShowComponent extends Panel {
         } else {
             add(new ExternalLink("handleLink", url.toString(), url.toString()));
         }
-
-        ExternalLink openpath = new ExternalLink("openpath", "?openpath=" + node.getNodeURI(), nodeName);
-        add(openpath);
 
         add(createDetails(nodeId, title, url));
     }

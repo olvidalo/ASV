@@ -98,7 +98,7 @@ ul#navigation .Version a {
     font-style: normal;
 }
 
-ul#navigation a {
+ul#navigation a, div#linksPanel a {
     font-family: 'Verdana';
     font-weight: normal;
     font-style: normal;
@@ -157,39 +157,60 @@ ul#navigation a {
 }
 
 .View:before {
-    content: "\e60e";
-}
-
-.Download:before {
-    content: "\e60a";
-}
-
-.DownloadAll:before {
-    content: "\e60a"; /* TODO: separate icon for multi download */
-}
-
-.MetadataSearch:before {
-    content: "\e60c";
-}
-
-.ContentSearch:before {
-    content: "\e60c";
-}
-
-.ManageAccess:before {
     content: "\e608";
 }
 
-.RequestAccess:before {
-    content: "\e606";
-}
-
-.Citation:before {
+.Download:before {
     content: "\e607";
 }
 
+.DownloadAll:before {
+    content: "\e607"; /* TODO: separate icon for multi download */
+}
+
+.MetadataSearch:before {
+    content: "\e605";
+}
+
+.ContentSearch:before {
+    content: "\e605";
+}
+
+.ManageAccess:before {
+    content: "\e606";
+}
+
+.RequestAccess:before {
+    content: "\e603";
+}
+
+.Citation:before {
+    content: "\e604";
+}
+
 .VersionInfo:before {
-    content: "\e60d";;
+    content: "\e601";
+}
+
+div#linksPanel {
+    margin: 16px;
+}
+
+div#linksPanel a.Bookmark, div#linksPanel a.Bookmark:visited {
+    float: right;
+    margin-top: 5px;
+    background: #97424c;
+}
+
+div#linksPanel a.Bookmark:hover {
+    background: #bc3b34;
+}
+div#linksPanel a.Bookmark:active {
+    background: #622122;
+}
+
+div#linksPanel a.Bookmark:before {
+    content: "\e602";
 }
 
 
@@ -229,3 +250,37 @@ ul#navigation a {
 }
 
 
+div#bookmarkdialogue {
+    font-size: small;
+    width: 40em;
+    height: 10em;
+    padding: .5em;
+}
+
+div#bookmarkdialogue  .bookmarklinks {
+    display: block;
+    border: 1px dashed;
+    padding: .5em;
+    margin-left: .5em;
+}
+
+div#bookmarkdialogue a.bookmarkicon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    text-decoration: none;
+}
+
+div#bookmarkdialogue a.bookmarkicon:before {
+    font-family: 'icomoon';
+    content: "\e602";
+}
+
+/* span with title hidden, it's only there to provide a bookmark title */
+div#bookmarkdialogue a.bookmarkicon span#title {
+    display: none;
+}
+
+div.wicket-mask-dark {
+    opacity: 0.4 !important;
+}

@@ -16,10 +16,13 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import nl.mpi.metadatabrowser.wicket.NodeViewLinkModel;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -33,16 +36,22 @@ import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.model.TypedSerializableCorpusNode;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,12 +76,17 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     private final MarkupContainer nodePresentationContainer;
     private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(NodesPanel.class, "res/imdi-viewer.js");
     private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(NodesPanel.class, "res/imdi-viewer.css");
+    private final Component bookmarkLink;
 
-    public NodesPanel(String id, IModel<Collection<SerializableCorpusNode>> model) {
+    public NodesPanel(String id, final IModel<Collection<SerializableCorpusNode>> model) {
         super(id, model);
 
         // add a panel to show feedback information (updated on model change, i.e. node selection)
         add(new FeedbackPanel("feedbackPanel")).setOutputMarkupId(true);
+
+        final ModalWindow bookmarkDialogue = createBookmarkDialogue();
+        bookmarkLink = createBookmarkLink(model, bookmarkDialogue);
+        add(bookmarkLink);
 
         // Add a panel to show the actions available for the selected nodes (updated on model change, i.e. node selection)
         nodeActionsPanel = new NodesActionsPanel("nodeActions");
@@ -84,6 +98,36 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
         nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
         nodePresentationContainer.setOutputMarkupId(true);
         add(nodePresentationContainer);
+    }
+
+    private ModalWindow createBookmarkDialogue() {
+        final ModalWindow modalWindow = new ModalWindow("bookmarkdialogue");
+        modalWindow
+                .setTitle("Bookmark or link to this node")
+                // Dimensions
+                .setInitialWidth(36).setWidthUnit("em")
+                .setInitialHeight(10).setHeightUnit("em")
+                .setResizable(false)
+                // Looks
+                .setCssClassName(ModalWindow.CSS_CLASS_GRAY)
+                .setMaskType(ModalWindow.MaskType.SEMI_TRANSPARENT)
+                // Don't try to prevent the user from clicking a link in the dialogue
+                .showUnloadConfirmation(false);
+        add(modalWindow);
+        return modalWindow;
+    }
+
+    private Component createBookmarkLink(final IModel<Collection<SerializableCorpusNode>> model, final ModalWindow bookmarkDialogue) {
+        final Component link = new ExternalLink("bookmark", new NodeViewLinkModel(model));
+        link.add(new AjaxEventBehavior("onclick") {
+
+            @Override
+            protected void onEvent(AjaxRequestTarget target) {
+                bookmarkDialogue.addOrReplace(new BookmarkDialogue(bookmarkDialogue.getContentId(), model));
+                bookmarkDialogue.show(target);
+            }
+        });
+        return link;
     }
 
     @Override
@@ -153,5 +197,22 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     public void renderHead(IHeaderResponse response) {
         response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
         response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
+
+        // render a canonical URL header so that Google can index stateless references
+        final String viewLink = new NodeViewLinkModel(getModel()).getObject();
+        if (!Strings.isEmpty(viewLink)) {
+            final URI cannonicalRef
+                    = URI.create(((HttpServletRequest) getRequest().getContainerRequest()).getRequestURL().toString()).resolve(viewLink);
+
+            response.render(new StringHeaderItem(String.format(""
+                    + "<link rel=\"canonical\" "
+                    + "href=\"%s\" />", cannonicalRef)));
+        }
     }
+
+    @Override
+    protected void onConfigure() {
+        bookmarkLink.setVisible(getModelObject().size() == 1);
+    }
+
 }

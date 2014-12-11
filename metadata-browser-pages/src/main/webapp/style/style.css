@@ -153,3 +153,7 @@ div#Welcome img{
     vertical-align:text-top;
 }
 
+iframe.externalPage {
+    width: 100%;
+    height: 90%; 
+}
