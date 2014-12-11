@@ -41,7 +41,6 @@ public class NodeActionsConfiguration implements Serializable {
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
-    private String amscs2URL;
     private static final Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
     // what to assume as default for "same" protocol if it is not known whether https is used
     final boolean ssl = false;
@@ -73,14 +72,6 @@ public class NodeActionsConfiguration implements Serializable {
      */
     public String getAmsURL() {
         return amsURL;
-    }
-
-    /**
-     *
-     * @return url for AMS based on cs2
-     */
-    public String getAmsURLForcs2() {
-        return amscs2URL;
     }
 
     /**
@@ -151,17 +142,6 @@ public class NodeActionsConfiguration implements Serializable {
     public void setAmsURL(String amsURL) {
         checkWarning(amsURL, "nl.mpi.amsUrl");
         this.amsURL = amsURL;
-    }
-
-    /**
-     *
-     * @param amscs2Url
-     * <p>
-     */
-    @Value("${nl.mpi.amscs2Url}")
-    public void setAmsURLForcs2(String amscs2Url) {
-        checkWarning(amscs2Url, "nl.mpi.amscs2Url");
-        this.amscs2URL = amscs2Url;
     }
 
     /**
