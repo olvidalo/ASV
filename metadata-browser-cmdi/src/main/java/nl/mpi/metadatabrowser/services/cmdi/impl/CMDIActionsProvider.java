@@ -26,7 +26,7 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIAMSNodeAction;
-import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIBookmarkNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDICitationNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIDownloadNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIMultipleDownloadNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIRrsNodeAction;
@@ -56,7 +56,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     @Autowired(required = true)
     private CMDIAMSNodeAction amsNodeAction;
     @Autowired(required = true)
-    private CMDIBookmarkNodeAction bookmarkNodeAction;
+    private CMDICitationNodeAction bookmarkNodeAction;
     @Autowired(required = true)
     private CMDIDownloadNodeAction downloadNodeAction;
     @Autowired(required = true)
@@ -96,7 +96,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction,
                 bookmarkNodeAction,
-                downloadNodeAction,
                 multipleDownloadNodeAction,
                 versionNodeAction);
 
@@ -105,8 +104,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 trovaNodeAction,
                 amsNodeAction,
                 rrsNodeAction,
-                bookmarkNodeAction,
-                downloadNodeAction);
+                bookmarkNodeAction);
 
         childLessMetadataNodeActionList = Arrays.<NodeAction>asList(
                 searchNodeAction,
@@ -114,7 +112,6 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction,
                 bookmarkNodeAction,
-                downloadNodeAction,
                 versionNodeAction);
 
         collectionNodeActionList = Arrays.<NodeAction>asList(
@@ -122,8 +119,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 trovaNodeAction,
                 amsNodeAction,
                 rrsNodeAction,
-                bookmarkNodeAction,
-                downloadNodeAction
+                bookmarkNodeAction
                 );
 
         resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(

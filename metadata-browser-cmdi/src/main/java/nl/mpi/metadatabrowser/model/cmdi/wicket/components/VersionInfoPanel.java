@@ -46,9 +46,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public class PanelVersionComponent extends Panel {
+public class VersionInfoPanel extends Panel {
 
-    private final Logger logger = LoggerFactory.getLogger(PanelVersionComponent.class);
+    private final Logger logger = LoggerFactory.getLogger(VersionInfoPanel.class);
     @SpringBean
     private NodeIdFilter nodeIdFilter;
     @SpringBean
@@ -62,7 +62,7 @@ public class PanelVersionComponent extends Panel {
     @SpringBean
     private URIFilter nodeUriFilter;
 
-    public PanelVersionComponent(String id, TypedCorpusNode node, String userid) {
+    public VersionInfoPanel(String id, TypedCorpusNode node, String userid) {
         super(id);
         try {
             // create marker for html wicket table

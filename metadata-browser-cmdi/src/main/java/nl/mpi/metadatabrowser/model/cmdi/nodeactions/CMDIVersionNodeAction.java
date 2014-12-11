@@ -23,7 +23,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.PanelVersionComponent;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.VersionInfoPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -46,7 +46,7 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
             @Override
             public org.apache.wicket.Component getComponent(String id) {
                 // create panel form for version action
-                return new PanelVersionComponent(id, node, userid);
+                return new VersionInfoPanel(id, node, userid);
             }
         };
         return new SimpleNodeActionResult(request);

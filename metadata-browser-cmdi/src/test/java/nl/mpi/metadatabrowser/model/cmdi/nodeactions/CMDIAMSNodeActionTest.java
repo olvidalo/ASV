@@ -20,11 +20,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
@@ -99,18 +98,12 @@ public class CMDIAMSNodeActionTest {
 
                         allowing(node).getNodeURI();
                         will(returnValue(NODE_ID));
-
-//                        oneOf(node).getPID();
-//                        will(returnValue(NODE_ID.toString()));
                     }
                 });
 
-        String id = filterIdProvider.getURIParam(NODE_ID);
 
         nodeActionsConfiguration.setAmsURL(
                 "http://lux16.mpi.nl/am/ams2/index.face");
-        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL());
-        URI targetURI = url.queryParam("nodeid", id).queryParam("jsessionID", new URI("session_id")).build();
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
         NodeActionResult result = instance.execute(Collections.singleton(node));
 
@@ -120,12 +113,7 @@ public class CMDIAMSNodeActionTest {
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
 
-        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-
-        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-
-        assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
     }
 
     /**
@@ -135,14 +123,7 @@ public class CMDIAMSNodeActionTest {
     public void testExecuteAmscs2() throws Exception {
         System.out.println("execute");
         final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-//        MockFilterNodeId filterIdProvider = new MockFilterNodeId();
-        Collection<TypedCorpusNode> nodes = new ArrayList<TypedCorpusNode>();
-
-        nodes.add(node);
-//        String id = filterIdProvider.getURIParam(NODE_ID);
         nodeActionsConfiguration.setAmsURLForcs2("http://lux16.mpi.nl/am/ams2-cmdi/index.face");
-        UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURLForcs2());
-        URI targetURI = url.queryParam("nodeid", NODE_ID.toString()).build();
 
         context.checking(
                 new Expectations() {
@@ -152,9 +133,6 @@ public class CMDIAMSNodeActionTest {
 
                         allowing(node).getNodeURI();
                         will(returnValue(NODE_ID));
-
-//                        oneOf(node).getPID();
-//                        will(returnValue(NODE_ID.toString()));
                     }
                 });
 
@@ -162,17 +140,11 @@ public class CMDIAMSNodeActionTest {
         CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
         NodeActionResult result = instance.execute(Collections.singleton(node));
 
-        assertEquals(
-                "Manage Access", instance.getName());
+        assertEquals("Manage Access", instance.getName());
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
 
-        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-
-        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-
-        assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
     }
 }

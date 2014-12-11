@@ -22,8 +22,8 @@ import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.cmdi.mock.MockNodeIdFilter;
 import static org.hamcrest.Matchers.instanceOf;
@@ -103,9 +103,6 @@ public class CMDIRrsNodeActionTest {
 
         ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertNotNull(actionRequest);
-        assertThat(actionRequest, instanceOf(NavigationActionRequest.class));
-        NavigationActionRequest navigationActionRequest = (NavigationActionRequest) actionRequest;
-        assertNotNull(navigationActionRequest.getTargetURL());
-        assertEquals(targetURI.toString(), navigationActionRequest.getTargetURL().toString());
+        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
     }
 }

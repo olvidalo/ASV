@@ -10,8 +10,11 @@
         <wicket:panel>
             <div id="feedbackPanel" wicket:id="feedbackPanel">[Feedback]</div>
             <div id="actionsPanelContainer">
-                <div id="actionsPanel" wicket:id="nodeActions">
+                <div id="linksPanel">
+                    <a class="btn btn-3 btn-3b Bookmark" wicket:id="bookmark" title="Bookmark, cite or link this archive node">Bookmark</a>
+                    <div wicket:id="bookmarkdialogue" />
                 </div>
+                <div id="actionsPanel" wicket:id="nodeActions">[NODE ACTIONS]</div>
             </div>
             <div id="nodePresentationContainer" wicket:id="nodePresentationContainer">
                 <div id="nodePresentation" wicket:id="nodePresentation">[NODE PRESENTATION]</div>
