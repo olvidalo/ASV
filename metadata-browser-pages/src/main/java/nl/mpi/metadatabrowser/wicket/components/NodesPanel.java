@@ -18,9 +18,11 @@ package nl.mpi.metadatabrowser.wicket.components;
 
 import nl.mpi.metadatabrowser.wicket.NodeViewLinkModel;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -40,8 +42,8 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -49,6 +51,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -194,6 +197,17 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     public void renderHead(IHeaderResponse response) {
         response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
         response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
+
+        // render a canonical URL header so that Google can index stateless references
+        final String viewLink = new NodeViewLinkModel(getModel()).getObject();
+        if (!Strings.isEmpty(viewLink)) {
+            final URI cannonicalRef
+                    = URI.create(((HttpServletRequest) getRequest().getContainerRequest()).getRequestURL().toString()).resolve(viewLink);
+
+            response.render(new StringHeaderItem(String.format(""
+                    + "<link rel=\"canonical\" "
+                    + "href=\"%s\" />", cannonicalRef)));
+        }
     }
 
     @Override
