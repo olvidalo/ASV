@@ -66,7 +66,11 @@ from 1.0 to >= 1.1
 	* Remove context parameters:
 		nl.mpi.imdiBrowser.forceHttpOrHttps and
 		nl.mpi.imdiBrowser.forceHttpsPrefix)
-	  
+
+	* Review the Apache and handle server redirect rules to see if
+	  they reflect the current state of available GET parameters:
+	  - openpath=node:1234
+	  - openhandle=1142/999-xyz-123
 						 
 from version 1.0-Alpha
     - add new parameter yamsSearchURL as below
