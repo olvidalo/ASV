@@ -146,9 +146,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
         );
 
         multipleNodeActionList = Arrays.<NodeAction>asList(
-                searchNodeAction,
                 trovaNodeAction,
-                amsNodeAction,
                 rrsNodeAction);
 
     }

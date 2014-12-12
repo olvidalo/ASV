@@ -70,13 +70,7 @@ public class CMDIAMSNodeAction extends EmbeddedPageNodeAction {
         // Build redirect to AMS
         final URI nodeId = node.getNodeURI();
         final String nodeid = filterIdProvider.getURIParam(nodeId);
-        final URI targetURI;
-        if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
-            targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURLForcs2()).queryParam("nodeid", nodeid).build();
-        } else {
-            targetURI = UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
-        }
-        return targetURI;
+        return UriBuilder.fromUri(nodeActionsConfiguration.getAmsURL()).queryParam("nodeid", nodeid).build();
     }
 
     @Override

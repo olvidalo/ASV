@@ -26,10 +26,6 @@
  value="http://lux16.mpi.nl/corpora/"
  description="URLs starting with this prefix will be rewritten to https" />
 
-<Parameter name="nl.mpi.imdiBrowserUrl"
- value="https://lux16.mpi.nl/ds/imdi_browser/"
- description="location of where the IMDI Browser is installed" />
-<!-- formerly ViewControllerContainer -->
 
 <Parameter name="nl.mpi.amsUrl"
  value="https://lux16.mpi.nl/am/ams2/index.face"

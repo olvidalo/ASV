@@ -116,35 +116,4 @@ public class CMDIAMSNodeActionTest {
         assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
     }
 
-    /**
-     * Test of execute method, of class CMDIAMSNodeAction.
-     */
-    @Test
-    public void testExecuteAmscs2() throws Exception {
-        System.out.println("execute");
-        final TypedCorpusNode node = context.mock(TypedCorpusNode.class, "parent");
-        nodeActionsConfiguration.setAmsURLForcs2("http://lux16.mpi.nl/am/ams2-cmdi/index.face");
-
-        context.checking(
-                new Expectations() {
-                    {
-                        allowing(node).getNodeType();
-                        will(returnValue(new CMDIMetadataType()));
-
-                        allowing(node).getNodeURI();
-                        will(returnValue(NODE_ID));
-                    }
-                });
-
-
-        CMDIAMSNodeAction instance = new CMDIAMSNodeAction(nodeActionsConfiguration, filterIdProvider);
-        NodeActionResult result = instance.execute(Collections.singleton(node));
-
-        assertEquals("Manage Access", instance.getName());
-
-        ControllerActionRequest actionRequest = result.getControllerActionRequest();
-        assertNotNull(actionRequest);
-
-        assertThat(actionRequest, instanceOf(ShowComponentRequest.class));
-    }
 }

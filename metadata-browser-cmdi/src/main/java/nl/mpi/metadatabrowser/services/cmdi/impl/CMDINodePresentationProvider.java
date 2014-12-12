@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -34,6 +35,7 @@ import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.MetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
+import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MultiNodePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.WelcomePagePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.model.MetadataTransformingModel;
@@ -42,6 +44,7 @@ import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.util.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +99,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
             }
         } else {
             logger.debug("Multiple nodes, present as string representation of collection");
-            return new Label(wicketId, nodes.toString());
+            return new MultiNodePanel(wicketId, new ListModel(new ArrayList(nodes)));
         }
     }
 

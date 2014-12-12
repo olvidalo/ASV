@@ -1,10 +1,12 @@
 		METADATA Browser INSTALLATION
 
-== Note on using SSL ==
-	METADATABrowser fully supports secure https browsing and connections
+
+	NOTES
+
+Note on using SSL: MetadataBrowser fully supports secure https browsing and connections
 
 
-	SOURCES
+	BUILDING FROM SOURCE FOR RELEASE
 
 The METADATA Browser source code contains 5 parts: the main war, the cmdi api, the cmdi-implementation,and two differents profile : using csdb adapter or using the coming csdb2.  It can be built using maven.
 
@@ -61,95 +63,81 @@ which the tomcat is running. No files need to be written by the Tomcat.
 
 	CONFIGURATION
 
-The METADATA Browser uses the following configuration options (which so far are the same as the IMDI Browser):
+The METADATA Browser uses the following configuration options:
 
-nl.mpi.imdiBrowser.imdiBrowserManualUrl // will be replaced when switch to cmdi
+* nl.mpi.imdiBrowser.imdiBrowserManualUrl // will be replaced when switch to cmdi
 (a website about usage of the IMDI browser: This is no webapp and this
 URL is not affected by forceHttpOrHttps nor forceHttpsPrefix settings!)
 
-nl.mpi.annexUrl
+* nl.mpi.annexUrl
 (location of Annex webapp, gets ?jsessionid=...&handle=... suffix or, if no
 handle/pid/urid known, ?jsessionid=...&nodeid=... suffix from the browser)
 
-nl.mpi.trovaUrl
+* nl.mpi.trovaUrl
 (location of Trova webapp, can be referenced as $trova_url$ in config file
 popup-menu-items.xml Browser uses nodeid= but Trova also supports handle=)
 
-nl.mpi.rrsIndex
+* nl.mpi.rrsIndex
 (location of "request access" page within RRS, see below)
 
-nl.mpi.rrsRegister
+* nl.mpi.rrsRegister
 (location of "register as new user" page within RRS...)
 
-nl.mpi.imdiBrowser.forceHttpOrHttps
-(optional setting: http, https or same to force all URLs within the IMDI
-browser to use the selected protocol, e.g. links to resources or other
-LAT webapps such as Annex. If set to 'same', force same protocol as the
-current session, e.g. https iff the IMDI Browser is visited via https)
-
-nl.mpi.imdiBrowser.forceHttpsPrefix
-(optional setting: force all URLs starting with this prefix to use https,
-for example http://yourhostname/ or http://yourhostname/yourarchive/...)
-
-nl.mpi.imdiBrowserUrl
-(location where the browser is installed, https://HOSTNAME/ds/imdi_browser/
-Also used by other webapps, was once set in "ViewControllerContainer" env)
-
-nl.mpi.amsUrl
+* nl.mpi.amsUrl
 (location of the Access Management System webapp, referenced as $AmsURL$)
 
-nl.mpi.amsRecalculateUrl
+* nl.mpi.amsRecalculateUrl
 (URL to contact after running the ArchiveCrawler to let AMS know that
 the access rights for the affected corpus have to be recalculated)
 
-nl.mpi.imexUrl
+* nl.mpi.imexUrl
 (location of the Imex image viewer webapp, can be referenced as $ImexURL$)
 
-nl.mpi.imdiSearchUrl
+* nl.mpi.imdiSearchUrl
 (location of the IMDI Metadata Search webapp, referenced as $IMDISearchURL$)
 
-nl.mpi.yamsSearchUrl
-(location of the CMDI Metadata Search webapp, referenced as $YAMSSearchURL$)
-
-nl.mpi.rrsUrl
+* nl.mpi.rrsUrl
 (location of Resource Request System webapp, used together with nl.mpi.rrs*
 and can be referenced as $RRSURL$ when used in popup-menu-items.xml)
 
-nl.mpi.translationservicebase
+* nl.mpi.translationservicebase
 Base url for the translation service up to "/translate?...", 
 e.g. "https://lux16.mpi.nl/ds/TranslationService"
 
-nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+* nl.mpi.metadatabrowser.schemeReplacePattern
+URLs matching this regex will have their scheme rewritten
+
+* nl.mpi.metadatabrowser.schemeReplaceTargetScheme
+Protocol enforcement on matching URLs, e.g. http or https, will be applied to
+external URLs matching the pattern defined in the schemeReplacePattern parameter
+
+* nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry
+amount of time in seconds for which handle - URL resolutions should be cached
+
+* nl.mpi.metadatabrowser.wicket.maxSizePerSession 
+OPTIONAL representation of the size for page store file (cache on disk per
+session), e.g. '10M' or '1024K'
+
+* nl.mpi.metadatabrowser.wicket.inmemoryCacheSize
+OPTIONAL integer parameter defining the maximum number of page instances 
+that will be saved into application-scoped cache (0 is disabled, also the
+default)
+
+Connection parameters for the 'adapter' profile (i.e. hybrid archive):
+
+* nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
 Name of the JNDI resource to use to connect to the corpus structure database (in case
 of the 'adapter' profile)
 
-CSDBConnectionResource
-(typically java:comp/env/jdbc/CSDB pointing to read-only corpusstructure DB)
+* nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource
+Name of the JNDI resource to use to connect to the AMS2 database 
 
-VersDBConnectionResource
-(typically java:comp/env/jdbc/VERSDB pointing to the same CSDB as above)
+* nl.mpi.metadatabrowser.adapter.DAMLRResource
+Name of the JNDI resource to use to connect to DAMLR 
 
-The first options can be set for example in context.xml as:
+* nl.mpi.metadatabrowser.adapter.ADSResource
+Name of the JNDI resource to use to connect to Active Directory 
 
-    <Parameter name="nl.mpi.imdiBrowser.imdiBrowserManualUrl"
-        value="http://www.mpi.nl/corpus/html/imdi_browser/index.html"
-        description="weblink to the imdibrowserManual"/>
-
-etc. The second group of op options can, for backwards compatibility, use:
-
-    <Environment name="AmsURL" value="https://HOSTNAME/am/ams2/index.face"
-	type="java.lang.String" override="false"/>
-
-However, the recommended syntax is now, with a nl.mpi.imdiBrowser prefix:
-
-    <Parameter name="nl.mpi.imdiBrowser.AmsURL"
-        value="https://HOSTNAME/am/ams2/index.face"
-        description="URL pointing to LAT Access Management System webapp"/>
-
-Example configuration text can be found in WEB-INF/context-xml-snippets.txt
-
-	OPTIONAL REWRITE RULES
-	
 The metadata browser accepts the following URL GET parameters:
 
 - rootnode

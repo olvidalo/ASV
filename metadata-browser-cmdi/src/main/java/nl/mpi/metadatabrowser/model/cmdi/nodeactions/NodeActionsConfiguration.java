@@ -37,11 +37,9 @@ public class NodeActionsConfiguration implements Serializable {
     private String rrsIndexUrl;
     private String annexURL;
     private String mdSearchURL;
-    private String yamsSearchURL;
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
-    private String amscs2URL;
     private static final Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
     // what to assume as default for "same" protocol if it is not known whether https is used
     final boolean ssl = false;
@@ -73,14 +71,6 @@ public class NodeActionsConfiguration implements Serializable {
      */
     public String getAmsURL() {
         return amsURL;
-    }
-
-    /**
-     *
-     * @return url for AMS based on cs2
-     */
-    public String getAmsURLForcs2() {
-        return amscs2URL;
     }
 
     /**
@@ -132,14 +122,6 @@ public class NodeActionsConfiguration implements Serializable {
     }
 
     /**
-     *
-     * @return URL for yams seach
-     */
-    String getYamsSearchURL() {
-        return yamsSearchURL;
-    }
-
-    /**
      * Setters
      */
     /**
@@ -151,17 +133,6 @@ public class NodeActionsConfiguration implements Serializable {
     public void setAmsURL(String amsURL) {
         checkWarning(amsURL, "nl.mpi.amsUrl");
         this.amsURL = amsURL;
-    }
-
-    /**
-     *
-     * @param amscs2Url
-     * <p>
-     */
-    @Value("${nl.mpi.amscs2Url}")
-    public void setAmsURLForcs2(String amscs2Url) {
-        checkWarning(amscs2Url, "nl.mpi.amscs2Url");
-        this.amscs2URL = amscs2Url;
     }
 
     /**
@@ -212,17 +183,6 @@ public class NodeActionsConfiguration implements Serializable {
     public void setMdSearchURL(String mdSearchURL) {
         checkWarning(mdSearchURL, "nl.mpi.imdiSearchUrl");
         this.mdSearchURL = mdSearchURL;
-    }
-
-    /**
-     * Only use for CMDI so can be null
-     * <p>
-     * @param yamsSearchURL
-     */
-    @Value("${nl.mpi.yamsSearchUrl}")
-    public void setYamsSearchURL(String yamsSearchURL) {
-        checkWarning(yamsSearchURL, "nl.mpi.yamsSearchUrl");
-        this.yamsSearchURL = yamsSearchURL;
     }
 
     /**
