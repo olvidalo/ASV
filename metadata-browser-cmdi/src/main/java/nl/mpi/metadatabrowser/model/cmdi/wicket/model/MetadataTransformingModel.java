@@ -61,7 +61,7 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
      */
     public MetadataTransformingModel(TypedCorpusNode node, String templatesKey) {
         this.node = node;
-        this.templatesKey = templatesKey; //TODO: get templates out of some store (on basis of key) rather than keep in model?
+        this.templatesKey = templatesKey;
     }
 
     @Override
