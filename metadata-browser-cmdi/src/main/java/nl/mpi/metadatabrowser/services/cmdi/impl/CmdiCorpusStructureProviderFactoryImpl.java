@@ -40,8 +40,5 @@ public class CmdiCorpusStructureProviderFactoryImpl implements CorpusStructurePr
     public CorpusStructureProvider createCorpusStructureProvider() {
 	logger.debug("Returning singleton CSDB");
 	return csdb;
-	//logger.debug("Creating new CmdiCorpusStructureDB with dbname='{}'", dbname);
-	//TODO: Implement CmdiCorpusStructureDB and return an instance here
-	//return new CmdiCorpusStructureDBImpl(dbname); 
     }
 }

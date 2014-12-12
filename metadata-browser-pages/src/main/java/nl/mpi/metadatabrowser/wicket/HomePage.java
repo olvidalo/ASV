@@ -177,7 +177,6 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
             try {
                 final URI nodeUri = new URI(uriString);
                 final String uriScheme = nodeUri.getScheme();
-                //TODO: Deal with openhandle=MPI123# format (=>node:123)
                 if (uriScheme == null
                         || (!uriScheme.equalsIgnoreCase("node") //not an explicit node URI
                         && !uriScheme.equalsIgnoreCase("hdl") //not a handle
