@@ -284,6 +284,4 @@ public class CMDINodePresentationProviderTest {
         final StreamSource streamSource = new StreamSource(new File(getClass().getResource(xsltResource).toURI()));
         transformerFactory.newTemplates(streamSource);
     }
-
-    //TODO: Add cases for IMDI, resource and fallback presentation
 }

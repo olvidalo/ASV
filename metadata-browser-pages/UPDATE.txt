@@ -65,7 +65,9 @@ from 1.0 to >= 1.1
 
 	* Remove context parameters:
 		nl.mpi.imdiBrowser.forceHttpOrHttps and
-		nl.mpi.imdiBrowser.forceHttpsPrefix)
+		nl.mpi.imdiBrowser.forceHttpsPrefix
+		nl.mpi.yamsSearchUrl
+		nl.mpi.amscs2Url
 
 	* Review the Apache and handle server redirect rules to see if
 	  they reflect the current state of available GET parameters:

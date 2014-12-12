@@ -19,11 +19,9 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
-import nl.mpi.metadatabrowser.services.URIFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,13 +64,11 @@ public class CMDISearchNodeAction extends RedirectingNodeAction {
     @Override
     protected URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
-        if (nodes.size() == 1) {
-            final URI nodeId = nodes.iterator().next().getNodeURI();
+        for (TypedCorpusNode node : nodes) {
+            final URI nodeId = node.getNodeURI();
             final String nodeid = nodeIdFilter.getURIParam(nodeId);
             uriBuilder.queryParam("nodeid", nodeid);
-            return uriBuilder.build();
-        } else {
-            throw new NodeActionException(this, "Metadata search can only be performed on a single node");
         }
+        return uriBuilder.build();
     }
 }
