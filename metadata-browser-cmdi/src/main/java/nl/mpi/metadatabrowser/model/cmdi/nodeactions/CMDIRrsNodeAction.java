@@ -61,16 +61,14 @@ public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements StyleSp
 
     @Override
     protected URI getTarget(Collection<TypedCorpusNode> nodes) {
-        URI targetURI = null;
-        UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
-        //TODO: properly support multiple nodes
+        //Buil redirect to RRS
+        final UriBuilder uriBuilder = UriBuilder.fromUri(nodeActionsConfiguration.getRrsURL() + nodeActionsConfiguration.getRrsIndexURL());
         for (TypedCorpusNode node : nodes) {
-            //Buil redirect to RRS
-            URI nodeId = node.getNodeURI();
+            final URI nodeId = node.getNodeURI();
             String nodeid = nodeIdFilter.getURIParam(nodeId);
-            targetURI = uriBuilder.queryParam("nodeid", nodeid).queryParam("jsessionID", "session_id").build();
+            uriBuilder.queryParam("nodeid", nodeid).build();
         }
-        return targetURI;
+        return uriBuilder.build();
     }
 
     @Override
