@@ -37,7 +37,6 @@ public class NodeActionsConfiguration implements Serializable {
     private String rrsIndexUrl;
     private String annexURL;
     private String mdSearchURL;
-    private String yamsSearchURL;
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
@@ -123,14 +122,6 @@ public class NodeActionsConfiguration implements Serializable {
     }
 
     /**
-     *
-     * @return URL for yams seach
-     */
-    String getYamsSearchURL() {
-        return yamsSearchURL;
-    }
-
-    /**
      * Setters
      */
     /**
@@ -192,17 +183,6 @@ public class NodeActionsConfiguration implements Serializable {
     public void setMdSearchURL(String mdSearchURL) {
         checkWarning(mdSearchURL, "nl.mpi.imdiSearchUrl");
         this.mdSearchURL = mdSearchURL;
-    }
-
-    /**
-     * Only use for CMDI so can be null
-     * <p>
-     * @param yamsSearchURL
-     */
-    @Value("${nl.mpi.yamsSearchUrl}")
-    public void setYamsSearchURL(String yamsSearchURL) {
-        checkWarning(yamsSearchURL, "nl.mpi.yamsSearchUrl");
-        this.yamsSearchURL = yamsSearchURL;
     }
 
     /**

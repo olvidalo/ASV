@@ -16,30 +16,14 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
-import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
-import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
-import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDICollectionType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,12 +33,10 @@ import org.springframework.stereotype.Component;
  * Class that calls redirect to CMDI Search
  */
 @Component
-public class CMDISearchNodeAction  extends RedirectingNodeAction {
+public class CMDISearchNodeAction extends RedirectingNodeAction {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;
-    private final NodeResolver nodeResolver;
-    private final URIFilter uriFilter;
 
     /**
      *
@@ -66,11 +48,9 @@ public class CMDISearchNodeAction  extends RedirectingNodeAction {
      * non-HTTPS URIs)
      */
     @Autowired
-    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter, NodeResolver nodeResolver, URIFilter nodeUriFilter) {
+    CMDISearchNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.nodeIdFilter = nodeIdFilter;
-        this.nodeResolver = nodeResolver;
-        this.uriFilter = nodeUriFilter;
     }
 
     @Override
@@ -85,37 +65,14 @@ public class CMDISearchNodeAction  extends RedirectingNodeAction {
 
     @Override
     protected URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException {
-        URI targetURI = null;
-        String wraphandleOrNodeURL;
-        //TODO: deal with multiple nodes properly
-        for (TypedCorpusNode node : nodes) {
-            if (node.getNodeType() instanceof CMDIMetadataType || node.getNodeType() instanceof CMDIResourceTxtType || node.getNodeType() instanceof CMDIResourceType || node.getNodeType() instanceof CMDICollectionType) {
-                try {
-                    //Buil redirect to CMDI Search
-                    final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getYamsSearchURL());
-                    final URI handle = nodeResolver.getPID(node);
-                    if (handle == null) { // can be null, pass URL instead
-                        // allow filter to rewrite, e.g. http->https
-                        wraphandleOrNodeURL = uriFilter.filterURI(nodeResolver.getUrl(node).toURI()).toString();
-                        targetURI = uriBuilder.queryParam("url", wraphandleOrNodeURL).build();
-                    } else {
-                        wraphandleOrNodeURL = handle.toString();
-                        if (handle.toString().contains(":")) {
-                            wraphandleOrNodeURL = handle.toString().split(":")[1];
-                        }
-                        targetURI = uriBuilder.queryParam("hdl", wraphandleOrNodeURL).build();
-                    }
-                } catch (URISyntaxException ex) {
-                    throw new NodeActionException(this, "Invalid URI for node", ex);
-                }
-            } else {
-                //Buil redirect to IMDI Search
-                final URI nodeId = node.getNodeURI();
-                final String nodeid = nodeIdFilter.getURIParam(nodeId);
-                final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL()).queryParam("nodeid", nodeid);
-                targetURI = uriBuilder.queryParam("jsessionID", "session_number").build();
-            }
+        final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getMdSearchURL());
+        if (nodes.size() == 1) {
+            final URI nodeId = nodes.iterator().next().getNodeURI();
+            final String nodeid = nodeIdFilter.getURIParam(nodeId);
+            uriBuilder.queryParam("nodeid", nodeid);
+            return uriBuilder.build();
+        } else {
+            throw new NodeActionException(this, "Metadata search can only be performed on a single node");
         }
-        return targetURI;
     }
 }
