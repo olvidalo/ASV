@@ -58,12 +58,24 @@
 
     <bean id="nodeUriUtils" class="nl.mpi.archiving.corpusstructure.adapter.NodeUriUtils" />
 
+    <!-- File path translator used by node resolver -->
+    <bean id="filePathTranslator" class="nl.mpi.archiving.corpusstructure.adapter.crawler.FilePathTranslatorAdapter">
+        <constructor-arg ref="aoProxy" />
+        <constructor-arg>
+            <bean class="nl.mpi.archiving.corpusstructure.adapter.TranslationService">
+                <constructor-arg ref="aoProxy" />
+                <constructor-arg value="${nl.mpi.translationservicebase}" />
+            </bean>
+        </constructor-arg>
+        <constructor-arg ref="handleResolver" />
+    </bean>
+
     <!-- CSDB factory for CorpusStructureAPI adapter -->
     <bean id="csProviderFactory" class="nl.mpi.archiving.corpusstructure.adapter.CorpusStructureAPIProviderFactory">
         <constructor-arg ref="csdbProxy" />
         <constructor-arg ref="aoProxy" />     
-        <constructor-arg ref="versioningProxy" />   
-        <constructor-arg ref="handleResolver" />
+        <constructor-arg ref="versioningProxy" />  
+        <constructor-arg ref="filePathTranslator" /> 
         <constructor-arg ref="nodeUriUtils" />
         <constructor-arg name="translationServiceBaserUrl" value="${nl.mpi.translationservicebase}" />
     </bean>
@@ -76,9 +88,6 @@
 
     <!-- Provider for correct id format. This used to get the appropriate ID as string and prevent a dependency to the Adapter in the cmdi implementation. -->
     <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.AdapterNodeIdFilter"/>
-
-    <!-- File path translator used by node resolver -->
-    <bean id="filePathTranslatorAdapter" factory-bean="csProviderFactory" factory-method="createFilePathTranslator" />
 
     <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
     <bean id="nodeResolver" factory-bean="csProviderFactory" factory-method="createNodeResolver" />
