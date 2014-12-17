@@ -11,13 +11,15 @@
     
     <xsl:include href="cmdi2general.xsl"/>
     <xsl:include href="collection2html.xsl"/>
+    <xsl:param name="htmlEnvelope" select="false()" />
+    <xsl:param name="styleLocation" required="no" />
     
-    <xsl:template match="/">
+    <xsl:template name="content">
         <xsl:choose>
             <xsl:when test="contains(/CMD/@xsi:schemaLocation, 'http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd')">
                 <xsl:call-template name="CMDI_COLLECTION_2_HTML"/>
             </xsl:when>
-<!--            <xsl:when test="contains(/CMD/@xsi:schemaLocation, 'http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd')">
+            <!--            <xsl:when test="contains(/CMD/@xsi:schemaLocation, 'http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1345561703620/xsd')">
                 <xsl:call-template name="COLLECTION2CORPUS" />
             </xsl:when>
             <xsl:when test="contains(/CMD/@xsi:schemaLocation, 'http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/clarin.eu:cr1:p_1361876010525/xsd')">
@@ -48,6 +50,39 @@
                 <xsl:call-template name="cmdi2general"/>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="/">
+        <xsl:choose>
+            <xsl:when test="$htmlEnvelope">
+                <xsl:call-template name="htmlEnvelope" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="content" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template name="htmlEnvelope">
+            <html>
+                <head>
+                    <xsl:if test="$styleLocation">
+                        <link rel="stylesheet" type="text/css">
+                            <xsl:attribute name="href" select="$styleLocation" />
+                        </link>
+                    </xsl:if>
+                </head>
+                <body>
+                    <div id="nodePanel">
+                        <div id="nodePresentationContainer">
+                            <div id="nodePresentation">
+                                <xsl:call-template name="content" />
+                            </div>
+                        </div>
+                    </div>
+                </body>
+            </html>
+        
     </xsl:template>
     
 </xsl:stylesheet>

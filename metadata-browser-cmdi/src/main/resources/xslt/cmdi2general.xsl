@@ -105,6 +105,7 @@
                     </xsl:choose>
 
                 </div>
+                <div class="IMDI_group_divider"></div>
             </xsl:if>
         </xsl:for-each>
 
