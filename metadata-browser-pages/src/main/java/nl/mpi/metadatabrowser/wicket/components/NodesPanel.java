@@ -39,17 +39,13 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -74,8 +70,6 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
     // Child components
     private final NodesActionsPanel nodeActionsPanel;
     private final MarkupContainer nodePresentationContainer;
-    private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(NodesPanel.class, "res/imdi-viewer.js");
-    private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(NodesPanel.class, "res/imdi-viewer.css");
     private final Component bookmarkLink;
 
     public NodesPanel(String id, final IModel<Collection<SerializableCorpusNode>> model) {
@@ -195,9 +189,6 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
-        response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
-
         // render a canonical URL header so that Google can index stateless references
         final String viewLink = new NodeViewLinkModel(getModel()).getObject();
         if (!Strings.isEmpty(viewLink)) {

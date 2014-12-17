@@ -43,8 +43,13 @@ import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +62,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CMDINodePresentationProvider implements NodePresentationProvider, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
-    public static final String IMDI_XSL = "/xslt/imdi-viewer.xsl";
-    public static final String CMDI_XSL = "/xslt/cmdi2xhtml.xsl";
+    private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(CMDINodePresentationProvider.class, "res/imdi-viewer.js");
+    private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(CMDINodePresentationProvider.class, "res/imdi-viewer.css");
+
     private final NodeResolver nodeResolver;
 
     /**
@@ -104,7 +110,15 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
     }
 
     private Component createMetadataTransformation(final TypedCorpusNode node, String wicketId) throws NodePresentationException, NodeTypeIdentifierException {
-        final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(node, getTemplates(node)));
+        final Label contentLabel = new Label(wicketId, new MetadataTransformingModel(node, getTemplates(node))) {
+
+            @Override
+            public void renderHead(IHeaderResponse response) {
+                response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
+                response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
+            }
+
+        };
         contentLabel.setEscapeModelStrings(false);
         return contentLabel;
     }

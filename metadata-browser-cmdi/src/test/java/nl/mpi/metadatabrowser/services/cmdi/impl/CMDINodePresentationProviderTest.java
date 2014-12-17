@@ -268,15 +268,15 @@ public class CMDINodePresentationProviderTest {
         assertThat(result, instanceOf(ResourcePresentation.class));
         assertEquals(result.getId(), "test");
     }
-
+    
     @Test
     public void testStylesheetsCmdi() throws Exception {
-        createTemplates(CMDINodePresentationProvider.CMDI_XSL);
+        createTemplates("/xslt/cmdi2xhtml.xsl");
     }
 
     @Test
     public void testStylesheetsImdi() throws Exception {
-        createTemplates(CMDINodePresentationProvider.IMDI_XSL);
+        createTemplates("/xslt/imdi-viewer.xsl");
     }
 
     private void createTemplates(final String xsltResource) throws IOException, TransformerFactoryConfigurationError, TransformerConfigurationException, URISyntaxException {
