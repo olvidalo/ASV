@@ -27,14 +27,7 @@
                             <div class="IMDI_name_value">
 
                                 <span class="IMDI_label">
-                                    <xsl:value-of select="fn:concat(local-name(), ' ')"/>
-                                    <xsl:if test="count(@*) > 0">
-                                        <span class="attributes">
-                                            <xsl:for-each select="@*">
-                                                <xsl:value-of select="name()"/>="<xsl:value-of
-                                                  select="."/>" </xsl:for-each>
-                                        </span>
-                                    </xsl:if>
+                                    <xsl:apply-templates select="." mode="elementLabel" />
                                 </span>
 
 
@@ -90,9 +83,7 @@
                                 <xsl:value-of select="fn:concat(local-name(), ' ')"/>
                                 <xsl:if test="count(@*) > 0">
                                     <div class="attributes">
-                                        <xsl:for-each select="@*">
-                                            <xsl:value-of select="name()"/>="<xsl:value-of
-                                                select="."/>" </xsl:for-each>
+                                        <xsl:apply-templates select="@*" mode="attributes"/>
                                     </div>
                                 </xsl:if>
                             </div>
@@ -105,9 +96,38 @@
                     </xsl:choose>
 
                 </div>
+                <div class="IMDI_group_divider"></div>
             </xsl:if>
         </xsl:for-each>
 
+    </xsl:template>
+    
+    <!-- Element labels -->
+    
+    <xsl:template match="lat-session//Key|lat-corpus//Key" mode="elementLabel">
+        <!-- Keys: show key name as label -->
+        <xsl:value-of select="@Name"/>
+    </xsl:template> 
+    
+    <xsl:template match="*" mode="elementLabel">
+        <!-- Default behaviour: show element name and attributes if present -->
+        <xsl:value-of select="fn:concat(local-name(), ' ')"/>
+        <xsl:if test="count(@*) > 0">
+            <span class="attributes">
+                <xsl:apply-templates select="@*" mode="attributes"/>
+            </span>
+        </xsl:if>
+    </xsl:template> 
+    
+    <!-- Element attributes -->
+    
+    <xsl:template match="@ref|@xml:lang|@Type|Key/@Name" mode="attributes">
+        <!-- Skip these attributes-->
+    </xsl:template>
+    
+    <xsl:template match="@*" mode="attributes">
+        <!-- Default behaviour: show name and value -->
+        <xsl:value-of select="name()"/>="<xsl:value-of select="."/>
     </xsl:template>
 
     <xsl:template name="cmdi2general" match="CMD">

@@ -18,15 +18,21 @@ package nl.mpi.metadatabrowser.wicket;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import org.apache.wicket.Application;
+import static org.apache.wicket.ThreadContext.getRequestCycle;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Model that generates a 'view' link, that is a link to the provided node
  * displayed in the metadata browser. If available, it uses the node handle
- * followed by the '@view' identifier; otherwise it falls back to the openpath 
+ * followed by the '@view' identifier; otherwise it falls back to the openpath
  * parameter
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
@@ -47,13 +53,7 @@ public class NodeViewLinkModel extends AbstractReadOnlyModel<String> {
             return getViewNodeLink(node).toString();
         } else {
             // build multi-node openpath request; processing of this not implemented yet!
-            final StringBuilder sb = new StringBuilder("?");
-            for (CorpusNode node : nodes) {
-                sb.append("openpath=")
-                        .append(node.getNodeURI().toString())
-                        .append("&");
-            }
-            return sb.toString();
+            return createOpenPathLink(nodes);
         }
     }
 
@@ -67,8 +67,17 @@ public class NodeViewLinkModel extends AbstractReadOnlyModel<String> {
                     .append(pid.getSchemeSpecificPart())
                     .append("@view");
         } else {
-            return "?openpath=" + node.getNodeURI().toString();
+            return createOpenPathLink(Collections.singleton(node));
         }
+    }
+
+    private String createOpenPathLink(final Collection<? extends CorpusNode> nodes) {
+        final PageParameters params = new PageParameters();
+        for (CorpusNode node : nodes) {
+            params.add("openpath", node.getNodeURI());
+        }
+        final String url = getRequestCycle().urlFor(Application.get().getHomePage(), params).toString();
+        return RequestCycle.get().getUrlRenderer().renderFullUrl(Url.parse(url));
     }
 
 }

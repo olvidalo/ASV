@@ -121,6 +121,11 @@ a {
     border-radius: 5px 5px 0px 0px;
 }
 
+.IMDI_group_divider {
+    clear: both;
+    height: 0px;
+}
+
 /* dynamic content header */
 .IMDI_group_header_dynamic {
     background-color: #BFCED9;
