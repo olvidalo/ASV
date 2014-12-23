@@ -34,11 +34,11 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO: Merge with CMDIDownloadNodeAction? TODO: Add support for multiple node
- * selection?
+ * TODO: Add support for multiple node selection?
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
@@ -46,11 +46,25 @@ import org.springframework.stereotype.Component;
 public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final NodeResolver nodeResolver;
-    private final AccessChecker accessChecker;
-
     @Autowired
-    public CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessChecker accessChecker) {
+    @Qualifier("browserService")
+    private NodeResolver nodeResolver;
+    @Autowired
+    private AccessChecker accessChecker;
+
+    /**
+     * Default constructor for Spring
+     */
+    protected CMDIDownloadNodeAction() {
+    }
+
+    /**
+     * Constructor for testing
+     *
+     * @param nodeResolver resolver to use
+     * @param accessChecker access checker to use
+     */
+    protected CMDIDownloadNodeAction(NodeResolver nodeResolver, AccessChecker accessChecker) {
         this.nodeResolver = nodeResolver;
         this.accessChecker = accessChecker;
     }

@@ -44,6 +44,7 @@ import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,22 +55,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
 
-    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
-    private final NodeActionsConfiguration nodeActionsConfiguration;
-    private final NodeIdFilter nodeIdFilter;
-    private final AccessChecker accessChecker;
-    private final NodeResolver nodeResolver;
+    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);   
+    @Autowired
+    private NodeActionsConfiguration nodeActionsConfiguration;   
+    @Autowired
+    private NodeIdFilter nodeIdFilter;   
+    @Autowired
+    private AccessChecker accessChecker;    
+    @Autowired
+    @Qualifier("browserService")
+    private NodeResolver nodeResolver;
 
     /**
-     * Action class are autowired in nodeActions.xml
+     * Default constructor for spring
+     */
+    protected CMDIViewNodeAction() {
+    }
+    
+    /**
      *
      * @param nodeActionsConfiguration NodeActionsConfiguration, get Annex url
      * @param nodeResolver node resolver
      * @param nodeIdFilter Node ID filter
      * @param accessChecker access checker
      */
-    @Autowired
-    public CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, NodeIdFilter nodeIdFilter, AccessChecker accessChecker) {
+    protected CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, NodeIdFilter nodeIdFilter, AccessChecker accessChecker) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
         this.nodeIdFilter = nodeIdFilter;
         this.accessChecker = accessChecker;

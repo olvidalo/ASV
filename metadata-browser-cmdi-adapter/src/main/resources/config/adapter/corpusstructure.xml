@@ -90,7 +90,9 @@
     <bean id="filterIdProvider" class="nl.mpi.metadatabrowser.services.cmdi.filter.AdapterNodeIdFilter"/>
 
     <!-- Node resolver that can do smart things with the 'node:xyz' URIs returned from the adapater corpus structure provider -->
-    <bean id="nodeResolver" factory-bean="csProviderFactory" factory-method="createNodeResolver" />
+    <bean id="nodeResolver" factory-bean="csProviderFactory" factory-method="createNodeResolver">
+        <qualifier value="browserService" />
+    </bean>
     
     <!-- Versioning info provider -->
     <bean id="versionInfoProvider" factory-bean="csProviderFactory" factory-method="createVersionInfoProvider" />
