@@ -124,18 +124,6 @@
             <version>${spring.security.version}</version>
         </dependency>
         <dependency>
-            <groupId>nl.mpi.annot.search</groupId>
-            <artifactId>annot-search-lib</artifactId>
-            <version>1.4.10</version>
-            <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
