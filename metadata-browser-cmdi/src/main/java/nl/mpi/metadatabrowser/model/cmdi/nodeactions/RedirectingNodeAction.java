@@ -19,7 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
-import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TargetSpecifier;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public abstract class RedirectingNodeAction implements NodeAction, TargetSpecifier {
+public abstract class RedirectingNodeAction implements NodeActionSingletonBean, TargetSpecifier {
 
     private final static Logger logger = LoggerFactory.getLogger(RedirectingNodeAction.class);
 

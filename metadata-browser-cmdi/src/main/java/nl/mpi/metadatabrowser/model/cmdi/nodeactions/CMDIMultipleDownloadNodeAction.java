@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
@@ -41,7 +42,7 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements Serializable {
+public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements NodeActionSingletonBean, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final ZipService zipService;

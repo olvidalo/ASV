@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.StyleSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Component;
  * Class that call redirect to RRS
  */
 @Component
-public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements StyleSpecifier {
+public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements NodeActionSingletonBean, StyleSpecifier {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;

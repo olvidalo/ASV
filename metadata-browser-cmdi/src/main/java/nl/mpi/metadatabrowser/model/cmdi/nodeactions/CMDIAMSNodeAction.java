@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
@@ -34,7 +35,7 @@ import org.springframework.stereotype.Component;
  * Class Action to call AMS (Manage Access Rights).
  */
 @Component
-public class CMDIAMSNodeAction extends EmbeddedPageNodeAction {
+public class CMDIAMSNodeAction extends EmbeddedPageNodeAction implements NodeActionSingletonBean {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter filterIdProvider;

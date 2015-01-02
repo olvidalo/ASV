@@ -24,6 +24,7 @@ import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -53,7 +54,7 @@ import org.springframework.stereotype.Component;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
-public class CMDIViewNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSingletonBean  {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);   
     @Autowired

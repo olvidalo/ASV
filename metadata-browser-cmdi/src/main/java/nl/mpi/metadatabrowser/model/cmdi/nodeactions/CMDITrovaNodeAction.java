@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.Collection;
 import javax.ws.rs.core.UriBuilder;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Component;
  * Class that calls redirect to Annotation Content Search (TROVA).
  */
 @Component
-public class CMDITrovaNodeAction extends RedirectingNodeAction {
+public class CMDITrovaNodeAction extends RedirectingNodeAction implements NodeActionSingletonBean {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;

@@ -13,7 +13,7 @@ import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Application object the Metadata Browser
@@ -38,6 +38,9 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
 
     @Autowired
     private Settings settings;
+    
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * @return @see org.apache.wicket.Application#getHomePage()
@@ -66,7 +69,7 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
     private void setCacheOptions() throws StringValueConversionException {
         final String maxSizePerSession = settings.getMaxSizePerSession();
         final int inmemoryCacheSize = settings.getInmemoryCacheSize();
-        
+
         if (!Strings.isEmpty(maxSizePerSession)) {
             final Bytes maxSizePerSessionBytes = Bytes.valueOf(maxSizePerSession);
             logger.info("Setting Max Size Per Session to {}", maxSizePerSessionBytes);
@@ -102,4 +105,9 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
     public TemplatesStore getTemplatesProvider() {
         return templatesProvider;
     }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
 }

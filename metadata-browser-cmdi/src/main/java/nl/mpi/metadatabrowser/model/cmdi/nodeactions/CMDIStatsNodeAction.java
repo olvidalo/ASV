@@ -16,8 +16,8 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
-import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDIStatsNodeAction extends SingleNodeAction implements NodeAction {
+public class CMDIStatsNodeAction extends SingleNodeAction implements NodeActionSingletonBean  {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
 

@@ -33,6 +33,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.proxy.ILazyInitProxy;
 import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
@@ -69,16 +70,27 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
             @Override
             protected void populateItem(ListItem<NodeAction> item) {
                 final NodeAction action = item.getModelObject();
+                
+                // inner node action that may not be serializable but implements all original interfaces
+                final NodeAction innerAction;
+                if (action instanceof ILazyInitProxy) {
+                    //unwrap proxy
+                    final Object proxyTarget = ((ILazyInitProxy) action).getObjectLocator().locateProxyTarget();
+                    innerAction = (NodeAction) proxyTarget;
+                } else {
+                    innerAction = action;
+                }
+                
                 final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
                 final Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
 
                 // the action may explicitly require the result to be shown in a new tab/window
-                if (action instanceof TargetSpecifier && ((TargetSpecifier) action).openInNew()) {
+                if (innerAction instanceof TargetSpecifier && ((TargetSpecifier) innerAction).openInNew()) {
                     actionLink.add(new AttributeModifier("target", "_blank"));
                 }
 
                 actionLink.add(new Label("linkLabel", action.getName()));
-                actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b " + getClassName(action)));
+                actionLink.add(new AttributeAppender("class", "btn btn-3 btn-3b " + getClassName(innerAction)));
                 item.add(actionLink);
                 item.add(new AttributeAppender("title", action.getTitle()));
             }

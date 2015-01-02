@@ -22,6 +22,7 @@ import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
@@ -43,7 +44,7 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
+public final class CMDIDownloadNodeAction extends SingleNodeAction implements NodeActionSingletonBean, Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     @Autowired
