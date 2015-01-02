@@ -44,6 +44,7 @@ import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -54,7 +55,7 @@ import org.springframework.stereotype.Component;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
-public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSingletonBean  {
+public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware  {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);   
     @Autowired
@@ -66,6 +67,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSi
     @Autowired
     @Qualifier("browserService")
     private NodeResolver nodeResolver;
+    private String beanName;
 
     /**
      * Default constructor for spring
@@ -176,5 +178,15 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSi
     @Override
     public String getTitle() {
         return "View this resource";
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

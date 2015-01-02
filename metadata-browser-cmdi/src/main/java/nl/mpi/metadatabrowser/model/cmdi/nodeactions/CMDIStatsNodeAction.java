@@ -26,6 +26,7 @@ import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,9 +34,10 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDIStatsNodeAction extends SingleNodeAction implements NodeActionSingletonBean  {
+public class CMDIStatsNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware  {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+    private String beanName;
 
     @Override
     public String getName() {
@@ -55,7 +57,15 @@ public class CMDIStatsNodeAction extends SingleNodeAction implements NodeActionS
         final NavigationActionRequest request = new NavigationActionRequest(null);
 
         return new SimpleNodeActionResult(request);
+    }
 
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
 
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

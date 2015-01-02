@@ -24,4 +24,6 @@ package nl.mpi.metadatabrowser.model;
  */
 public interface NodeActionSingletonBean extends NodeAction {
     
+    String getBeanName();
+    
 }

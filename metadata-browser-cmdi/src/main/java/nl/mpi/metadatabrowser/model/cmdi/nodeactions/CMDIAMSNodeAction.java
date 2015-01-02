@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,10 +36,11 @@ import org.springframework.stereotype.Component;
  * Class Action to call AMS (Manage Access Rights).
  */
 @Component
-public class CMDIAMSNodeAction extends EmbeddedPageNodeAction implements NodeActionSingletonBean {
+public class CMDIAMSNodeAction extends EmbeddedPageNodeAction implements NodeActionSingletonBean, BeanNameAware {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter filterIdProvider;
+    private String beanName;
 
     @Autowired
     public CMDIAMSNodeAction(NodeActionsConfiguration nodeActionsCongiguration, NodeIdFilter filterIdProvider) {
@@ -73,6 +75,16 @@ public class CMDIAMSNodeAction extends EmbeddedPageNodeAction implements NodeAct
     @Override
     protected IModel<String> getOpenInNewLabelModel() {
         return Model.of("Click here to manage node access");
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 
 }

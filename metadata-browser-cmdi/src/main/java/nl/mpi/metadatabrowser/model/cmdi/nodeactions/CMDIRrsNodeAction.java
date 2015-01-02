@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,10 +35,11 @@ import org.springframework.stereotype.Component;
  * Class that call redirect to RRS
  */
 @Component
-public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements NodeActionSingletonBean, StyleSpecifier {
+public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements NodeActionSingletonBean, StyleSpecifier, BeanNameAware {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;
+    private String beanName;
 
     @Autowired
     public CMDIRrsNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter) {
@@ -75,5 +77,15 @@ public class CMDIRrsNodeAction extends EmbeddedPageNodeAction implements NodeAct
     @Override
     protected IModel<String> getOpenInNewLabelModel() {
         return Model.of("Click here to request access to this node");
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

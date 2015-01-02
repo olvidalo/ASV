@@ -27,6 +27,7 @@ import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.VersionInfoPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,9 +35,10 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActionSingletonBean  {
+public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware  {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+    private String beanName;
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
@@ -61,5 +63,15 @@ public class CMDIVersionNodeAction extends SingleNodeAction implements NodeActio
     @Override
     public String getTitle() {
         return "Show version information for the selected node";
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

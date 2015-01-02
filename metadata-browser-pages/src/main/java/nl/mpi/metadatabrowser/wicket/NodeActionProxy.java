@@ -55,14 +55,14 @@ public class NodeActionProxy {
         @Override
         protected NodeAction doForward(final NodeAction a) {
             if (a instanceof NodeActionSingletonBean) {
-                // convert to a proxy; lookup by class
-                final Class actionClass = a.getClass();
+                // convert to a proxy; lookup by bean name
+                final String beanName = ((NodeActionSingletonBean)a).getBeanName();
                 return (NodeAction) LazyInitProxyFactory.createProxy(NodeAction.class, new IProxyTargetLocator() {
 
                     @Override
                     public Object locateProxyTarget() {
-                        // get the bean from the application context (assuming there is only one bean of the specified class!)
-                        return MetadataBrowserApplication.get().getApplicationContext().getBean(actionClass);
+                        // get the bean from the application context
+                        return MetadataBrowserApplication.get().getApplicationContext().getBean(beanName);
                     }
                 });
             } else {

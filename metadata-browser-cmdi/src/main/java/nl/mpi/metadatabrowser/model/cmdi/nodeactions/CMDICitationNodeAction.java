@@ -29,6 +29,7 @@ import nl.mpi.metadatabrowser.model.cmdi.wicket.components.CitationComponent;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,9 +37,10 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDICitationNodeAction extends SingleNodeAction implements NodeActionSingletonBean  {
+public class CMDICitationNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware  {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
+    private String beanName;
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
@@ -62,5 +64,15 @@ public class CMDICitationNodeAction extends SingleNodeAction implements NodeActi
     @Override
     public String getTitle() {
         return "Get a persistent link to this branch or resource in order to cite it in a publication or link to it on a web site";
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

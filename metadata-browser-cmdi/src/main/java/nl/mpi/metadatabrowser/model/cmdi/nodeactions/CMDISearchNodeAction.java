@@ -23,6 +23,7 @@ import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,10 +33,11 @@ import org.springframework.stereotype.Component;
  * Class that calls redirect to CMDI Search
  */
 @Component
-public class CMDISearchNodeAction extends RedirectingNodeAction implements NodeActionSingletonBean {
+public class CMDISearchNodeAction extends RedirectingNodeAction implements NodeActionSingletonBean, BeanNameAware {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;
+    private String beanName;
 
     /**
      *
@@ -71,5 +73,15 @@ public class CMDISearchNodeAction extends RedirectingNodeAction implements NodeA
             uriBuilder.queryParam("nodeid", nodeid);
         }
         return uriBuilder.build();
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }
