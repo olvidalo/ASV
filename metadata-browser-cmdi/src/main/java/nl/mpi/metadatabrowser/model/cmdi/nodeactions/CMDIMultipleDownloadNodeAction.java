@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
@@ -32,6 +33,7 @@ import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,10 +43,11 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements Serializable {
+public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements NodeActionSingletonBean, Serializable, BeanNameAware {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     private final ZipService zipService;
+    private String beanName;
 
     @Autowired
     public CMDIMultipleDownloadNodeAction(ZipService zipService) {
@@ -90,5 +93,15 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
             logger.error("an exception has occured when trying to download package of : {}", node, ex);
             throw new NodeActionException(this, ex);
         }
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

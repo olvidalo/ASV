@@ -32,6 +32,7 @@ import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+import nl.mpi.metadatabrowser.wicket.NodeActionProxy;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.model.TypedSerializableCorpusNode;
 import org.apache.wicket.Component;
@@ -164,7 +165,9 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
      */
     private void updateNodeActions(final Collection<TypedCorpusNode> typedNodes) {
         final List<NodeAction> selectedNodeActions = nodeActionsProvider.getNodeActions(typedNodes);
-        nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, selectedNodeActions));
+        // convert node actions to actions that are safe for serialisation
+        final List<NodeAction> safeNodeActions = NodeActionProxy.getProxyList(selectedNodeActions);
+        nodeActionsPanel.setModelObject(new NodeActionsStructure(typedNodes, safeNodeActions));
     }
 
     /**

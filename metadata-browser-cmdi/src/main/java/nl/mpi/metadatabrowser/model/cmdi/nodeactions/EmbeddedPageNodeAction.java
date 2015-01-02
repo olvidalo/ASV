@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public abstract class EmbeddedPageNodeAction implements NodeAction {
+public abstract class EmbeddedPageNodeAction implements NodeActionSingletonBean  {
 
     private final static Logger logger = LoggerFactory.getLogger(EmbeddedPageNodeAction.class);
 

@@ -22,6 +22,7 @@ import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.SingleNodeAction;
@@ -33,6 +34,7 @@ import nl.mpi.metadatabrowser.services.cmdi.impl.CorpusNodeResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -43,7 +45,7 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public final class CMDIDownloadNodeAction extends SingleNodeAction implements Serializable {
+public final class CMDIDownloadNodeAction extends SingleNodeAction implements NodeActionSingletonBean, Serializable, BeanNameAware {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     @Autowired
@@ -51,6 +53,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
     private NodeResolver nodeResolver;
     @Autowired
     private AccessChecker accessChecker;
+    private String beanName;
 
     /**
      * Default constructor for Spring
@@ -104,5 +107,15 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements Se
         } catch (NodeNotFoundException ex) {
             throw new NodeActionException(this, ex);
         }
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }
