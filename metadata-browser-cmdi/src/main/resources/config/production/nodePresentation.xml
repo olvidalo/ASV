@@ -45,4 +45,6 @@
     </bean>
     
     <bean id="nodePresentationProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationProvider" />
+    
+    <bean id="nodePresentationAjaxListener" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodePresentationAjaxListener" /> 
 </beans>
