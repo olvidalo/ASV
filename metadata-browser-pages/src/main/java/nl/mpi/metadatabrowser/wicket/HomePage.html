@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="style/metadata-visualisation.css" type="text/css" media="screen" title="Stylesheet" />
         <link rel="shortcut icon" href="favicon.ico" type="image/ico" />
     </head>
-    <body onload="init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png');">
+    <body>
         <div wicket:id="headerPanel" id="headerPanel">[HEADER PANEL]</div>
 
         <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
@@ -20,8 +20,6 @@
             var variousDecorationsHeight = 2;
             var extraDecorationsForMainPanel = 130;
             var treepanel = $("#treePanel");
-            var actionWrapper = $("#actionsPanelContainer");
-            var nodePanel = $("#nodePanel");
             var nodePresentationContainer = $("#nodePresentation");
             var header = $("#headerPanel");
             var heightForTreeMenu = $(window).height() - header.height() - variousDecorationsHeight;
@@ -29,10 +27,21 @@
             treepanel.height(heightForTreeMenu);
             nodePresentationContainer.height(heightForMainPanel);
         }
-
-        $(function() {
+        
+        $(document).ready(function(){
+            
             $(window).resize(doLayout);
             doLayout();
+            
+            //scroll to the selected tree item
+            var selected = $('#treePanel .row-selected');
+            if(selected.length > 0) {
+                var panel = $('#treePanel');
+                var panelOffset = panel.offset().top;
+                var panelHeight = panel.height() / 2;
+                var itemOffset = selected.offset().top;
+                panel.scrollTop(itemOffset - panelOffset - panelHeight);
+            }
         });
         </script>
     </body>

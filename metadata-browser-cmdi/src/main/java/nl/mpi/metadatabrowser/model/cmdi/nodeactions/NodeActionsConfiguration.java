@@ -17,7 +17,8 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.Serializable;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -40,9 +41,7 @@ public class NodeActionsConfiguration implements Serializable {
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
-    private static final Logger logger = Logger.getLogger(NodeActionsConfiguration.class.getName());
-    // what to assume as default for "same" protocol if it is not known whether https is used
-    final boolean ssl = false;
+    private static final Logger logger = LoggerFactory.getLogger(NodeActionsConfiguration.class);
 
     /**
      * @getters

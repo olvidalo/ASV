@@ -49,6 +49,8 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     private AuthenticationHolder auth;
     @SpringBean
     private TreeExpander treeExpander;
+    @SpringBean(required = false)
+    private NodePresentationAjaxListener nodePresentationListener;
 
     private final NodesPanel nodesPanel;
     private final ArchiveTreePanel treePanel;
@@ -90,6 +92,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
                     nodesPanel.setModelObject(treePanel.getSelectedNodes());
                     if (target != null) {
                         target.add(nodesPanel);
+                        if(nodePresentationListener != null){
+                            nodePresentationListener.onNodeSelectionChanged(target);
+                        }
                     }
                 }
             }
