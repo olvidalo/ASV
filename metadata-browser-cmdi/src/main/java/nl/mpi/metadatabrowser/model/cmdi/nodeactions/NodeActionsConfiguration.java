@@ -17,8 +17,10 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.Serializable;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -33,6 +35,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class NodeActionsConfiguration implements Serializable {
 
+    public final static String DEFAULT_ANNEX_MIMETYPES = "text/plain text/x-eaf+xml text/x-chat text/x-shoebox-text text/x-toolbox-text text/x-subrip text/praat-textgrid";
+
     private String amsURL;
     private String rrsURL;
     private String rrsIndexUrl;
@@ -41,6 +45,7 @@ public class NodeActionsConfiguration implements Serializable {
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
+    private String annexMimeTypes = DEFAULT_ANNEX_MIMETYPES;
     private static final Logger logger = LoggerFactory.getLogger(NodeActionsConfiguration.class);
 
     /**
@@ -110,6 +115,10 @@ public class NodeActionsConfiguration implements Serializable {
      */
     public String getManualURL() {
         return manualURL;
+    }
+
+    public String getAnnexMimeTypes() {
+        return annexMimeTypes;
     }
 
     /**
@@ -192,6 +201,11 @@ public class NodeActionsConfiguration implements Serializable {
     public void setTrovaURL(String trovaURL) {
         checkWarning(trovaURL, "nl.mpi.trovaUrl");
         this.trovaURL = trovaURL;
+    }
+
+    @Value("${nl.mpi.metadatabrowser.annexMimeTypes:}" + DEFAULT_ANNEX_MIMETYPES)
+    public void setAnnexMimeTypes(String annexMimeTypes) {
+        this.annexMimeTypes = annexMimeTypes;
     }
 
     /**

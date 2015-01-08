@@ -16,8 +16,14 @@
  */
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
@@ -36,7 +42,6 @@ import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
@@ -55,26 +60,33 @@ import org.springframework.stereotype.Component;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
-public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware  {
+public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware {
 
-    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);   
+    private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     @Autowired
-    private NodeActionsConfiguration nodeActionsConfiguration;   
+    private NodeActionsConfiguration nodeActionsConfiguration;
     @Autowired
-    private NodeIdFilter nodeIdFilter;   
+    private NodeIdFilter nodeIdFilter;
     @Autowired
-    private AccessChecker accessChecker;    
+    private AccessChecker accessChecker;
     @Autowired
     @Qualifier("browserService")
     private NodeResolver nodeResolver;
     private String beanName;
+    private Set<String> annexMimeTypes;
 
     /**
      * Default constructor for spring
      */
     protected CMDIViewNodeAction() {
     }
-    
+
+    @PostConstruct
+    public void init() {
+        final String annexTypes = nodeActionsConfiguration.getAnnexMimeTypes();
+        annexMimeTypes = ImmutableSet.copyOf(annexTypes.split("\\s"));
+    }
+
     /**
      *
      * @param nodeActionsConfiguration NodeActionsConfiguration, get Annex url
@@ -108,10 +120,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSi
     private boolean isAnnexViewable(final TypedCorpusNode node) {
         final NodeType nodeType = node.getNodeType();
         final boolean isAnnexViewable = nodeType instanceof CMDIResourceTxtType
-                || nodeType instanceof ResourceWrittenType && node.getName().endsWith(".srt")
-                || node.getName().endsWith(".eaf")
-                || node.getName().endsWith("tbt")
-                || node.getName().endsWith(".cha");
+                || annexMimeTypes.contains(node.getFormat());
         return isAnnexViewable;
     }
 
