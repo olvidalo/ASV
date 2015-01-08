@@ -59,9 +59,11 @@ public class CMDIViewNodeActionTest {
         accessChecker = context.mock(AccessChecker.class);
         nodeResolver = context.mock(NodeResolver.class);
         auth = context.mock(AuthenticationHolder.class);
+        nodeActionsConfiguration.setAnnexMimeTypes("text/x-eaf+xml text/x-chat");
         nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
 
         instance = new CMDIViewNodeAction(nodeActionsConfiguration, nodeResolver, filter, accessChecker);
+        instance.init();
         instance.setAuthenticationHolder(auth);
     }
 
@@ -75,8 +77,8 @@ public class CMDIViewNodeActionTest {
                 allowing(node).getNodeType();
                 will(returnValue(context.mock(NodeType.class)));
 
-                allowing(node).getName();
-                will(returnValue("parent.jpg"));
+                allowing(node).getFormat();
+                will(returnValue("image/jpeg")); //not an annex format
 
                 oneOf(auth).getPrincipalName();
                 will(returnValue("user"));
@@ -104,8 +106,8 @@ public class CMDIViewNodeActionTest {
                 allowing(node).getNodeType();
                 will(returnValue(context.mock(NodeType.class)));
 
-                allowing(node).getName();
-                will(returnValue("parent.eaf"));
+                allowing(node).getFormat();
+                will(returnValue("text/x-eaf+xml"));
 
                 oneOf(nodeResolver).getPID(node);
                 will(returnValue(URI.create("hdl:1234/5678-abcd")));
@@ -116,7 +118,7 @@ public class CMDIViewNodeActionTest {
         final ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertTrue(actionRequest instanceof NavigationActionRequest);
         NavigationActionRequest navRequest = (NavigationActionRequest) actionRequest;
-        assertTrue(navRequest.getTargetURL().toString().contains("handle=hdl:1234/5678-abcd"));
+        assertTrue(navRequest.getTargetURL().toString().contains("http://lux16.mpi.nl/ds/annex/search.jsp?handle=hdl:1234/5678-abcd"));
     }
 
     /**
@@ -130,8 +132,8 @@ public class CMDIViewNodeActionTest {
                 allowing(node).getNodeType();
                 will(returnValue(context.mock(NodeType.class)));
 
-                allowing(node).getName();
-                will(returnValue("parent.eaf"));
+                allowing(node).getFormat();
+                will(returnValue("text/x-chat"));
 
                 oneOf(nodeResolver).getPID(node);
                 will(returnValue(null));
@@ -148,6 +150,6 @@ public class CMDIViewNodeActionTest {
         final ControllerActionRequest actionRequest = result.getControllerActionRequest();
         assertTrue(actionRequest instanceof NavigationActionRequest);
         NavigationActionRequest navRequest = (NavigationActionRequest) actionRequest;
-        assertTrue(navRequest.getTargetURL().toString().contains("nodeid=NODE-ID-PARAM"));
+        assertTrue(navRequest.getTargetURL().toString().equals("http://lux16.mpi.nl/ds/annex/search.jsp?nodeid=NODE-ID-PARAM"));
     }
 }

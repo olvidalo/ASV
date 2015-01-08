@@ -114,6 +114,12 @@ external URLs matching the pattern defined in the schemeReplacePattern parameter
 * nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry
 amount of time in seconds for which handle - URL resolutions should be cached
 
+* nl.mpi.metadatabrowser.annexMimeTypes
+OPTIONAL whitespace separated list of mime types that should open Annex when the 
+'view' action is executed. Defaults to:
+    "text/plain text/x-eaf+xml text/x-chat text/x-shoebox-text 
+    text/x-toolbox-text text/x-subrip text/praat-textgrid"
+
 * nl.mpi.metadatabrowser.wicket.maxSizePerSession 
 OPTIONAL representation of the size for page store file (cache on disk per
 session), e.g. '10M' or '1024K'

@@ -9,6 +9,7 @@ from 1.0 to >= 1.1
 		nl.mpi.metadatabrowser.schemeReplacePattern
 		nl.mpi.metadatabrowser.schemeReplaceTargetScheme
 		nl.mpi.metadatabrowser.adapter.handleResolutionCacheExpiry
+                [OPTIONAL] nl.mpi.metadatabrowser.annexMimeTypes (added after 1.1-RC5)
 		[OPTIONAL] nl.mpi.metadatabrowser.wicket.maxSizePerSession 
 		[OPTIONAL] nl.mpi.metadatabrowser.wicket.inmemoryCacheSize
 	
@@ -48,6 +49,12 @@ from 1.0 to >= 1.1
 			description="amount of time in seconds for which handle - URL resolutions
 						 should be cached" />
 						 
+		<!-- Optional Annex types configuration (values shown here are defaults) -->
+		<Parameter name="nl.mpi.metadatabrowser.annexMimeTypes"
+			value="text/plain text/x-eaf+xml text/x-chat text/x-shoebox-text text/x-toolbox-text text/x-subrip text/praat-textgrid" 
+			description="Whitespace separated list of mime types that should open Annex when the 'view' action is executed"/>  
+
+
 		<!-- Optional wicket cache settings -->
 
 		<Parameter name="nl.mpi.metadatabrowser.wicket.maxSizePerSession"
