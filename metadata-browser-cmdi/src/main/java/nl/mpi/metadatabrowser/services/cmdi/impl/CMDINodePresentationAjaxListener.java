@@ -20,6 +20,7 @@ import nl.mpi.metadatabrowser.wicket.NodePresentationAjaxListener;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /**
+ * Listener that gets called when the node presentation gets updated via Ajax
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
@@ -27,7 +28,12 @@ public class CMDINodePresentationAjaxListener implements NodePresentationAjaxLis
 
     @Override
     public void onNodeSelectionChanged(AjaxRequestTarget target) {
-        target.appendJavaScript("init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png')");
+        // IMDI viewer page (stylesheet result) includes the definition of
+        // an init method. If it exists, call it.
+        target.appendJavaScript(""
+                + "if (typeof init_viewer == 'function') { "
+                + " init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png') "
+                + "}");
     }
 
 }
