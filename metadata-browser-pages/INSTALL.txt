@@ -65,8 +65,8 @@ which the tomcat is running. No files need to be written by the Tomcat.
 
 The METADATA Browser uses the following configuration options:
 
-* nl.mpi.imdiBrowser.imdiBrowserManualUrl // will be replaced when switch to cmdi
-(a website about usage of the IMDI browser: This is no webapp and this
+* nl.mpi.metadatabrowser.manualUrl
+(a website about usage of the metadata browser: This is no webapp and this
 URL is not affected by forceHttpOrHttps nor forceHttpsPrefix settings!)
 
 * nl.mpi.annexUrl
