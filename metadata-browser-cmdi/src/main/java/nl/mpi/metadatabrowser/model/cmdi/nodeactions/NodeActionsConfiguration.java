@@ -17,10 +17,8 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.Serializable;
-import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -212,9 +210,9 @@ public class NodeActionsConfiguration implements Serializable {
      *
      * @param manualURL
      */
-    @Value("${nl.mpi.imdiBrowser.imdiBrowserManualUrl}")
+    @Value("${nl.mpi.metadatabrowser.manualUrl}")
     public void setManualURL(String manualURL) {
-        checkWarning(manualURL, "nl.mpi.manualUrl");
+        checkWarning(manualURL, "nl.mpi.metadatabrowser.manualUrl");
         this.manualURL = manualURL;
     }
 
@@ -227,9 +225,9 @@ public class NodeActionsConfiguration implements Serializable {
      */
     private void checkWarning(String parameter, String name) {
         if (parameter != null) {
-            logger.info(name + " was initialized with value: " + parameter);
+            logger.info("{} was initialized with value: {}", name, parameter);
         } else {
-            logger.error("Required parameter " + name + " was not initialized properly");
+            logger.error("Required parameter {} was not initialized properly", name);
         }
     }
 }
