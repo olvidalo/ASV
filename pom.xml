@@ -99,7 +99,7 @@
         <!-- Version of Wicket to depend on in module projects -->
         <wicket.version>6.18.0</wicket.version>
         <jmock.version>2.6.0</jmock.version>
-        <corpusstructure2.version>1.1.1-RC1</corpusstructure2.version>
+        <corpusstructure2.version>1.1.1</corpusstructure2.version>
         <!-- Hint for NetBeans to insert license header -->
         <netbeans.hint.license>gpl30</netbeans.hint.license>
         <spring.version>3.2.12.RELEASE</spring.version>
