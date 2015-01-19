@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
-import nl.mpi.archiving.corpusstructure.core.OutputFormat;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -32,7 +31,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -44,7 +42,7 @@ import org.wicketstuff.html5.media.MediaSource;
 import org.wicketstuff.html5.media.video.Html5Video;
 
 /**
- *
+ * @author Twan Goosen <twan.goosen@mpi.nl>
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  * Class that is responsible for video display in the browser
  */
@@ -78,12 +76,14 @@ public final class MediaFilePanel extends Panel {
      */
     public MediaFilePanel(String id, TypedCorpusNode node) {
         super(id);
+        final String nodeUrl = getNodeUrl(node);
+
         add(new Label("viewTitle", "Viewing " + node.getName()));
 
         final List<MediaSource> html5media = findHtml5alternative(node);
 
         // add view for case where no HTML5 resources available
-        add(new ExternalFramePanel("altView", resolver.getUrl(node).toString()) {
+        add(new ExternalFramePanel("altView", nodeUrl) {
 
             @Override
             public boolean isVisible() {
@@ -101,14 +101,11 @@ public final class MediaFilePanel extends Panel {
         };
         add(streaming);
 
-        streaming.add(new Link("original") {
+        if (html5media != null) {
+            streaming.add(new MediaFileExternalLink("originalFile", nodeUrl));
+            streaming.add(new MediaFileExternalLink("streamingFile", html5media.get(0).getSrc()));
+        }
 
-            @Override
-            public void onClick() {
-                allowStreamingModel.setObject(Boolean.FALSE);
-            }
-        });
-        
         // add view for case where HTML5 resources is available
         final Html5Video video = (new Html5Video("displayVideo", createMediaModel(html5media)) {
             private static final long serialVersionUID = 1L;
@@ -125,8 +122,6 @@ public final class MediaFilePanel extends Panel {
 
         });
         streaming.add(video);
-
-        add(new ExternalLink("viewVideo", getNodeUrl(node)));
     }
 
     private List<MediaSource> findHtml5alternative(TypedCorpusNode node) {
@@ -214,5 +209,21 @@ public final class MediaFilePanel extends Panel {
             }
         };
         return mediaSourceList;
+    }
+
+    /**
+     * External link with a label that shows the filename (bit after last slash)
+     * in the label
+     */
+    private static class MediaFileExternalLink extends ExternalLink {
+
+        public MediaFileExternalLink(String id, String link) {
+            super(id, link);
+
+            // add label
+            final String fileName = link.replaceAll(".*/", ""); // strip off everything until last slash
+            add(new Label("name", fileName));
+        }
+
     }
 }

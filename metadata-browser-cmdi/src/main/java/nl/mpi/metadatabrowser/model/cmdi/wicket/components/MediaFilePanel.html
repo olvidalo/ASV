@@ -18,10 +18,17 @@
                         <param name="flashvars" value="controls=true&amp;file=../media/echo-hereweare.mp4" />
                     </object>
                 </video>
-                <p>This is a streaming version of the selected media file that may be of reduced quality. Click <a wicket:id="original">here</a> to go to the original media.</p>
+                <p>
+                    This is a streaming version of the selected video file that may be reduced in quality or size.
+                    If you cannot see the video, your browser might not support MPEG4/H.264 video playback.
+                    The following links may display the video or may initiate a download, depending on your browser:
+                </p>
+                <p>
+                    <a wicket:id="originalFile"><span wicket:id="name">[filename]</span> (original file)</a><br />
+                    <a wicket:id="streamingFile"><span wicket:id="name">[filename]</span> (streaming version)</a>
+                </p>
             </wicket:container>
             <span wicket:id="altView"></span>
-            <p> If you cannot see the video click <a href="" wicket:id="viewVideo" target="_blank">here </a> or consider downloading it.</p>
             <script>
                 $('audio,video').mediaelementplayer({
                     success: function (player, node) {
