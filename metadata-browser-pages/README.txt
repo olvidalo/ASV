@@ -3,9 +3,10 @@
 What is it?
 -----------
 
-METADATA Browser is a web-based application that allows users to browse
-the content of the extensive archive of the IMDI
-(ISLE Metadata Description Initiative) corpus at the MPI. It will also in a later version support browsing of the extensive archive of the CMDI corpus at MPI
+METADATA Browser is a web-based application that allows users to browse the content of the
+extensive archive of the IMDI (ISLE Metadata Description Initiative) corpus at the MPI. 
+It will also in a later version support browsing of the extensive archive of the CMDI 
+corpus at MPI.
 
 The Latest Version
 ------------------
@@ -15,8 +16,8 @@ Please see the file called CHANGES.
 Documentation
 -------------
 
-The most up-to-date documentation for METADATA Browser is the same as IMDI Browser and can be found at
-<http://www.lat-mpi.eu/tools/imdi/browser/web/>.
+The most up-to-date documentation for the Metadata Browser can be found at
+<https://tla.mpi.nl/tools/tla-tools/asv>.
 
 Installation
 ------------
