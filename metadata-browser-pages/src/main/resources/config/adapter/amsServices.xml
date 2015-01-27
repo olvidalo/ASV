@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+       profile="cmdi-production,cmdi-production-ams,cmdi-adapter-ams">
+
+    <!--
+        Spring configuration of adapter AMS services
+        
+        This AMS wiring gets imported from the AMS library. To make it work,
+        the following resource is needed in the Tomcat context (fill in
+        host, username and password according to deployment situation):
+        
+        <Resource
+                name="jdbc/AMS2DB"
+                auth="Container"
+                type="javax.sql.DataSource"
+                driverClassName="org.postgresql.Driver"
+                url="jdbc:postgresql://<HOST>:5432/ams2?useUnicode=true&amp;charSet=UTF-8"
+                username="<USER>"
+                password="<PASSWORD>"
+        />
+    -->
+
+    <!-- Import the copied and slightly adapted AMS wiring -->
+    <import resource="../../ams-config/spring-ams2-core.xml"/>
+    
+    <bean id="AmsService" class="nl.mpi.metadatabrowser.cmdi.ams.AmsRemoteServiceHybridAdapter"/>
+
+    <bean id="authService" class="nl.mpi.archiving.corpusstructure.adapter.ams.AmsAuthorizationServiceAdapter">
+        <constructor-arg ref="authorizationSrv" />
+        <constructor-arg ref="principalSrv" />
+    </bean>
+
+    <bean id="licenseService" class="nl.mpi.archiving.corpusstructure.adapter.ams.AmsLicenseServiceAdapter">
+        <constructor-arg ref="licenseSrv" />
+    </bean>
+
+</beans>

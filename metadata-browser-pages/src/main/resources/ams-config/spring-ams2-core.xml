@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC 
+	"-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+        <!-- Copied and adpated from AMS2 version 1.5 -->
+        
+	<import resource="core.xml" />
+	<import resource="authentication.xml" />
+	<import resource="datasource-jndi.xml" />
+	<import resource="persistence.xml" />
+        <!--<import resource="spring-config/persistence.no2ndCache.xml" />-->
+        <!--<import resource="spring-config/export.xml" />-->
+</beans>
