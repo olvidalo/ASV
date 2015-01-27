@@ -1,6 +1,7 @@
 Metadata browser 1.1.1
 	Changes:
 			- upgraded to corpus-structure-2 version 1.1.3
+			- Spring configuration moved to web application package
 
 Metadata browser 1.1.0
 	Changes:
