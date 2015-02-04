@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/metadata-browser-pages">
-  <Parameter description="Default Spring profile, may be overridden using spring.profiles.active" name="spring.profiles.default" value="cmdi-production"/>
+  <Parameter description="Default Spring profile, may be overridden using spring.profiles.active" name="spring.profiles.default" value="hybrid-production"/>
   <!-- 
 	Spring profile for runtime. Actual beans may come from dependency, also see contextConfigLocation parameter in web.xml. 
 	
 
 	Profiles:
-	    * cmdi-production: combines all production profiles
-	     * cmdi-production-providers: actual providers implementation
-	     * cmdi-production-csdb: actual CSDB implementation (depending on dependency this can be adapter or cs2)
-	    
-	    
-	    Adapter profiles, make sure that metadata-browser-cmdi-adapter is included as a dependency!
-	    * cmdi-adapter-csdb: explicitly select adapter implementation of corpus structure provider that connects to the 'old' (IMDI) corpus structure API
-	    * cmdi-adapter-ams: explicitly select adapter implementation of License and Authorization services that wrap 'old' AMS services
-	    
-	    CS2 profiles, make sure that metadata-browser-cmdi-adapter is included as a dependency!
-	    * cmdi-cs2-csdb: explicitly select adapter implementation of corpus structure provider that connects to the 'old' (IMDI) corpus structure API
-	    
+	    * hybrid-production: combines all hybrid production profiles
+	     * hybrid-production-providers: actual providers (for node presentation, icons, etc) implementation
+	     * hybrid-production-csdb: explicitly select adapter implementation of corpus structure provider that connects to the 'old' (IMDI) corpus structure API
+	     * hybrid-production-ams: explicitly select adapter implementation of License and Authorization services that wrap 'old' AMS services
+
 	    * cmdi-mock-csdb: mock implementation of CMDI CSDB
 	    * cmdi-mock-ams: mock implementation of AMS License and Authorization services
     -->
-  <!-- as long as there are no non-adapter ams services, use the following for cs2: -->
-  <!--<Parameter name="spring.profiles.active" value="cmdi-production-providers, cmdi-mock-ams"/>-->
 </Context>

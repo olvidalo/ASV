@@ -1,3 +1,10 @@
+from 1.1 to >= 1.2
+
+	* The spring profile for the hybrid/adapter implementation has changed. In the
+	  context parameters 'spring.profiles.active' and 'spring.profiles.default', replace 
+	  'cmdi-production' with  'hybrid-production'. 
+	  The profiles 'cmdi-adapter-*' and 'cmdi-cs2-*' have been completely removed.
+
 from 1.0 to >= 1.1
 
 	* Add new context parameters: 

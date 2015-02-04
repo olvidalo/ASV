@@ -3,6 +3,8 @@ Metadata browser 1.2.0
 			- removed support for 'native' corpus-structure-2. Only the adapter is
 			still supported; the adapter project has been merged with the old 'cmdi'
 			package and is now called 'hybrid'
+			- Spring profiles have been refactored accordingly, 'hybrid-production' should
+			be used now; see upgrade instructions for details
 
 Metadata browser 1.1.1
 	Changes:

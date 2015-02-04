@@ -6,13 +6,13 @@
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
-       profile="cmdi-production,cmdi-production-csdb,cmdi-adapter-csdb">
+       profile="hybrid-production,hybrid-production-csdb">
 
     <!--
 	Spring configuration of the corpus structure database beans for usage in a production environment.
 
-        These beans should get picked up by the metadata browser wicket application as long as the 'cmdi-production' profile
-        or 'cmdi-production-csdb' is active.
+        These beans should get picked up by the metadata browser wicket application as long as the 'hybrid-production' profile
+        or 'hybrid-production-csdb' is active.
     -->
     
     <!-- Load properties from context.xml via servlet container -->
