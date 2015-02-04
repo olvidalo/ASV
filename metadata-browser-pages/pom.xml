@@ -27,44 +27,17 @@
         <logging.appender>File</logging.appender>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>cmdi-adapter</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>metadata-browser-cmdi-adapter</artifactId>
-                    <version>1.2-SNAPSHOT</version>
-                    <exclusions>
-                        <!--                        <exclusion>
-                            <artifactId>javax.servlet-api</artifactId>
-                            <groupId>javax.servlet</groupId>
-                        </exclusion>-->
-                    </exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>cmdi-cs2</id>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>metadata-browser-cmdi-cs2</artifactId>
-                    <version>1.2-SNAPSHOT</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!-- PROJECT DEPENDENCIES -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>metadata-browser-api</artifactId>
             <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>metadata-browser-hybrid</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>nl.mpi</groupId>
