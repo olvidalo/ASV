@@ -1,3 +1,9 @@
+Metadata browser 1.2.0
+	Changes:
+			- removed support for 'native' corpus-structure-2. Only the adapter is
+			still supported; the adapter project has been merged with the old 'cmdi'
+			package and is now called 'hybrid'
+
 Metadata browser 1.1.1
 	Changes:
 			- upgraded to corpus-structure-2 version 1.1.3
