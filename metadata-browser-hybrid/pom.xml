@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>nl.mpi.metadata-browser</groupId>
-    <artifactId>metadata-browser-cmdi</artifactId>
+    <artifactId>metadata-browser-hybrid</artifactId>
     <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Metadata Browser Services CMDI Implementation</name>
+    <name>Metadata Browser Services Hybrid Implementation</name>
 
     <build>
         <resources>
@@ -69,6 +69,17 @@
             <version>${corpusstructure2.version}</version>
         </dependency>
         <dependency>
+            <groupId>nl.mpi.corpusstructure</groupId>
+            <artifactId>corpus-structure-2-adapter</artifactId>
+            <version>${corpusstructure2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>nl.mpi</groupId>
             <artifactId>wicket-tree-components</artifactId>
             <version>1.2</version>
@@ -107,7 +118,7 @@
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
