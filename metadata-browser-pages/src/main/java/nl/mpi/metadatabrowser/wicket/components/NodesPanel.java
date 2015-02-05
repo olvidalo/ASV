@@ -200,7 +200,7 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
 
             response.render(new StringHeaderItem(String.format(""
                     + "<link rel=\"canonical\" "
-                    + "href=\"%s\" />", cannonicalRef)));
+                    + "href=\"%s\" />", Strings.escapeMarkup(cannonicalRef.toString()))));
         }
     }
 
