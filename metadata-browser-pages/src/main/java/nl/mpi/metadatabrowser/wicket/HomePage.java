@@ -1,12 +1,15 @@
 package nl.mpi.metadatabrowser.wicket;
 
+import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProviderFactory;
+import nl.mpi.archiving.tree.GenericTreeNode;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
@@ -14,8 +17,6 @@ import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.markup.html.tree.LinkType;
-import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -73,23 +74,23 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
 
         // Add a panel hosting the archive tree, taking its structure from the injected tree model provider
         treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
-        treePanel.setLinkType(LinkType.AJAX_FALLBACK);
         add(treePanel);
 
         // Add a panel to show information and actions on the currently selected node(s)
         nodesPanel = new NodesPanel("nodesPanel", new CollectionModel(treePanel.getSelectedNodes()));
         nodesPanel.setOutputMarkupId(true);
 
-        final Tree archiveTree = treePanel.getTree();
-        final Object rootObj = archiveTree.getModelObject().getRoot();// get rootNode object
-        archiveTree.getTreeState().expandNode(rootObj);// open tree to first children
+        final GenericTreeNode rootObj = treeModelProvider.getRoot();
+        treePanel.expand(rootObj);// open tree to first children
 
         // Link up the tree panel and nodes panel so that changes in the former get reflected in the latter
         treePanel.addArchiveTreePanelListener(new ArchiveTreePanelListener<SerializableCorpusNode>() {
             @Override
             public void nodeSelectionChanged(AjaxRequestTarget target, ArchiveTreePanel<SerializableCorpusNode> treePanel) {
                 if (!treePanel.getSelectedNodes().isEmpty()) {
-                    nodesPanel.setModelObject(treePanel.getSelectedNodes());
+                    // put selection in a new set to ensure a *new* model object is set
+                    final HashSet<SerializableCorpusNode> selection = Sets.newHashSet(treePanel.getSelectedNodes());
+                    nodesPanel.setModelObject(selection);
                     if (target != null) {
                         target.add(nodesPanel);
                         if(nodePresentationListener != null){
@@ -101,7 +102,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         });
 
         checkForOpenpathParameter(parameters, rootObj);
-        nodesPanel.setModelObject(treePanel.getSelectedNodes());// display presentation for selected node (Welocome Page if openpath doesn' exist)
+        nodesPanel.setModelObject(Sets.newHashSet(treePanel.getSelectedNodes()));// display presentation for selected node (Welocome Page if openpath doesn' exist)
         add(nodesPanel);
     }
 
@@ -143,12 +144,12 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
      * @param rootObj Object, the root node
      * @return boolean for openpath exist or not
      */
-    private Boolean checkForOpenpathParameter(PageParameters parameters, Object rootObj) {
+    private Boolean checkForOpenpathParameter(PageParameters parameters, GenericTreeNode rootObj) {
         final URI nodeUri = getNodeUriToOpen(parameters);
         if (nodeUri == null) {
             return false;
         } else {
-            final boolean nodeFound = treeExpander.openPath(treePanel.getTree(), rootObj, nodeUri);
+            final boolean nodeFound = treeExpander.openPath(treePanel, rootObj, nodeUri);
             if (!nodeFound) {
                 logger.info("Node with URI {} requested but not found", nodeUri);
                 if (nodeUri.getScheme().equalsIgnoreCase("hdl")) {

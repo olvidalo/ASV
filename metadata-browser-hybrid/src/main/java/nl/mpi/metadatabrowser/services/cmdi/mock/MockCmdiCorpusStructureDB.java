@@ -117,6 +117,11 @@ public class MockCmdiCorpusStructureDB implements CorpusStructureProvider, Seria
     }
 
     @Override
+    public boolean hasChildNodes(URI nodeUri) {
+        return !getChildNodeURIs(nodeUri).isEmpty();
+    }
+
+    @Override
     public void initialize() {
     }
 

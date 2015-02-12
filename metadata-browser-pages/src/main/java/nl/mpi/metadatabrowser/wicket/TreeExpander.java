@@ -16,19 +16,22 @@
  */
 package nl.mpi.metadatabrowser.wicket;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
+import nl.mpi.archiving.tree.GenericTreeModelProvider;
+import nl.mpi.archiving.tree.GenericTreeModelProviderFactory;
 import nl.mpi.archiving.tree.GenericTreeNode;
-import nl.mpi.archiving.tree.swingtree.GenericTreeSwingTreeNodeWrapper;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.corpusstructure.UnknownNodeException;
-import org.apache.wicket.extensions.markup.html.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +47,8 @@ public class TreeExpander implements Serializable {
     private final static Logger logger = LoggerFactory.getLogger(TreeExpander.class);
     @Autowired
     private CorpusStructureProvider csprovider;
+    @Autowired
+    private GenericTreeModelProviderFactory treeModelProviderFactory;
 
     public TreeExpander() {
     }
@@ -60,7 +65,7 @@ public class TreeExpander implements Serializable {
      * @param nodeUri URI (with either "hdl:" or "node:" schema)
      * @return whether the tree was expanded
      */
-    public boolean openPath(Tree tree, Object rootObj, URI nodeUri) {
+    public boolean openPath(ArchiveTreePanel tree, GenericTreeNode rootObj, URI nodeUri) {
         logger.debug("Trying to expand archive tree to [{}]", nodeUri);
         // retrieve actual node to:
         // 1. check whether it exists
@@ -87,7 +92,7 @@ public class TreeExpander implements Serializable {
      * @throws URISyntaxException
      * @throws UnknownNodeException
      */
-    private boolean getParentNode(URI node, Tree tree, List<URI> parentNodes, Object rootObj) {
+    private boolean getParentNode(URI node, ArchiveTreePanel tree, List<URI> parentNodes, GenericTreeNode rootObj) {
         URI parentNodeURI = csprovider.getCanonicalParent(node);// get parent URI
         logger.trace("Expanding tree: found parent node [{}]", parentNodeURI);
         if (parentNodeURI != null) {
@@ -106,21 +111,23 @@ public class TreeExpander implements Serializable {
      * @param treePanel ArchivePanel, treePanel in which node will be expanded
      * @param rootObj Object, the root node which is already expanded
      */
-    private boolean expandTreeToSelectedNode(List<URI> parentNodes, Tree tree, Object rootObj) {
+    private boolean expandTreeToSelectedNode(List<URI> parentNodes, ArchiveTreePanel tree, GenericTreeNode rootObj) {
+        final GenericTreeModelProvider treeModelProvider = treeModelProviderFactory.createTreeModelProvider(rootObj);
+        
         logger.debug("Found parents, expanding node path {}", parentNodes);
         // Generate an iterator. Start just after the last element.(reverse reading)
         ListIterator<URI> li = parentNodes.listIterator(parentNodes.size());
-        Object currentTreeNode = rootObj;// this is root node (already expanded)
-        li.previous();
+        GenericTreeNode currentTreeNode = rootObj;// this is root node (already expanded)
+        li.previous();//TODO: use guava to iterate over a reverse list (and skip root)
         while (li.hasPrevious()) {
             URI nodeUri = li.previous();
-            currentTreeNode = findTreeNodeObject((GenericTreeSwingTreeNodeWrapper) currentTreeNode, nodeUri);
+            currentTreeNode = findTreeNodeObject(currentTreeNode, nodeUri, treeModelProvider);
             if (currentTreeNode == null) {
                 logger.error("Node not found while expanding trees!", nodeUri);
                 return false;
             } else {
-                tree.getTreeState().expandNode(currentTreeNode);
-                tree.getTreeState().selectNode(currentTreeNode, true);
+                tree.expand(currentTreeNode);
+                tree.toggleSelection(currentTreeNode);
             }
         }
         return true;
@@ -132,20 +139,23 @@ public class TreeExpander implements Serializable {
      *
      * @param currentTreeNode GenericTreeSwingTreeNodeWrapper, object to be
      * matched with nopdeURI
-     * @param nodeUri URI, uri of the node that has to be expanded
+     * @param targetUri URI, uri of the node that has to be expanded
      * @return treeNodeObject GenericTreeSwingTreeNodeWrapper, object of a node
      * to be expanded
      */
-    private Object findTreeNodeObject(GenericTreeSwingTreeNodeWrapper currentTreeNode, URI nodeUri) {
-        for (int i = 0; i < currentTreeNode.getChildCount(); i++) {
-            final GenericTreeSwingTreeNodeWrapper treeNodeObject = (GenericTreeSwingTreeNodeWrapper) currentTreeNode.getChildAt(i);
-            GenericTreeNode contentNode = treeNodeObject.getContentNode();
-            if (contentNode instanceof CorpusNode) {
-                if (nodeUri.equals(((CorpusNode) contentNode).getNodeURI())) {
-                    return treeNodeObject;
-                }
+    private GenericTreeNode findTreeNodeObject(GenericTreeNode currentTreeNode, final URI targetUri, GenericTreeModelProvider treeModelProvider) {
+        final Iterator<? extends GenericTreeNode> childIterator = treeModelProvider.getChildren(currentTreeNode);
+        
+        // get the first child that matches the target URI
+        final GenericTreeNode node = Iterators.find(childIterator, new Predicate<GenericTreeNode>() {
+
+            @Override
+            public boolean apply(GenericTreeNode contentNode) {
+                return (contentNode instanceof CorpusNode
+                        && targetUri.equals(((CorpusNode) contentNode).getNodeURI()));
             }
-        }
-        return null;
+
+        });
+        return node;
     }
 }
