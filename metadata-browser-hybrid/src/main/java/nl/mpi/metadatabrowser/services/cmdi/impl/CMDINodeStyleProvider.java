@@ -16,10 +16,6 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.swing.ImageIcon;
 import nl.mpi.archiving.corpusstructure.core.AccessLevel;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
@@ -41,7 +37,6 @@ import nl.mpi.metadatabrowser.model.cmdi.type.ResourceWrittenType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,28 +56,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeNodeStyleProvider<T> {
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodeStyleProvider.class);
-    private final static String sessionIcon = "type-session";
-    private final static String catalogueIcon = "type-catalogue";
-    private final static String corpusIcon = "type-corpus";
-    private final static String audioIcon = "type-audio";
-    private final static String videoIcon = "type-video";
-//    private final static String annotationIcon = "/Ficons/annotation.gif";
-    private final static String pictureIcon = "type-image";
-    private final static String writtenIcon = "type-written";
-    private final static String infoIcon = "type-info";
-    private final static String mediafileIcon = "type-mediafile";
-    private final static String fileIcon = "type-file";
-    private final static String cmdiIcon = "type-cmdi";
-    private final static String unknownIcon = "type-unknown";
-    private final static String openIcon = "access-open";
-    private final static String licensedIcon = "access-licensed";
-    private final static String restrictedIcon = "access-restricted";
-    private final static String closedIcon = "access-closed";
-    private final static String externalIcon = "access-external";
-    private final Map<Entry<ImageIcon, ImageIcon>, ResourceReference> iconMap = new HashMap<>();
+    private final static String sessionClass = "type-session";
+    private final static String catalogueClass = "type-catalogue";
+    private final static String corpusClass = "type-corpus";
+    private final static String audioClass = "type-audio";
+    private final static String videoClass = "type-video";
+//    private final static String annotationClass = "/Ficons/annotation.gif";
+    private final static String pictureClass = "type-image";
+    private final static String writtenClass = "type-written";
+    private final static String infoClass = "type-info";
+    private final static String mediafileClass = "type-mediafile";
+    private final static String fileClass = "type-file";
+    private final static String cmdiClass = "type-cmdi";
+    private final static String unknownClass = "type-unknown";
+    private final static String openClass = "access-open";
+    private final static String licensedClass = "access-licensed";
+    private final static String restrictedClass = "access-restricted";
+    private final static String closedClass = "access-closed";
+    private final static String externalClass = "access-external";
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final AccessInfoProvider accessInfoProvider;
-
+    
     /**
      * Constructor Autowired in providers.xml
      *
@@ -119,54 +113,54 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
     }
 
     private String getNodeTypeIcon(final NodeType nodeType) {
-        final String nodeTypeIcon;
+        final String nodeTypeClass;
         if (nodeType instanceof CMDIResourceType) {
-            nodeTypeIcon = mediafileIcon;
+            nodeTypeClass = mediafileClass;
         } else if (nodeType instanceof CMDIResourceTxtType) {
-            nodeTypeIcon = fileIcon;
+            nodeTypeClass = fileClass;
         } else if (nodeType instanceof IMDISessionType) {
-            nodeTypeIcon = sessionIcon;
+            nodeTypeClass = sessionClass;
         } else if (nodeType instanceof IMDICorpusType) {
-            nodeTypeIcon = corpusIcon;
+            nodeTypeClass = corpusClass;
         } else if (nodeType instanceof IMDICatalogueType) {
-            nodeTypeIcon = catalogueIcon;
+            nodeTypeClass = catalogueClass;
         } else if (nodeType instanceof CMDIMetadataType) {
-            nodeTypeIcon = cmdiIcon;
+            nodeTypeClass = cmdiClass;
         } else if (nodeType instanceof CMDICollectionType) {
-            nodeTypeIcon = corpusIcon; //TODO: Separate CMDI collection type?
+            nodeTypeClass = corpusClass; //TODO: Separate CMDI collection type?
         } else if (nodeType instanceof IMDIInfoType) {
-            nodeTypeIcon = infoIcon;
+            nodeTypeClass = infoClass;
         } else if (nodeType instanceof ResourceVideoType) {
-            nodeTypeIcon = videoIcon;
+            nodeTypeClass = videoClass;
         } else if (nodeType instanceof ResourceAudioType) {
-            nodeTypeIcon = audioIcon;
+            nodeTypeClass = audioClass;
         } else if (nodeType instanceof ResourcePictureType) {
-            nodeTypeIcon = pictureIcon;
+            nodeTypeClass = pictureClass;
         } else if (nodeType instanceof ResourceWrittenType) {
-            nodeTypeIcon = writtenIcon;
+            nodeTypeClass = writtenClass;
         } else {
-            nodeTypeIcon = unknownIcon;
+            nodeTypeClass = unknownClass;
         }
-        return nodeTypeIcon;
+        return nodeTypeClass;
     }
 
     private String getNodeAccessIcon(AccessLevel nodeAccessLevel) {
         if (nodeAccessLevel == null) {
-            return unknownIcon;
+            return unknownClass;
         }
         switch (nodeAccessLevel) {
             case ACCESS_LEVEL_OPEN_EVERYBODY:
-                return openIcon;
+                return openClass;
             case ACCESS_LEVEL_OPEN_REGISTERED_USERS:
-                return licensedIcon;
+                return licensedClass;
             case ACCESS_LEVEL_PERMISSION_NEEDED:
-                return restrictedIcon;
+                return restrictedClass;
             case ACCESS_LEVEL_CLOSED:
-                return closedIcon;
+                return closedClass;
             case ACCESS_LEVEL_EXTERNAL:
-                return externalIcon;
+                return externalClass;
             default:
-                return unknownIcon;
+                return unknownClass;
         }
     }
 }
