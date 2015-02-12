@@ -36,7 +36,7 @@
     <!-- CMDI implementations for metadata browser providers -->
     <bean id="nodeTypeIdentifier" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeTypeIdentifier" />
     
-    <bean id="treeIconProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeIconProvider" />
+    <bean id="treeStyleProvider" class="nl.mpi.metadatabrowser.services.cmdi.impl.CMDINodeStyleProvider" />
 
     <!-- Node action and presentation providers are configured in dedicated files -->
     

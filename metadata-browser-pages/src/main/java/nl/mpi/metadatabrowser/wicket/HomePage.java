@@ -10,7 +10,7 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProvider;
 import nl.mpi.archiving.tree.GenericTreeModelProviderFactory;
 import nl.mpi.archiving.tree.GenericTreeNode;
-import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeIconProvider;
+import nl.mpi.archiving.tree.wicket.components.ArchiveTreeNodeStyleProvider;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanel;
 import nl.mpi.archiving.tree.wicket.components.ArchiveTreePanelListener;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
@@ -45,7 +45,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     @SpringBean
     private CorpusStructureProvider csProvider;
     @SpringBean(required = false)
-    private ArchiveTreeNodeIconProvider<CorpusNode> treeIconProvider;
+    private ArchiveTreeNodeStyleProvider<CorpusNode> treeIconProvider;
     @SpringBean
     private AuthenticationHolder auth;
     @SpringBean
