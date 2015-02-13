@@ -168,29 +168,29 @@ iframe.externalPage {
 
 /* access level icons */
 
-.tree-content .access-open span {
+.tree-content .access-open span.tree-label {
     background-image: url("accessIcons/al_circle_green.png");
 }
-.tree-content .access-licensed span {
+.tree-content .access-licensed span.tree-label {
     background-image: url("accessIcons/al_circle_yellow.png");
 }
-.tree-content .access-restricted span {
+.tree-content .access-restricted span.tree-label {
     background-image: url("accessIcons/al_circle_orange.png");
 }
-.tree-content .access-closed span {
+.tree-content .access-closed span.tree-label {
     background-image: url("accessIcons/al_circle_red.png");
 }
-.tree-content .access-external span {
+.tree-content .access-external span.tree-label {
     background-image: url("accessIcons/al_circle_black.png");
 }
-.tree-content .access-unknown span {
+.tree-content .access-unknown span.tree-label {
     background-image: url("Ficons/unknown.png");
 }
 
 /* node type icons */
 
 .tree-content .type-session {
-    background-image: url("Ficons/session_color.png");
+    background-image: url("Ficons/session_color.gif");
 }
 .tree-content .type-catalogue {
     background-image: url("Ficons/catalogue.png");
