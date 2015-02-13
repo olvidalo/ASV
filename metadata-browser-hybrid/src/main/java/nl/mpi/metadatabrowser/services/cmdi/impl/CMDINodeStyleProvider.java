@@ -61,19 +61,20 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
     private final static String corpusClass = "type-corpus";
     private final static String audioClass = "type-audio";
     private final static String videoClass = "type-video";
-//    private final static String annotationClass = "/Ficons/annotation.gif";
+//    private final static String annotationClass = "type-annotation";
     private final static String pictureClass = "type-image";
     private final static String writtenClass = "type-written";
     private final static String infoClass = "type-info";
     private final static String mediafileClass = "type-mediafile";
     private final static String fileClass = "type-file";
     private final static String cmdiClass = "type-cmdi";
-    private final static String unknownClass = "type-unknown";
+    private final static String unknownTypeClass = "type-unknown";
     private final static String openClass = "access-open";
     private final static String licensedClass = "access-licensed";
     private final static String restrictedClass = "access-restricted";
     private final static String closedClass = "access-closed";
     private final static String externalClass = "access-external";
+    private final static String unknownAccessClass = "access-unknown";
     private final NodeTypeIdentifier nodeTypeIdentifier;
     private final AccessInfoProvider accessInfoProvider;
     
@@ -139,14 +140,14 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
         } else if (nodeType instanceof ResourceWrittenType) {
             nodeTypeClass = writtenClass;
         } else {
-            nodeTypeClass = unknownClass;
+            nodeTypeClass = unknownTypeClass;
         }
         return nodeTypeClass;
     }
 
     private String getNodeAccessIcon(AccessLevel nodeAccessLevel) {
         if (nodeAccessLevel == null) {
-            return unknownClass;
+            return unknownAccessClass;
         }
         switch (nodeAccessLevel) {
             case ACCESS_LEVEL_OPEN_EVERYBODY:
@@ -160,7 +161,7 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
             case ACCESS_LEVEL_EXTERNAL:
                 return externalClass;
             default:
-                return unknownClass;
+                return unknownAccessClass;
         }
     }
 }
