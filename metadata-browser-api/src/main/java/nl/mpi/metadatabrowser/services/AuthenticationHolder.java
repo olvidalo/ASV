@@ -22,19 +22,26 @@ import java.io.Serializable;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public interface AuthenticationHolder extends Serializable{
+public interface AuthenticationHolder extends Serializable {
 
+    /**
+     * Principal name that should be returned by {@link #getPrincipalName() }
+     * if no user is logged in
+     */
+    public static final String ANONYMOUS_PRINCIPAL = "anonymous";
 
     /**
      * get current user id that was set with the request.
+     *
      * @return user id
      */
     String getPrincipalName();
 
     /**
      * Set the user id for further use in application
+     *
      * @param user
      */
-    void setPrincipalName( String user);
+    void setPrincipalName(String user);
 
 }

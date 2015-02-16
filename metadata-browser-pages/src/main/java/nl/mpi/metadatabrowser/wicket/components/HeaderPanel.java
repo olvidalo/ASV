@@ -17,6 +17,7 @@
 package nl.mpi.metadatabrowser.wicket.components;
 
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
+import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.wicket.HomePage;
 import nl.mpi.metadatabrowser.wicket.UserModel;
 import org.apache.wicket.markup.ComponentTag;
@@ -69,7 +70,7 @@ public final class HeaderPanel extends Panel {
         ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
         ExternalLink userLoginLink;
-        if (UserModel.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
+        if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
             userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
         } else {
             userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");

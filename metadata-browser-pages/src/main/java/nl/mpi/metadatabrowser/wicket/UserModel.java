@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.wicket;
 
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.util.string.Strings;
 
 /**
  *
@@ -25,7 +26,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  */
 public class UserModel extends AbstractReadOnlyModel<String> {
 
-    public static final String ANONYMOUS_PRINCIPAL = "anonymous";
     private final AuthenticationHolder auth;
 
     public UserModel(AuthenticationHolder auth) {
@@ -35,8 +35,8 @@ public class UserModel extends AbstractReadOnlyModel<String> {
     @Override
     public String getObject() {
         final String user = auth.getPrincipalName();
-        if (user == null || user.trim().equals("")) {
-            return ANONYMOUS_PRINCIPAL;
+        if (Strings.isEmpty(user)) {
+            return AuthenticationHolder.ANONYMOUS_PRINCIPAL;
         } else {
             return user;
         }

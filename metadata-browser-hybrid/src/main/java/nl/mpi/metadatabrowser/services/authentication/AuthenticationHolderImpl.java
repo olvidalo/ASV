@@ -23,21 +23,20 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.springframework.stereotype.Component;
 
 /**
- * Class that holds the user id of the current logged in user. value is
- * Anonymous if null
+ * Class that holds the user id of the current logged in user. Returned value is
+ * {@link #ANONYMOUS_PRINCIPAL} if null
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
 public class AuthenticationHolderImpl implements AuthenticationHolder, Serializable {
-//private static String userid;
 
     @Override
     public String getPrincipalName() {
         HttpServletRequest request = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
         String userid = request.getRemoteUser();
         if (userid == null || userid.equals("")) {
-            userid = "anonymous";
+            userid = ANONYMOUS_PRINCIPAL;
         }
         return userid;
     }
