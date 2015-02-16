@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 import nl.mpi.archiving.corpusstructure.core.ExtendedCorpusNode;
@@ -32,12 +33,20 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.datetime.DateConverter;
+import org.apache.wicket.datetime.PatternDateConverter;
+import org.apache.wicket.datetime.StyleDateConverter;
+import org.apache.wicket.datetime.markup.html.basic.DateLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,13 +71,20 @@ public class VersionInfoPanel extends Panel {
     @SpringBean
     private URIFilter nodeUriFilter;
 
+    /**
+     * Date converter for the date label; usage of patterns is described at
+     * {@link http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html?is-external=true}
+     */
+    private final static DateConverter labelDateConverter = new PatternDateConverter("d MMM yyyy HH:mm", false);
+    private final static DateConverter tooltipDateConverter = new PatternDateConverter("EEE, d MMM yyyy HH:mm:ss.SSS Z", false);
+
     public VersionInfoPanel(String id, TypedCorpusNode node, String userid) {
         super(id);
         try {
             // create marker for html wicket table
             RepeatingView repeating = new RepeatingView("rowItems");
             add(repeating);
-            
+
             add(new Label("nodeName", node.getName()));
 
             final URI nodeURI = node.getNodeURI();
@@ -103,20 +119,44 @@ public class VersionInfoPanel extends Panel {
 
     private void addVersionInfo(Collection<ExtendedCorpusNode> versionsNodes, RepeatingView repeating, String userId, String handleResolver) throws URISyntaxException, IllegalArgumentException, UriBuilderException, NodeNotFoundException {
         for (ExtendedCorpusNode node : versionsNodes) {
-            
+
             // for each loop add a row
             AbstractItem item = new AbstractItem(repeating.newChildId());
             repeating.add(item);
 
             final URI nodeURI = node.getNodeURI();
-            
+
             final String nodeUrl = getNodeUrl(node);
 
             final Boolean hasaccess = accessChecker.hasAccess(userId, nodeURI);
             // add fields for each row
-            Date currentNodeDate = versionInfoProvider.getDateOfVersion(nodeURI);
+            final Date currentNodeDate = versionInfoProvider.getDateOfVersion(nodeURI);
+            final URI newVersion = versionInfoProvider.getNewerVersionUri(nodeURI);
             item.add(new Label("hasaccess", hasaccess ? "yes" : "no"));
-            item.add(new Label("currentNodeDate", currentNodeDate));
+            item.add(new DateLabel("currentNodeDate", Model.of(currentNodeDate), labelDateConverter) {
+
+                @Override
+                protected void onConfigure() {
+                    // only show date if this is not the current, i.e. if there is a newer version
+                    setVisible(newVersion != null);
+                }
+
+            }.add(new AttributeAppender("title", new AbstractReadOnlyModel<String>() {
+
+                @Override
+                public String getObject() {
+                    return tooltipDateConverter.convertToString(currentNodeDate, Locale.getDefault());
+                }
+            })));
+            item.add(new MarkupContainer("current") {
+
+                @Override
+                protected void onConfigure() {
+                    // only show 'current' label if this is the current, i.e. if there is no newer version
+                    setVisible(newVersion == null);
+                }
+
+            });
             item.add(new ExternalLink("linktoNode", nodeUrl, nodeIdFilter.getURIParam(nodeURI)));
 
             URI nodePID = resolver.getPID(node);
