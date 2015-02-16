@@ -47,7 +47,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
     @SpringBean(required = false)
     private ArchiveTreeNodeStyleProvider<CorpusNode> treeIconProvider;
     @SpringBean
-    private AuthenticationHolder auth;
+    private AuthenticationHolder authHolder;
     @SpringBean
     private TreeExpander treeExpander;
     @SpringBean(required = false)
@@ -65,7 +65,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         super(parameters);
 
         //Add a panel hosting the user information.
-        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", auth.getPrincipalName());
+        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", new UserModel(authHolder));
         add(headerPanel);
 
         final URI rootNodeUri = getRootNodeURI(parameters);
@@ -93,7 +93,7 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
                     nodesPanel.setModelObject(selection);
                     if (target != null) {
                         target.add(nodesPanel);
-                        if(nodePresentationListener != null){
+                        if (nodePresentationListener != null) {
                             nodePresentationListener.onNodeSelectionChanged(target);
                         }
                     }
@@ -198,4 +198,5 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
             }
         }
     }
+
 }

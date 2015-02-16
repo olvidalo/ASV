@@ -18,12 +18,14 @@ package nl.mpi.metadatabrowser.wicket.components;
 
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.wicket.HomePage;
+import nl.mpi.metadatabrowser.wicket.UserModel;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -35,10 +37,13 @@ public final class HeaderPanel extends Panel {
     @SpringBean
     private NodeActionsConfiguration nodeActionsConf; //TODO: Make separate headerConf and inject that to prevent dependency on CMDI impl
 
-    public HeaderPanel(String id, String user) {
+    /**
+     * 
+     * @param id component id
+     * @param userModel model that provides the principal name of the current user
+     */
+    public HeaderPanel(String id, IModel<String> userModel) {
         super(id);
-
-
 
         add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
             @Override
@@ -64,8 +69,7 @@ public final class HeaderPanel extends Panel {
         ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
         ExternalLink userLoginLink;
-        if (user == null || user.trim().equals("") || user.equals("anonymous")) {
-            user = "anonymous";
+        if (UserModel.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
             userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
         } else {
             userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");
@@ -82,7 +86,7 @@ public final class HeaderPanel extends Panel {
                 return super.isEnabled() && false;
             }
         };
-        userName.add(new Label("user", "user : " + user));
+        userName.add(new Label("user", userModel));
         add(userName);
         add(manualLink);
         add(registerLink);
