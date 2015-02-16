@@ -71,9 +71,9 @@ public final class HeaderPanel extends Panel {
 
         ExternalLink userLoginLink;
         if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
-            userLoginLink = new ExternalLink("userLoginLink", "login.jsp", "login");
+            userLoginLink = new ExternalLink("userLoginLink", "login.jsp?login=1", "log in");
         } else {
-            userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html", "logout");
+            userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html?logout=1", "log out");
         }
 
         Link<Void> userName = new Link<Void>("userName") {
