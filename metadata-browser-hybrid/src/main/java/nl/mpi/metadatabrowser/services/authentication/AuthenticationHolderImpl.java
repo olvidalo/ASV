@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.services.authentication;
 
+import java.io.Serializable;
 import javax.servlet.http.HttpServletRequest;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
 @Component
-public class AuthenticationHolderImpl implements AuthenticationHolder {
+public class AuthenticationHolderImpl implements AuthenticationHolder, Serializable {
 //private static String userid;
 
     @Override
