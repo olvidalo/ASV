@@ -61,6 +61,13 @@ adapted.
 The files extracted from the war file need to be readable for the UID in
 which the tomcat is running. No files need to be written by the Tomcat.
 
+	AAI (Shibboleth vs Lana2)
+	
+Out of the box, the Metadata Browser is configured to be used with Shibboleth
+authentication. It is possible to configure the browser for use with Lana2. To do this,
+comment out the sections of WEB-INF/web.xml indicated to be related to Shibboleth and
+uncomment the sections that enable Lana2.
+
 	CONFIGURATION
 
 The METADATA Browser uses the following configuration options:
