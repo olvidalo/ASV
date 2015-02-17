@@ -6,6 +6,15 @@ Metadata browser 1.2.0
 			- Spring profiles have been refactored accordingly, 'hybrid-production' should
 			be used now; see upgrade instructions for details
 
+Metadata browser 1.1.2
+	Changes:
+			- added support and sample configuration for Lana2 authentication (#4493)
+	Fixes:
+			- corrected display of dates and indication of current version in the version
+			information (#4462)
+			- fixed erroneous opening of unsupported written resources in Annex on the
+			'View' action (#4505)
+
 Metadata browser 1.1.1
 	Changes:
 			- upgraded to corpus-structure-2 version 1.1.3
