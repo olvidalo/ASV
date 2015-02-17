@@ -17,12 +17,9 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
@@ -39,7 +36,6 @@ import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
@@ -118,10 +114,7 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSi
     }
 
     private boolean isAnnexViewable(final TypedCorpusNode node) {
-        final NodeType nodeType = node.getNodeType();
-        final boolean isAnnexViewable = nodeType instanceof CMDIResourceTxtType
-                || annexMimeTypes.contains(node.getFormat());
-        return isAnnexViewable;
+        return annexMimeTypes.contains(node.getFormat());
     }
 
     private NodeActionResult createAnnexRequest(final TypedCorpusNode node) throws IllegalArgumentException, UriBuilderException {

@@ -201,7 +201,7 @@ public class NodeActionsConfiguration implements Serializable {
         this.trovaURL = trovaURL;
     }
 
-    @Value("${nl.mpi.metadatabrowser.annexMimeTypes:}" + DEFAULT_ANNEX_MIMETYPES)
+    @Value("${nl.mpi.metadatabrowser.annexMimeTypes:" + DEFAULT_ANNEX_MIMETYPES + "}")
     public void setAnnexMimeTypes(String annexMimeTypes) {
         this.annexMimeTypes = annexMimeTypes;
     }
