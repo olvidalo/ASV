@@ -89,34 +89,24 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
             return UNKNOWN_NODE_TYPE;
         }
 
-        // determine node file name
-        final String name;
-        // the following step can be expensive when it needs a handle lookup
-        // (depending on the implementation) - consider using a caching
-        // implementation
-        final File localFile = nodeResolver.getLocalFile(node);
-        if (localFile == null) {
-            name = nodeResolver.getUrl(node).getPath();
-        } else {
-            name = localFile.getName();
-        }
-
         // We have a type in the corpus node, determine CorpusNodeType
         switch (corpusNodeType) {
             case RESOURCE_VIDEO:
-                return getResourceVideoType(name);
+                return new ResourceVideoType();
             case RESOURCE_AUDIO:
-                return getResourceVideoType(name); // previous new CMDIResourceType();
+                return new ResourceAudioType(); // previous new CMDIResourceType();
+            case RESOURCE_IMAGE:
+                return new ResourcePictureType();
             case RESOURCE_OTHER:
                 return new CMDIResourceType(); // default icon Media
             case RESOURCE_ANNOTATION:
-                return getResourceAnnotationType(name);
+                return new ResourceWrittenType();
             case RESOURCE_LEXICAL:
-                return getResourceAnnotationType(name); // previous new CMDIResourceTxtType();
+                return new ResourceWrittenType();
             case METADATA:
-                return getMetadataType(node, name);
+                return getMetadataType(node);
             case COLLECTION:
-                return getCollectionType(node, name);
+                return getCollectionType(node);
             case IMDICATALOGUE:
                 return new IMDICatalogueType();
             case IMDIINFO:
@@ -134,7 +124,11 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      * @return either IMDI session or CMDI type
      * @see CorpusNodeType#METADATA
      */
-    private NodeType getMetadataType(CorpusNode node, String name) {
+    private NodeType getMetadataType(CorpusNode node) {
+        // Determine node file name, which is needed to determine the metadata
+        // type (IMDI or CMDI) - see https://trac.mpi.nl/ticket/4511
+        final String name = getFileName(node);
+        
         if (node.getFormat().equals(IMDI_MIME_TYPE)) {
             // can still be transformed CMDI, check
             if (CMDI_FILE_PATTERN.matcher(name).matches()) {
@@ -163,7 +157,11 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
      * @return
      * @see CorpusNodeType#COLLECTION
      */
-    private NodeType getCollectionType(CorpusNode node, String name) {
+    private NodeType getCollectionType(CorpusNode node) {
+        // Determine node file name, which is needed to determine the metadata
+        // type (IMDI or CMDI) - see https://trac.mpi.nl/ticket/4511
+        final String name = getFileName(node);
+        
         if (node.getFormat().equals(IMDI_MIME_TYPE)) {
             // can still be transformed CMDI, check
             if (CMDI_FILE_PATTERN.matcher(name).matches()) {
@@ -176,39 +174,16 @@ public class CMDINodeTypeIdentifier implements NodeTypeIdentifier {
         }
     }
 
-    /**
-     * Determines type for annotation resources (according to {@link CorpusNode#getType()
-     * })
-     *
-     * @param name, String as the name of a node
-     * @return Type of the Node
-     * @see CorpusNodeType#RESOURCE_ANNOTATION
-     */
-    private NodeType getResourceAnnotationType(String name) {
-        if (name.endsWith(".txt") || name.endsWith(".pdf") || name.endsWith(".eaf") || name.endsWith(".html") || name.endsWith(".csv") || name.endsWith(".lmf") || name.endsWith(".xml") || name.endsWith(".xsd") || name.endsWith("tbt") || name.endsWith(".cha")) {
-            return new ResourceWrittenType();
+    private String getFileName(CorpusNode node) {
+        // the following step can be expensive when it needs a handle lookup
+        // (depending on the implementation) - consider using a caching
+        // implementation
+        final File localFile = nodeResolver.getLocalFile(node);
+        if (localFile == null) {
+            return nodeResolver.getUrl(node).getPath();
         } else {
-            return new CMDIResourceTxtType(); // will return default Text Icon
+            return localFile.getName();
         }
     }
 
-    /**
-     * Determines type for video resources (according to {@link CorpusNode#getType()
-     * })
-     *
-     * @param name, String as the name of a node
-     * @return Type of the Node
-     * @see CorpusNodeType#RESOURCE_VIDEO
-     */
-    private NodeType getResourceVideoType(String name) {
-        if (name.endsWith(".jpg") || name.endsWith(".html") || name.endsWith(".gif") || name.endsWith(".tif") || name.endsWith(".tiff") || name.endsWith(".png")) {
-            return new ResourcePictureType();
-        } else if (name.endsWith(".wav") || name.endsWith(".mp3") || name.endsWith(".m4a") || name.endsWith(".aif")) {
-            return new ResourceAudioType();
-        } else if (name.endsWith(".mpeg") || name.endsWith(".mpg") || name.endsWith(".mov") || name.endsWith(".mpv") || name.endsWith(".mp4") || name.endsWith(".smil")) {
-            return new ResourceVideoType();
-        } else {
-            return new CMDIResourceType(); // will return a default Media Icon
-        }
-    }
 }
