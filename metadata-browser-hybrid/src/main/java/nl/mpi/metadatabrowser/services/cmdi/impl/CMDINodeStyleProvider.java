@@ -66,7 +66,7 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
     private final static String writtenClass = "type-written";
     private final static String infoClass = "type-info";
     private final static String mediafileClass = "type-mediafile";
-    private final static String fileClass = "type-file";
+//    private final static String fileClass = "type-file";
     private final static String cmdiClass = "type-cmdi";
     private final static String unknownTypeClass = "type-unknown";
     private final static String openClass = "access-open";
@@ -118,7 +118,7 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
         if (nodeType instanceof CMDIResourceType) {
             nodeTypeClass = mediafileClass;
         } else if (nodeType instanceof CMDIResourceTxtType) {
-            nodeTypeClass = fileClass;
+            nodeTypeClass = writtenClass;
         } else if (nodeType instanceof IMDISessionType) {
             nodeTypeClass = sessionClass;
         } else if (nodeType instanceof IMDICorpusType) {

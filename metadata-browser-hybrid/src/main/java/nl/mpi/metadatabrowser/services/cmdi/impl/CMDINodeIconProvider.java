@@ -47,15 +47,12 @@ import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
-import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-;
 
 /**
  * Icon provider for {@link CorpusNode}, primarily CMDI but with support for
@@ -195,7 +192,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
         if (nodeType instanceof CMDIResourceType) {
             nodeTypeIcon = fileIcon;
         } else if (nodeType instanceof CMDIResourceTxtType) {
-            nodeTypeIcon = fileIconTxt;
+            nodeTypeIcon = writtenIcon;
         } else if (nodeType instanceof IMDISessionType) {
             nodeTypeIcon = sessionIcon;
         } else if (nodeType instanceof IMDICorpusType) {
