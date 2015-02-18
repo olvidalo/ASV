@@ -135,7 +135,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
      * @return ImageIcon, corresponding to access level
      */
     private ResourceReference checkNodeAccess(T contentNode, ImageIcon typeNode) throws NodeNotFoundException {
-        final ImageIcon accessIcon = getNodeAccessIcon(accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
+        final ImageIcon accessIcon = getNodeAccessIcon(contentNode, accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
 
         // retrieve the corresponding combined icon based on nodetype and accesslevel
         final Map.Entry<ImageIcon, ImageIcon> iconTuple = new SimpleEntry<>(typeNode, accessIcon);
@@ -221,7 +221,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
         return nodeTypeIcon;
     }
 
-    private ImageIcon getNodeAccessIcon(AccessLevel nodeAccessLevel) {
+    private ImageIcon getNodeAccessIcon(T contentNode, AccessLevel nodeAccessLevel) {
         if (nodeAccessLevel == null) {
             return unknownIcon;
         }
@@ -237,7 +237,11 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
             case ACCESS_LEVEL_EXTERNAL:
                 return externalIcon;
             default:
-                return unknownIcon;
+                if (contentNode.isOnSite()) {
+                    return unknownIcon;
+                } else {
+                    return externalIcon;
+                }
         }
     }
 }
