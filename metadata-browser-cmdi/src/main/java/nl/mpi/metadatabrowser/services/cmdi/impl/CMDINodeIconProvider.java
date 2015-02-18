@@ -80,7 +80,6 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     private final static ImageIcon writtenIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/writtenresource.gif"));
     private final static ImageIcon infoIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/infofile.gif"));
     private final static ImageIcon fileIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/mediafile.gif"));
-    private final static ImageIcon fileIconTxt = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/file.gif"));
     private final static ImageIcon cmdiIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/clarin.png"));
     private final static ImageIcon unknownIcon = new ImageIcon(CMDINodeIconProvider.class.getResource("/Ficons/unknown.png"));
     private final static ImageIcon openIcon = new ImageIcon(ResourcePresentation.class.getResource("al_circle_green.png"));
@@ -144,7 +143,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
     }
 
     private void populateIconMap() {
-        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIconTxt, fileIcon, cmdiIcon, unknownIcon, videoIcon, pictureIcon, annotationIcon, audioIcon, writtenIcon);
+        final List<ImageIcon> nodeIcon = Arrays.asList(sessionIcon, corpusIcon, catalogueIcon, infoIcon, fileIcon, cmdiIcon, unknownIcon, videoIcon, pictureIcon, annotationIcon, audioIcon, writtenIcon);
         final List<ImageIcon> accessIcon = Arrays.asList(openIcon, licensedIcon, restrictedIcon, closedIcon, externalIcon, unknownIcon);
 
         int i = 0;
@@ -195,7 +194,7 @@ public class CMDINodeIconProvider<T extends CorpusNode> implements ArchiveTreeNo
         if (nodeType instanceof CMDIResourceType) {
             nodeTypeIcon = fileIcon;
         } else if (nodeType instanceof CMDIResourceTxtType) {
-            nodeTypeIcon = fileIconTxt;
+            nodeTypeIcon = writtenIcon;
         } else if (nodeType instanceof IMDISessionType) {
             nodeTypeIcon = sessionIcon;
         } else if (nodeType instanceof IMDICorpusType) {
