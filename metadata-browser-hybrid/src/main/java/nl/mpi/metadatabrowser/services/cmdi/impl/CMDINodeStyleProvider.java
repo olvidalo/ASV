@@ -61,12 +61,10 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
     private final static String corpusClass = "type-corpus";
     private final static String audioClass = "type-audio";
     private final static String videoClass = "type-video";
-//    private final static String annotationClass = "type-annotation";
     private final static String pictureClass = "type-image";
     private final static String writtenClass = "type-written";
     private final static String infoClass = "type-info";
     private final static String mediafileClass = "type-mediafile";
-//    private final static String fileClass = "type-file";
     private final static String cmdiClass = "type-cmdi";
     private final static String unknownTypeClass = "type-unknown";
     private final static String openClass = "access-open";
@@ -103,7 +101,7 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
         try {
             final NodeType nodeType = nodeTypeIdentifier.getNodeType(contentNode);
             final String nodeTypeIcon = getNodeTypeIcon(nodeType);
-            final String accessIcon = getNodeAccessIcon(accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
+            final String accessIcon = getNodeAccessIcon(contentNode, accessInfoProvider.getAccessLevel(contentNode.getNodeURI()));
             return nodeTypeIcon + " " + accessIcon;
         } catch (NodeTypeIdentifierException ex) {
             logger.error("Could not identify node type of {}", contentNode, ex);
@@ -145,7 +143,7 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
         return nodeTypeClass;
     }
 
-    private String getNodeAccessIcon(AccessLevel nodeAccessLevel) {
+    private String getNodeAccessIcon(T contentNode, AccessLevel nodeAccessLevel) {
         if (nodeAccessLevel == null) {
             return unknownAccessClass;
         }
@@ -161,7 +159,11 @@ public class CMDINodeStyleProvider<T extends CorpusNode> implements ArchiveTreeN
             case ACCESS_LEVEL_EXTERNAL:
                 return externalClass;
             default:
-                return unknownAccessClass;
+                if (contentNode.isOnSite()) {
+                    return unknownAccessClass;
+                } else {
+                    return externalClass;
+                }
         }
     }
 }
