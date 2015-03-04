@@ -160,6 +160,10 @@ ul#navigation a, div#linksPanel a {
     content: "\e608";
 }
 
+.ViewImages:before {
+    content: "\e608";
+}
+
 .Download:before {
     content: "\e607";
 }

@@ -43,6 +43,7 @@ public class NodeActionsConfiguration implements Serializable {
     private String trovaURL;
     private String manualURL;
     private String rrsRegister;
+    private String imexUrl;
     private String annexMimeTypes = DEFAULT_ANNEX_MIMETYPES;
     private static final Logger logger = LoggerFactory.getLogger(NodeActionsConfiguration.class);
 
@@ -125,6 +126,10 @@ public class NodeActionsConfiguration implements Serializable {
      */
     public String getMdSearchURL() {
         return mdSearchURL;
+    }
+
+    public String getImexUrl() {
+        return imexUrl;
     }
 
     /**
@@ -215,6 +220,14 @@ public class NodeActionsConfiguration implements Serializable {
         checkWarning(manualURL, "nl.mpi.metadatabrowser.manualUrl");
         this.manualURL = manualURL;
     }
+
+    @Value("${nl.mpi.imexUrl}")
+    public void setImexUrl(String imexUrl) {
+        checkWarning(imexUrl, "nl.mpi.imexUrl");
+        this.imexUrl = imexUrl;
+    }
+    
+    
 
     /**
      * If 'parameter' is null, log an error about 'name' not being set.

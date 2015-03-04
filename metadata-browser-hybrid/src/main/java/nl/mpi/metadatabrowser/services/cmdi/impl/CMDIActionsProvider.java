@@ -16,11 +16,15 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import nl.mpi.archiving.corpusstructure.core.CorpusNodeType;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -34,11 +38,14 @@ import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDISearchNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDITrovaNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIVersionNodeAction;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.CMDIViewNodeAction;
+import nl.mpi.metadatabrowser.model.cmdi.nodeactions.ViewImagesAction;
+import nl.mpi.metadatabrowser.model.cmdi.type.CMDIMetadataType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.model.cmdi.type.CollectionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDICatalogueType;
 import nl.mpi.metadatabrowser.model.cmdi.type.IMDIInfoType;
+import nl.mpi.metadatabrowser.model.cmdi.type.IMDISessionType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourcePictureType;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
@@ -72,11 +79,14 @@ public class CMDIActionsProvider implements NodeActionsProvider {
     @Autowired(required = true)
     private CMDIViewNodeAction viewNodeAction;
     @Autowired(required = true)
+    private ViewImagesAction viewImagesAction;
+    @Autowired(required = true)
     private final CorpusStructureProvider csdb;
     // Type dependent lists to be initialized
     private List<NodeAction> resourcetxtNodeActionList;
     private List<NodeAction> resourceAudioVideoNodeActionList;
     private List<NodeAction> metadataNodeActionList;
+    private List<NodeAction> metadataNodeWithImagesActionList;
     private List<NodeAction> childLessMetadataNodeActionList;
     private List<NodeAction> collectionNodeActionList;
     private List<NodeAction> multipleNodeActionList;
@@ -99,6 +109,11 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 multipleDownloadNodeAction,
                 versionNodeAction);
 
+        metadataNodeWithImagesActionList
+                = Lists.newArrayList(Iterables.concat(
+                                metadataNodeActionList,
+                                Arrays.<NodeAction>asList(viewImagesAction)));
+
         catalogueMetadataNodeActionList = Arrays.<NodeAction>asList(
                 searchNodeAction,
                 trovaNodeAction,
@@ -120,7 +135,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 amsNodeAction,
                 rrsNodeAction,
                 bookmarkNodeAction
-                );
+        );
 
         resourceAudioVideoNodeActionList = Arrays.<NodeAction>asList(
                 amsNodeAction,
@@ -138,7 +153,7 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                 bookmarkNodeAction,
                 downloadNodeAction,
                 versionNodeAction);
-        
+
         infoFileActionList = Arrays.<NodeAction>asList(
                 amsNodeAction,
                 bookmarkNodeAction,
@@ -157,11 +172,10 @@ public class CMDIActionsProvider implements NodeActionsProvider {
         if (nodes.size() > 0 && nodes.size() == 1) {
             for (TypedCorpusNode node : nodes) {
                 final NodeType nodeType = node.getNodeType();
-                
+
                 if (nodeType instanceof CollectionType) {
                     return collectionNodeActionList;
-                }
-                else if (nodeType instanceof MetadataType) {
+                } else if (nodeType instanceof MetadataType) {
                     if (nodeType instanceof IMDICatalogueType) {
                         return catalogueMetadataNodeActionList;
                     }
@@ -172,16 +186,18 @@ public class CMDIActionsProvider implements NodeActionsProvider {
                         if (csdb.getChildNodes(childNodeUri).isEmpty()) {
                             return childLessMetadataNodeActionList;
                         } else {
-                            return metadataNodeActionList;
+                            if (hasImageResources(node)) {
+                                return metadataNodeWithImagesActionList;
+                            } else {
+                                return metadataNodeActionList;
+                            }
                         }
                     }
-                }
-                else if (nodeType instanceof CMDIResourceType || nodeType instanceof ResourceVideoType || nodeType instanceof ResourcePictureType || nodeType instanceof ResourceAudioType) {
+                } else if (nodeType instanceof CMDIResourceType || nodeType instanceof ResourceVideoType || nodeType instanceof ResourcePictureType || nodeType instanceof ResourceAudioType) {
                     return resourceAudioVideoNodeActionList;
-                }
-                else if (nodeType instanceof CMDIResourceTxtType || nodeType instanceof ResourceWrittenType) {
+                } else if (nodeType instanceof CMDIResourceTxtType || nodeType instanceof ResourceWrittenType) {
                     return resourcetxtNodeActionList;
-                } else if(nodeType instanceof IMDIInfoType) {
+                } else if (nodeType instanceof IMDIInfoType) {
                     return infoFileActionList;
                 }
             }
@@ -189,5 +205,15 @@ public class CMDIActionsProvider implements NodeActionsProvider {
             return multipleNodeActionList;
         }
         return null;
+    }
+
+    private boolean hasImageResources(TypedCorpusNode node) {
+        final NodeType nodeType = node.getNodeType();
+        if (nodeType instanceof IMDISessionType || nodeType instanceof CMDIMetadataType) {
+            final Collection<URI> imageDescendants = csdb.getDescendantsByType(node.getNodeURI(), Collections.singletonList(CorpusNodeType.RESOURCE_IMAGE));
+            return !imageDescendants.isEmpty();
+        } else {
+            return false;
+        }
     }
 }
