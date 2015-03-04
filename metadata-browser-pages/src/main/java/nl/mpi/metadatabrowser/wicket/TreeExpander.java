@@ -68,16 +68,15 @@ public class TreeExpander implements Serializable {
     public boolean openPath(ArchiveTreePanel tree, GenericTreeNode rootObj, URI nodeUri) {
         logger.debug("Trying to expand archive tree to [{}]", nodeUri);
         // retrieve actual node to:
-        // 1. check whether it exists
+        // 1. check whether it exists and has a parent (i.e. is linked in)
         // 2. obtain the NodeUri in case it was requested by means of its handle
         //    (node URIs will be assumed when expanding the tree later on)
         final CorpusNode node = csprovider.getNode(nodeUri);
-        if (node != null) {
+        if (node != null 
+                && csprovider.getCanonicalParent(node.getNodeURI()) != null) {
             final List<URI> parentNodes = new ArrayList<>();
-            if (!parentNodes.isEmpty()) { // if empty node is not linked in
-                parentNodes.add(node.getNodeURI());
-                return getParentNode(nodeUri, tree, parentNodes, rootObj);
-            }
+            parentNodes.add(node.getNodeURI());
+            return getParentNode(nodeUri, tree, parentNodes, rootObj);
         }
         return false;
     }
