@@ -63,7 +63,7 @@ public class TreeExpander implements Serializable {
      * @param rootObj root object of the tree
      * @param tree tree to expand
      * @param nodeUri URI (with either "hdl:" or "node:" schema)
-     * @return whether the tree was expanded
+     * @return whether the tree could be expanded
      */
     public boolean openPath(ArchiveTreePanel tree, GenericTreeNode rootObj, URI nodeUri) {
         logger.debug("Trying to expand archive tree to [{}]", nodeUri);
@@ -74,8 +74,10 @@ public class TreeExpander implements Serializable {
         final CorpusNode node = csprovider.getNode(nodeUri);
         if (node != null) {
             final List<URI> parentNodes = new ArrayList<>();
-            parentNodes.add(node.getNodeURI());
-            return getParentNode(nodeUri, tree, parentNodes, rootObj);
+            if (!parentNodes.isEmpty()) { // if empty node is not linked in
+                parentNodes.add(node.getNodeURI());
+                return getParentNode(nodeUri, tree, parentNodes, rootObj);
+            }
         }
         return false;
     }
@@ -113,7 +115,7 @@ public class TreeExpander implements Serializable {
      */
     private boolean expandTreeToSelectedNode(List<URI> parentNodes, ArchiveTreePanel tree, GenericTreeNode rootObj) {
         final GenericTreeModelProvider treeModelProvider = treeModelProviderFactory.createTreeModelProvider(rootObj);
-        
+
         logger.debug("Found parents, expanding node path {}", parentNodes);
         // Generate an iterator. Start just after the last element.(reverse reading)
         ListIterator<URI> li = parentNodes.listIterator(parentNodes.size());
@@ -145,7 +147,7 @@ public class TreeExpander implements Serializable {
      */
     private GenericTreeNode findTreeNodeObject(GenericTreeNode currentTreeNode, final URI targetUri, GenericTreeModelProvider treeModelProvider) {
         final Iterator<? extends GenericTreeNode> childIterator = treeModelProvider.getChildren(currentTreeNode);
-        
+
         // get the first child that matches the target URI
         final GenericTreeNode node = Iterators.find(childIterator, new Predicate<GenericTreeNode>() {
 
