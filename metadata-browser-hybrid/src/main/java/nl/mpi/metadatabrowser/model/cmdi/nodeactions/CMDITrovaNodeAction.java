@@ -22,7 +22,6 @@ import javax.ws.rs.core.UriBuilder;
 import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +31,10 @@ import org.springframework.stereotype.Component;
  * Class that calls redirect to Annotation Content Search (TROVA).
  */
 @Component
-public class CMDITrovaNodeAction extends RedirectingNodeAction implements NodeActionSingletonBean, BeanNameAware {
+public class CMDITrovaNodeAction extends RedirectingNodeAction implements NodeActionSingletonBean {
 
     private final NodeActionsConfiguration nodeActionsConfiguration;
     private final NodeIdFilter nodeIdFilter;
-    private String beanName;
 
     @Autowired
     public CMDITrovaNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeIdFilter nodeIdFilter) {
@@ -65,16 +63,6 @@ public class CMDITrovaNodeAction extends RedirectingNodeAction implements NodeAc
             targetURI = uriBuilder.queryParam("nodeid", nodeid).build();
         }
         return targetURI;
-    }
-
-    @Override
-    public String getBeanName() {
-        return beanName;
-    }
-
-    @Override
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
     }
 
 }

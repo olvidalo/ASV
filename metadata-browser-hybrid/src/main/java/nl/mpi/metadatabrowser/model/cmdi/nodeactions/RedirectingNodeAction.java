@@ -28,14 +28,17 @@ import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public abstract class RedirectingNodeAction implements NodeActionSingletonBean, TargetSpecifier {
+public abstract class RedirectingNodeAction implements NodeActionSingletonBean, TargetSpecifier, BeanNameAware {
 
     private final static Logger logger = LoggerFactory.getLogger(RedirectingNodeAction.class);
+
+    private String beanName;
 
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
@@ -58,6 +61,16 @@ public abstract class RedirectingNodeAction implements NodeActionSingletonBean, 
     @Override
     public boolean openInNew() {
         return true;
+    }
+
+    @Override
+    public String getBeanName() {
+        return beanName;
+    }
+
+    @Override
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 
 }
