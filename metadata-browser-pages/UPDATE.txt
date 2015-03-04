@@ -4,6 +4,8 @@ from 1.1 to >= 1.2
 	  context parameters 'spring.profiles.active' and 'spring.profiles.default', replace 
 	  'cmdi-production' with  'hybrid-production'. 
 	  The profiles 'cmdi-adapter-*' and 'cmdi-cs2-*' have been completely removed.
+	* Make sure that the 'nl.mpi.imexUrl' context parameter is set correctly, because it
+	  is now mandatory for the metadata browser
 
 from 1.0 to >= 1.1
 
