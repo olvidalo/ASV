@@ -59,16 +59,18 @@ public class NodeViewLinkModel extends AbstractReadOnlyModel<String> {
 
     private CharSequence getViewNodeLink(final CorpusNode node) {
         final MetadataBrowserServicesLocator services = MetadataBrowserServicesLocator.Instance.get();
-        final NodeResolver nodeResolver = services.getNodeResolver();
-        final URI pid = nodeResolver.getPID(node);
-        if (pid != null) {
-            final URI handleResolverURI = services.getCorpusStructureProvider().getHandleResolverURI();
-            return new StringBuilder(handleResolverURI.toString())
-                    .append(pid.getSchemeSpecificPart())
-                    .append("@view");
-        } else {
-            return createOpenPathLink(Collections.singleton(node));
+        if (node.isOnSite()) {
+            // on-site nodes with a handle can be bookmarked by handle (we can assume the @view identifier works for these)
+            final NodeResolver nodeResolver = services.getNodeResolver();
+            final URI pid = nodeResolver.getPID(node);
+            if (pid != null) {
+                final URI handleResolverURI = services.getCorpusStructureProvider().getHandleResolverURI();
+                return new StringBuilder(handleResolverURI.toString())
+                        .append(pid.getSchemeSpecificPart())
+                        .append("@view");
+            }
         }
+        return createOpenPathLink(Collections.singleton(node));
     }
 
     private String createOpenPathLink(final Collection<? extends CorpusNode> nodes) {

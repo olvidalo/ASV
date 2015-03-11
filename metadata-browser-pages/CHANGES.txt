@@ -5,7 +5,10 @@ Metadata browser 1.2.0
 			package and is now called 'hybrid'
 			- the Spring profiles have been refactored accordingly, 'hybrid-production'
 			should be used now; see upgrade instructions for details
-			- added an IMEX action for conveniently viewing images in a session (#3897)			
+			- reimplementation of the tree, now determining leaf state on basis of node 
+			type (#4552), icons based on CSS rather than an image tag for each node
+			- added an IMEX action for conveniently viewing images in a session (#3897)		
+			- only create @view bookmark links for on-site nodes (#4555)	
 
 Metadata browser 1.1.2
 	Changes:
