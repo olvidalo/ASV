@@ -31,9 +31,11 @@ public class CMDINodePresentationAjaxListener implements NodePresentationAjaxLis
         // IMDI viewer page (stylesheet result) includes the definition of
         // an init method. If it exists, call it.
         target.appendJavaScript(""
-                + "if (typeof init_viewer == 'function') { "
-                + " init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png') "
-                + "}");
+                + "if (typeof init_viewer === 'function') { "
+                + " init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png'); "
+                + "} "
+                + "doLayout(); "
+        );
     }
 
 }

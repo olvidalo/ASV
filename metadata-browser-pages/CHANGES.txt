@@ -9,6 +9,7 @@ Metadata browser 1.2.0
 			type (#4552), icons based on CSS rather than an image tag for each node
 			- added an IMEX action for conveniently viewing images in a session (#3897)		
 			- only create @view bookmark links for on-site nodes (#4555)	
+			- some layout issues resolved (#4526)
 
 Metadata browser 1.1.2
 	Changes:

@@ -1,12 +1,14 @@
-		METADATA Browser INSTALLATION
+*** METADATA Browser INSTALLATION ***
 
-
-	NOTES
+==========================================================================================
+NOTES
+==========================================================================================
 
 Note on using SSL: MetadataBrowser fully supports secure https browsing and connections
 
-
-	BUILDING FROM SOURCE FOR RELEASE
+==========================================================================================
+BUILDING FROM SOURCE FOR RELEASE
+==========================================================================================
 
 The METADATA Browser source code contains 5 parts: the main war, the cmdi api, the cmdi-implementation,and two differents profile : using csdb adapter or using the coming csdb2.  It can be built using maven.
 
@@ -35,7 +37,9 @@ To create eclipse configuration files:
 Then in Eclipse from the package explorer select Import -> existing project
 into workspace.
 
-	COMPILED PACKAGE
+==========================================================================================
+COMPILED PACKAGE
+==========================================================================================
 
 The war file should be unpacked into the folder where the current version is
 usually located (i.e.  in lux17, it would be "/lat/webapps/metadata_browser").
@@ -61,14 +65,21 @@ adapted.
 The files extracted from the war file need to be readable for the UID in
 which the tomcat is running. No files need to be written by the Tomcat.
 
+==========================================================================================
 	AAI (Shibboleth vs Lana2)
+==========================================================================================
 	
 Out of the box, the Metadata Browser is configured to be used with Shibboleth
 authentication. It is possible to configure the browser for use with Lana2. To do this,
 comment out the sections of WEB-INF/web.xml indicated to be related to Shibboleth and
 uncomment the sections that enable Lana2.
 
-	CONFIGURATION
+For some notes on installation on systems configured for Lana2, see the section towards
+the end of this document
+
+==========================================================================================
+CONFIGURATION
+==========================================================================================
 
 The METADATA Browser uses the following configuration options:
 
@@ -169,4 +180,45 @@ define a rewrite rule (for the first two of these parameters) that rewrites this
 a node URI, e.g. in this case
 	'openpath=node:84114'
 	
+==========================================================================================
+INSTALLATION NOTES FOR LANA2 ENVIRONMENTS
+==========================================================================================
+
+Here are some notes collected by Eric Auer while deploying metadata browser 1.1.2-RC1 at
+SOAS in London (IMDI metadata only)
+
+----
+``The web.xml in the download fails to specify the auth style (with or without LDAP), so I 
+manually added this:
+<init-param>
+<param-name>authenticationService</param-name>
+<param-value>amsAuthenticationSrv</param-value>
+</init-param>
+... to the nl.mpi.lat.auth.lana2.LanaAuthFilter filter setup.``
+----
+``To use AMS *with* LDAP/KDC, you would instead of "ams" put
+"integrated" in the above snippet. If you put "integrated",
+but have no LDAP/KDC, logins may take minutes until AMS has
+the timeout and realizes that you do not have LDAP/KDC 
+
+	* the ams2-1.5.0.jar (and ams2.api-1.5.0.jar & ams2.auth-1.5.0.jar?) shipping with the
+	 metadata browser seems to require CMDI, and it might lack mechanisms to switch 
+	 LDAP/KDC off, in any case I found the following strings in the jar file:
+		java:comp/env/jdbc/AMS2-CMDI-DB
+		java:comp/env/kdc/MPI-NL
+		java:comp/env/jdbc/CSDB3
+		java:comp/env/AmsURL
+		java:comp/env/ldap/DAMLR
+		
+... and indeed, metadata-browser fails to start, giving some
+error message about not finding AMS2-CMDI-DB then Also,
+it hardcodes several CMDI specific file locations. I would
+have hoped those to be configurable without editing the JAR
+and I would have preferred non-absolute paths in particular
+for /lat/webapps/ams2-cmdi/current/... 
+		
+[How] I got the metadata-browser to work nevertheless:
+- remove all three ams*1.5.0*jar files from WEB-INF/lib/
+- copy ams2-1.4.9.2.jar from another webapp installed at SOAS
+- note that this package still ships with "devel mode wicket"``
 
