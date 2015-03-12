@@ -18,12 +18,13 @@
         <script>
             function doLayout() {
                 var variousDecorationsHeight = 2;
-                var extraDecorationsForMainPanel = 130;
+                var extraDecorationsForMainPanel = 10;
                 var treepanel = $("#treePanel");
                 var nodePresentationContainer = $("#nodePresentation");
                 var header = $("#headerPanel");
+                var actionsPanel = $("#actionsPanelContainer");
                 var heightForTreeMenu = $(window).height() - header.height() - variousDecorationsHeight;
-                var heightForMainPanel = $(window).height() - header.height() - extraDecorationsForMainPanel;
+                var heightForMainPanel = $(window).height() - header.height() - actionsPanel.height() - extraDecorationsForMainPanel;
                 treepanel.height(heightForTreeMenu);
                 nodePresentationContainer.height(heightForMainPanel);
             }

@@ -33,7 +33,9 @@ public class CMDINodePresentationAjaxListener implements NodePresentationAjaxLis
         target.appendJavaScript(""
                 + "if (typeof init_viewer === 'function') { "
                 + " init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png'); "
-                + "}");
+                + "} "
+                + "doLayout(); "
+        );
     }
 
 }
