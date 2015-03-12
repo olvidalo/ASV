@@ -16,33 +16,37 @@
         <div wicket:id="treePanel" id="treePanel">[TREE PANEL]</div>
         <div wicket:id="nodesPanel" id="nodePanel">[NODES PANEL]</div>
         <script>
-        function doLayout() {
-            var variousDecorationsHeight = 2;
-            var extraDecorationsForMainPanel = 130;
-            var treepanel = $("#treePanel");
-            var nodePresentationContainer = $("#nodePresentation");
-            var header = $("#headerPanel");
-            var heightForTreeMenu = $(window).height() - header.height() - variousDecorationsHeight;
-            var heightForMainPanel = $(window).height() - header.height() - extraDecorationsForMainPanel;
-            treepanel.height(heightForTreeMenu);
-            nodePresentationContainer.height(heightForMainPanel);
-        }
-        
-        $(document).ready(function(){
-            
-            $(window).resize(doLayout);
-            doLayout();
-            
-            //scroll to the selected tree item
-            var selected = $('#treePanel .selected');
-            if(selected.length > 0) {
-                var panel = $('#treePanel');
-                var panelOffset = panel.offset().top;
-                var panelHeight = panel.height() / 2;
-                var itemOffset = selected.offset().top;
-                panel.scrollTop(itemOffset - panelOffset - panelHeight);
+            function doLayout() {
+                var variousDecorationsHeight = 2;
+                var extraDecorationsForMainPanel = 130;
+                var treepanel = $("#treePanel");
+                var nodePresentationContainer = $("#nodePresentation");
+                var header = $("#headerPanel");
+                var heightForTreeMenu = $(window).height() - header.height() - variousDecorationsHeight;
+                var heightForMainPanel = $(window).height() - header.height() - extraDecorationsForMainPanel;
+                treepanel.height(heightForTreeMenu);
+                nodePresentationContainer.height(heightForMainPanel);
             }
-        });
+
+            $(document).ready(function () {
+
+                $(window).resize(doLayout);
+                doLayout();
+
+                //scroll to the selected tree item
+                var selected = $('#treePanel .selected');
+                if (selected.length > 0) {
+                    var panel = $('#treePanel');
+                    var panelOffset = panel.offset().top;
+                    var panelHeight = panel.height() / 2;
+                    var itemOffset = selected.offset().top;
+                    panel.scrollTop(itemOffset - panelOffset - panelHeight);
+                }
+
+                if (typeof init_viewer === 'function') {
+                    init_viewer('imdi-viewer-open.png', 'imdi-viewer-closed.png');
+                }
+            });
         </script>
     </body>
 </html>
