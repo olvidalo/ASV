@@ -17,37 +17,15 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import com.google.common.collect.ImmutableSet;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriBuilderException;
-import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
-import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
 import nl.mpi.metadatabrowser.model.NodeAction;
-import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.NodeType;
-import nl.mpi.metadatabrowser.model.ShowComponentRequest;
-import nl.mpi.metadatabrowser.model.SingleNodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
-import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
-import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
-import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
-import nl.mpi.metadatabrowser.model.cmdi.type.ResourceVideoType;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.AudioFilePanel;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
-import nl.mpi.metadatabrowser.model.cmdi.wicket.components.MediaFilePanel;
-import nl.mpi.metadatabrowser.services.NodeIdFilter;
-import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,19 +34,15 @@ import org.springframework.stereotype.Component;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
-public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSingletonBean, BeanNameAware {
+public class CMDIViewNodeAction extends SingleNodeActionSingletonBean {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     @Autowired
     private NodeActionsConfiguration nodeActionsConfiguration;
     @Autowired
-    private NodeIdFilter nodeIdFilter;
+    private ViewInAnnexAction annexViewAction;
     @Autowired
-    private AccessChecker accessChecker;
-    @Autowired
-    @Qualifier("browserService")
-    private NodeResolver nodeResolver;
-    private String beanName;
+    private ViewResourceAction resourceViewAction;
     private Set<String> annexMimeTypes;
 
     /**
@@ -86,90 +60,28 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSi
     /**
      *
      * @param nodeActionsConfiguration NodeActionsConfiguration, get Annex url
-     * @param nodeResolver node resolver
-     * @param nodeIdFilter Node ID filter
-     * @param accessChecker access checker
+     * @param resourceViewAction
+     * @param annexViewAction
      */
-    protected CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, NodeResolver nodeResolver, NodeIdFilter nodeIdFilter, AccessChecker accessChecker) {
+    protected CMDIViewNodeAction(NodeActionsConfiguration nodeActionsConfiguration, ViewResourceAction resourceViewAction, ViewInAnnexAction annexViewAction) {
         this.nodeActionsConfiguration = nodeActionsConfiguration;
-        this.nodeIdFilter = nodeIdFilter;
-        this.accessChecker = accessChecker;
-        this.nodeResolver = nodeResolver;
+        this.resourceViewAction = resourceViewAction;
+        this.annexViewAction = annexViewAction;
     }
 
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
-        //Buil redirect to Annex here
         logger.debug("View on {} requested", node);
 
-        try {
-            if (isAnnexViewable(node)) {
-                return createAnnexRequest(node);
-            } else {
-                return createViewRequest(node);
-            }
-        } catch (NodeNotFoundException ex) {
-            throw new NodeActionException(this, "Node not found", ex);
+        if (isAnnexViewable(node)) {
+            return annexViewAction.execute(node);
+        } else {
+            return resourceViewAction.execute(node);
         }
     }
 
     private boolean isAnnexViewable(final TypedCorpusNode node) {
         return annexMimeTypes.contains(node.getFormat());
-    }
-
-    private NodeActionResult createAnnexRequest(final TypedCorpusNode node) throws IllegalArgumentException, UriBuilderException {
-        final URI pid = nodeResolver.getPID(node);
-        final URI targetURI;
-        {
-            final UriBuilder uriBuilder = UriBuilder.fromPath(nodeActionsConfiguration.getAnnexURL());
-            if (pid == null) {
-                final String nodeId = nodeIdFilter.getURIParam(node.getNodeURI());
-                targetURI = uriBuilder.queryParam("nodeid", nodeId).build();
-            } else {
-                targetURI = uriBuilder.queryParam("handle", pid.toString()).build();
-            }
-        }
-
-        try {
-            final NavigationActionRequest request = new NavigationActionRequest(targetURI.toURL());
-            return new SimpleNodeActionResult(request);
-        } catch (MalformedURLException ex) {
-            logger.error("URL syntax exception while creating Annex URL", ex);
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param node
-     * @return a {@link SimpleNodeActionResult} with a component depending on
-     * the type of node - either a media panel, audio panel or general IFrame
-     * viewer
-     */
-    private NodeActionResult createViewRequest(final TypedCorpusNode node) throws NodeNotFoundException {
-        final NodeType nodeType = node.getNodeType();
-        final String userid = auth.getPrincipalName();
-        final boolean hasAccess = accessChecker.hasAccess(userid, node.getNodeURI());
-
-        // construct a request to show a component depending on the type of resource
-        final ShowComponentRequest componentRequest = new ShowComponentRequest() {
-            @Override
-            public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
-
-                if (hasAccess) { // do not show players if the user has no access to the resource
-                    if (nodeType instanceof ResourceVideoType) {
-                        return new MediaFilePanel(id, node);
-                    } else if (nodeType instanceof ResourceAudioType) {
-                        return new AudioFilePanel(id, node);
-                    }
-                }
-
-                // Fallback for non-media files (e.g. images) to be rendered by the browser
-                // If resource is not accessible, this will provide more information
-                return new ExternalFramePanel(id, nodeResolver.getUrl(node).toString());
-            }
-        };
-        return new SimpleNodeActionResult(componentRequest);
     }
 
     @Override
@@ -180,15 +92,5 @@ public class CMDIViewNodeAction extends SingleNodeAction implements NodeActionSi
     @Override
     public String getTitle() {
         return "View this resource";
-    }
-
-    @Override
-    public String getBeanName() {
-        return beanName;
-    }
-
-    @Override
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
     }
 }

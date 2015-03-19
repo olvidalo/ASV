@@ -61,8 +61,14 @@ public class CMDIViewNodeActionTest {
         auth = context.mock(AuthenticationHolder.class);
         nodeActionsConfiguration.setAnnexMimeTypes("text/x-eaf+xml text/x-chat");
         nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
+        
+        final ViewResourceAction viewResourceAction = new ViewResourceAction(accessChecker, nodeResolver);
+        viewResourceAction.setAuthenticationHolder(auth);
 
-        instance = new CMDIViewNodeAction(nodeActionsConfiguration, nodeResolver, filter, accessChecker);
+        final ViewInAnnexAction viewInAnnexAction = new ViewInAnnexAction(nodeActionsConfiguration, filter, nodeResolver);
+        viewInAnnexAction.setAuthenticationHolder(auth);
+        
+        instance = new CMDIViewNodeAction(nodeActionsConfiguration, viewResourceAction, viewInAnnexAction);
         instance.init();
         instance.setAuthenticationHolder(auth);
     }
