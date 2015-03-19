@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import nl.mpi.metadatabrowser.model.ActionSelectionRequest;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
@@ -26,47 +27,47 @@ import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Delegation action request handler that wraps specialized handlers and calls these depending on the type of the incoming
- * {@link ControllerActionRequest}
+ * Delegation action request handler that wraps specialized handlers and calls
+ * these depending on the type of the incoming {@link ControllerActionRequest}
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ControllerActionRequestHandlerImpl implements ControllerActionRequestHandler<ControllerActionRequest> {
 
-    private ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler;
-    private ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler;
-    private ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler;
+    private final ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler;
+    private final ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler;
+    private final ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler;
+    private final ControllerActionRequestHandler<ActionSelectionRequest> actionSelectionRequestHandler;
+
+    public ControllerActionRequestHandlerImpl(ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler, ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler, ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler, ControllerActionRequestHandler<ActionSelectionRequest> actionSelectionRequestHandler) {
+        this.navigationRequestHandler = navigationRequestHandler;
+        this.downloadRequestHandler = downloadRequestHandler;
+        this.showComponentRequestHandler = showComponentRequestHandler;
+        this.actionSelectionRequestHandler = actionSelectionRequestHandler;
+    }
 
     /**
-     * Handles an action request on the provided request cycle. Assumes that the specialized handlers have been set.
+     * Handles an action request on the provided request cycle. Assumes that the
+     * specialized handlers have been set.
      *
      * @param requestCycle current request cycle to act on
      * @param actionRequest action request to handle
-     * @throws RequestHandlerException when actionRequest is of a type that this handler cannot process or if an error occurs within
-     * one of the wrapped handlers
+     * @throws RequestHandlerException when actionRequest is of a type that this
+     * handler cannot process or if an error occurs within one of the wrapped
+     * handlers
      */
     @Override
     public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest, Page originatingPage) throws RequestHandlerException {
-	if (actionRequest instanceof NavigationRequest) {
-	    navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest, originatingPage);
-	} else if (actionRequest instanceof DownloadRequest) {
-	    downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest, originatingPage);
-	} else if (actionRequest instanceof ShowComponentRequest) {
-	    showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest, originatingPage);
-	} else {
-	    throw new RequestHandlerException("Cannot handle action request of type " + actionRequest.getClass().getName());
-	}
-    }
-
-    public void setNavigationRequestHandler(ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler) {
-	this.navigationRequestHandler = navigationRequestHandler;
-    }
-
-    public void setDownloadRequestHandler(ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler) {
-	this.downloadRequestHandler = downloadRequestHandler;
-    }
-
-    public void setShowComponentRequestHandler(ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler) {
-	this.showComponentRequestHandler = showComponentRequestHandler;
+        if (actionRequest instanceof NavigationRequest) {
+            navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest, originatingPage);
+        } else if (actionRequest instanceof DownloadRequest) {
+            downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest, originatingPage);
+        } else if (actionRequest instanceof ShowComponentRequest) {
+            showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest, originatingPage);
+        } else if (actionRequest instanceof ActionSelectionRequest) {
+            actionSelectionRequestHandler.handleActionRequest(requestCycle, (ActionSelectionRequest) actionRequest, originatingPage);
+        } else {
+            throw new RequestHandlerException("Cannot handle action request of type " + actionRequest.getClass().getName());
+        }
     }
 }

@@ -44,23 +44,29 @@ public class ControllerActionRequestHandlerImplTest {
     private Page page;
     private RequestCycle requestCycle;
     private ControllerActionRequestHandlerImpl instance;
+    private ControllerActionRequestHandler<NavigationRequest> navigationRequestHandler;
+    private ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler;
+    private ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler;
+    private ControllerActionRequestHandler selectActionRequestHandler;
 
     @Before
     public void setUp() {
 	tester = new WicketTester();
 	requestCycle = tester.getRequestCycle();
 	page = new MockHomePage();
-	instance = new ControllerActionRequestHandlerImpl();
+        navigationRequestHandler = context.mock(ControllerActionRequestHandler.class, "NavigationRequest");
+        downloadRequestHandler = context.mock(ControllerActionRequestHandler.class, "DownloadRequest");
+        showComponentRequestHandler = context.mock(ControllerActionRequestHandler.class, "ShowComponentRequest");
+        selectActionRequestHandler = context.mock(ControllerActionRequestHandler.class, "SelectActionRequest");
+	instance = new ControllerActionRequestHandlerImpl(navigationRequestHandler, downloadRequestHandler, showComponentRequestHandler, selectActionRequestHandler);
     }
 
     @Test
     public void testHandleNavigationRequest() throws Exception {
-	final ControllerActionRequestHandler<NavigationRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "NavigationRequest");
 	final NavigationRequest request = context.mock(NavigationRequest.class);
-	instance.setNavigationRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(requestHandler).handleActionRequest(requestCycle, request, page);
+		oneOf(navigationRequestHandler).handleActionRequest(requestCycle, request, page);
 	    }
 	});
 	instance.handleActionRequest(requestCycle, request, page);
@@ -68,12 +74,10 @@ public class ControllerActionRequestHandlerImplTest {
 
     @Test
     public void testHandleDownloadRequest() throws Exception {
-	final ControllerActionRequestHandler<DownloadRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "DownloadRequest");
 	final DownloadRequest request = context.mock(DownloadRequest.class);
-	instance.setDownloadRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(requestHandler).handleActionRequest(requestCycle, request, page);
+		oneOf(downloadRequestHandler).handleActionRequest(requestCycle, request, page);
 	    }
 	});
 	instance.handleActionRequest(requestCycle, request, page);
@@ -81,12 +85,10 @@ public class ControllerActionRequestHandlerImplTest {
 
     @Test
     public void testHandleShowComponentRequest() throws Exception {
-	final ControllerActionRequestHandler<ShowComponentRequest> requestHandler = context.mock(ControllerActionRequestHandler.class, "ShowComponentRequest");
 	final ShowComponentRequest request = context.mock(ShowComponentRequest.class);
-	instance.setShowComponentRequestHandler(requestHandler);
 	context.checking(new Expectations() {
 	    {
-		oneOf(requestHandler).handleActionRequest(requestCycle, request, page);
+		oneOf(showComponentRequestHandler).handleActionRequest(requestCycle, request, page);
 	    }
 	});
 	instance.handleActionRequest(requestCycle, request, page);

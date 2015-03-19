@@ -25,14 +25,17 @@
     
     <!-- Services -->
     <bean id="actionRequestHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ControllerActionRequestHandlerImpl">
-	<property name="navigationRequestHandler">
+        <constructor-arg index="0">
 	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.NavigationRequestHandler"/>
-	</property>
-	<property name="downloadRequestHandler">
+        </constructor-arg>
+        <constructor-arg index="1">
 	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.DownloadRequestHandler" />
-	</property>
-	<property name="showComponentRequestHandler">
+        </constructor-arg>
+        <constructor-arg index="2">
 	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.ShowComponentRequestHandler" />
-	</property>
+        </constructor-arg>
+        <constructor-arg index="3">
+	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.ActionSelectionRequestHandler" />
+        </constructor-arg>
     </bean>
 </beans>

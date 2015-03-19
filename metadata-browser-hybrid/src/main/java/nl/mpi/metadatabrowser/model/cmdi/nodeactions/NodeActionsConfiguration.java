@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 public class NodeActionsConfiguration implements Serializable {
 
     public final static String DEFAULT_ANNEX_MIMETYPES = "text/plain text/x-eaf+xml text/x-chat text/x-shoebox-text text/x-toolbox-text text/x-subrip text/praat-textgrid";
+    public final static String DEFAULT_OPTIONAL_ANNEX_MIMETYPES = "text/plain text/xml application/xml";
 
     private String amsURL;
     private String rrsURL;
@@ -45,6 +46,7 @@ public class NodeActionsConfiguration implements Serializable {
     private String rrsRegister;
     private String imexUrl;
     private String annexMimeTypes = DEFAULT_ANNEX_MIMETYPES;
+    private String optionalAnnexMimeTypes = DEFAULT_OPTIONAL_ANNEX_MIMETYPES;
     private static final Logger logger = LoggerFactory.getLogger(NodeActionsConfiguration.class);
 
     /**
@@ -118,6 +120,10 @@ public class NodeActionsConfiguration implements Serializable {
 
     public String getAnnexMimeTypes() {
         return annexMimeTypes;
+    }
+
+    public String getOptionalAnnexMimeTypes() {
+        return optionalAnnexMimeTypes;
     }
 
     /**
@@ -211,6 +217,11 @@ public class NodeActionsConfiguration implements Serializable {
         this.annexMimeTypes = annexMimeTypes;
     }
 
+    @Value("${nl.mpi.metadatabrowser.optionalAnnexMimeTypes:" + DEFAULT_OPTIONAL_ANNEX_MIMETYPES + "}")
+    public void setOptionalAnnexMimeTypes(String annexMimeTypes) {
+        this.optionalAnnexMimeTypes = annexMimeTypes;
+    }
+
     /**
      *
      * @param manualURL
@@ -226,8 +237,6 @@ public class NodeActionsConfiguration implements Serializable {
         checkWarning(imexUrl, "nl.mpi.imexUrl");
         this.imexUrl = imexUrl;
     }
-    
-    
 
     /**
      * If 'parameter' is null, log an error about 'name' not being set.

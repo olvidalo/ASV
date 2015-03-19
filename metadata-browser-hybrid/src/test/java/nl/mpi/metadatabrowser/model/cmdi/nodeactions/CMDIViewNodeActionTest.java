@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.net.URI;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
+import nl.mpi.metadatabrowser.model.ActionSelectionRequest;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
@@ -60,6 +61,7 @@ public class CMDIViewNodeActionTest {
         nodeResolver = context.mock(NodeResolver.class);
         auth = context.mock(AuthenticationHolder.class);
         nodeActionsConfiguration.setAnnexMimeTypes("text/x-eaf+xml text/x-chat");
+        nodeActionsConfiguration.setOptionalAnnexMimeTypes("text/plain");
         nodeActionsConfiguration.setAnnexURL("http://lux16.mpi.nl/ds/annex/search.jsp");
         
         final ViewResourceAction viewResourceAction = new ViewResourceAction(accessChecker, nodeResolver);
@@ -157,5 +159,27 @@ public class CMDIViewNodeActionTest {
         assertTrue(actionRequest instanceof NavigationActionRequest);
         NavigationActionRequest navRequest = (NavigationActionRequest) actionRequest;
         assertTrue(navRequest.getTargetURL().toString().equals("http://lux16.mpi.nl/ds/annex/search.jsp?nodeid=NODE-ID-PARAM"));
+    }
+
+    /**
+     * Test of execute method, of class CMDIViewNodeAction.
+     */
+    @Test
+    public void testExecuteSelect() throws Exception {
+        context.checking(new Expectations() {
+            {
+                allowing(node).getNodeType();
+                will(returnValue(context.mock(NodeType.class)));
+
+                allowing(node).getFormat();
+                will(returnValue("text/plain"));
+            }
+        });
+
+        final NodeActionResult result = instance.execute(node);
+        final ControllerActionRequest actionRequest = result.getControllerActionRequest();
+        assertTrue(actionRequest instanceof ActionSelectionRequest);
+        //ActionSelectionRequest selectionRequest = (ActionSelectionRequest) actionRequest;
+        //test actions in list
     }
 }
