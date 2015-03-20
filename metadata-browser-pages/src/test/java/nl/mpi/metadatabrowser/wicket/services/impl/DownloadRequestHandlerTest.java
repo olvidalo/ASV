@@ -19,6 +19,7 @@ package nl.mpi.metadatabrowser.wicket.services.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import nl.mpi.metadatabrowser.model.DownloadRequest;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -44,9 +45,9 @@ public class DownloadRequestHandlerTest {
 
     @Before
     public void setUp() {
-	tester = new WicketTester();
-	requestCycle = tester.getRequestCycle();
-	instance = new DownloadRequestHandler();
+        tester = new WicketTester();
+        requestCycle = tester.getRequestCycle();
+        instance = new DownloadRequestHandler();
     }
 
     /**
@@ -54,25 +55,25 @@ public class DownloadRequestHandlerTest {
      */
     @Test
     public void testHandleActionRequest() throws Exception {
-	final String fileName = "filename";
+        final String fileName = "filename";
 
-	final DownloadRequest actionRequest = context.mock(DownloadRequest.class);
-	final IResourceStream resourceStream = context.mock(IResourceStream.class);
-	final InputStream inputStream = new ByteArrayInputStream("stream content".getBytes());
-	context.checking(new Expectations() {
-	    {
-		oneOf(actionRequest).getFileName();
-		will(returnValue(fileName));
-		oneOf(actionRequest).getDownloadStream();
-		will(returnValue(resourceStream));
+        final DownloadRequest actionRequest = context.mock(DownloadRequest.class);
+        final IResourceStream resourceStream = context.mock(IResourceStream.class);
+        final InputStream inputStream = new ByteArrayInputStream("stream content".getBytes());
+        context.checking(new Expectations() {
+            {
+                oneOf(actionRequest).getFileName();
+                will(returnValue(fileName));
+                oneOf(actionRequest).getDownloadStream();
+                will(returnValue(resourceStream));
 
-		oneOf(resourceStream).getInputStream();
-		will(returnValue(inputStream));
-		allowing(resourceStream).getContentType();
-		will(returnValue("test/content-type"));
-	    }
-	});
-	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());
-	//TODO: Assert download
+                oneOf(resourceStream).getInputStream();
+                will(returnValue(inputStream));
+                allowing(resourceStream).getContentType();
+                will(returnValue("test/content-type"));
+            }
+        });
+        instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage(), context.mock(AjaxRequestTarget.class));
+        //TODO: Assert download
     }
 }

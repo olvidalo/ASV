@@ -24,6 +24,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -57,15 +58,15 @@ public class ControllerActionRequestHandlerImpl implements ControllerActionReque
      * handlers
      */
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest, Page originatingPage) throws RequestHandlerException {
+    public void handleActionRequest(RequestCycle requestCycle, ControllerActionRequest actionRequest, Page originatingPage, AjaxRequestTarget target) throws RequestHandlerException {
         if (actionRequest instanceof NavigationRequest) {
-            navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest, originatingPage);
+            navigationRequestHandler.handleActionRequest(requestCycle, (NavigationRequest) actionRequest, originatingPage, target);
         } else if (actionRequest instanceof DownloadRequest) {
-            downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest, originatingPage);
+            downloadRequestHandler.handleActionRequest(requestCycle, (DownloadRequest) actionRequest, originatingPage, target);
         } else if (actionRequest instanceof ShowComponentRequest) {
-            showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest, originatingPage);
+            showComponentRequestHandler.handleActionRequest(requestCycle, (ShowComponentRequest) actionRequest, originatingPage, target);
         } else if (actionRequest instanceof ActionSelectionRequest) {
-            actionSelectionRequestHandler.handleActionRequest(requestCycle, (ActionSelectionRequest) actionRequest, originatingPage);
+            actionSelectionRequestHandler.handleActionRequest(requestCycle, (ActionSelectionRequest) actionRequest, originatingPage, target);
         } else {
             throw new RequestHandlerException("Cannot handle action request of type " + actionRequest.getClass().getName());
         }

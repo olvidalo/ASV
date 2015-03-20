@@ -23,6 +23,7 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
@@ -48,55 +49,57 @@ public class ControllerActionRequestHandlerImplTest {
     private ControllerActionRequestHandler<DownloadRequest> downloadRequestHandler;
     private ControllerActionRequestHandler<ShowComponentRequest> showComponentRequestHandler;
     private ControllerActionRequestHandler selectActionRequestHandler;
-
+    private AjaxRequestTarget ajaxRequestTarget;
+    
     @Before
     public void setUp() {
-	tester = new WicketTester();
-	requestCycle = tester.getRequestCycle();
-	page = new MockHomePage();
+        tester = new WicketTester();
+        requestCycle = tester.getRequestCycle();
+        page = new MockHomePage();
         navigationRequestHandler = context.mock(ControllerActionRequestHandler.class, "NavigationRequest");
         downloadRequestHandler = context.mock(ControllerActionRequestHandler.class, "DownloadRequest");
         showComponentRequestHandler = context.mock(ControllerActionRequestHandler.class, "ShowComponentRequest");
         selectActionRequestHandler = context.mock(ControllerActionRequestHandler.class, "SelectActionRequest");
-	instance = new ControllerActionRequestHandlerImpl(navigationRequestHandler, downloadRequestHandler, showComponentRequestHandler, selectActionRequestHandler);
+        ajaxRequestTarget = context.mock(AjaxRequestTarget.class);
+        instance = new ControllerActionRequestHandlerImpl(navigationRequestHandler, downloadRequestHandler, showComponentRequestHandler, selectActionRequestHandler);
     }
 
     @Test
     public void testHandleNavigationRequest() throws Exception {
-	final NavigationRequest request = context.mock(NavigationRequest.class);
-	context.checking(new Expectations() {
-	    {
-		oneOf(navigationRequestHandler).handleActionRequest(requestCycle, request, page);
-	    }
-	});
-	instance.handleActionRequest(requestCycle, request, page);
+        final NavigationRequest request = context.mock(NavigationRequest.class);
+        context.checking(new Expectations() {
+            {
+                oneOf(navigationRequestHandler).handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
+            }
+        });
+        instance.handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
     }
 
     @Test
     public void testHandleDownloadRequest() throws Exception {
-	final DownloadRequest request = context.mock(DownloadRequest.class);
-	context.checking(new Expectations() {
-	    {
-		oneOf(downloadRequestHandler).handleActionRequest(requestCycle, request, page);
-	    }
-	});
-	instance.handleActionRequest(requestCycle, request, page);
+        final DownloadRequest request = context.mock(DownloadRequest.class);
+        context.checking(new Expectations() {
+            {
+                oneOf(downloadRequestHandler).handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
+            }
+        });
+        instance.handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
     }
 
     @Test
     public void testHandleShowComponentRequest() throws Exception {
-	final ShowComponentRequest request = context.mock(ShowComponentRequest.class);
-	context.checking(new Expectations() {
-	    {
-		oneOf(showComponentRequestHandler).handleActionRequest(requestCycle, request, page);
-	    }
-	});
-	instance.handleActionRequest(requestCycle, request, page);
+        final ShowComponentRequest request = context.mock(ShowComponentRequest.class);
+        context.checking(new Expectations() {
+            {
+                oneOf(showComponentRequestHandler).handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
+            }
+        });
+        instance.handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
     }
 
     @Test(expected = RequestHandlerException.class)
     public void handleUnknown() throws Exception {
-	final ControllerActionRequest request = context.mock(ControllerActionRequest.class);
-	instance.handleActionRequest(requestCycle, request, page);
+        final ControllerActionRequest request = context.mock(ControllerActionRequest.class);
+        instance.handleActionRequest(requestCycle, request, page, ajaxRequestTarget);
     }
 }

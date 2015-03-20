@@ -20,6 +20,7 @@ import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class NavigationRequestHandler implements ControllerActionRequestHandler<
     public final int HTTP_MOVED_TEMPORARILY = 302;
 
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage) throws RequestHandlerException {
+    public void handleActionRequest(RequestCycle requestCycle, NavigationRequest actionRequest, Page originatingPage, AjaxRequestTarget target) throws RequestHandlerException {
 	logger.debug("Received request to navigate to RRS with url {}", actionRequest.getTargetURL());
 	if (actionRequest.getTargetURL() != null) {
 	    redirectToUrl(requestCycle, actionRequest.getTargetURL().toString());

@@ -20,29 +20,33 @@ import java.util.Collection;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
- * Button for offering and handling {@link NodeAction}s on a collection of nodes
+ * AJAX fallback button for offering and handling {@link NodeAction}s on a
+ * collection of nodes
  *
+ * @see NodeActionLink
+ * @see NodeActionHandler
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-class NodeActionLink extends Link {
+class AjaxFallbackNodeActionLink extends AjaxFallbackLink {
 
     @SpringBean
     private ControllerActionRequestHandler actionRequestHandler;
     private final NodeActionHandler nodeActionHandler;
 
-    public NodeActionLink(String id, Collection<TypedCorpusNode> nodes, NodeAction action) {
+    public AjaxFallbackNodeActionLink(String id, Collection<TypedCorpusNode> nodes, NodeAction action) {
         super(id, Model.of(action.getName()));
         nodeActionHandler = new NodeActionHandler(action, nodes);
     }
 
     @Override
-    public void onClick() {
-        nodeActionHandler.handle(actionRequestHandler, this, null);
+    public void onClick(AjaxRequestTarget target) {
+        nodeActionHandler.handle(actionRequestHandler, this, target);
     }
 
 }

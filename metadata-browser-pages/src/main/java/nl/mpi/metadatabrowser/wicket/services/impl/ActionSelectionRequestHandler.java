@@ -25,8 +25,8 @@ import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ActionSelectionRequestHandler implements ControllerActionRequestHan
     private final static Logger logger = LoggerFactory.getLogger(ActionSelectionRequestHandler.class);
     
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, ActionSelectionRequest actionRequest, Page originatingPage) throws RequestHandlerException {
+    public void handleActionRequest(RequestCycle requestCycle, ActionSelectionRequest actionRequest, Page originatingPage, AjaxRequestTarget target) throws RequestHandlerException {
         // get the modal window component in the node actions panel
         final Component modalWindowComponent = originatingPage.get("nodesPanel:nodeActions:actionselectiondialogue");
         if (modalWindowComponent instanceof ModalWindow) {

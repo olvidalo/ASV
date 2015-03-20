@@ -16,7 +16,6 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
@@ -29,9 +28,7 @@ import nl.mpi.metadatabrowser.wicket.AbstractWicketTest;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -148,7 +145,7 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
                 will(returnValue(actionRequest));
 
                 // ..and passed on to the action request handler
-                oneOf(actionRequestHandler).handleActionRequest(tester.getRequestCycle(), actionRequest, panel.getPage());
+                oneOf(actionRequestHandler).handleActionRequest(tester.getRequestCycle(), actionRequest, panel.getPage(), null);
             }
         });
 

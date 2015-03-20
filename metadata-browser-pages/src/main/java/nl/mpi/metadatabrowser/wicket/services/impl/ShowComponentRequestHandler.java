@@ -23,6 +23,7 @@ import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -32,13 +33,13 @@ import org.apache.wicket.request.cycle.RequestCycle;
 public class ShowComponentRequestHandler implements ControllerActionRequestHandler<ShowComponentRequest> {
 
     @Override
-    public void handleActionRequest(RequestCycle requestCycle, ShowComponentRequest actionRequest, Page originatingPage) throws RequestHandlerException {
-	try {
-	    final Component component = actionRequest.getComponent("nodePresentation");
-	    final MarkupContainer container = (MarkupContainer) originatingPage.get("nodesPanel:nodePresentationContainer");
-	    container.addOrReplace(component);
-	} catch (ControllerActionRequestException ex) {
-	    throw new RequestHandlerException("Error while getting component to show for action result", ex);
-	}
+    public void handleActionRequest(RequestCycle requestCycle, ShowComponentRequest actionRequest, Page originatingPage, AjaxRequestTarget target) throws RequestHandlerException {
+        try {
+            final Component component = actionRequest.getComponent("nodePresentation");
+            final MarkupContainer container = (MarkupContainer) originatingPage.get("nodesPanel:nodePresentationContainer");
+            container.addOrReplace(component);
+        } catch (ControllerActionRequestException ex) {
+            throw new RequestHandlerException("Error while getting component to show for action result", ex);
+        }
     }
 }

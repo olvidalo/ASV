@@ -21,6 +21,7 @@ import java.net.URL;
 import nl.mpi.metadatabrowser.model.NavigationRequest;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTester;
@@ -67,7 +68,7 @@ public class NavigationRequestHandlerTest {
 		will(returnValue(new URL(nodeActionsConfiguration.getRrsURL())));
 	    }
 	});
-	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage());
+	instance.handleActionRequest(requestCycle, actionRequest, new MockHomePage(), context.mock(AjaxRequestTarget.class));
 	//TODO: Assert redirect to rrs url
 	//TODO: Test for other targets
     }
