@@ -16,23 +16,47 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import java.util.List;
 import nl.mpi.metadatabrowser.model.ActionSelectionRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.wicket.components.ActionSelectionPanel;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ActionSelectionRequestHandler implements ControllerActionRequestHandler<ActionSelectionRequest> {
-
+    
+    private final static Logger logger = LoggerFactory.getLogger(ActionSelectionRequestHandler.class);
+    
     @Override
     public void handleActionRequest(RequestCycle requestCycle, ActionSelectionRequest actionRequest, Page originatingPage) throws RequestHandlerException {
-        Session.get().info("Select action");
-        //TODO: Show dialogue
+        // get the modal window component in the node actions panel
+        final Component modalWindowComponent = originatingPage.get("nodesPanel:nodeActions:actionselectiondialogue");
+        if (modalWindowComponent instanceof ModalWindow) {
+            showActions((ModalWindow) modalWindowComponent, actionRequest.getNodeActions());
+        } else {
+            // unexpected - wrong page?
+            logger.warn("Could not find modal window component to show action selection!");
+            Session.get().error("Could not show action options");
+        }
     }
-
+    
+    private void showActions(ModalWindow modalWindow, List<NodeAction> nodeActions) {
+        // create a panel with action options 
+        final ActionSelectionPanel actionSelectionPanel = new ActionSelectionPanel(modalWindow.getContentId(), new ListModel<>(nodeActions));
+        modalWindow.addOrReplace(actionSelectionPanel);
+    }
+    
 }

@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.wicket.model.NodeActionsListModel;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -95,6 +96,20 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 item.add(new AttributeAppender("title", action.getTitle()));
             }
         });
+        
+        final ModalWindow modalWindow = new ModalWindow("actionselectiondialogue");
+        modalWindow
+                .setTitle("Bookmark or link to this node")
+                // Dimensions
+                .setInitialWidth(36).setWidthUnit("em")
+                .setInitialHeight(10).setHeightUnit("em")
+                .setResizable(false)
+                // Looks
+                .setCssClassName(ModalWindow.CSS_CLASS_GRAY)
+                .setMaskType(ModalWindow.MaskType.SEMI_TRANSPARENT)
+                // Don't try to prevent the user from clicking a link in the dialogue
+                .showUnloadConfirmation(false);
+        add(modalWindow);
     }
 
     @Override
