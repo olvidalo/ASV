@@ -56,6 +56,16 @@ public abstract class RedirectingNodeAction implements NodeActionSingletonBean, 
         }
     }
 
+    /**
+     * Default implementation does not allow Ajax (no point for redirects)
+     *
+     * @return false
+     */
+    @Override
+    public boolean isAjaxAllowed() {
+        return false;
+    }
+
     protected abstract URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException;
 
     @Override

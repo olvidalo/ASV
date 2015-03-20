@@ -19,7 +19,6 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.net.URI;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ControllerActionRequestException;
-import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
@@ -69,6 +68,16 @@ public abstract class EmbeddedPageNodeAction implements NodeActionSingletonBean 
      */
     protected IModel<String> getOpenInNewLabelModel() {
         return Model.of("Click here to proceed");
+    }
+
+    /**
+     * Default implementation allows Ajax
+     *
+     * @return true
+     */
+    @Override
+    public boolean isAjaxAllowed() {
+        return true;
     }
 
     protected abstract URI getTarget(Collection<TypedCorpusNode> nodes) throws NodeActionException;

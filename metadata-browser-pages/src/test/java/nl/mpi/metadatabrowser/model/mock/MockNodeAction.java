@@ -100,4 +100,9 @@ public class MockNodeAction implements NodeAction, Serializable {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public boolean isAjaxAllowed() {
+        return true;
+    }
 }

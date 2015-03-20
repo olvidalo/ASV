@@ -60,4 +60,15 @@ public abstract class SingleNodeAction implements NodeAction {
     public void setAuthenticationHolder(AuthenticationHolder auth) {
         this.auth = auth;
     }
+
+    /**
+     * Default implementation allows Ajax
+     *
+     * @return true
+     */
+    @Override
+    public boolean isAjaxAllowed() {
+        return true;
+    }
+
 }

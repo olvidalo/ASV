@@ -83,12 +83,17 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
             {
                 allowing(action1).getName();
                 will(returnValue("action 1"));
-                allowing(action2).getName();
-                will(returnValue("action 2"));
                 allowing(action1).getTitle();
+                will(returnValue("action 2"));
+                allowing(action1).isAjaxAllowed();
+                will(returnValue(true));
+                
+                allowing(action2).getName();
                 will(returnValue("action 2"));
                 allowing(action2).getTitle();
                 will(returnValue("action 2"));
+                allowing(action2).isAjaxAllowed();
+                will(returnValue(false));
             }
         });
         modelObject.setNodeActions(Arrays.asList(action1, action2));
@@ -101,8 +106,10 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
         Component listView = panel.get("nodeActions");
         assertThat(listView, instanceOf(ListView.class));
         assertEquals(2, ((ListView) listView).size());
-        Component actionButton = panel.get("nodeActions:0:nodeActionLink");
-        assertThat(actionButton, instanceOf(NodeActionLink.class));
+        Component actionButton1 = panel.get("nodeActions:0:nodeActionLink");
+        assertThat(actionButton1, instanceOf(AjaxFallbackNodeActionLink.class));
+        Component actionButton2 = panel.get("nodeActions:1:nodeActionLink");
+        assertThat(actionButton2, instanceOf(NodeActionLink.class));
     }
 
     @Test
@@ -119,6 +126,9 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
 
                 allowing(action).getTitle();
                 will(returnValue("action title"));
+                
+                allowing(action).isAjaxAllowed();
+                will(returnValue(true));
             }
         });
         modelObject.setNodeActions(Arrays.asList(action));
@@ -172,6 +182,9 @@ public class NodesActionsPanelTest extends AbstractWicketTest {
 
                 allowing(action).getTitle();
                 will(returnValue("action title"));
+                
+                allowing(action).isAjaxAllowed();
+                will(returnValue(true));
             }
         });
         modelObject.setNodeActions(Arrays.asList(action));

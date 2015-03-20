@@ -62,4 +62,12 @@ public interface NodeAction extends Serializable {
      * @throws NodeActionException if any error occurs during node exception
      */
     NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException;
+
+    /**
+     * Tells the front-end whether it can optionally trigger this action via an
+     * Ajax request (which in the end updates the entire relevant area)
+     *
+     * @return whether Ajax requests to this
+     */
+    boolean isAjaxAllowed();
 }

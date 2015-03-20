@@ -95,6 +95,16 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
         }
     }
 
+    /**
+     * Download should not be retrieved in an Ajax request!
+     *
+     * @return false
+     */
+    @Override
+    public boolean isAjaxAllowed() {
+        return false;
+    }
+
     @Override
     public String getBeanName() {
         return beanName;

@@ -71,7 +71,7 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
             @Override
             protected void populateItem(ListItem<NodeAction> item) {
                 final NodeAction action = item.getModelObject();
-                
+
                 // inner node action that may not be serializable but implements all original interfaces
                 final NodeAction innerAction;
                 if (action instanceof ILazyInitProxy) {
@@ -81,9 +81,14 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 } else {
                     innerAction = action;
                 }
-                
+
                 final Collection<TypedCorpusNode> nodes = NodesActionsPanel.this.getModelObject().getNodes();
-                final Link actionLink = new NodeActionLink("nodeActionLink", nodes, action);
+                final Link actionLink;
+                if (action.isAjaxAllowed()) {
+                    actionLink = new AjaxFallbackNodeActionLink("nodeActionLink", nodes, action);
+                } else {
+                    actionLink = new NodeActionLink("nodeActionLink", nodes, action);
+                }
 
                 // the action may explicitly require the result to be shown in a new tab/window
                 if (innerAction instanceof TargetSpecifier && ((TargetSpecifier) innerAction).openInNew()) {
@@ -96,7 +101,7 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 item.add(new AttributeAppender("title", action.getTitle()));
             }
         });
-        
+
         final ModalWindow modalWindow = new ModalWindow("actionselectiondialogue");
         modalWindow
                 .setTitle("Bookmark or link to this node")
