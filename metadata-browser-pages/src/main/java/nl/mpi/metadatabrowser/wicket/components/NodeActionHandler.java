@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import java.io.Serializable;
 import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public class NodeActionHandler {
+public class NodeActionHandler implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeActionHandler.class);
 

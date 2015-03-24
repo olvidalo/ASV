@@ -16,6 +16,7 @@
  */
 package nl.mpi.metadatabrowser.model;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,12 +26,18 @@ import java.util.List;
 public class ActionSelectionRequest implements ControllerActionRequest {
 
     private final List<NodeAction> nodeActions;
+    private final Collection<TypedCorpusNode> nodes;
 
-    public ActionSelectionRequest(List<NodeAction> nodeActions) {
+    public ActionSelectionRequest(List<NodeAction> nodeActions, Collection<TypedCorpusNode> nodes) {
         this.nodeActions = nodeActions;
+        this.nodes = nodes;
     }
 
     public List<NodeAction> getNodeActions() {
         return nodeActions;
+    }
+    
+    public Collection<TypedCorpusNode> getNodes() {
+        return nodes;
     }
 }

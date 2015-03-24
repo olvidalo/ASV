@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
@@ -84,7 +85,7 @@ public class CMDIViewNodeAction extends SingleNodeActionSingletonBean {
         
         if (isOptionalAnnexViewable(node)) {
             final ImmutableList<NodeAction> actionsList = ImmutableList.<NodeAction>of(resourceViewAction, annexViewAction);
-            return new SimpleNodeActionResult(new ActionSelectionRequest(actionsList));
+            return new SimpleNodeActionResult(new ActionSelectionRequest(actionsList, Lists.newArrayList(node)));
         } else if (isAnnexViewable(node)) {
             return annexViewAction.execute(node);
         } else {

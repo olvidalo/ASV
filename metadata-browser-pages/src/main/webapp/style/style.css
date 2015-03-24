@@ -158,6 +158,36 @@ iframe.externalPage {
     height: 90%; 
 }
 
+#actionselectiondialogue ul {
+    display: block;
+  width: 100%;
+    list-style-type: none;
+    padding: 0em;
+    margin: 0;
+}
+
+#actionselectiondialogue li {
+    display: block;
+    border-bottom: 1px solid;
+}
+
+#actionselectiondialogue li a {
+    display: block;
+    text-decoration: none;
+    padding: 1em;
+    color: black;
+}
+
+#actionselectiondialogue li a:hover {
+    background: #ccc;
+}
+
+#actionselectiondialogue li a span.actionname {
+    display: block;
+    font-weight: bold;
+    margin-bottom: .2em;
+} 
+
 
 /**** NODE ICONS *****/
 

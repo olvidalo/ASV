@@ -104,7 +104,7 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
 
         final ModalWindow modalWindow = new ModalWindow("actionselectiondialogue");
         modalWindow
-                .setTitle("Bookmark or link to this node")
+                .setTitle("Select an action")
                 // Dimensions
                 .setInitialWidth(36).setWidthUnit("em")
                 .setInitialHeight(10).setHeightUnit("em")
