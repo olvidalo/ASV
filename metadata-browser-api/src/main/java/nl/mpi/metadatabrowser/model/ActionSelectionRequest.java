@@ -26,18 +26,37 @@ import java.util.List;
 public class ActionSelectionRequest implements ControllerActionRequest {
 
     private final List<NodeAction> nodeActions;
+    private final NodeAction defaultAction;
     private final Collection<TypedCorpusNode> nodes;
 
-    public ActionSelectionRequest(List<NodeAction> nodeActions, Collection<TypedCorpusNode> nodes) {
+    public ActionSelectionRequest(List<NodeAction> nodeActions, NodeAction defaultAction, Collection<TypedCorpusNode> nodes) {
         this.nodeActions = nodeActions;
         this.nodes = nodes;
+        this.defaultAction = defaultAction;
     }
 
+    /**
+     *
+     * @return list of actions to choose from
+     */
     public List<NodeAction> getNodeActions() {
         return nodeActions;
     }
-    
+
+    /**
+     *
+     * @return actions to execute selected action on
+     */
     public Collection<TypedCorpusNode> getNodes() {
         return nodes;
+    }
+
+    /**
+     *
+     * @return default action in case the user cannot be asked (preferably not
+     * null)
+     */
+    public NodeAction getDefaultAction() {
+        return defaultAction;
     }
 }

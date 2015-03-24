@@ -40,7 +40,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  */
 public class ActionSelectionPanel extends GenericPanel<ActionSelectionRequest> {
 
-    @SpringBean
+    @SpringBean(name = "actionRequestHandler")
     private ControllerActionRequestHandler actionRequestHandler;
 
     public ActionSelectionPanel(String id, final IModel<ActionSelectionRequest> model, final ModalWindow modalWindow) {

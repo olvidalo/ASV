@@ -16,8 +16,12 @@
  */
 package nl.mpi.metadatabrowser.wicket.services.impl;
 
+import java.util.Collection;
 import nl.mpi.metadatabrowser.model.ActionSelectionRequest;
+import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.components.ActionSelectionPanel;
+import nl.mpi.metadatabrowser.wicket.components.NodeActionHandler;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import org.apache.wicket.Component;
@@ -30,17 +34,70 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
+ * Handles action selection requests, if possible by presenting the user with an
+ * action selection dialogue; has a non-javascript fallback in case the action
+ * provides a default action
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
+ * @see ActionSelectionPanel
  */
 public class ActionSelectionRequestHandler implements ControllerActionRequestHandler<ActionSelectionRequest> {
 
     private final static Logger logger = LoggerFactory.getLogger(ActionSelectionRequestHandler.class);
 
+    @Autowired
+    @Qualifier("actionRequestHandler")
+    private ControllerActionRequestHandler actionRequestHandler;
+
+    protected ActionSelectionRequestHandler() {
+    }
+
+    protected ActionSelectionRequestHandler(ControllerActionRequestHandler actionRequestHandler) {
+        this.actionRequestHandler = actionRequestHandler;
+    }
+
     @Override
     public void handleActionRequest(RequestCycle requestCycle, ActionSelectionRequest actionRequest, Page originatingPage, AjaxRequestTarget target) throws RequestHandlerException {
+        if (target == null) {
+            // no Ajax request, we cannot ask user (modal window requires Javascript) so execute default action
+            executeDefaultAction(actionRequest, originatingPage);
+        } else {
+            // show a modal window that allows the user to select an action
+            askUser(actionRequest, originatingPage, target);
+        }
+    }
+
+    /**
+     * tries to execute the default action
+     *
+     * @param actionRequest
+     * @param originatingPage
+     */
+    private void executeDefaultAction(ActionSelectionRequest actionRequest, Page originatingPage) {
+        final NodeAction defaultAction = actionRequest.getDefaultAction();
+        
+        if (defaultAction == null) {
+            logger.warn("Action selection request does not define a default action");
+            Session.get().warn("There is no default action. Selection dialogue could not be shown. Please enable javascript.");
+        } else {
+            final Collection<TypedCorpusNode> nodes = actionRequest.getNodes();
+            final NodeActionHandler nodeActionHandler = new NodeActionHandler(defaultAction, nodes);
+            nodeActionHandler.handle(actionRequestHandler, originatingPage, null);
+        }
+    }
+
+    /**
+     * opens a modal dialogue that allows the user to choose an action
+     *
+     * @param actionRequest
+     * @param originatingPage
+     * @param target
+     */
+    private void askUser(ActionSelectionRequest actionRequest, Page originatingPage, AjaxRequestTarget target) {
         // get the modal window component in the node actions panel
         final Component component = originatingPage.get("nodesPanel:nodeActions:actionselectiondialogue");
         if (component instanceof ModalWindow) {

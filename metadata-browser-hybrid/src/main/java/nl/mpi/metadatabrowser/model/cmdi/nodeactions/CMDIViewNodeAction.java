@@ -85,7 +85,7 @@ public class CMDIViewNodeAction extends SingleNodeActionSingletonBean {
         
         if (isOptionalAnnexViewable(node)) {
             final ImmutableList<NodeAction> actionsList = ImmutableList.<NodeAction>of(resourceViewAction, annexViewAction);
-            return new SimpleNodeActionResult(new ActionSelectionRequest(actionsList, Lists.newArrayList(node)));
+            return new SimpleNodeActionResult(new ActionSelectionRequest(actionsList, annexViewAction, Lists.newArrayList(node)));
         } else if (isAnnexViewable(node)) {
             return annexViewAction.execute(node);
         } else {

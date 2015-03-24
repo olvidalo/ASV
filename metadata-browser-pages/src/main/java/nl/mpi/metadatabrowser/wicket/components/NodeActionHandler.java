@@ -25,6 +25,7 @@ import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
+import nl.mpi.metadatabrowser.wicket.services.impl.ActionSelectionRequestHandler;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @see NodeActionLink
  * @see AjaxFallbackNodeActionLink
+ * @see ActionSelectionRequestHandler
  * 
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */

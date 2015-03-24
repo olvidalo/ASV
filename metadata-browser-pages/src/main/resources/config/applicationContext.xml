@@ -23,19 +23,20 @@
     <!-- Wicket application class -->	
     <bean id="wicketApplication" class="nl.mpi.metadatabrowser.wicket.MetadataBrowserApplication" />
     
+    <!-- action selection handler needs to be created separately because it has a circular reference -->
+    <bean id="actionSelectionHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ActionSelectionRequestHandler" />
+    
     <!-- Services -->
     <bean id="actionRequestHandler" class="nl.mpi.metadatabrowser.wicket.services.impl.ControllerActionRequestHandlerImpl">
         <constructor-arg index="0">
-	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.NavigationRequestHandler"/>
+            <bean class="nl.mpi.metadatabrowser.wicket.services.impl.NavigationRequestHandler"/>
         </constructor-arg>
         <constructor-arg index="1">
-	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.DownloadRequestHandler" />
+            <bean class="nl.mpi.metadatabrowser.wicket.services.impl.DownloadRequestHandler" />
         </constructor-arg>
         <constructor-arg index="2">
-	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.ShowComponentRequestHandler" />
+            <bean class="nl.mpi.metadatabrowser.wicket.services.impl.ShowComponentRequestHandler" />
         </constructor-arg>
-        <constructor-arg index="3">
-	    <bean class="nl.mpi.metadatabrowser.wicket.services.impl.ActionSelectionRequestHandler" />
-        </constructor-arg>
+        <constructor-arg index="3" ref="actionSelectionHandler" />
     </bean>
 </beans>
