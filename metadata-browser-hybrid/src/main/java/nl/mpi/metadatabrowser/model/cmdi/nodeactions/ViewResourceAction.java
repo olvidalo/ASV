@@ -66,7 +66,6 @@ public class ViewResourceAction extends SingleNodeActionSingletonBean {
     @Override
     protected NodeActionResult execute(final TypedCorpusNode node) throws NodeActionException {
         try {
-            final NodeType nodeType = node.getNodeType();
             final String userid = auth.getPrincipalName();
             final boolean hasAccess = accessChecker.hasAccess(userid, node.getNodeURI());
 
@@ -76,6 +75,7 @@ public class ViewResourceAction extends SingleNodeActionSingletonBean {
                 public org.apache.wicket.Component getComponent(String id) throws ControllerActionRequestException {
 
                     if (hasAccess) { // do not show players if the user has no access to the resource
+                        final NodeType nodeType = node.getNodeType();
                         if (nodeType instanceof ResourceVideoType) {
                             return new MediaFilePanel(id, node);
                         } else if (nodeType instanceof ResourceAudioType) {
@@ -83,7 +83,7 @@ public class ViewResourceAction extends SingleNodeActionSingletonBean {
                         }
                     }
 
-                // Fallback for non-media files (e.g. images) to be rendered by the browser
+                    // Fallback for non-media files (e.g. images) to be rendered by the browser
                     // If resource is not accessible, this will provide more information
                     return new ExternalFramePanel(id, nodeResolver.getUrl(node).toString());
                 }
