@@ -127,12 +127,19 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
      */
     private class CustomHomePageResourceFinder implements IResourceFinder {
 
-        private static final String HOME_PAGE_PROPERTIES_CLASS = "nl/mpi/metadatabrowser/wicket/HomePage.properties";
+        /**
+         * Location on classpath of default properties file
+         */
         private static final String DEFAULT_PROPERTIES_FILE = "/HomePage.properties";
+        
+        /**
+         * Path wicket is going to look for
+         */
+        private final String homePagePropertiesPath = HomePage.class.getName().replace('.', '/') + ".properties";
 
         @Override
         public IResourceStream find(Class<?> clazz, String pathname) {
-            if (pathname.equals(HOME_PAGE_PROPERTIES_CLASS)) {
+            if (pathname.equals(homePagePropertiesPath)) {
                 if (!Strings.isEmpty(homePageValuesPropertiesFile)) {
                     final File file = new File(homePageValuesPropertiesFile);
                     if (file.exists()) {
