@@ -176,10 +176,22 @@ iframe.externalPage {
     text-decoration: none;
     padding: 1em;
     color: black;
+    padding-left: 50px;
+    background-repeat: no-repeat;
+    background-size: 30px;
+    background-position: 10px 10px;
+}
+
+#actionselectiondialogue li a.ViewResource {
+  background-image: url("Ficons/writtenresource.gif");
+}
+
+#actionselectiondialogue li a.ViewAnnex {
+  background-image: url("Ficons/annotation.gif");
 }
 
 #actionselectiondialogue li a:hover {
-    background: #ccc;
+    background-color: #ccc;
 }
 
 #actionselectiondialogue li a span.actionname {

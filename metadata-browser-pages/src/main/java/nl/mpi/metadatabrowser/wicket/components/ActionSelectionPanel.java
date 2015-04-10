@@ -20,18 +20,22 @@ import java.util.Collection;
 import java.util.List;
 import nl.mpi.metadatabrowser.model.ActionSelectionRequest;
 import nl.mpi.metadatabrowser.model.NodeAction;
+import nl.mpi.metadatabrowser.model.StyleSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.proxy.ILazyInitProxy;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -60,6 +64,7 @@ public class ActionSelectionPanel extends GenericPanel<ActionSelectionRequest> {
 
                         // this action
                         final NodeAction action = actionModel.getObject();
+
                         // nodes to apply on
                         final Collection<TypedCorpusNode> nodes = model.getObject().getNodes();
 
@@ -67,8 +72,29 @@ public class ActionSelectionPanel extends GenericPanel<ActionSelectionRequest> {
                         nodeActionHandler.handle(actionRequestHandler, this, target);
                     }
                 };
+
                 actionLink.add(new Label("name", new PropertyModel(actionModel, "name")));
                 actionLink.add(new Label("description", new PropertyModel(actionModel, "title")));
+
+                actionLink.add(new AttributeAppender("class", new AbstractReadOnlyModel<String>() {
+
+                    @Override
+                    public String getObject() {
+
+                        final NodeAction action = actionModel.getObject();
+                        // inner node action that may not be serializable but implements all original interfaces
+                        final NodeAction innerAction;
+                        if (action instanceof ILazyInitProxy) {
+                            //unwrap proxy
+                            final Object proxyTarget = ((ILazyInitProxy) action).getObjectLocator().locateProxyTarget();
+                            innerAction = (NodeAction) proxyTarget;
+                        } else {
+                            innerAction = action;
+                        }
+                        return NodesActionsPanel.getClassName(innerAction);
+                    }
+                }));
+
                 item.add(actionLink);
 
             }

@@ -122,7 +122,7 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
         response.render(CssHeaderItem.forReference(NodesActionsPanel_CSS));
     }
 
-    private String getClassName(final NodeAction action) {
+    public static String getClassName(final NodeAction action) {
         final String className;
         if (action instanceof StyleSpecifier) {
             className = ((StyleSpecifier) action).getStyleClass();
