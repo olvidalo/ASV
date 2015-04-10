@@ -147,6 +147,10 @@ OPTIONAL integer parameter defining the maximum number of page instances
 that will be saved into application-scoped cache (0 is disabled, also the
 default)
 
+* nl.mpi.metadatabrowser.customHomePageProperties 
+OPTIONAL parameter specifying the location of a custom 'home page properties' 
+file (see section on customisation below).
+
 Connection parameters for the 'adapter' profile (i.e. hybrid archive):
 
 * nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
@@ -179,6 +183,34 @@ In order to be backwards compatible and support cases such as
 define a rewrite rule (for the first two of these parameters) that rewrites this to
 a node URI, e.g. in this case
 	'openpath=node:84114'
+
+================================================================================
+CUSTOMISATION
+================================================================================
+
+A number of aspects of the metadata browser can be customised, such as the page
+title, the name and icons shown in the header, and the welcome page that is
+shown if no nodes are selected. Customisation is based on a number values set in
+a properties file. By default, the application loads these values from the
+following file in the web application:
+
+	WEB-INF/classes/HomePage.properties
+
+Customisation can be done either by modifying this file (which may cause the
+modifications to get lost when the application is updated), or by making a copy
+of this file and configuring the following context parameter to hold the
+location of this copy:
+
+	nl.mpi.metadatabrowser.customHomePageProperties
+
+For example:
+
+    	<Parameter name="nl.mpi.metadatabrowser.customHomePageProperties"
+    	value="/lat/webapps/metadata-browser/tla_homepage.properties" />
+
+Because of caching, the application needs to be reset for changes in the
+properties file to take effect. Some documentation on the individual properties
+can be found as comments in the properties file itself.
 	
 ==========================================================================================
 INSTALLATION NOTES FOR LANA2 ENVIRONMENTS

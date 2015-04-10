@@ -1,3 +1,8 @@
+Metadata browser 1.3.0
+	Changes:
+			- view selection for written resources (#4445)
+			- options for customisation (#4525, for details, see INSTALL.txt)
+
 Metadata browser 1.2.0
 	Changes:
 			- removed support for 'native' corpus-structure-2. Only the adapter is

@@ -19,13 +19,13 @@ Documentation
 The most up-to-date documentation for the Metadata Browser can be found at
 <https://tla.mpi.nl/tools/tla-tools/asv>.
 
-Installation
-------------
+Installation and configuration
+------------------------------
 
 Please see the file called INSTALL.
 
 Upgrading
-------------
+---------
 
 Please see the file called UPGRADE.
 
