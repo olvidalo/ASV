@@ -23,16 +23,13 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
-import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
-import nl.mpi.metadatabrowser.model.SingleNodeAction;
+import nl.mpi.metadatabrowser.model.StyleSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.NavigationActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
-import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -42,7 +39,7 @@ import org.springframework.stereotype.Component;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
-public class ViewInAnnexAction extends SingleNodeActionSingletonBean {
+public class ViewInAnnexAction extends SingleNodeActionSingletonBean implements StyleSpecifier {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     @Autowired
@@ -90,11 +87,16 @@ public class ViewInAnnexAction extends SingleNodeActionSingletonBean {
 
     @Override
     public String getName() {
-        return "View annotations";
+        return "Open in annotation viewer";
     }
 
     @Override
     public String getTitle() {
-        return "Open in annotation viewer";
+        return "Open the resource in Annex, a web-based tool for exploring and viewing annotated multimedia recordings";
+    }
+
+    @Override
+    public String getStyleClass() {
+        return "ViewAnnex";
     }
 }

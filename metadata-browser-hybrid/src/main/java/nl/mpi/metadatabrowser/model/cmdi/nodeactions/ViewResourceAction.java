@@ -24,6 +24,7 @@ import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.NodeType;
 import nl.mpi.metadatabrowser.model.ShowComponentRequest;
+import nl.mpi.metadatabrowser.model.StyleSpecifier;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.type.ResourceAudioType;
@@ -43,7 +44,7 @@ import org.springframework.stereotype.Component;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 @Component
-public class ViewResourceAction extends SingleNodeActionSingletonBean {
+public class ViewResourceAction extends SingleNodeActionSingletonBean implements StyleSpecifier {
 
     private final static Logger logger = LoggerFactory.getLogger(NodeAction.class);
     @Autowired
@@ -96,12 +97,17 @@ public class ViewResourceAction extends SingleNodeActionSingletonBean {
 
     @Override
     public String getName() {
-        return "View resource";
+        return "View resource content";
     }
 
     @Override
     public String getTitle() {
-        return "View resource content";
+        return "Display the resource content in this window according to the browser's built in viewing capacities";
+    }
+
+    @Override
+    public String getStyleClass() {
+        return "ViewResource";
     }
 
 }
