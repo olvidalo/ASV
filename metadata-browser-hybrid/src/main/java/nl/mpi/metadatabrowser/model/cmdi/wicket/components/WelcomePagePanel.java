@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi.wicket.components;
 
 import org.apache.wicket.markup.html.include.Include;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.StringResourceModel;
 
 /**
  *
@@ -27,6 +28,6 @@ public final class WelcomePagePanel extends Panel {
 
     public WelcomePagePanel(String id) {
         super(id);
-       add(new Include("include", "HomePage.html"));
+        add(new Include("include", new StringResourceModel("welcomepage.url", null)));
     }
 }
