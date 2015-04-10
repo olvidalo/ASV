@@ -18,6 +18,8 @@ import nl.mpi.metadatabrowser.wicket.components.HeaderPanel;
 import nl.mpi.metadatabrowser.wicket.components.NodesPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -63,7 +65,9 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
      */
     public HomePage(final PageParameters parameters) {
         super(parameters);
-
+        
+        add(new Label("title", new StringResourceModel("homepage.title", null)));
+        
         //Add a panel hosting the user information.
         final HeaderPanel headerPanel = new HeaderPanel("headerPanel", new UserModel(authHolder));
         add(headerPanel);
