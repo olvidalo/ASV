@@ -74,21 +74,28 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
             if (zipFile == null) {
                 logger.error("none of the files are accessible to user : " + userid);
                 return new SimpleNodeActionResult(String.format("User %s has no access to one or more of the child nodes. No zip could be created. Log in and/or request access, then try again.", userid));
-            }
-            final IResourceStream resStream = new FileResourceStream(zipFile) {
-                @Override
-                public void close() throws IOException {
-                    super.close();
-                    logger.debug("Zip file download completed. Removing {} from file system.", zipFile);
-                    if (!zipFile.delete()) {
-                        logger.warn("Could not remove zip file: {}", zipFile);
-                    }
-                }
-            };
-            final String filename = String.format("package_%s.zip", FilenameUtils.getBaseName(node.getName()));
-            final DownloadActionRequest request = new DownloadActionRequest(filename, resStream);
+            } else {
+                final IResourceStream resStream = new FileResourceStream(zipFile) {
+                    @Override
+                    public void close() throws IOException {
+                        super.close();
 
-            return new SimpleNodeActionResult(request);
+                        // called when download is complete - file can be removed
+                        logger.debug("Zip file download completed. Removing {} from file system.", zipFile);
+                        
+                        if (!zipFile.delete()) {
+                            logger.warn("Could not remove zip file: {}", zipFile);
+                        }
+                    }
+                };
+                final String filename = String.format("package_%s.zip", FilenameUtils.getBaseName(node.getName()));
+                final DownloadActionRequest request = new DownloadActionRequest(filename, resStream);
+
+                // when the VM closes, file should be removed if it has not already
+                zipFile.deleteOnExit();
+
+                return new SimpleNodeActionResult(request);
+            }
         } catch (IOException ex) {
             logger.error("an exception has occured when trying to download package of : {}", node, ex);
             throw new NodeActionException(this, ex);
