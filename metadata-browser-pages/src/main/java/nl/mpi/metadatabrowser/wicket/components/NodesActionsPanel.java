@@ -107,7 +107,7 @@ public final class NodesActionsPanel extends GenericPanel<NodeActionsStructure> 
                 .setTitle("Select an action")
                 // Dimensions
                 .setInitialWidth(36).setWidthUnit("em")
-                .setInitialHeight(10).setHeightUnit("em")
+                .setInitialHeight(15).setHeightUnit("em")
                 .setResizable(false)
                 // Looks
                 .setCssClassName(ModalWindow.CSS_CLASS_GRAY)
