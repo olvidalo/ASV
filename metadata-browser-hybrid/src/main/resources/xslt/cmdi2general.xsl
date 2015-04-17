@@ -85,10 +85,10 @@
                             </xsl:attribute>
 
                             <div class="IMDI_group_header_static">
-                                <!-- TODO: javascript class toggle -->
-                                <a class="toggle" 
-                                    href="#"
-                                    ><span>toggle</span></a>
+
+                                <!-- hanlder in cmdi2html.js -->
+                                <a class="toggle" href="#"><span>toggle</span></a>
+
                                 <xsl:value-of select="fn:concat(local-name(), ' ')"/>
                                 <xsl:if test="count(@*) > 0">
                                     <div class="attributes">
@@ -119,12 +119,14 @@
     <!-- Group expansion state (css class) -->
     
     <!-- Template for paths of groups that should be expanded by default -->
-    <xsl:template match="/CMD/Components/lat-session |
+    <xsl:template match="/CMD/Components/* |
         /CMD/Components/lat-session/descriptions |
         /CMD/Components/lat-session/Keys|
         /CMD/Components/lat-session/Actors|
-        /CMD/Components/lat-session/References" mode="expansionState">
-        <xsl:text>IMDI_group expanded</xsl:text>
+        /CMD/Components/lat-session/References|
+        /CMD/Components/lat-session/References/descriptions|
+        /CMD/Components/lat-corpus//*" mode="expansionState">
+        <xsl:text>IMDI_group</xsl:text>
     </xsl:template>
 
     <!-- Anything else should be collapsed -->
@@ -229,12 +231,6 @@
             <!--</p>-->
         </article>
         
-        <script>
-            $("a.toggle").click(function() {
-                $(this).parent().parent().toggleClass('collapsed'); 
-                $(this).parent().parent().toggleClass('expanded');
-            });
-        </script>
     </xsl:template>
         
 </xsl:stylesheet>

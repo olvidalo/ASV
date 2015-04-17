@@ -63,6 +63,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
 
     private final static Logger logger = LoggerFactory.getLogger(CMDINodePresentationProvider.class);
     private static final JavaScriptResourceReference IMDIVIEWER_JS = new JavaScriptResourceReference(CMDINodePresentationProvider.class, "res/imdi-viewer.js");
+    private static final JavaScriptResourceReference CMDIVIEWER_JS = new JavaScriptResourceReference(CMDINodePresentationProvider.class, "res/cmdi2html.js");
     private final static CssResourceReference IMDIVIEWER_CSS = new CssResourceReference(CMDINodePresentationProvider.class, "res/imdi-viewer.css");
 
     private final NodeResolver nodeResolver;
@@ -115,6 +116,7 @@ public class CMDINodePresentationProvider implements NodePresentationProvider, S
             @Override
             public void renderHead(IHeaderResponse response) {
                 response.render(JavaScriptReferenceHeaderItem.forReference(IMDIVIEWER_JS));
+                response.render(JavaScriptReferenceHeaderItem.forReference(CMDIVIEWER_JS));
                 response.render(CssHeaderItem.forReference(IMDIVIEWER_CSS));
             }
 
