@@ -78,13 +78,27 @@
                             <br />
                         </xsl:when>
                         <xsl:otherwise>
+                            
+                            <!-- children, so component level -->
+                            <xsl:attribute name="class" >
+                                <xsl:apply-templates select="." mode="expansionState" />
+                            </xsl:attribute>
 
                             <div class="IMDI_group_header_static">
+                                <!-- TODO: javascript class toggle -->
+                                <a class="toggle" 
+                                    href="#"
+                                    ><span>toggle</span></a>
                                 <xsl:value-of select="fn:concat(local-name(), ' ')"/>
                                 <xsl:if test="count(@*) > 0">
                                     <div class="attributes">
                                         <xsl:apply-templates select="@*" mode="attributes"/>
                                     </div>
+                                </xsl:if>
+                                <xsl:if test="normalize-space(./Name) != ''">
+                                    <span class="group_name">
+                                        <xsl:value-of select="./Name" />
+                                    </span>
                                 </xsl:if>
                             </div>
                             <div class="IMDI_group_static">
@@ -100,6 +114,22 @@
             </xsl:if>
         </xsl:for-each>
 
+    </xsl:template>
+    
+    <!-- Group expansion state (css class) -->
+    
+    <!-- Template for paths of groups that should be expanded by default -->
+    <xsl:template match="/CMD/Components/lat-session |
+        /CMD/Components/lat-session/descriptions |
+        /CMD/Components/lat-session/Keys|
+        /CMD/Components/lat-session/Actors|
+        /CMD/Components/lat-session/References" mode="expansionState">
+        <xsl:text>IMDI_group expanded</xsl:text>
+    </xsl:template>
+
+    <!-- Anything else should be collapsed -->
+    <xsl:template match="*" mode="expansionState">
+        <xsl:text>IMDI_group collapsed</xsl:text>
     </xsl:template>
     
     <!-- Element labels -->
@@ -198,5 +228,13 @@
                 <xsl:call-template name="Component_tree"/>
             <!--</p>-->
         </article>
+        
+        <script>
+            $("a.toggle").click(function() {
+                $(this).parent().parent().toggleClass('collapsed'); 
+                $(this).parent().parent().toggleClass('expanded');
+            });
+        </script>
     </xsl:template>
+        
 </xsl:stylesheet>

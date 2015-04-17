@@ -112,6 +112,45 @@ a {
     padding: 4px;
 }
 
+/* Hidden content for IMDI group */
+.IMDI_group.collapsed .IMDI_group_static {
+    display: none;
+}
+
+/* component name in title */
+
+.IMDI_group.collapsed > .IMDI_group_header_static > span.group_name {
+    display: inline;
+}
+
+.IMDI_group.collapsed > .IMDI_group_header_static > span.group_name {
+    display: inline;
+    text-decoration: underline;
+    padding-left: 2em
+}
+
+/* toggle link */
+
+.IMDI_group a.toggle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: .5em;
+    background-repeat: no-repeat;
+}
+
+.IMDI_group a.toggle span {
+    display: none;
+}
+
+.IMDI_group.collapsed > .IMDI_group_header_static > a.toggle {
+    background-image: url('imdi-viewer-closed.png');
+}
+
+.IMDI_group.expanded > .IMDI_group_header_static > a.toggle {
+    background-image: url('imdi-viewer-open.png');
+}
+
 /* static content header */
 .IMDI_group_header_static {
     background-color: #1C3655;
