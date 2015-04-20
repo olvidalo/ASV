@@ -119,13 +119,20 @@
     <!-- Group expansion state (css class) -->
     
     <!-- Template for paths of groups that should be expanded by default -->
-    <xsl:template match="/CMD/Components/* |
-        /CMD/Components/lat-session/descriptions |
-        /CMD/Components/lat-session/Keys|
-        /CMD/Components/lat-session/Actors|
-        /CMD/Components/lat-session/References|
-        /CMD/Components/lat-session/References/descriptions|
-        /CMD/Components/lat-corpus//*" mode="expansionState">
+    <xsl:template mode="expansionState"
+        match="/CMD/Components/*
+        | /CMD/Components/*/GeneralInfo
+        | /CMD/Components/*/GeneralInfo/Descriptions
+        
+        | /CMD/Components/lat-session/descriptions
+        | /CMD/Components/lat-session/Keys
+        | /CMD/Components/lat-session/Actors
+        | /CMD/Components/lat-session/References
+        | /CMD/Components/lat-session/References/descriptions
+        
+        | /CMD/Components/lat-corpus//*
+        
+        | /CMD/Components/DiscAn_Project/Project" >
         <xsl:text>IMDI_group</xsl:text>
     </xsl:template>
 

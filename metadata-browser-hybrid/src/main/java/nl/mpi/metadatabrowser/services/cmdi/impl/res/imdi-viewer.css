@@ -125,7 +125,7 @@ span.group_name {
 
 .IMDI_group.collapsed > .IMDI_group_header_static > span.group_name {
     display: inline;
-    text-decoration: underline;
+    font-weight: bold;
     padding-left: 2em
 }
 
@@ -170,10 +170,11 @@ a.toggle {
 }
 
 /* dynamic content header */
-.IMDI_group_header_dynamic {
+.IMDI_group_header_dynamic, .collapsed .IMDI_group_header_static, .expanded .IMDI_group_header_static {
     background-color: #BFCED9;
     padding: 1px;
     border: solid 1px #B0B0B0;
+    color: black;
 }
 
 /* clickable header link */
