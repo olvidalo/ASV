@@ -30,6 +30,11 @@ corresponding name: "filter.<server>.properties", under the directory
 must be created and the necessary properties added (based on the existing
 filters).
 
+To build for *LANA2* environments, add the following parameter to the maven 
+commands:
+
+	-Pnon-shib
+
 To create eclipse configuration files:
 
   mvn eclipse:eclipse
@@ -70,12 +75,17 @@ which the tomcat is running. No files need to be written by the Tomcat.
 ==========================================================================================
 	
 Out of the box, the Metadata Browser is configured to be used with Shibboleth
-authentication. It is possible to configure the browser for use with Lana2. To do this,
-comment out the sections of WEB-INF/web.xml indicated to be related to Shibboleth and
-uncomment the sections that enable Lana2.
+authentication. It is possible to configure the browser for use with Lana2:
+	
+INSTALLATION NOTES FOR LANA2 ENVIRONMENTS
 
-For some notes on installation on systems configured for Lana2, see the section towards
-the end of this document
+Make sure to have a version of metadata-browser-pages that was built with the
+'non-shib' Maven build profile. This should be indicated in the file name of the
+deployment package. You can further verify this by checking that there is a
+a JAR for ams2 version 1.4.9.* in 'WEB-inf/lib'.
+
+After deployment, comment/uncomment the indicated sections in the web.xml file
+to enable LANA2 authentication.
 
 ==========================================================================================
 CONFIGURATION
@@ -211,46 +221,4 @@ For example:
 Because of caching, the application needs to be reset for changes in the
 properties file to take effect. Some documentation on the individual properties
 can be found as comments in the properties file itself.
-	
-==========================================================================================
-INSTALLATION NOTES FOR LANA2 ENVIRONMENTS
-==========================================================================================
-
-Here are some notes collected by Eric Auer while deploying metadata browser 1.1.2-RC1 at
-SOAS in London (IMDI metadata only)
-
-----
-``The web.xml in the download fails to specify the auth style (with or without LDAP), so I 
-manually added this:
-<init-param>
-<param-name>authenticationService</param-name>
-<param-value>amsAuthenticationSrv</param-value>
-</init-param>
-... to the nl.mpi.lat.auth.lana2.LanaAuthFilter filter setup.``
-----
-``To use AMS *with* LDAP/KDC, you would instead of "ams" put
-"integrated" in the above snippet. If you put "integrated",
-but have no LDAP/KDC, logins may take minutes until AMS has
-the timeout and realizes that you do not have LDAP/KDC 
-
-	* the ams2-1.5.0.jar (and ams2.api-1.5.0.jar & ams2.auth-1.5.0.jar?) shipping with the
-	 metadata browser seems to require CMDI, and it might lack mechanisms to switch 
-	 LDAP/KDC off, in any case I found the following strings in the jar file:
-		java:comp/env/jdbc/AMS2-CMDI-DB
-		java:comp/env/kdc/MPI-NL
-		java:comp/env/jdbc/CSDB3
-		java:comp/env/AmsURL
-		java:comp/env/ldap/DAMLR
-		
-... and indeed, metadata-browser fails to start, giving some
-error message about not finding AMS2-CMDI-DB then Also,
-it hardcodes several CMDI specific file locations. I would
-have hoped those to be configurable without editing the JAR
-and I would have preferred non-absolute paths in particular
-for /lat/webapps/ams2-cmdi/current/... 
-		
-[How] I got the metadata-browser to work nevertheless:
-- remove all three ams*1.5.0*jar files from WEB-INF/lib/
-- copy ams2-1.4.9.2.jar from another webapp installed at SOAS
-- note that this package still ships with "devel mode wicket"``
 

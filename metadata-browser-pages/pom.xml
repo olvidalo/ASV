@@ -272,6 +272,83 @@
         </plugins>
     </build>
     
+    <profiles>
+        <profile>
+            <!-- 
+                Build profile for non-shibbolised environments, basically
+                swapping the AMS2 dependency for an older version while keeping
+                some of it's "modern" dependencies (spring, hibernate et al.)
+                
+                Based on Eric's experiences with deploying the browser at SOAS, 
+                see <https://trac.mpi.nl/ticket/4521>
+            -->
+            <id>non-shib</id>
+            <build>
+                <finalName>${project.artifactId}-${project.version}-non-shib</finalName>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>nl.mpi</groupId>
+                    <artifactId>ams2</artifactId>
+                    <version>1.4.9.2</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>nl.mpi</groupId>
+                            <artifactId>corpusstructure-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>net.sf.ehcache</groupId>
+                            <artifactId>ehcache</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context-support</artifactId>
+                    <version>3.2.12.RELEASE</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                    <version>3.2.12.RELEASE</version>
+                </dependency>
+                <dependency>
+                    <groupId>nl.mpi</groupId>
+                    <artifactId>mpi-util</artifactId>
+                    <version>1.2.4</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                    <version>3.6.10.Final</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-ehcache</artifactId>
+                    <version>3.6.10.Final</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                    <version>3.6.10.Final</version>
+                </dependency>
+                <dependency>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                    <version>2.2.2</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    
     <pluginRepositories>
         <pluginRepository>
             <id>MPI</id>
