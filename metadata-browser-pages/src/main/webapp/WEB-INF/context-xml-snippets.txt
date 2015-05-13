@@ -40,7 +40,7 @@
  description="location of the Imex image viewer webapp" />
 
 <Parameter name="nl.mpi.imdiSearchUrl"
- value="https://lux16.mpi.nl/ds/imdi_search/strucsearch.jsp"
+ value="https://lux16.mpi.nl/ds/imdi_search/search.html"
  description="location of the IMDI Search webapp" />
 
 <Parameter name="nl.mpi.rrsUrl"

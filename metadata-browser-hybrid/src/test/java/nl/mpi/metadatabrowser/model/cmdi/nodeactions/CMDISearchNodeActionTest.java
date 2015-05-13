@@ -87,7 +87,7 @@ public class CMDISearchNodeActionTest {
         });
 
         String id = filterIdProvider.getURIParam(NODE_ID);
-        nodeActionsConfiguration.setMdSearchURL("http://lux16.mpi.nl/ds/imdi_search/strucsearch.jsp");
+        nodeActionsConfiguration.setMdSearchURL("https://lux16.mpi.nl/ds/imdi_search/search.html");
         UriBuilder url = UriBuilder.fromUri(nodeActionsConfiguration.getMdSearchURL());
         URI targetURI = url.queryParam("nodeid", id).build();
 
