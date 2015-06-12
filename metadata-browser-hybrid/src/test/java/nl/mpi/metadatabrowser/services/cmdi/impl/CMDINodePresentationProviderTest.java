@@ -45,6 +45,7 @@ import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ResourcePresentation;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.TemplatesStore;
 import nl.mpi.metadatabrowser.wicket.MetadataBrowserServicesLocator;
+import nl.mpi.metadatabrowser.wicket.Settings;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jmock.Expectations;
@@ -82,6 +83,7 @@ public class CMDINodePresentationProviderTest {
     private CorpusStructureProvider csProvider;
     private NodeTypeIdentifier nodeTypeIdentifier;
     private CMDINodePresentationProvider instance;
+    private Settings settings;
 
     @Before
     public void setUp() {
@@ -91,6 +93,7 @@ public class CMDINodePresentationProviderTest {
         nodeTypeIdentifier = context.mock(NodeTypeIdentifier.class);
         csProvider = context.mock(CorpusStructureProvider.class);
         transformer = context.mock(Transformer.class);
+        settings = new Settings();
 
         MetadataBrowserServicesLocator.Instance.set(new MetadataBrowserServicesLocator() {
 
@@ -108,6 +111,12 @@ public class CMDINodePresentationProviderTest {
             public CorpusStructureProvider getCorpusStructureProvider() {
                 return csProvider;
             }
+
+            @Override
+            public Settings getSettings() {
+                return settings;
+            }
+            
 
             @Override
             public TemplatesStore getTemplatesProvider() {
