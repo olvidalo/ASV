@@ -121,6 +121,11 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
         return applicationContext;
     }
 
+    @Override
+    public Settings getSettings() {
+        return settings;
+    }
+
     /**
      * Finds the custom home page properties resource, if set; otherwise returns
      * the default resource stream with strings for the {@link HomePage}
@@ -131,7 +136,7 @@ public class MetadataBrowserApplication extends WebApplication implements Metada
          * Location on classpath of default properties file
          */
         private static final String DEFAULT_PROPERTIES_FILE = "/HomePage.properties";
-        
+
         /**
          * Path wicket is going to look for
          */

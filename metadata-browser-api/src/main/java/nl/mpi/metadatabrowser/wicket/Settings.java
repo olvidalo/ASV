@@ -31,12 +31,15 @@ public class Settings {
     @Value("${nl.mpi.metadatabrowser.wicket.inmemoryCacheSize:-1}")
     private int inmemoryCacheSize;
 
+    @Value("${nl.mpi.metadatabrowser.allowHandleDisplay:true}")
+    private boolean handleDisplayAllowed;
+
     /**
      *
      * @return the maximum number of page instances that will be saved into
      * application-scoped cache (default = 0 so disabled); if less that 0,
      * should be ignored
-     * 
+     *
      * @see http://wicket.apache.org/guide/guide/versioningCaching.html
      */
     public int getInmemoryCacheSize() {
@@ -55,6 +58,16 @@ public class Settings {
      */
     public String getMaxSizePerSession() {
         return maxSizePerSession;
+    }
+
+    /**
+     * Determines whether the application should display handles for nodes in
+     * bookmarks etc regardless of whether they are available (defaults to true)
+     *
+     * @return Whether the application should display handles
+     */
+    public boolean isHandleDisplayAllowed() {
+        return handleDisplayAllowed;
     }
 
 }

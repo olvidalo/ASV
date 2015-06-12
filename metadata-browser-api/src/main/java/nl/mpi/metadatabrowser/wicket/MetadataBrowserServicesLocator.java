@@ -36,7 +36,17 @@ public interface MetadataBrowserServicesLocator {
 
     CorpusStructureProvider getCorpusStructureProvider();
     
+    /**
+     * 
+     * @return store with transformation templates for visualisation
+     */
     TemplatesStore getTemplatesProvider();
+    
+    /**
+     * 
+     * @return settings for the metadata browser web application
+     */
+    Settings getSettings();
 
     /**
      * Instance where a singleton instance of the service locator can be registered
