@@ -22,6 +22,7 @@ import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
+import nl.mpi.metadatabrowser.wicket.Settings;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -48,6 +49,8 @@ public final class CitationComponent extends Panel {
     private CorpusStructureProvider csdb;
     @SpringBean
     private NodeResolver nodeResolver;
+    @SpringBean
+    private Settings appSettings;
 
     public CitationComponent(String id, IModel<TypedCorpusNode> nodeModel) {
         super(id);
@@ -67,7 +70,14 @@ public final class CitationComponent extends Panel {
         }
 
         final URL url = nodeResolver.getUrl(node);
-        final URI handle = nodeResolver.getPID(node); // can be null
+        
+        final URI handle;
+        if (appSettings.isHandleDisplayAllowed()) {
+            handle = nodeResolver.getPID(node); // can be null
+        } else {
+            handle = null;
+        }
+        
         if (handle != null) {
             final String wrapHandle = handle.getSchemeSpecificPart();
             final String resolver = csdb.getHandleResolverURI().toString();

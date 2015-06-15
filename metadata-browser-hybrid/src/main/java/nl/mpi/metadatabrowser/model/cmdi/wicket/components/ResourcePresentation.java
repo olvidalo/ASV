@@ -28,6 +28,7 @@ import nl.mpi.archiving.corpusstructure.core.FileInfo;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
 import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
+import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
@@ -37,6 +38,7 @@ import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 import nl.mpi.metadatabrowser.services.URIFilter;
+import nl.mpi.metadatabrowser.wicket.Settings;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.ComponentTag;
@@ -72,7 +74,11 @@ public final class ResourcePresentation extends Panel {
     @SpringBean
     private NodeActionsConfiguration nodeActionsConfiguration;
     @SpringBean
+    private CorpusStructureProvider csProvider;
+    @SpringBean
     private URIFilter nodeUriFilter;
+    @SpringBean
+    private Settings appSettings;
     private final ResourceReference openIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_green.png");
     private final ResourceReference licensedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_yellow.png");
     private final ResourceReference restrictedIcon = new PackageResourceReference(ResourcePresentation.class, "al_circle_orange.png");
@@ -109,13 +115,19 @@ public final class ResourcePresentation extends Panel {
         final URI nodeURI = node.getNodeURI();
         final boolean hasaccess = accessChecker.hasAccess(userid, nodeURI);
 
+        final URI handle;
+        if (appSettings.isHandleDisplayAllowed()) {
+            handle = resolver.getPID(node);
+        } else {
+            handle = null;
+        }
+
         String wrapHandle = "";
-        URI handle = resolver.getPID(node);
         if (handle != null) {
             wrapHandle = handle.toString();
             if (wrapHandle.contains(":")) {
                 wrapHandle = wrapHandle.split(":")[1];
-                wrapHandle = "http://hdl.handle.net/" + wrapHandle;
+                wrapHandle = csProvider.getHandleResolverURI().toString() + wrapHandle;
             }
         }
         String nodetype = "unknown";

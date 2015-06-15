@@ -161,6 +161,15 @@ default)
 OPTIONAL parameter specifying the location of a custom 'home page properties' 
 file (see section on customisation below).
 
+* nl.mpi.metadatabrowser.adapter.handleResolverUri
+OPTIONAL parameter that determines whether the application should display 
+handles for nodes in bookmarks etc regardless of whether they are available
+(defaults to true)
+
+* nl.mpi.metadatabrowser.allowHandleDisplay
+OPTIONAL parameter specifying the base URI of the handle resolver, assumed to
+have a trailing slash, e.g. https://hdl.handle.net/
+
 Connection parameters for the 'adapter' profile (i.e. hybrid archive):
 
 * nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
