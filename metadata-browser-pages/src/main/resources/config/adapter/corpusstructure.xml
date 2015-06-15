@@ -81,7 +81,9 @@
     </bean>
     
     <!-- Corpus structure provider created from factory -->
-    <bean id="corpusStructureProvider" factory-bean="csProviderFactory" factory-method="createCorpusStructureProvider" />
+    <bean id="corpusStructureProvider" factory-bean="csProviderFactory" factory-method="createCorpusStructureProvider">
+        <property name="handleResolverUri" value="${nl.mpi.metadatabrowser.adapter.handleResolverUri:http://hdl.handle.net/}" />
+    </bean>
 
     <!-- Access info provider (also adapter) -->
     <bean id="accessInfoProvider" factory-bean="csProviderFactory" factory-method="createAccessInfoProvider" />
