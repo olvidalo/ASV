@@ -25,12 +25,12 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
-import nl.mpi.archiving.corpusstructure.provider.AccessInfoProvider;
 import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
@@ -87,6 +87,8 @@ public class ZipServiceImpl implements ZipService, Serializable {
         
         final int filesCount;
         try (ZipOutputStream zipStream = new ZipOutputStream(fileStream)) {
+            // don't compress
+            zipStream.setLevel(Deflater.NO_COMPRESSION);
             // add PID to zip as comment
             zipStream.setComment(getZipComment(node));
 
@@ -204,7 +206,8 @@ public class ZipServiceImpl implements ZipService, Serializable {
         if (pid != null) {
             return pid.toString();
         } else {
-            return nodeResolver.getUrl(node).toString();
+            final URL url = nodeResolver.getUrl(node);
+            return String.valueOf(url);
         }
     }
 
