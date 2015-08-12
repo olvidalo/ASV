@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class ZipServiceImpl implements ZipService, Serializable {
-
+    
     private final static Logger logger = LoggerFactory.getLogger(ZipServiceImpl.class);
     private final static long MAX_LIMIT = FileUtils.ONE_GB * 2;
     private final CorpusStructureProvider csdb;
@@ -84,7 +84,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     public File createZipFileForNodes(TypedCorpusNode node, String userid) throws IOException, FileNotFoundException {
         final File zipFile = File.createTempFile("mdbrowser", ".zip");
         final FileOutputStream fileStream = new FileOutputStream(zipFile);
-
+        
         final int filesCount;
         try (ZipOutputStream zipStream = new ZipOutputStream(fileStream)) {
             // add PID to zip as comment
@@ -94,9 +94,13 @@ public class ZipServiceImpl implements ZipService, Serializable {
             filesCount = addFile(node, userid, zipStream);
         } catch (NodeNotFoundException ex) {
             logger.warn("Node not found while creating zip archive", ex);
+            removeOnAbort(zipFile, node);
             return null;
+        } catch (IOException ex) {
+            removeOnAbort(zipFile, node);
+            throw ex;
         }
-
+        
         logger.debug("Added {} files to archive of node {}: {}", filesCount, node.getNodeURI(), zipFile.getAbsolutePath());
 
         // at least one child must be present, otherwise fail
@@ -112,17 +116,24 @@ public class ZipServiceImpl implements ZipService, Serializable {
         }
     }
 
+    public void removeOnAbort(final File zipFile, TypedCorpusNode node) {
+        if (zipFile.exists()) {
+            logger.info("Zip creation aborted, removing incomplete archive {} for node {}", zipFile, node.getNodeURI());
+            zipFile.delete();
+        }
+    }
+    
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream) throws NodeNotFoundException, IOException {
         // wrap a new long so that it can be updated while writing
         final ThreadLocal<Long> sizeCount = new ThreadLocal<>();
         sizeCount.set(0L);
-
+        
         return addFile(node, userid, zipStream, sizeCount);
     }
-
+    
     private int addFile(CorpusNode node, String userid, ZipOutputStream zipStream, ThreadLocal<Long> sizeCount) throws NodeNotFoundException, IOException {
         final URI nodeURI = node.getNodeURI();
-
+        
         if (accessChecker.hasAccess(userid, nodeURI)) {
             logger.debug("Adding {} to ZIP", nodeURI);
 
@@ -153,7 +164,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
      */
     private long writeToZipStream(CorpusNode node, ZipOutputStream zipStream) throws IOException {
         final File localFile = nodeResolver.getLocalFile(node);
-
+        
         final String fileName;
         if (localFile == null) {
             final URL nodeUrl = nodeResolver.getUrl(node);
@@ -161,7 +172,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
         } else {
             fileName = localFile.getName();
         }
-
+        
         logger.trace("Writing {} to ZIP as {}", node.getNodeURI(), fileName);
 
         // prepare target stream for this entry
@@ -177,9 +188,9 @@ public class ZipServiceImpl implements ZipService, Serializable {
 
         // end of writing this entry
         zipStream.closeEntry();
-
+        
         logger.trace("Done writing {} to ZIP", fileName);
-
+        
         return written;
     }
 
@@ -208,7 +219,7 @@ public class ZipServiceImpl implements ZipService, Serializable {
     private void updateWriteSizeCount(ThreadLocal<Long> sizeCount, final long addedBytes) throws IOException {
         // update written byte count accumulator
         final long totalBytes = sizeCount.get() + addedBytes;
-
+        
         logger.trace("Written {}, total {}", addedBytes, totalBytes);
 
         // check against limit
