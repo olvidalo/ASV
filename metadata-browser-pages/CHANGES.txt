@@ -7,6 +7,12 @@ Metadata browser 1.3.0
 				* nl.mpi.metadatabrowser.adapter.handleResolverUri
 					(see INSTALL.txt for usage information)
 			
+Metadata browser 1.2.1
+	Fixes:
+			- Zip files temporarily written to disk for the 'download all' 
+			action on sessions now get removed when the creation of the zip
+			file fails due to an I/O error (including cases where the total size
+			exceeds the maximum allowed size)
 
 Metadata browser 1.2.0
 	Changes:
