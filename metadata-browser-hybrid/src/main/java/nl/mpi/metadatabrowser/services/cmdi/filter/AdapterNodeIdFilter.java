@@ -1,7 +1,7 @@
 package nl.mpi.metadatabrowser.services.cmdi.filter;
 
 import java.net.URI;
-import nl.mpi.archiving.corpusstructure.adapter.AdapterUtils;
+import nl.mpi.archiving.corpusstructure.adapter.utils.AdapterUtils;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
 
 /*
