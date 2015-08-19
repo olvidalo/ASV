@@ -95,10 +95,10 @@
     </dependencies>
     <properties>
         <!-- Version of Wicket to depend on in module projects -->
-        <wicket.version>6.19.0</wicket.version>
+        <wicket.version>6.20.0</wicket.version>
         <jmock.version>2.6.0</jmock.version>
         <corpusstructure2.version>1.2.0-SNAPSHOT</corpusstructure2.version>
-        <wicket-tree-components.version>1.3</wicket-tree-components.version>
+        <wicket-tree-components.version>1.4-SNAPSHOT</wicket-tree-components.version>
         <!-- Hint for NetBeans to insert license header -->
         <netbeans.hint.license>gpl30</netbeans.hint.license>
         <spring.version>3.2.12.RELEASE</spring.version>
