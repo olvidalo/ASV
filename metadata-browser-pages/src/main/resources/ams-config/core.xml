@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 <!DOCTYPE beans PUBLIC 
-        "-//SPRING//DTD BEAN//EN" 
-        "http://www.springframework.org/dtd/spring-beans.dtd">
+	"-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -13,8 +13,8 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
     <!-- Copied and adpated (to use context parameters to select JNDI resources) from AMS2 version 1.5 -->
 
-    <!-- ** core services *************************************************** -->
-	    
+	<!-- ** core services *************************************************** -->
+	
     <!-- Load properties from context.xml via servlet container -->
     <bean
         class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
@@ -22,7 +22,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </bean>
     
     <bean id="abstractAuthSrv" class="nl.mpi.lat.ams.service.impl.AbstractAuthorizationSrv" 
-          abstract="true" >
+              abstract="true" >
         <property name="nodeAuthDao" 			ref="nodeAuthDao" />
         <property name="nodeAuthStaledDao" 		ref="nodeAuthStaledDao" />
         <property name="nodeLicenseStaledDao" 	ref="nodeLicenseStaledDao" />
@@ -32,16 +32,16 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <property name="principalSrv"   ref="principalSrv" />
     </bean>
 	
-    <!-- bean id="ruleEvalSrv" class="nl.mpi.lat.ams.eval.RuleEvaluationSrv"  
-    parent="abstractAuthSrv" / -->
+	<!-- bean id="ruleEvalSrv" class="nl.mpi.lat.ams.eval.RuleEvaluationSrv"  
+		parent="abstractAuthSrv" / -->
 		
-    <!-- new ruleEvalService with cache
-    BEWARE: the CACHED rule eval service MUST NOT BE a SINGLETON, 
-    cause due to it bears cache data it is NOT a threatsafe singleton service instance -->
+	<!-- new ruleEvalService with cache
+		BEWARE: the CACHED rule eval service MUST NOT BE a SINGLETON, 
+		cause due to it bears cache data it is NOT a threatsafe singleton service instance -->
     <bean id="cachedRuleEvalSrv" class="nl.mpi.lat.ams.eval.CachedRuleEvalSrv"
-          parent="abstractAuthSrv"
-          scope="prototype" >
-        <!-- aop:scoped-proxy / -->
+              parent="abstractAuthSrv"
+              scope="prototype" >
+		<!-- aop:scoped-proxy / -->
         <property name="principalSrv"	ref="principalSrv" />
     </bean>
     <bean id="corpusDbAuthSrv" class="nl.mpi.lat.ams.service.impl.CsDbAuthSrv" >
@@ -50,7 +50,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </bean>
 	
     <bean id="authorizationSrv"		class="nl.mpi.lat.ams.service.impl.AmsAuthorizationSrv" 
-          parent="abstractAuthSrv" >
+              parent="abstractAuthSrv" >
         <property name="ruleEvaluationSrv"	ref="corpusDbAuthSrv" />
         <property name="nodePcplRuleDao"                ref="nodePcplRuleDao" />
     </bean>
@@ -77,57 +77,56 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </bean>
 	
     <bean id="corpusStructureDB" class="nl.mpi.corpusstructure.CorpusStructureDBWriteImpl" >
-        <!-- db url / datasource -->
+		<!-- db url / datasource -->
         <constructor-arg	 value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
         <constructor-arg	 value="false" />	<!-- bootstrap mode -->
         <constructor-arg	 value="" />			<!-- db user : jndi configured -->
         <constructor-arg	 value="" />			<!-- db passwd : jndi configured -->
     </bean>
-    
-    <!-- csdb New-None-Singleton-Instance -->
+	<!-- csdb New-None-Singleton-Instance -->
 <!--    <bean id="corpusStructureDB-NNSI" class="nl.mpi.corpusstructure.CorpusStructureDBWriteImpl" 
-          parent="corpusStructureDB"
-          scope="prototype" />-->
+              parent="corpusStructureDB"
+              scope="prototype" />-->
 		
     <bean id="versioningDB" class="nl.mpi.versioning.manager.VersioningAPIImpl" >
         <constructor-arg	value="${nl.mpi.metadatabrowser.adapter.CSDBConnectionResource}" />
         <constructor-arg	value="" />			<!-- db user : jndi configured -->
         <constructor-arg	value="" />			<!-- db passwd : jndi configured -->
     </bean>
-    <!-- versioningDB New-None-Singleton-Instance -->
+	<!-- versioningDB New-None-Singleton-Instance -->
 <!--    <bean id="versioningDB-NNSI" class="nl.mpi.versioning.manager.VersioningAPIImpl" 
-          parent="versioningDB"
+              parent="versioningDB"
           scope="prototype" />-->
 	
 	
-    <!-- ** DAOs ************************************************************ -->
+	<!-- ** DAOs ************************************************************ -->
     <bean id="nodeAuthDao"
-          class="nl.mpi.lat.ams.dao.NodeAuthorizationDao" >
+              class="nl.mpi.lat.ams.dao.NodeAuthorizationDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
     </bean>
     <bean id="nodeAuthStaledDao"
-          class="nl.mpi.lat.ams.dao.NodeAuthorizationStaledDao" >
+              class="nl.mpi.lat.ams.dao.NodeAuthorizationStaledDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
     </bean>
     <bean id="nodeLicenseStaledDao"
-          class="nl.mpi.lat.ams.dao.NodeLicenseStaledDao" >
+              class="nl.mpi.lat.ams.dao.NodeLicenseStaledDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
     </bean>
     <bean id="ruleDao"
-          class="nl.mpi.lat.ams.dao.RuleDao" >
+              class="nl.mpi.lat.ams.dao.RuleDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
     </bean>
         
     <bean id="nodePcplRuleDao"
-          class="nl.mpi.lat.ams.dao.NodePcplRuleDao" >
+              class="nl.mpi.lat.ams.dao.NodePcplRuleDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
@@ -135,20 +134,20 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
     </bean>
         
     <bean id="licenseDao"
-          class="nl.mpi.lat.ams.dao.LicenseDao" >
+              class="nl.mpi.lat.ams.dao.LicenseDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
     </bean>
     <bean id="nodeLicenseDao"
-          class="nl.mpi.lat.ams.dao.NodeLicenseDao" >
+              class="nl.mpi.lat.ams.dao.NodeLicenseDao" >
         <property name="sessionFactory">
             <ref bean="sessionFactory"/>
         </property>
     </bean>
         
     <bean id="nodePcplLicenseDao"
-          class="nl.mpi.lat.ams.dao.NodePcplLicenseDao" >
+              class="nl.mpi.lat.ams.dao.NodePcplLicenseDao" >
         <property name="sessionFactory" >
             <ref bean="sessionFactory"/>
         </property>

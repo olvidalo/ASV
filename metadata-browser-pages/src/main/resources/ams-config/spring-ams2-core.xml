@@ -4,7 +4,7 @@
 	"http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-        <!-- Copied and adpated from AMS2 version 1.5 -->
+        <!-- Copied and adapted from AMS2 version 1.5 -->
         
 	<import resource="core.xml" />
 	<import resource="authentication.xml" />

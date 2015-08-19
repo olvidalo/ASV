@@ -12,16 +12,16 @@
         <property name="ignoreUnresolvablePlaceholders" value="false" />
     </bean>
     
-    <!-- ** persistence layer :: hibernate  ************************************ -->
+<!-- ** persistence layer :: hibernate  ************************************ -->
 
-    <!-- datasource, driver & connection -->
-    <!-- datasource in JNDI mode -->
-    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" >
-        <property name="jndiName">
+	<!-- datasource, driver & connection -->
+	<!-- datasource in JNDI mode -->
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" >
+		<property name="jndiName">
             <value>${nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource}</value>
-        </property>
-    </bean>
+		</property>
+	</bean>
 	
-    <!-- import resource="persistence.xml" /-->
+	<!-- import resource="persistence.xml" /-->
 	
 </beans>
