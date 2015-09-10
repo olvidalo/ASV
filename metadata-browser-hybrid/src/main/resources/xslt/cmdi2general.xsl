@@ -166,7 +166,7 @@
     
     <xsl:template match="@*" mode="attributes">
         <!-- Default behaviour: show name and value -->
-        <xsl:value-of select="name()"/>="<xsl:value-of select="."/>
+        <xsl:value-of select="name()"/>=&quot;<xsl:value-of select="."/>&quot;
     </xsl:template>
 
     <xsl:template name="cmdi2general" match="CMD">
