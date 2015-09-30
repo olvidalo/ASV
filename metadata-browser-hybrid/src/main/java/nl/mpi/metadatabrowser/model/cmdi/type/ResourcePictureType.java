@@ -22,7 +22,7 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
  */
 public class ResourcePictureType extends AbstractNodeType {
     public ResourcePictureType(){
-        super("resourcePicture");
+        super("Media Resource (Image)");
     }
 
 }

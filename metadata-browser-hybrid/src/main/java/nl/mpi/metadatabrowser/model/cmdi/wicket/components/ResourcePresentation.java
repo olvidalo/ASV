@@ -32,8 +32,6 @@ import nl.mpi.archiving.corpusstructure.provider.CorpusStructureProvider;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.services.authentication.AccessChecker;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceTxtType;
-import nl.mpi.metadatabrowser.model.cmdi.type.CMDIResourceType;
 import nl.mpi.metadatabrowser.services.AmsService;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.services.NodeIdFilter;
@@ -130,11 +128,9 @@ public final class ResourcePresentation extends Panel {
                 wrapHandle = csProvider.getHandleResolverURI().toString() + wrapHandle;
             }
         }
-        String nodetype = "unknown";
         String format = node.getFormat();
 
         final FileInfo fileInfo = node.getFileInfo();
-        String checksum = fileInfo.getChecksum();
         String size = "unknown";
         String lastmodified = "unknown";
         long isize = fileInfo.getSize();
@@ -152,13 +148,13 @@ public final class ResourcePresentation extends Panel {
                 lastmodified = new Date(filetime.getTime()).toString();
             }
         }
-
-        if (node.getNodeType() instanceof CMDIResourceTxtType) {
-            nodetype = "Written Resource";
-        } else if (node.getNodeType() instanceof CMDIResourceType) {
-            nodetype = "Media Resource";
+        
+        String nodetype = node.getNodeType().getName(); // fixes <https://trac.mpi.nl/ticket/4697>
+        if(nodetype == null) {
+            nodetype = "unknown";
         }
 
+        String checksum = fileInfo.getChecksum();
         if (checksum == null) {
             checksum = "unknown";
         }
