@@ -38,8 +38,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.datetime.DateConverter;
 import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.basic.DateLabel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.AbstractItem;
@@ -82,7 +82,7 @@ public class VersionInfoPanel extends Panel {
         super(id);
         try {
             // create marker for html wicket table
-            RepeatingView repeating = new RepeatingView("rowItems");
+            final RepeatingView repeating = new RepeatingView("rowItems");
             add(repeating);
 
             add(new Label("nodeName", node.getName()));
@@ -91,25 +91,19 @@ public class VersionInfoPanel extends Panel {
             final Collection<ExtendedCorpusNode> versionsNodes = versionInfoProvider.getAllVersions(nodeURI);
             final URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null)) {
-                try {
-
-                    // loop through the list of versions for a node to write them in the table.
-                    if (versionsNodes != null && versionsNodes.size() > 0) {
+                final boolean infoFound = versionsNodes != null && versionsNodes.size() > 0
+                        && false; //REMOVE!!
+                if (infoFound) {
+                    try {
+                        // loop through the list of versions for a node to write them in the table.
                         final String handleResolver = csdb.getHandleResolverURI().toString();
                         addVersionInfo(versionsNodes, repeating, userid, handleResolver);
-                    } else { // list is empty
-                        //TODO decide if it is revelant to display table with no value or simply return a message.
-                        final Boolean hasaccess = accessChecker.hasAccess(userid, nodeURI);
-                        repeating.add(new Label("hasaccess", hasaccess.toString()));
-                        repeating.add(new Label("currentNodeDate", ""));
-                        repeating.add(new ExternalLink("linktoNode", "no version found", "link to the node"));
-                        repeating.add(new ExternalLink("linktoPID", "no version found", "link to the PID of the node"));
-                        add(repeating);
+                    } catch (NodeNotFoundException ex) {
+                        Session.get().error(ex.getMessage());
+                        logger.warn("Node not found: {}", nodeURL, ex);
                     }
-                } catch (NodeNotFoundException ex) {
-                    Session.get().error(ex.getMessage());
-                    logger.warn("Node not found: {}", nodeURL, ex);
                 }
+                add(new WebMarkupContainer("infoNotFound").setVisible(!infoFound));
             }
         } catch (URISyntaxException ex) {
             Session.get().error(ex.getMessage());
