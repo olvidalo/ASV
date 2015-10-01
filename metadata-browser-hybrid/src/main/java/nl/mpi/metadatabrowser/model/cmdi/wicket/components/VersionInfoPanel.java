@@ -91,8 +91,7 @@ public class VersionInfoPanel extends Panel {
             final Collection<ExtendedCorpusNode> versionsNodes = versionInfoProvider.getAllVersions(nodeURI);
             final URL nodeURL = resolver.getUrl(node);
             if ((nodeURL != null)) {
-                final boolean infoFound = versionsNodes != null && versionsNodes.size() > 0
-                        && false; //REMOVE!!
+                final boolean infoFound = versionsNodes != null && versionsNodes.size() > 0;
                 if (infoFound) {
                     try {
                         // loop through the list of versions for a node to write them in the table.
