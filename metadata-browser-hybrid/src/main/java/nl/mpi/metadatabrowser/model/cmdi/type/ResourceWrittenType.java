@@ -22,6 +22,6 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
  */
 public class ResourceWrittenType extends AbstractNodeType{
  public ResourceWrittenType(){
-     super("resourceWritten");
+     super("Written Resource");
  }
 }

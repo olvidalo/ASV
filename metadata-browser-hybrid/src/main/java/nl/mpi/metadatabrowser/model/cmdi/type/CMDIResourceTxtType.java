@@ -23,6 +23,6 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
 public class CMDIResourceTxtType extends AbstractNodeType {
 
     public CMDIResourceTxtType() {
-	super("resourceTxt");
+	super("Text resource");
     }
 }

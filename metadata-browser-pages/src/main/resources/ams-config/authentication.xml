@@ -158,7 +158,7 @@
 	<!-- ** special dao for lana SSO authentication and mgmt ** -->
 	<bean id="sessionDao" class="nl.mpi.lat.ams.dao.SessionDao">
                 <constructor-arg value="${nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource}" />
-                <constructor-arg value="${nl.mpi.metadatabrowser.adapter.amsConfProfile:cmdi}" />
+                <constructor-arg value="${nl.mpi.metadatabrowser.adapter.amsConfProfile:imdi}" />
 	</bean>
 
 

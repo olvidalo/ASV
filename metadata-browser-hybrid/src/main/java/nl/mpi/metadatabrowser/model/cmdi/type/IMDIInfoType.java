@@ -23,6 +23,6 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
 public class IMDIInfoType extends AbstractNodeType {
 
     public IMDIInfoType() {
-        super("infoFile");
+        super("Info File");
     }
 }

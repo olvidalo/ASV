@@ -22,7 +22,7 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
  */
 public class ResourceAudioType extends AbstractNodeType {
     public ResourceAudioType(){
-        super("resourceAudio");
+        super("Media Resource (Audio)");
     }
 
 }

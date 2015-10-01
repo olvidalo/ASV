@@ -24,6 +24,6 @@ package nl.mpi.metadatabrowser.model.cmdi.type;
 public class ResourceVideoType extends AbstractNodeType {
 
     public ResourceVideoType() {
-        super("resourceVideo");
+        super("Media Resource (Video)");
     }
 }
