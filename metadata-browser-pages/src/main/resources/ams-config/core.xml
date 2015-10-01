@@ -93,11 +93,11 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
         <constructor-arg	value="" />			<!-- db user : jndi configured -->
         <constructor-arg	value="" />			<!-- db passwd : jndi configured -->
     </bean>
-	<!-- versioningDB New-None-Singleton-Instance -->
-<!--    <bean id="versioningDB-NNSI" class="nl.mpi.versioning.manager.VersioningAPIImpl" 
+    
+        <!-- versioningDB New-None-Singleton-Instance -->
+    <bean id="versioningDB-NNSI" class="nl.mpi.versioning.manager.VersioningAPIImpl" 
               parent="versioningDB"
-          scope="prototype" />-->
-	
+          scope="prototype" />
 	
 	<!-- ** DAOs ************************************************************ -->
     <bean id="nodeAuthDao"
