@@ -185,6 +185,9 @@ Name of the JNDI resource to use to connect to DAMLR
 * nl.mpi.metadatabrowser.adapter.ADSResource
 Name of the JNDI resource to use to connect to Active Directory 
 
+* nl.mpi.metadatabrowser.adapter.amsConfProfile
+Mode of AMS, either 'imdi' (for "normal" IMDI archive) or 'cmdi' (for hybrid/CMDI)
+
 The metadata browser accepts the following URL GET parameters:
 
 - rootnode
@@ -230,4 +233,3 @@ For example:
 Because of caching, the application needs to be reset for changes in the
 properties file to take effect. Some documentation on the individual properties
 can be found as comments in the properties file itself.
-
