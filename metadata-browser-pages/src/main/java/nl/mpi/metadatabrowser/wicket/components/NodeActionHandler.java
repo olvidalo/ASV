@@ -23,6 +23,7 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.wicket.NodeActionAjaxListener;
 import nl.mpi.metadatabrowser.wicket.services.ControllerActionRequestHandler;
 import nl.mpi.metadatabrowser.wicket.services.RequestHandlerException;
 import nl.mpi.metadatabrowser.wicket.services.impl.ActionSelectionRequestHandler;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @see NodeActionLink
  * @see AjaxFallbackNodeActionLink
  * @see ActionSelectionRequestHandler
- * 
+ *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
 public class NodeActionHandler implements Serializable {
@@ -49,7 +50,7 @@ public class NodeActionHandler implements Serializable {
     private final Collection<TypedCorpusNode> nodes;
 
     /**
-     * 
+     *
      * @param action action to handle
      * @param nodes nodes to perform action on
      */
@@ -60,7 +61,7 @@ public class NodeActionHandler implements Serializable {
 
     /**
      * Handle a node click
-     * 
+     *
      * @param actionRequestHandler request handler to trigger
      * @param component action component
      * @param target optional Ajax request target (can be null!)
@@ -70,6 +71,14 @@ public class NodeActionHandler implements Serializable {
             final NodeActionResult result = action.execute(nodes);
             handleFeedbackMessage(result);
             handleActionRequest(result, actionRequestHandler, component, target);
+
+            if (target != null) {
+                // give result opportunity to speak to the ajax request target
+                final NodeActionAjaxListener ajaxListener = result.getAjaxListener();
+                if (ajaxListener != null) {
+                    ajaxListener.onActionRequestHandled(target);
+                }
+            }
         } catch (NodeActionException ex) {
             logger.warn("Error in execution of action {} on nodes {}", action.getName(), nodes, ex);
             Session.get().error(ex.getMessage());

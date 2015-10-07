@@ -18,6 +18,7 @@ package nl.mpi.metadatabrowser.model.cmdi;
 
 import nl.mpi.metadatabrowser.model.ControllerActionRequest;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
+import nl.mpi.metadatabrowser.wicket.NodeActionAjaxListener;
 
 /**
  * Immutable node action result that has a
@@ -50,5 +51,14 @@ public class SimpleNodeActionResult implements NodeActionResult {
     @Override
     public final String getFeedbackMessage() {
 	return feedbackMessage;
+    }
+
+    /**
+     * NOOP
+     * @return null
+     */
+    @Override
+    public NodeActionAjaxListener getAjaxListener() {
+        return null;
     }
 }

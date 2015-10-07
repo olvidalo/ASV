@@ -23,6 +23,7 @@ import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionException;
 import nl.mpi.metadatabrowser.model.NodeActionResult;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
+import nl.mpi.metadatabrowser.wicket.NodeActionAjaxListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public class MockNodeAction implements NodeAction, Serializable {
     private String feedbackMessage;
     private String exceptionMessage;
     private ControllerActionRequest resultActionRequest;
+    private NodeActionAjaxListener ajaxListener;
 
     @Override
     public String getName() {
@@ -69,6 +71,14 @@ public class MockNodeAction implements NodeAction, Serializable {
         this.resultActionRequest = resultActionRequest;
     }
 
+    public NodeActionAjaxListener getAjaxListener() {
+        return ajaxListener;
+    }
+
+    public void setAjaxListener(NodeActionAjaxListener ajaxListener) {
+        this.ajaxListener = ajaxListener;
+    }
+
     @Override
     public NodeActionResult execute(Collection<TypedCorpusNode> nodes) throws NodeActionException {
         logger.info("Action [{}] invoked on {}", getName(), nodes);
@@ -88,6 +98,11 @@ public class MockNodeAction implements NodeAction, Serializable {
                 @Override
                 public ControllerActionRequest getControllerActionRequest() {
                     return resultActionRequest;
+                }
+
+                @Override
+                public NodeActionAjaxListener getAjaxListener() {
+                    return ajaxListener;
                 }
             };
         } else {
