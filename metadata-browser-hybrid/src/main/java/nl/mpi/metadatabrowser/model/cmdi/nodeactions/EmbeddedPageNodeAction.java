@@ -26,6 +26,8 @@ import nl.mpi.metadatabrowser.model.ShowComponentRequest;
 import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.model.cmdi.wicket.components.ExternalFramePanel;
+import nl.mpi.metadatabrowser.wicket.NodeActionAjaxListener;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
@@ -35,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  */
-public abstract class EmbeddedPageNodeAction implements NodeActionSingletonBean  {
+public abstract class EmbeddedPageNodeAction implements NodeActionSingletonBean {
 
     private final static Logger logger = LoggerFactory.getLogger(EmbeddedPageNodeAction.class);
 
@@ -57,7 +59,25 @@ public abstract class EmbeddedPageNodeAction implements NodeActionSingletonBean 
                 };
             }
         };
-        return new SimpleNodeActionResult(componentRequest);
+        return new SimpleNodeActionResult(componentRequest) {
+
+            /**
+             *
+             * @return ajax listener that triggers a layout update after request
+             * handling
+             */
+            @Override
+            public NodeActionAjaxListener getAjaxListener() {
+                return new NodeActionAjaxListener() {
+
+                    @Override
+                    public void onActionRequestHandled(AjaxRequestTarget target) {
+                        target.appendJavaScript("doLayout();");
+                    }
+                };
+            }
+
+        };
     }
 
     /**

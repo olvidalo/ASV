@@ -17,12 +17,13 @@
 package nl.mpi.metadatabrowser.model;
 
 import java.io.Serializable;
+import nl.mpi.metadatabrowser.wicket.NodeActionAjaxListener;
 
 /**
  * Interface for results returned after execution of node actions.
  *
  * Serializability of all implementations must be assured!
- * 
+ *
  * @author Twan Goosen <twan.goosen@mpi.nl>
  * @see NodeAction#execute(java.net.URI)
  */
@@ -36,12 +37,21 @@ public interface NodeActionResult extends Serializable {
     String getFeedbackMessage();
 
     /**
-     * Provides an action request for the controller. For this to be usable, implementations of this interface should return an
-     * implementation of one of the extensions of the ControllerActionRequest interface.
+     * Provides an action request for the controller. For this to be usable,
+     * implementations of this interface should return an implementation of one
+     * of the extensions of the ControllerActionRequest interface.
      *
      * @return controller action request or null if not applicable
      * @see NavigationRequest
      * @see DownloadRequest
      */
     ControllerActionRequest getControllerActionRequest();
+
+    /**
+     * Provides a listener that may respond to events in the wicket ajax
+     * lifecylce
+     *
+     * @return a listener, can also be null
+     */
+    NodeActionAjaxListener getAjaxListener();
 }
