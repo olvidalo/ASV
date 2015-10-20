@@ -22,4 +22,9 @@ function init_cmdi() {
     });    
 }
 
+function expand_highlighted() {
+    $(".searchword").parents('.IMDI_group').removeClass('collapsed');
+    $(".searchword").parents('.IMDI_group').addClass('expanded');
+}
+
 $(document).ready(init_cmdi);

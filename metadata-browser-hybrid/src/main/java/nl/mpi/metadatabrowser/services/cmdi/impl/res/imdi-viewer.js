@@ -5,7 +5,10 @@ var IMG_CLOSED = '';
 function init_viewer(o_img, c_img) {
     IMG_OPEN = o_img;
     IMG_CLOSED = c_img;
+}
 
+function expand_highlighted() {
+    $(".searchword").parents('.IMDI_group_dynamic').css('display','block');
 }
 
 function is_open(id) {

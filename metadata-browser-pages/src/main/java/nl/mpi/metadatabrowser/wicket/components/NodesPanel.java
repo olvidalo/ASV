@@ -32,6 +32,7 @@ import nl.mpi.metadatabrowser.services.NodePresentationException;
 import nl.mpi.metadatabrowser.services.NodePresentationProvider;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifier;
 import nl.mpi.metadatabrowser.services.NodeTypeIdentifierException;
+import nl.mpi.metadatabrowser.wicket.HighlightSearchTermBehavior;
 import nl.mpi.metadatabrowser.wicket.NodeActionProxy;
 import nl.mpi.metadatabrowser.wicket.model.NodeActionsStructure;
 import nl.mpi.metadatabrowser.wicket.model.TypedSerializableCorpusNode;
@@ -93,6 +94,20 @@ public class NodesPanel<SerializableCorpusNode extends CorpusNode & Serializable
         nodePresentationContainer.add(new WebMarkupContainer("nodePresentation"));
         nodePresentationContainer.setOutputMarkupId(true);
         add(nodePresentationContainer);
+
+        add(new HighlightSearchTermBehavior() {
+
+            @Override
+            protected String getComponentSelector(String componentId) {
+                return String.format("#%s #nodePresentation", componentId);
+            }
+
+            @Override
+            protected String getQueryParam() {
+                return "token";
+            }
+
+        });
     }
 
     private ModalWindow createBookmarkDialogue() {
