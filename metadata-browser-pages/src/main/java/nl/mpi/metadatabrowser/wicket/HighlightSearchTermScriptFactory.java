@@ -3,6 +3,7 @@ package nl.mpi.metadatabrowser.wicket;
 import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
@@ -12,7 +13,8 @@ public class HighlightSearchTermScriptFactory implements Serializable {
 
     public static final String HIGHLIGHT_FUNCTION = "$('%s').highlight(%s, {className:'%s'})";
 
-    public static final Collection<String> DEFAULT_EXCLUDE_WORDS = ImmutableSet.of("and", "or", "not", "to");
+    public static final Collection<String> DEFAULT_EXCLUDE_WORDS = Collections.emptySet();
+            //ImmutableSet.of("and", "or", "not", "to");
 
     public static final String DEFAULT_CSS_CLASS = "searchword";
 
