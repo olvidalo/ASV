@@ -6,6 +6,11 @@ Metadata browser 1.3.0
 				* nl.mpi.metadatabrowser.allowHandleDisplay
 				* nl.mpi.metadatabrowser.adapter.handleResolverUri
 					(see INSTALL.txt for usage information)
+	Fixes:
+			- re-enabled search term highlighting in metadata view (#4747)
+			- rendering issue on nodes without versioning info resolved (#4732)
+			- fixed issue with lack of scrollbars on iframes (#4526)
+			- proper node type shown in the resource view (#4697)
 			
 Metadata browser 1.2.1
 	Fixes:

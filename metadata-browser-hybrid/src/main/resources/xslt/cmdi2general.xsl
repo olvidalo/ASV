@@ -19,7 +19,7 @@
             <xsl:if
                 test="not($subnodes_text = '' and $prune_Components_branches_without_text_values)">
                 <xsl:variable name="nchildren" select="fn:count(child::element())"/>
-                <div class="IMDI_group">
+                <div class="IMDI_group cmdi">
 
                     <xsl:choose>
                         <xsl:when test="$nchildren = 0 and not(not(child::node()))">
@@ -133,12 +133,12 @@
         | /CMD/Components/lat-corpus//*
         
         | /CMD/Components/DiscAn_Project/Project" >
-        <xsl:text>IMDI_group</xsl:text>
+        <xsl:text>IMDI_group cmdi</xsl:text>
     </xsl:template>
 
     <!-- Anything else should be collapsed -->
     <xsl:template match="*" mode="expansionState">
-        <xsl:text>IMDI_group collapsed</xsl:text>
+        <xsl:text>IMDI_group collapsed cmdi</xsl:text>
     </xsl:template>
     
     <!-- Element labels -->

@@ -697,7 +697,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
         </xsl:message>-->
         <div>
             <xsl:attribute name="class">
-                <xsl:text>IMDI_group</xsl:text>
+                <xsl:text>IMDI_group imdi</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="style">
                 <xsl:text>margin-left: </xsl:text>
@@ -744,6 +744,7 @@ Last modification by Evelyn Richter, 13 Aug 2009, adjusted Catalogue: DocumentLa
             <xsl:attribute name="class">
                 <xsl:text>IMDI_group_</xsl:text>
                 <xsl:value-of select="$group-type"/>
+                <xsl:text> imdi</xsl:text>
             </xsl:attribute>
             <xsl:attribute name="id">
                 <xsl:value-of select="$id"/>
