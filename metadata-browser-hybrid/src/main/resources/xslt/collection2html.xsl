@@ -12,7 +12,7 @@
     
     <xsl:template name="CMDI_COLLECTION_2_HTML">
         <article>
-            <div class="IMDI_group" style="margin-left: 0px">
+            <div class="IMDI_group cmdi" style="margin-left: 0px">
                 <div class="IMDI_group_header_static">Collection</div>
                 <div class="IMDI_group_static">
                     <!-- Basic info (root fields) -->
@@ -30,7 +30,7 @@
     </xsl:template>
     
     <xsl:template mode="CMDICOLLECTIONGROUP" match="Contact">
-        <div class="IMDI_group" style="margin-left: 0px">
+        <div class="IMDI_group cmdi" style="margin-left: 0px">
             <div class="IMDI_group_header_static">Contact</div>
             <div class="IMDI_group_static">                   
                 <xsl:apply-templates select="Person" mode="CMDICOLLECTIONFIELD" />                    
@@ -44,7 +44,7 @@
     </xsl:template>
     
     <xsl:template mode="CMDICOLLECTIONGROUP" match="License">
-        <div class="IMDI_group" style="margin-left: 0px">
+        <div class="IMDI_group cmdi" style="margin-left: 0px">
             <div class="IMDI_group_header_static">License</div>
             <div class="IMDI_group_static">                   
                 <xsl:apply-templates select="DistributionType" mode="CMDICOLLECTIONFIELD" />                    

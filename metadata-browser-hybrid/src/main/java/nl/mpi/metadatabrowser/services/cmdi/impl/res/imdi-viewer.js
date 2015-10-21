@@ -7,8 +7,8 @@ function init_viewer(o_img, c_img) {
     IMG_CLOSED = c_img;
 }
 
-function expand_highlighted() {
-    $(".searchword").parents('.IMDI_group_dynamic').css('display','block');
+function expand_highlighted_imdi() {
+    $(".searchword").parents('.IMDI_group_dynamic.imdi').css('display','block');
 }
 
 function is_open(id) {

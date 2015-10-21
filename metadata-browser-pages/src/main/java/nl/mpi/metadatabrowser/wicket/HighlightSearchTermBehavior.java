@@ -32,9 +32,13 @@ public class HighlightSearchTermBehavior extends Behavior {
             // after load, highlight 
             response.render(OnDomReadyHeaderItem.forScript(scriptFactory.createScript(selector, words)
                     + ";"
-                    + "if (typeof expand_highlighted === 'function') { "
-                    + " expand_highlighted();"
-                    + "}"));
+                    + "if (typeof expand_highlighted_imdi === 'function') { "
+                    + " expand_highlighted_imdi();"
+                    + "}"
+                    + "if (typeof expand_highlighted_cmdi === 'function') { "
+                    + " expand_highlighted_cmdi();"
+                    + "}"            
+            ));
         }
     }
 
