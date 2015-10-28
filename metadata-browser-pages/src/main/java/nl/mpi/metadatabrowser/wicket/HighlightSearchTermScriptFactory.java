@@ -1,6 +1,5 @@
 package nl.mpi.metadatabrowser.wicket;
 
-import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,7 +10,7 @@ import java.util.Collections;
  */
 public class HighlightSearchTermScriptFactory implements Serializable {
 
-    public static final String HIGHLIGHT_FUNCTION = "$('%s').highlight(%s, {className:'%s'})";
+    public static final String HIGHLIGHT_FUNCTION = "$('%s').highlight(%s, {className:'%s', wordsOnly: %s})";
 
     public static final Collection<String> DEFAULT_EXCLUDE_WORDS = Collections.emptySet();
             //ImmutableSet.of("and", "or", "not", "to");
@@ -26,8 +25,14 @@ public class HighlightSearchTermScriptFactory implements Serializable {
         return String.format(HIGHLIGHT_FUNCTION,
                 componentSelector,
                 makeWordListArray(words),
-                cssClass
+                cssClass,
+                matchWordsOnly(words)
         );
+    }
+    
+    protected boolean matchWordsOnly(String query) {
+        // string with asterixes or question marks should match by character
+        return !query.matches(".*[\\*\\?].*");
     }
 
     /**
@@ -69,7 +74,7 @@ public class HighlightSearchTermScriptFactory implements Serializable {
                 + "['\"]+"
                 //or boosting values
                 + "|['\"]?\\^.*"
-                + ")$",
+                + ")$|[\\?\\*]",
                 //replace with empty string
                 "");
     }
