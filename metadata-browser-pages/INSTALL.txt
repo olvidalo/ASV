@@ -148,6 +148,11 @@ OPTIONAL whitespace separated list of mime types that should open Annex when the
     "text/plain text/x-eaf+xml text/x-chat text/x-shoebox-text 
     text/x-toolbox-text text/x-subrip text/praat-textgrid"
 
+* nl.mpi.metadatabrowser.optionalAnnexMimeTypes
+OPTIONAL whitespace separated list of mime types for which the user should be
+provided the option to open in Annex or using the browser's viewer. Defaults to:
+    "text/plain text/xml application/xml"
+
 * nl.mpi.metadatabrowser.wicket.maxSizePerSession 
 OPTIONAL representation of the size for page store file (cache on disk per
 session), e.g. '10M' or '1024K'
