@@ -245,8 +245,12 @@ node selected, set the following property in your homepage properties file:
     welcomepage.url
 
 to the location of that page, e.g. http://my-host.com/HomePage.html.
+
 Note: since the URL will be resolved from the host itself, you can also use 
 'localhost' as a hostname if applicable, e.g. http://localhost/HomePage.html.
 
 You may use the file 'HomePage.html', which can be found in the web application
-package, as an example or template.
+package, as an example or template. Be aware that any relative (image) locations
+will be resolved from the ASV URL by the client, as they will not be 
+automatically resolved when included on the back end.
+
