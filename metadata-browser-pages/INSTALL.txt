@@ -10,7 +10,7 @@ Note on using SSL: MetadataBrowser fully supports secure https browsing and conn
 BUILDING FROM SOURCE FOR RELEASE
 ==========================================================================================
 
-The METADATA Browser source code contains 5 parts: the main war, the cmdi api, the cmdi-implementation,and two differents profile : using csdb adapter or using the coming csdb2.  It can be built using maven.
+The METADATA Browser source code contains 3 parts: the main war, the services api, and the 'hybrid' implementation.  It can be built using maven.
 
 To create all the artifacts for METADATA Browser
 (api, war file, cmdi-impl and both csdb profile):
