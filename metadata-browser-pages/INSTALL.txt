@@ -238,3 +238,15 @@ For example:
 Because of caching, the application needs to be reset for changes in the
 properties file to take effect. Some documentation on the individual properties
 can be found as comments in the properties file itself.
+
+To customise the welcome page shown when the browser is opened without any
+node selected, set the following property in your homepage properties file:
+
+    welcomepage.url
+
+to the location of that page, e.g. http://my-host.com/HomePage.html.
+Note: since the URL will be resolved from the host itself, you can also use 
+'localhost' as a hostname if applicable, e.g. http://localhost/HomePage.html.
+
+You may use the file 'HomePage.html', which can be found in the web application
+package, as an example or template.
