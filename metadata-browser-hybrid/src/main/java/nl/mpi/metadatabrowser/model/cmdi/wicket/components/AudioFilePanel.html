@@ -15,12 +15,5 @@
             <span wicket:id="altView"></span>
             <p> If you cannot hear anything or nothing is displayed <a href="" wicket:id="viewAudio" target="_blank"> click here </a> or consider downloading it.</p>
         </wicket:panel>
-        <script>
-            $('audio,video').mediaelementplayer({
-                success: function(player, node) {
-                    $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
-                }
-            });
-        </script>
     </body>
 </html>
