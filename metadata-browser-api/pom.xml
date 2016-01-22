@@ -5,12 +5,12 @@
     <parent>
         <groupId>nl.mpi.metadata-browser</groupId>
         <artifactId>metadata-browser-parent</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.3.2</version>
     </parent>
 
     <groupId>nl.mpi.metadata-browser</groupId>
     <artifactId>metadata-browser-api</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3.2</version>
     <packaging>jar</packaging>
 
     <name>Metadata Browser Services API</name>
