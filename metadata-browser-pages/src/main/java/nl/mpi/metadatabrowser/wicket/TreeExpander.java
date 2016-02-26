@@ -72,11 +72,17 @@ public class TreeExpander implements Serializable {
         // 2. obtain the NodeUri in case it was requested by means of its handle
         //    (node URIs will be assumed when expanding the tree later on)
         final CorpusNode node = csprovider.getNode(nodeUri);
-        if (node != null 
-                && csprovider.getCanonicalParent(node.getNodeURI()) != null) {
-            final List<URI> parentNodes = new ArrayList<>();
-            parentNodes.add(node.getNodeURI());
-            return getParentNode(nodeUri, tree, parentNodes, rootObj);
+        if (node != null) {
+            if (csprovider.getCanonicalParent(node.getNodeURI()) != null) {
+                final List<URI> parentNodes = new ArrayList<>();
+                parentNodes.add(node.getNodeURI());
+                return getParentNode(nodeUri, tree, parentNodes, rootObj);
+            } else if(node.getNodeURI().equals(csprovider.getRootNodeURI())) {
+                //target node is the root node, select and expand
+                tree.expand(node);
+                tree.toggleSelection(node);
+                return true;
+            }
         }
         return false;
     }
