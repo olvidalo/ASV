@@ -16,9 +16,15 @@
  */
 package nl.mpi.metadatabrowser.wicket.components;
 
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Collection;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.wicket.HomePage;
+import nl.mpi.metadatabrowser.wicket.NodeViewLinkModel;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
@@ -35,10 +41,11 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  *
  * @author Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
  */
-public final class HeaderPanel extends Panel {
+public final class HeaderPanel<SerializableCorpusNode extends CorpusNode & Serializable> extends Panel {
 
     @SpringBean
     private NodeActionsConfiguration nodeActionsConf; //TODO: Make separate headerConf and inject that to prevent dependency on CMDI impl
+    private final IModel<Collection<SerializableCorpusNode>> collectionModel;
 
     /**
      *
@@ -46,8 +53,9 @@ public final class HeaderPanel extends Panel {
      * @param userModel model that provides the principal name of the current
      * user
      */
-    public HeaderPanel(String id, final IModel<String> userModel) {
+    public HeaderPanel(String id, final IModel<String> userModel, final IModel<Collection<SerializableCorpusNode>> collectionModel) {
         super(id);
+        this.collectionModel = collectionModel;
 
         add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
             @Override
@@ -77,7 +85,13 @@ public final class HeaderPanel extends Panel {
             public void onClick() {
                 final String loginUrl;
                 if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
-                    loginUrl = "login.jsp?login=1"; //TODO: add app state parameters
+                    try {
+                        //login and return to currently selected node
+                        final NodeViewLinkModel nodeViewLinkModel = new NodeViewLinkModel(collectionModel);
+                        loginUrl = "login.jsp?login=1&returnPage=" + URLEncoder.encode(nodeViewLinkModel.getObject(), "UTF-8");
+                    } catch (UnsupportedEncodingException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     loginUrl = "logoutPage.html?logout=1";
                 }
@@ -114,4 +128,11 @@ public final class HeaderPanel extends Panel {
         add(homeLink);
 //        add(userLogoutLink);
     }
+
+    @Override
+    public void detachModels() {
+        super.detachModels();
+        collectionModel.detach();
+    }
+
 }

@@ -1,7 +1,7 @@
 <%--
     Document   : login.jsp
     Created on : Jan 13, 2014, 2:10:32 PM
-    Author     : Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>
+    Authors    : Jean-Charles Ferrières <jean-charles.ferrieres@mpi.nl>, Twan Goosen <twan.goosen@mpi.nl>
 --%>
 
 <%@page contentType="text/html"%>
@@ -13,15 +13,25 @@
        userid = (String) session.getAttribute("userid");
       if( userid == null || userid.trim().equals("")) userid = "anonymous";
     }
+    
+    String returnUrl;
+    if(request.getParameter("returnPage") != null) {
+        returnUrl = request.getParameter("returnPage");
+    } else if(request.getQueryString() == null) {
+        returnUrl = request.getContextPath();
+    } else {
+        returnUrl =  request.getContextPath() + "?" 
+                + request.getQueryString()
+                        .replaceAll("(login=[^?&]+)", "");
+    }
+
+   
 %>
 <html>
   <head>
     <title>Login</title>
     <link rel="stylesheet" type="text/css" charset="iso-8859-1" href="<%= request.getContextPath() %>/style/style.css">
-    <meta http-equiv="refresh" content="1; url=<%= request.getContextPath() %>?<%= 
-        request.getQueryString() == null ? "" 
-                : request.getQueryString().replaceAll("(login=[^?&]+)", "") 
-    %>" />
+    <meta http-equiv="refresh" content="1; url=<%= returnUrl %>" />
   </head>
   <body>
         <table border="0" cellspacing="2" cellpadding="0" height="300" align="center">
