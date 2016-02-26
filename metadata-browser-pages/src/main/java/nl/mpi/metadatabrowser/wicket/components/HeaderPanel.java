@@ -19,14 +19,16 @@ package nl.mpi.metadatabrowser.wicket.components;
 import nl.mpi.metadatabrowser.model.cmdi.nodeactions.NodeActionsConfiguration;
 import nl.mpi.metadatabrowser.services.AuthenticationHolder;
 import nl.mpi.metadatabrowser.wicket.HomePage;
-import nl.mpi.metadatabrowser.wicket.UserModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -39,11 +41,12 @@ public final class HeaderPanel extends Panel {
     private NodeActionsConfiguration nodeActionsConf; //TODO: Make separate headerConf and inject that to prevent dependency on CMDI impl
 
     /**
-     * 
+     *
      * @param id component id
-     * @param userModel model that provides the principal name of the current user
+     * @param userModel model that provides the principal name of the current
+     * user
      */
-    public HeaderPanel(String id, IModel<String> userModel) {
+    public HeaderPanel(String id, final IModel<String> userModel) {
         super(id);
 
         add(new BookmarkablePageLink("aboutLink", AboutPage.class) {
@@ -69,12 +72,28 @@ public final class HeaderPanel extends Panel {
 
         ExternalLink registerLink = new ExternalLink("registerLink", nodeActionsConf.getRrsURL() + nodeActionsConf.getRrsRegister());
 
-        ExternalLink userLoginLink;
-        if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
-            userLoginLink = new ExternalLink("userLoginLink", "login.jsp?login=1", "log in");
-        } else {
-            userLoginLink = new ExternalLink("userLoginLink", "logoutPage.html?logout=1", "log out");
-        }
+        final Component userLoginLink = new Link("userLoginLink") {
+            @Override
+            public void onClick() {
+                final String loginUrl;
+                if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
+                    loginUrl = "login.jsp?login=1"; //TODO: add app state parameters
+                } else {
+                    loginUrl = "logoutPage.html?logout=1";
+                }
+                getRequestCycle().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(loginUrl));
+            }
+
+        }.add(new Label("loginLabel", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
+                    return "Log in";
+                } else {
+                    return "Log out";
+                }
+            }
+        }));
 
         Link<Void> userName = new Link<Void>("userName") {
             @Override
