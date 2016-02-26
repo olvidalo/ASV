@@ -18,7 +18,10 @@
   <head>
     <title>Login</title>
     <link rel="stylesheet" type="text/css" charset="iso-8859-1" href="<%= request.getContextPath() %>/style/style.css">
-    <meta http-equiv="refresh" content="1; url=<%= request.getContextPath() %>?<%= request.getQueryString().replaceAll("(login=[^?&]+)", "") %>" />
+    <meta http-equiv="refresh" content="1; url=<%= request.getContextPath() %>?<%= 
+        request.getQueryString() == null ? "" 
+                : request.getQueryString().replaceAll("(login=[^?&]+)", "") 
+    %>" />
   </head>
   <body>
         <table border="0" cellspacing="2" cellpadding="0" height="300" align="center">
