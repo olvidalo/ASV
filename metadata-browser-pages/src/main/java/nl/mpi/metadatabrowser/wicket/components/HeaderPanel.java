@@ -87,7 +87,13 @@ public final class HeaderPanel<SerializableCorpusNode extends CorpusNode & Seria
                 if (AuthenticationHolder.ANONYMOUS_PRINCIPAL.equals(userModel.getObject())) {
                     try {
                         //login and return to currently selected node
-                        final NodeViewLinkModel nodeViewLinkModel = new NodeViewLinkModel(collectionModel);
+                        final NodeViewLinkModel nodeViewLinkModel = new NodeViewLinkModel(collectionModel) {
+                            @Override
+                            protected boolean useHandleIfAvailable() {
+                                return false;
+                            }
+
+                        };
                         loginUrl = "login.jsp?login=1&returnPage=" + URLEncoder.encode(nodeViewLinkModel.getObject(), "UTF-8");
                     } catch (UnsupportedEncodingException ex) {
                         throw new RuntimeException(ex);
