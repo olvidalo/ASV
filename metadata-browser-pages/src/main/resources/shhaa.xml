@@ -30,7 +30,7 @@
 
 	
         <authorization>
-            <location  target="/Zlogin*" />
+            <location  target="/login*" />
         </authorization>
 	
 	
