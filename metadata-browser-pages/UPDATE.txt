@@ -1,12 +1,13 @@
-from 1.3.1 to 1.3.2
+From 1.3.2 to 1.3.3:
+	Various bugfixes, no special actions are required
 
+From 1.3.1 to 1.3.2:
 	Hotfix release, no special actions are required
-from 1.3.0 to 1.3.1
 
-
+From 1.3.1 to 1.3.2:
 	Hotfix release, no special actions are required
 	
-from 1.2 to >= 1.3
+From 1.2 to >= 1.3:
         * Add the following mandatory context parameter:
                 - nl.mpi.metadatabrowser.adapter.amsConfProfile
                     with value 'imdi' or 'cmdi' (latter for the hybrid archive)
@@ -24,12 +25,10 @@ from 1.2 to >= 1.3
 	* Optional: to override some default strings and locations (logos, welcome
 	  page), follow the instructions under 'Customisation' in INSTALL.txt
 
-from 1.2.0 to 1.2.1
-
+From 1.2.0 to 1.2.1:
 	Hotfix release, no special actions are required
 
-from 1.1 to >= 1.2
-
+From 1.1 to >= 1.2:
 	* The spring profile for the hybrid/adapter implementation has changed. In the
 	  context parameters 'spring.profiles.active' and 'spring.profiles.default', replace 
 	  'cmdi-production' with  'hybrid-production'. 
@@ -37,8 +36,7 @@ from 1.1 to >= 1.2
 	* Make sure that the 'nl.mpi.imexUrl' context parameter is set correctly, because it
 	  is now mandatory for the metadata browser
 
-from 1.0 to >= 1.1
-
+From 1.0 to >= 1.1:
 	* Add new context parameters: 
 		nl.mpi.translationservicebase
 		nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
@@ -126,7 +124,7 @@ from 1.0 to >= 1.1
 	  - openpath=node:1234
 	  - openhandle=1142/999-xyz-123
 						 
-from version 1.0-Alpha
+From version 1.0-Alpha:
     - add new parameter yamsSearchURL as below
           <Parameter name="nl.mpi.yamsSearchUrl"
          value="http://lux17.mpi.nl/ds/yaas/search.html"
