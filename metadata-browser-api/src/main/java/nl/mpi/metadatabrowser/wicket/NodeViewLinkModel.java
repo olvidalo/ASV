@@ -59,7 +59,7 @@ public class NodeViewLinkModel extends AbstractReadOnlyModel<String> {
 
     private CharSequence getViewNodeLink(final CorpusNode node) {
         final MetadataBrowserServicesLocator services = MetadataBrowserServicesLocator.Instance.get();
-        if (node.isOnSite() && isHandleDisplayAllowed()) {
+        if (node.isOnSite() && useHandleIfAvailable()) {
             // on-site nodes with a handle can be bookmarked by handle (we can assume the @view identifier works for these)
             final NodeResolver nodeResolver = services.getNodeResolver();
             final URI pid = nodeResolver.getPID(node);
@@ -82,7 +82,7 @@ public class NodeViewLinkModel extends AbstractReadOnlyModel<String> {
         return RequestCycle.get().getUrlRenderer().renderFullUrl(Url.parse(url));
     }
 
-    private boolean isHandleDisplayAllowed() {
+    protected boolean useHandleIfAvailable() {
         final Settings settings = MetadataBrowserServicesLocator.Instance.get().getSettings();
         return settings.isHandleDisplayAllowed();
     }

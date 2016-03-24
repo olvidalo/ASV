@@ -68,9 +68,6 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         
         add(new Label("title", new StringResourceModel("homepage.title", null)));
         
-        //Add a panel hosting the user information.
-        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", new UserModel(authHolder));
-        add(headerPanel);
 
         final URI rootNodeUri = getRootNodeURI(parameters);
         final CorpusNode rootNode = csProvider.getNode(rootNodeUri);
@@ -80,9 +77,15 @@ public class HomePage<SerializableCorpusNode extends CorpusNode & Serializable> 
         treePanel = new ArchiveTreePanel("treePanel", treeModelProvider, treeIconProvider);
         add(treePanel);
 
+        final CollectionModel collectionModel = new CollectionModel(treePanel.getSelectedNodes());
+        
+        //Add a panel hosting the user information.
+        final HeaderPanel headerPanel = new HeaderPanel("headerPanel", new UserModel(authHolder), collectionModel);
+        add(headerPanel);
+
         // Add a panel to show information and actions on the currently selected node(s)
-        nodesPanel = new NodesPanel("nodesPanel", new CollectionModel(treePanel.getSelectedNodes()));
-        nodesPanel.setOutputMarkupId(true);
+        nodesPanel = new NodesPanel("nodesPanel", collectionModel);
+        nodesPanel.setOutputMarkupId(true);        
 
         final GenericTreeNode rootObj = treeModelProvider.getRoot();
         treePanel.expand(rootObj);// open tree to first children
