@@ -1,3 +1,19 @@
+From 1.3.3 to 1.3.4:
+        The following OPTIONAL context parameters may be added:
+
+            - nl.mpi.metadatabrowser.stylesheet.cmdi2html
+                with a URL (typically file:/...) of the stylesheet to be used for 
+                conversion of CMDI to HTML for display in the metadata browser's
+                main panel
+            - nl.mpi.metadatabrowser.stylesheet.imdi2html
+                with a URL (typically file:/...) of the stylesheet to be used for
+                conversion of IMDI to HTML for display in the metadata browser's
+                main panel
+
+        If not set, the internal visualisation stylesheets will be used. These 
+        two parameters can be configured independently, i.e. you could configure
+        a custom stylesheet location for IMDI but not for CMDI or vice versa.
+
 From 1.3.2 to 1.3.3:
 	Various bugfixes, no special actions are required
 

@@ -1,3 +1,9 @@
+Metadata browser 1.3.4
+        Changes:
+                        - fixed a bug in the CMDI-to-HTML stylesheet
+                        - added context parameters for configuring the location
+                        of custom IMDI/CMDI-to-HTML stylesheets
+
 Metadata browser 1.3.3
 	Changes:
 			- fixed usage of top node pid/node id in the 'openpath' or 
