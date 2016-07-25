@@ -94,7 +94,7 @@ public final class MetadataTransformingModel extends AbstractReadOnlyModel<Strin
         } catch (IOException ex) {
             throw new NodePresentationException("Could not read metadata for transformation", ex);
         } catch (TransformerException ex) {
-            throw new NodePresentationException("Could not transform metadata", ex);
+            throw new NodePresentationException("Could not transform metadata file using templates " + templatesKey , ex);
         } catch (NodeTypeIdentifierException ex) {
             throw new NodeTypeIdentifierException("could not match node type in transformation", ex);
         }

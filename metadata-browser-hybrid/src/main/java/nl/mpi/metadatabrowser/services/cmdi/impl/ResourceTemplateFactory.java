@@ -16,6 +16,10 @@
  */
 package nl.mpi.metadatabrowser.services.cmdi.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
@@ -43,7 +47,17 @@ public class ResourceTemplateFactory {
      * @throws TransformerConfigurationException
      */
     public Templates newTemplate(String resource) throws TransformerConfigurationException {
-        return newTemplate(getClass(), resource);
+        if (resource.toLowerCase().startsWith("http:") || resource.startsWith("https:") || resource.startsWith("file:")) {
+            try {
+                return newTemplate(new URL(resource));
+            } catch (MalformedURLException ex) {
+                throw new RuntimeException("Invalid URL for template: " + resource, ex);
+            } catch (IOException ex) {
+                throw new RuntimeException("Could not create template for URL: " + resource, ex);
+            }
+        } else {
+            return newTemplate(getClass(), resource);
+        }
     }
 
     /**
@@ -61,10 +75,25 @@ public class ResourceTemplateFactory {
         final URL resourceURL = clazz.getResource(resource);
 
         logger.debug("Creating StreamSource for resource {} (context class: {})", resourceURL, clazz.getName());
-        final StreamSource source = new StreamSource(resourceURL.toString());        
+        final StreamSource source = new StreamSource(resourceURL.toString());
 
         logger.info("Creating templates for stylesheet {}", resource);
         return transformerFactory.newTemplates(source);
+    }
+
+    public Templates newTemplate(URL url) throws IOException, TransformerConfigurationException {
+        final InputStream stream = url.openStream();
+        try {
+            final StreamSource source;
+            if (url.getProtocol().equalsIgnoreCase("file")) {
+                source = new StreamSource(stream, URI.create(url.toString()).getSchemeSpecificPart());
+            } else {
+                source = new StreamSource(stream, url.toString());
+            }
+            return transformerFactory.newTemplates(source);
+        } finally {
+            stream.close();
+        }
     }
 
 }

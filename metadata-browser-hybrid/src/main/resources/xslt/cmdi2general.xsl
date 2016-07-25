@@ -89,13 +89,14 @@
                                 <!-- hanlder in cmdi2html.js -->
                                 <a class="toggle" href="#"><span>toggle</span></a>
 
-                                <xsl:value-of select="fn:concat(local-name(), ' ')"/>
+                                <xsl:value-of select="fn:concat(normalize-space(local-name()), ' ')"/>
                                 <xsl:if test="count(@*) > 0">
                                     <div class="attributes">
                                         <xsl:apply-templates select="@*" mode="attributes"/>
                                     </div>
                                 </xsl:if>
-                                <xsl:if test="normalize-space(./Name) != ''">
+                                <xsl:if test="count(./Name) = 1 and not(./Name/child::*) and normalize-space(./Name) != ''">
+                                    <!-- Node has one leaf child called 'Name' - fair to assume it is its displayable name -->
                                     <span class="group_name">
                                         <xsl:value-of select="./Name" />
                                     </span>

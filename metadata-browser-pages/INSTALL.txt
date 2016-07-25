@@ -175,6 +175,16 @@ OPTIONAL parameter that determines whether the application should display
 handles for nodes in bookmarks etc regardless of whether they are available
 (defaults to true)
 
+* nl.mpi.metadatabrowser.stylesheet.imdi2html
+OPTIONAL parameter that set the URL (typically file:/...) of the stylesheet to 
+be used for the conversion of IMDI to HTML for display in the metadata browser's
+main panel (defaults to usage of packaged default stylesheet)
+
+* nl.mpi.metadatabrowser.stylesheet.cmdi2html
+OPTIONAL parameter that set the URL (typically file:/...) of the stylesheet to 
+be used for the conversion of CMDI to HTML for display in the metadata browser's
+main panel (defaults to usage of packaged default stylesheet)
+
 Connection parameters for the 'adapter' profile (i.e. hybrid archive):
 
 * nl.mpi.metadatabrowser.adapter.CSDBConnectionResource

@@ -19,19 +19,24 @@
     -->
 
     <context:annotation-config />
-
+    
+    <!-- Load properties from context.xml via servlet container -->
+    <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+    
     <bean id="templatesFactory" class="nl.mpi.metadatabrowser.services.cmdi.impl.ResourceTemplateFactory" />
     
     <!-- IMDI template definition is read from /imdi-viewer.xsl resource -->
     <bean id="imdiTemplates" factory-bean="templatesFactory" factory-method="newTemplate">
         <qualifier value="imdiTemplates" /> <!-- Qualifier to disambiguate from CMDI templates -->
-        <constructor-arg value="/xslt/imdi-viewer.xsl" />
+        <constructor-arg value="${nl.mpi.metadatabrowser.stylesheet.imdi2html:/xslt/imdi-viewer.xsl}" />
     </bean>
     
     <!-- IMDI template definition is read from /cmd2xhtml.xsl resource -->
     <bean id="cmdiTemplates" factory-bean="templatesFactory" factory-method="newTemplate">
         <qualifier value="cmdiTemplates" /> <!-- Qualifier to disambiguate from IMDI templates -->
-        <constructor-arg value="/xslt/cmdi2xhtml.xsl" />
+        <constructor-arg value="${nl.mpi.metadatabrowser.stylesheet.cmdi2html:/xslt/cmdi2xhtml.xsl}" />
     </bean>
     
     <!-- Put both templates beans in the templates store -->
