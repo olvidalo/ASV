@@ -4,10 +4,9 @@
     xmlns:fn="http://www.w3.org/2005/xpath-functions" exclude-result-prefixes="xs" version="2.0"
     xpath-default-namespace="http://www.clarin.eu/cmd/">
 
-    <xsl:output method="html" encoding="UTF-8" doctype-system="about:legacy-compat" indent="yes"
-        cdata-section-elements="td"/>
+    <xsl:output method="html" encoding="UTF-8" doctype-system="about:legacy-compat" indent="yes"/>
 
-    <xsl:param name="prune_Components_branches_without_text_values" as="xs:boolean" select="false()"/>
+    <xsl:param name="prune_Components_branches_without_text_values" as="xs:boolean" select="true()"/>
 
     <xsl:template name="Component_tree" match="/CMD/Components">
         <xsl:param name="nodeset" as="element()+" select="/CMD/Components"/>
