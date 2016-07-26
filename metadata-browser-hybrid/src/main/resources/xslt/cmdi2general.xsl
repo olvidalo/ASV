@@ -10,110 +10,118 @@
 
     <xsl:template name="Component_tree" match="/CMD/Components">
         <xsl:param name="nodeset" as="element()+" select="/CMD/Components"/>
-
-        <xsl:for-each select="$nodeset/element()">
-            <xsl:variable name="subnodes_text"
-                select="fn:normalize-space(fn:string-join(descendant-or-self::element()/text(), ''))"
-                as="xs:string+"/>
-            <xsl:if
-                test="not($subnodes_text = '' and $prune_Components_branches_without_text_values)">
-                <xsl:variable name="nchildren" select="fn:count(child::element())"/>
-                <div class="IMDI_group cmdi">
-
-                    <xsl:choose>
-                        <xsl:when test="$nchildren = 0 and not(not(child::node()))">
-
-                            <div class="IMDI_name_value">
-
-                                <span class="IMDI_label">
-                                    <xsl:apply-templates select="." mode="elementLabel" />
-                                </span>
-
-
-                                <!--<br /><br />-->
-
-                                <span class="IMDI_value">
-                                    <xsl:choose>
-                                        <xsl:when test="self::element() castable as xs:string">
-                                            <xsl:variable name="leaf_value"
-                                                select="self::element() cast as xs:string"
-                                                as="xs:string"/>
-                                            <xsl:variable name="is_URL"
-                                                select="starts-with($leaf_value, 'http://') or starts-with($leaf_value, 'https://')"
-                                                as="xs:boolean"/>
-                                                <xsl:choose>
-                                                  <xsl:when test="$is_URL">
-                                                  <a href="{$leaf_value}">
-                                                  <xsl:value-of select="$leaf_value"/>
-                                                  </a>
-                                                  </xsl:when>
-                                                  <xsl:otherwise>
-                                                  <xsl:value-of select="$leaf_value"/>
-                                                  </xsl:otherwise>
-                                                </xsl:choose>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <xsl:variable name="leaf_value"
-                                                select="format-number(self::element(), '#') cast as xs:string"
-                                                as="xs:string"/>
-                                            <xsl:variable name="is_URL"
-                                                select="starts-with($leaf_value, 'http://') or starts-with($leaf_value, 'https://')"
-                                                as="xs:boolean"/>
-                                            <xsl:attribute name="class">leaf</xsl:attribute>
-                                            <xsl:choose>
-                                                <xsl:when test="$is_URL">
-                                                  <a href="{$leaf_value}">
-                                                  <xsl:value-of select="$leaf_value"/>
-                                                  </a>
-                                                </xsl:when>
-                                                <xsl:otherwise>
-                                                  <xsl:value-of select="$leaf_value"/>
-                                                </xsl:otherwise>
-                                            </xsl:choose>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
-                                </span>
-                            </div>
-                            <br />
-                        </xsl:when>
-                        <xsl:otherwise>
+        <xsl:apply-templates select="$nodeset/element()" mode="node" />
+    </xsl:template>
+    
+    <xsl:template match="*" mode="node">
+        <xsl:variable name="subnodes_text"
+            select="fn:normalize-space(fn:string-join(descendant-or-self::element()/text(), ''))"
+            as="xs:string+"/>
+        <xsl:if
+            test="not($subnodes_text = '' and $prune_Components_branches_without_text_values)">
+            <xsl:variable name="nchildren" select="fn:count(child::element())"/>
+            <div class="IMDI_group cmdi">
+                
+                <xsl:choose>
+                    <xsl:when test="$nchildren = 0 and not(not(child::node()))">
+                        
+                        <div class="IMDI_name_value">
                             
-                            <!-- children, so component level -->
-                            <xsl:attribute name="class" >
-                                <xsl:apply-templates select="." mode="expansionState" />
-                            </xsl:attribute>
-
-                            <div class="IMDI_group_header_static">
-
-                                <!-- hanlder in cmdi2html.js -->
-                                <a class="toggle" href="#"><span>toggle</span></a>
-
-                                <xsl:value-of select="fn:concat(normalize-space(local-name()), ' ')"/>
-                                <xsl:if test="count(@*) > 0">
-                                    <div class="attributes">
-                                        <xsl:apply-templates select="@*" mode="attributes"/>
-                                    </div>
-                                </xsl:if>
-                                <xsl:if test="count(./Name) = 1 and not(./Name/child::*) and normalize-space(./Name) != ''">
-                                    <!-- Node has one leaf child called 'Name' - fair to assume it is its displayable name -->
-                                    <span class="group_name">
-                                        <xsl:value-of select="./Name" />
-                                    </span>
-                                </xsl:if>
-                            </div>
-                            <div class="IMDI_group_static">
-                                <xsl:call-template name="Component_tree">
-                                    <xsl:with-param name="nodeset" select="self::element()"/>
-                                </xsl:call-template>
-                            </div>
-                        </xsl:otherwise>
-                    </xsl:choose>
-
-                </div>
-                <div class="IMDI_group_divider"></div>
-            </xsl:if>
-        </xsl:for-each>
-
+                            <span class="IMDI_label">
+                                <xsl:apply-templates select="." mode="elementLabel" />
+                            </span>
+                            
+                            
+                            <!--<br /><br />-->
+                            
+                            <span class="IMDI_value">
+                                <xsl:choose>
+                                    <xsl:when test="self::element() castable as xs:string">
+                                        <xsl:variable name="leaf_value"
+                                            select="self::element() cast as xs:string"
+                                            as="xs:string"/>
+                                        <xsl:variable name="is_URL"
+                                            select="starts-with($leaf_value, 'http://') or starts-with($leaf_value, 'https://')"
+                                            as="xs:boolean"/>
+                                        <xsl:choose>
+                                            <xsl:when test="$is_URL">
+                                                <a href="{$leaf_value}">
+                                                    <xsl:value-of select="$leaf_value"/>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:value-of select="$leaf_value"/>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:variable name="leaf_value"
+                                            select="format-number(self::element(), '#') cast as xs:string"
+                                            as="xs:string"/>
+                                        <xsl:variable name="is_URL"
+                                            select="starts-with($leaf_value, 'http://') or starts-with($leaf_value, 'https://')"
+                                            as="xs:boolean"/>
+                                        <xsl:attribute name="class">leaf</xsl:attribute>
+                                        <xsl:choose>
+                                            <xsl:when test="$is_URL">
+                                                <a href="{$leaf_value}">
+                                                    <xsl:value-of select="$leaf_value"/>
+                                                </a>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:value-of select="$leaf_value"/>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </span>
+                        </div>
+                        <br />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        
+                        <!-- children, so component level -->
+                        <xsl:attribute name="class" >
+                            <xsl:apply-templates select="." mode="expansionState" />
+                        </xsl:attribute>
+                        
+                        <div class="IMDI_group_header_static">
+                            
+                            <!-- hanlder in cmdi2html.js -->
+                            <a class="toggle" href="#"><span>toggle</span></a>
+                            
+                            <xsl:value-of select="fn:concat(normalize-space(local-name()), ' ')"/>
+                            <xsl:if test="count(@*) > 0">
+                                <div class="attributes">
+                                    <xsl:apply-templates select="@*" mode="attributes"/>
+                                </div>
+                            </xsl:if>
+                            <xsl:if test="count(./Name) = 1 and not(./Name/child::*) and normalize-space(./Name) != ''">
+                                <!-- Node has one leaf child called 'Name' - fair to assume it is its displayable name -->
+                                <span class="group_name">
+                                    <xsl:value-of select="./Name" />
+                                </span>
+                            </xsl:if>
+                        </div>
+                        <div class="IMDI_group_static">
+                            <xsl:call-template name="Component_tree">
+                                <xsl:with-param name="nodeset" select="self::element()"/>
+                            </xsl:call-template>
+                        </div>
+                    </xsl:otherwise>
+                </xsl:choose>
+                
+            </div>
+            <div class="IMDI_group_divider"></div>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template mode="node"
+        match="/CMD/Components/*/CorpusLink
+        | /CMD/Components/*/InfoLink
+        | /CMD/Components/*/History
+        ">
+        <!-- skip -->
     </xsl:template>
     
     <!-- Group expansion state (css class) -->
