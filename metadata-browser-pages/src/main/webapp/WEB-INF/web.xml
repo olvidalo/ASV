@@ -39,7 +39,7 @@
     <!-- END PROFILE CONTEXTCONFIGLOCATION  -->
 
     <!-- BEGIN SHIBBOLETH CONFIG - Disable when using Lana -->
-
+<!--
     <context-param>
         <param-name>ShhaaConfigLocation</param-name>
         <param-value>/WEB-INF/shhaa.xml</param-value>
@@ -55,12 +55,12 @@
     </filter-mapping>
     <listener>
         <listener-class>de.mpg.aai.shhaa.config.ConfigContextListener</listener-class>
-    </listener>	
+    </listener>	-->
 
     <!-- END SHIBBOLETH CONFIG -->
     
     <!-- BEGIN LANA2 CONFIG - Disable when using Shibboleth -->
-<!--    <filter>
+    <filter>
         <filter-name>SsoFilter</filter-name>
         <filter-class>nl.mpi.lat.auth.lana2.LanaAuthFilter</filter-class> 
         <init-param>
@@ -95,7 +95,7 @@
     <filter-mapping>
             <filter-name>SsoFilter</filter-name>
             <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
     <!-- END LANA2 CONFIG -->
     <!-- logoutpage = page shown AFTER logout / super = PW for impersonation -->
 

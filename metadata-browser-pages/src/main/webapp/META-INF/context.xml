@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/metadata-browser-pages">
-  <Parameter description="Default Spring profile, may be overridden using spring.profiles.active" name="spring.profiles.default" value="hybrid-production"/>
+  <Parameter description="Default Spring profile, may be overridden using spring.profiles.active" name="spring.profiles.default" value="hybrid-production,asv-ams-hybrid"/>
   <!-- 
 	Spring profile for runtime. Actual beans may come from dependency, also see contextConfigLocation parameter in web.xml. 
 	

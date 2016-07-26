@@ -14,6 +14,22 @@ From 1.3.3 to 1.3.4:
         two parameters can be configured independently, i.e. you could configure
         a custom stylesheet location for IMDI but not for CMDI or vice versa.
 
+        The following parameters are no longer used and should be REMOVED:
+            -nl.mpi.metadatabrowser.adapter.amsConfProfile
+            -nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
+            -nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource
+        
+        Instead, activate one of the following spring profiles: 'ams-hybrid'
+        or 'ams-old'. E.g.:
+
+        <Parameter name="spring.profiles.active"
+             value="my-other-profile1,my-other-profile2,ams-hybrid"/>    
+
+             OR
+
+        <Parameter name="spring.profiles.active"
+             value="my-other-profile1,my-other-profile2,ams-old"/>    
+
 From 1.3.2 to 1.3.3:
 	Various bugfixes, no special actions are required
 

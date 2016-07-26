@@ -97,7 +97,7 @@
         <!-- Version of Wicket to depend on in module projects -->
         <wicket.version>6.22.0</wicket.version>
         <jmock.version>2.6.0</jmock.version>
-        <corpusstructure2.version>1.2.0</corpusstructure2.version>
+        <corpusstructure2.version>1.2.4</corpusstructure2.version>
         <wicket-tree-components.version>1.3.1</wicket-tree-components.version>
         <!-- Hint for NetBeans to insert license header -->
         <netbeans.hint.license>gpl30</netbeans.hint.license>

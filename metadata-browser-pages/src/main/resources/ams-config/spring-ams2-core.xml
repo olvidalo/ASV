@@ -6,10 +6,10 @@
 <beans>
         <!-- Copied and adapted from AMS2 version 1.5 -->
         
-	<import resource="core.xml" />
-	<import resource="authentication.xml" />
 	<import resource="datasource-jndi.xml" />
 	<import resource="persistence.xml" />
-        <!--<import resource="spring-config/persistence.no2ndCache.xml" />-->
-        <!--<import resource="spring-config/export.xml" />-->
+	<import resource="core.xml" />
+	<import resource="authentication.xml" />
+        <!--"spring-config/persistence.no2ndCache.xml"-->
+        <!--"spring-config/export.xml"-->
 </beans>

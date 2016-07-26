@@ -91,6 +91,19 @@ to enable LANA2 authentication.
 CONFIGURATION
 ==========================================================================================
 
+Configure a spring profile in your context.xml. Always use 'hybrid-production',
+and combine with either 'ams-hybrid' or 'ams-old'. For example:
+
+<Parameter name="spring.profiles.active"
+             value="my-other-profile1,hybrid-production,ams-old"
+             override="false"/>
+
+             OR
+
+<Parameter name="spring.profiles.active"
+             value="some-other-profile1,hybrid-production,ams-hybrid"
+             override="false"/>
+
 The METADATA Browser uses the following configuration options:
 
 * nl.mpi.metadatabrowser.manualUrl
@@ -187,21 +200,11 @@ main panel (defaults to usage of packaged default stylesheet)
 
 Connection parameters for the 'adapter' profile (i.e. hybrid archive):
 
-* nl.mpi.metadatabrowser.adapter.CSDBConnectionResource
-Name of the JNDI resource to use to connect to the corpus structure database (in case
-of the 'adapter' profile)
-
-* nl.mpi.metadatabrowser.adapter.AMS2ConnectionResource
-Name of the JNDI resource to use to connect to the AMS2 database 
-
 * nl.mpi.metadatabrowser.adapter.DAMLRResource
 Name of the JNDI resource to use to connect to DAMLR 
 
 * nl.mpi.metadatabrowser.adapter.ADSResource
 Name of the JNDI resource to use to connect to Active Directory 
-
-* nl.mpi.metadatabrowser.adapter.amsConfProfile
-Mode of AMS, either 'imdi' (for "normal" IMDI archive) or 'cmdi' (for hybrid/CMDI)
 
 The metadata browser accepts the following URL GET parameters:
 
