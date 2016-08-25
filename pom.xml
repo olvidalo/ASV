@@ -11,7 +11,7 @@
 
     <groupId>nl.mpi.metadata-browser</groupId>
     <artifactId>metadata-browser-parent</artifactId>
-    <version>1.3.4-TESTING</version>
+    <version>1.3.4</version>
     <name>Metadata Browser</name>
     <url>http://www.tla.mpi.nl</url>
     <description>A CMDI compatible metadata browser</description>
