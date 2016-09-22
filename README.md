@@ -1,4 +1,4 @@
-# ASV: Archive structure browser
+# ASV: Archive structure viewer
 
 ASV (or Metadata Browser) is a web-based application that allows users to browse the content of the
 extensive archive of the IMDI (ISLE Metadata Description Initiative) and CMDI ([Component Metadata Infrastructure](http://www.clarin.eu/cmdi)))
