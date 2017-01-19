@@ -50,7 +50,16 @@
                                                 </a>
                                             </xsl:when>
                                             <xsl:otherwise>
-                                                <xsl:value-of select="$leaf_value"/>
+                                                <xsl:choose>
+                                                    <xsl:when test="string-length($leaf_value)>300">
+                                                        <pre class="IMDI_large_text_block">
+                                                            <xsl:value-of select="$leaf_value"/>
+                                                        </pre>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:value-of select="$leaf_value"/>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>                                                
                                             </xsl:otherwise>
                                         </xsl:choose>
                                     </xsl:when>
