@@ -5,7 +5,7 @@
     <parent>
         <groupId>nl.mpi.metadata-browser</groupId>
         <artifactId>metadata-browser-parent</artifactId>
-        <version>1.4</version>
+        <version>1.4.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -14,7 +14,7 @@
     <artifactId>metadata-browser-pages</artifactId>
     <name>metadata-browser-pages</name>
     <packaging>war</packaging>
-    <version>1.4</version>
+    <version>1.4.1-SNAPSHOT</version>
     <description>Metadata Browser Wicket Pages</description>
 
 
