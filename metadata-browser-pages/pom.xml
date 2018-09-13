@@ -5,7 +5,7 @@
     <parent>
         <groupId>nl.mpi.metadata-browser</groupId>
         <artifactId>metadata-browser-parent</artifactId>
-        <version>1.4</version>
+        <version>1.4-SOAS.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -14,7 +14,7 @@
     <artifactId>metadata-browser-pages</artifactId>
     <name>metadata-browser-pages</name>
     <packaging>war</packaging>
-    <version>1.4</version>
+    <version>1.4-SOAS.1</version>
     <description>Metadata Browser Wicket Pages</description>
 
 
@@ -122,7 +122,7 @@
             <version>1.53.0</version>
         </dependency>
     </dependencies>
-    
+
 
     <build>
         <filters>
@@ -271,15 +271,15 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
-            <!-- 
+            <!--
                 Build profile for non-shibbolised environments, basically
                 swapping the AMS2 dependency for an older version while keeping
                 some of it's "modern" dependencies (spring, hibernate et al.)
-                
-                Based on Eric's experiences with deploying the browser at SOAS, 
+
+                Based on Eric's experiences with deploying the browser at SOAS,
                 see <https://trac.mpi.nl/ticket/4521>
             -->
             <id>non-shib</id>
@@ -348,7 +348,7 @@
             </dependencies>
         </profile>
     </profiles>
-    
+
     <pluginRepositories>
         <pluginRepository>
             <id>MPI</id>
