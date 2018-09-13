@@ -17,7 +17,9 @@
 package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
 import java.net.URL;
 import nl.mpi.archiving.corpusstructure.core.NodeNotFoundException;
 import nl.mpi.archiving.corpusstructure.core.service.NodeResolver;
@@ -85,6 +87,7 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements No
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Single download action invoked on {}", node);
+        final URI nodeUri = node.getNodeURI();
         final String userid = auth.getPrincipalName();
         try {
             if (accessChecker.hasAccess(userid, node.getNodeURI())) {
@@ -99,10 +102,12 @@ public final class CMDIDownloadNodeAction extends SingleNodeAction implements No
                     fileName = localFile.getName();
                 }
 
+                logger.info("Download {}, {}, granted", nodeUri, userid);
                 final DownloadActionRequest request = new DownloadActionRequest(fileName, resStream);
                 return new SimpleNodeActionResult(request);
             } else {
-                return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, node.getNodeURI()));
+                logger.info("Download {}, {}, denied", nodeUri, userid);
+                return new SimpleNodeActionResult(String.format("User %s has no access to the node %s", userid, nodeUri));
             }
         } catch (NodeNotFoundException ex) {
             throw new NodeActionException(this, ex);

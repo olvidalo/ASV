@@ -106,6 +106,8 @@ public class CMDIMultipleDownloadNodeActionTest {
                 allowing(node).getName();
                 will(returnValue("nodeName"));
 
+                allowing(node).getNodeURI();
+
                 oneOf(zipService).createZipFileForNodes(node, userId);
                 will(returnValue(zipFile));
             }

@@ -19,6 +19,8 @@ package nl.mpi.metadatabrowser.model.cmdi.nodeactions;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URI;
+
 import nl.mpi.metadatabrowser.model.NodeAction;
 import nl.mpi.metadatabrowser.model.NodeActionSingletonBean;
 import nl.mpi.metadatabrowser.model.NodeActionException;
@@ -28,6 +30,7 @@ import nl.mpi.metadatabrowser.model.TypedCorpusNode;
 import nl.mpi.metadatabrowser.model.cmdi.DownloadActionRequest;
 import nl.mpi.metadatabrowser.model.cmdi.SimpleNodeActionResult;
 import nl.mpi.metadatabrowser.services.cmdi.ZipService;
+import nl.mpi.archiving.corpusstructure.core.CorpusNode;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -68,13 +71,16 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
     @Override
     protected NodeActionResult execute(TypedCorpusNode node) throws NodeActionException {
         logger.debug("Multiple download action invoked on {}", node);
+        final String userid = auth.getPrincipalName();
         try {
-            final String userid = auth.getPrincipalName();
             final File zipFile = zipService.createZipFileForNodes(node, userid);
             if (zipFile == null) {
+                logger.info("DownloadAll {}, {}, denied", node.getNodeURI(), userid);
                 logger.error("none of the files are accessible to user : " + userid);
                 return new SimpleNodeActionResult(String.format("User %s has no access to one or more of the child nodes. No zip could be created. Log in and/or request access, then try again.", userid));
             } else {
+                final URI nodeUri = node.getNodeURI();
+                logger.info("DownloadAll {}, {}, granted", nodeUri, userid);
                 final IResourceStream resStream = new FileResourceStream(zipFile) {
                     @Override
                     public void close() throws IOException {
@@ -82,7 +88,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
 
                         // called when download is complete - file can be removed
                         logger.debug("Zip file download completed. Removing {} from file system.", zipFile);
-                        
+
                         if (!zipFile.delete()) {
                             logger.warn("Could not remove zip file: {}", zipFile);
                         }
@@ -97,6 +103,7 @@ public class CMDIMultipleDownloadNodeAction extends SingleNodeAction implements 
                 return new SimpleNodeActionResult(request);
             }
         } catch (IOException ex) {
+            logger.info("DownloadAll {}, {}, granted, incomplete", node.getNodeURI(), userid);
             logger.error("an exception has occured when trying to download package of : {}", node, ex);
             throw new NodeActionException(this, ex);
         }
